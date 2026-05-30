@@ -417,19 +417,21 @@ function stepBusiness(){
     navHTML(true,"Next: Spend")+'</div>';
 }
 
+function spendSummaryHTML(){
+  var tot=totalMonthly();
+  var threshNote = (tot>0 && tot<GUARANTEE_MIN_MONTHLY) ?
+    '<div class="threshold-note">This optimizer is built for businesses spending <b>$30,000+/month</b>, where recovery is biggest. At '+money(tot)+'/mo you may find less — but we\'ll still run your full audit, and you\'re covered either way: <b>if we don\'t identify $3,000 in value, your purchase is refunded.</b></div>' : '';
+  return '<div style="text-align:right;font-weight:700;color:var(--text-secondary);font-size:14px;margin-top:-6px">Total: '+money(tot)+' / month</div>'+threshNote;
+}
 function stepSpend(){
   var rows=activeCategories().map(function(c){
     return '<div class="field"><label>'+esc(c.label)+' <span class="hint">— '+esc(c.note)+'</span></label>'+
       '<div class="input-prefix"><span>$</span><input type="text" inputmode="numeric" value="'+esc(state.spend[c.id])+'" oninput="setSpend(\''+c.id+'\',this.value)" placeholder="monthly $"></div></div>';
   }).join("");
-  var tot=totalMonthly();
-  var threshNote = (tot>0 && tot<GUARANTEE_MIN_MONTHLY) ?
-    '<div class="threshold-note">This optimizer is built for businesses spending <b>$30,000+/month</b>, where recovery is biggest. At '+money(tot)+'/mo you may find less — but we\'ll still run your full audit, and you\'re covered either way: <b>if we don\'t identify $3,000 in value, your purchase is refunded.</b></div>' : '';
   return '<div class="step fade-in"><h2>Your monthly business spend</h2>'+
     '<p class="lead">Enter what you put on cards (or could) each month. Estimates are fine — leave blank if none.</p>'+
     rows+
-    '<div style="text-align:right;font-weight:700;color:var(--text-secondary);font-size:14px;margin-top:-6px">Total: '+money(tot)+' / month</div>'+
-    threshNote+
+    '<div id="spendSummary">'+spendSummaryHTML()+'</div>'+
     (state.errors.spend?'<div class="err">'+esc(state.errors.spend)+'</div>':'')+
     navHTML(true,"Next: Current Cards")+'</div>';
 }
@@ -577,11 +579,15 @@ function stepConfirm(){
 function setMode(m){state.mode=m;render();}
 function setBiz(id){state.bizType=id;render();}
 function setVal(k,v){state[k]=v;if(k==="email"&&state.errors.email)state.errors.email=null;}
-function setSpend(id,v){state.spend[id]=v; if(state.errors.spend){state.errors.spend=null;} liveUpdateSpend();}
+function setSpend(id,v){
+  state.spend[id]=v;
+  state.errors.spend=null; // clear silently; do NOT re-render (would drop input focus)
+  var s=document.getElementById("spendSummary");
+  if(s) s.innerHTML=spendSummaryHTML();
+}
 function setSetup(id){state.currentSetup=id;render();}
 function setPoints(v){state.hasPoints=v;render();}
 function setYN(field,v){state[field]=v;if(state.errors[field])state.errors[field]=null;render();}
-function liveUpdateSpend(){ /* keep total + threshold note current without full re-render churn */ render(); }
 
 function submitLead(){
   var e={}, em=String(state.email).trim();
