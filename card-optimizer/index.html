@@ -153,6 +153,18 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 .pay .optin{display:flex;align-items:flex-start;gap:9px;text-align:left;margin:12px 2px 4px;font-size:12.5px;color:var(--text-secondary);line-height:1.45;cursor:pointer;}
 .pay .optin input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--blue);cursor:pointer;}
 .pay .optin b{color:var(--text-primary);}
+/* report preview gallery */
+.preview{margin:0 0 28px;}
+.preview .phead{text-align:center;margin-bottom:6px;}
+.preview h2{font-family:var(--font-display);font-size:clamp(20px,4vw,26px);font-weight:800;}
+.preview .psub{text-align:center;color:var(--text-secondary);font-size:15px;max-width:560px;margin:0 auto 22px;}
+.preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.shot{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;}
+.shot img{width:100%;height:auto;display:block;}
+.shot .cap{font-size:13px;font-weight:600;color:var(--text-secondary);padding:10px 14px;border-top:1px solid var(--border);background:#fff;}
+.shot .cap b{color:var(--text-primary);}
+.preview .disclaimer{text-align:center;font-size:12.5px;color:var(--text-muted);margin-top:14px;font-style:italic;}
+@media(max-width:640px){.preview-grid{grid-template-columns:1fr;}}
 .confirm{text-align:center;padding:24px 0;}
 .confirm .ico{font-size:54px;}
 .confirm h2{font-family:var(--font-display);font-size:26px;font-weight:800;margin:10px 0 8px;}
@@ -254,6 +266,18 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 </section>
 
 <div class="wrap">
+  <div class="preview">
+    <div class="phead"><h2>Here's exactly what you get</h2></div>
+    <p class="psub">A complete, personalized report built from your real numbers — on screen instantly, ready to save as a PDF. Here's a real example:</p>
+    <div class="preview-grid">
+      <div class="shot"><img src="preview-recovery.jpg" alt="Your first-year Recovery Number — a big, clear dollar figure" loading="lazy"><div class="cap"><b>Your Recovery Number</b> — the exact dollars you're leaving on the table</div></div>
+      <div class="shot"><img src="preview-chart.jpg" alt="Where the money is — category-by-category breakdown chart" loading="lazy"><div class="cap"><b>Where the money is</b> — what you capture now vs. optimized, by category</div></div>
+      <div class="shot"><img src="preview-plan.jpg" alt="Your 30-day action plan with numbered steps" loading="lazy"><div class="cap"><b>Your 30-day action plan</b> — exact order and timing, step by step</div></div>
+      <div class="shot"><img src="preview-premium.jpg" alt="Premium card upgrades with net-of-fee dollar benefit" loading="lazy"><div class="cap"><b>Worked-out card picks</b> — net dollar benefit on your spend (exact cards named in your report)</div></div>
+    </div>
+    <p class="disclaimer">Sample report for an example business. Your report uses your numbers, so your Recovery Number will reflect your actual spend.</p>
+  </div>
+
   <div class="card" id="app"></div>
 
   <div class="founder">
