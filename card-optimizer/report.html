@@ -91,6 +91,45 @@ p.secsub{color:var(--text-secondary);font-size:14px;margin-bottom:16px;}
 .err-state h1{font-family:var(--font-display);font-size:24px;margin-bottom:10px;}
 .err-state p{color:var(--text-secondary);max-width:440px;margin:0 auto 16px;}
 
+/* deep card detail */
+.cardrate{font-size:13.5px;color:var(--text-secondary);margin:6px 0;}
+.cardwhy{font-size:13.5px;color:var(--text-primary);margin:6px 0;}
+.cardmath{background:#F8FAFC;border-radius:var(--radius-sm);padding:12px 14px;margin:10px 0;}
+.cardmath .mathlabel{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);margin-bottom:6px;}
+.cardmath ul{margin:0;padding-left:18px;}
+.cardmath li{font-size:13px;margin-bottom:5px;color:var(--text-secondary);}
+.cardbonus{font-size:13px;font-weight:600;color:var(--green-dark);margin-top:8px;}
+.mathlabel{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);}
+.ex{font-size:12.5px;color:var(--text-muted);font-style:italic;}
+
+/* points page */
+.ptsgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:16px 0;}
+.ptsbox{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;}
+.ptsbox.best{border-color:var(--green);background:#F0FDF8;}
+.ptsbox .l{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);font-weight:700;}
+.ptsbox .v{font-family:var(--font-display);font-size:21px;font-weight:800;margin:4px 0;}
+.ptsbox.best .v{color:var(--green-dark);}
+.ptsbox .n{font-size:11px;color:var(--text-muted);}
+.ptstable,.achtable{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px;}
+.ptstable th,.ptstable td,.achtable td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+.ptstable th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);font-weight:700;}
+.ptstable .cpp{font-weight:700;color:var(--green-dark);white-space:nowrap;}
+.ptswarn{background:#FFF7ED;border:1px solid #FED7AA;border-radius:var(--radius-sm);padding:14px;font-size:13.5px;color:#9A3412;margin-top:14px;}
+.ptssteps{padding-left:20px;margin-top:6px;}
+.ptssteps li{font-size:13.5px;margin-bottom:8px;color:var(--text-secondary);}
+.ptsfresh{font-size:11.5px;color:var(--text-muted);margin-top:12px;font-style:italic;}
+
+/* ACH */
+.achrule{background:var(--blue-light);border-radius:var(--radius-sm);padding:14px;font-size:14px;color:var(--text-primary);}
+.achtable td:last-child{text-align:right;font-weight:700;white-space:nowrap;}
+.achtable .bad{color:var(--red);}
+.achtable .good{color:var(--green-dark);}
+.achtable tr.net td{border-top:2px solid var(--border);border-bottom:none;}
+.achsteps{padding-left:20px;margin-top:6px;}
+.achsteps li{font-size:13.5px;margin-bottom:8px;color:var(--text-secondary);}
+.achnote{font-size:11.5px;color:var(--text-muted);margin-top:10px;font-style:italic;}
+.pagebreak{break-inside:avoid;}
+
 @media(max-width:560px){.card{padding:20px;}.dual{grid-template-columns:1fr;}.report-actions .btn-ghost{display:none;}}
 @media print{
   .site-header,.report-actions,.no-print{display:none!important;}
@@ -277,6 +316,44 @@ function calc(){
 }
 /* ============ END SHARED CORE ============ */
 
+/* ---- card detail metadata: why each card wins + earn structure ---- */
+var CARD_DETAIL = {
+  "Chase Ink Business Cash": {
+    rate:"5% back on the first $25,000/yr at office-supply stores and on internet/cable/phone; 2% at gas stations and restaurants (first $25k); 1% after.",
+    why:"For materials and supplies bought through office-supply channels, 5% is the highest no-fee rate available anywhere. Most contractors run far more through supply houses than they realize.",
+    bonus:"$750 cash back after $6,000 spend in 3 months."
+  },
+  "U.S. Bank Triple Cash Rewards": {
+    rate:"3% back on gas/EV charging (transactions up to $200), office supply, cell-phone service, and restaurants — no annual cap; 1% on everything else. Plus a $100/yr software credit.",
+    why:"The only no-fee card that pays 3% on fuel with no cap, which is why it anchors the fuel category for trades fleets. The uncapped structure beats cards that throttle after a spend limit.",
+    bonus:"$500 after $4,500 spend in 5 months."
+  },
+  "Wells Fargo Signify Business Cash": {
+    rate:"Flat 2% cash back on every purchase, uncapped, with no annual fee and no category tracking.",
+    why:"For advertising, software, shipping, and general spend there is no no-fee card paying more than ~2% reliably — so a clean, uncapped 2% on everything is the honest best no-fee backbone. No caps to blow through, no categories to manage. The real upside above 2% lives in the premium cards below.",
+    bonus:"$500 after $5,000 spend in 3 months."
+  },
+  "Amex Blue Business Plus": {
+    rate:"2x Membership Rewards points on the first $50,000/yr of everyday purchases, then 1x. No annual fee.",
+    why:"Points can be worth more than 2% if transferred to Amex travel partners, making this a flexible no-fee base for businesses that travel.",
+    bonus:"15,000 points (~$150+) after $3,000 spend in 3 months."
+  }
+};
+
+/* ---- points redemption reference (verified June 2026 — see sources in research file) ---- */
+var POINTS_REDEMPTION = [
+  {type:"Statement credit / cash back", cpp:"1.0¢", note:"The floor — simplest and always available, but usually the lowest value."},
+  {type:"Gift cards", cpp:"0.8–1.0¢", note:"Often at or below cash. Generally avoid unless a bonus promo applies."},
+  {type:"Travel via the card's portal", cpp:"1.0–1.5¢", note:"Chase Ink Preferred ≈ 1.25¢; Amex & Capital One ≈ 1.0¢. Easy, no transfers."},
+  {type:"Transfer to airline/hotel partners", cpp:"1.5–2.0¢+", note:"Highest value (Chase UR up to ~2.05¢, Amex ~2.0¢, Cap One ~1.85¢) — but requires a trip to use them on."}
+];
+/* monthly freshness stamp */
+function weekStamp(){
+  var d = new Date();
+  return d.toLocaleString("en-US",{month:"long",year:"numeric"});
+}
+
+
 /* ---- decode URL params into state ---- */
 function loadStateFromURL(){
   var qs = new URLSearchParams(window.location.search);
@@ -324,29 +401,60 @@ function renderReport(){
       '<div class="bar-track"><div class="bar-opt" style="width:'+optW+'%">'+money(c.optimal)+'</div><div class="bar-cur" style="width:'+curW+'%"></div></div></div>';
   }).join("");
 
+  // ---- NO-FEE CARD STACK with worked math per card ----
+  var catLabelFor = {};
+  r.perCat.forEach(function(c){ catLabelFor[c.primary] = (catLabelFor[c.primary]||[]).concat(c); });
   var stack = r.stack.map(function(name,i){
+    var d = CARD_DETAIL[name] || {rate:"",why:"",bonus:""};
+    // worked math: find the categories this card is primary for
+    var cats = catLabelFor[name] || [];
+    var mathRows = cats.filter(function(c){return c.annualSpend>0;}).map(function(c){
+      var monthly = c.annualSpend/12;
+      return '<li>Your <b>'+esc2(c.label.toLowerCase())+'</b>: '+money(monthly)+'/mo \u00d7 12 = <b>'+money(c.annualSpend)+'/yr</b> \u2192 earns about <b>'+money(c.optimal)+'/yr</b> on this card'+
+        (c.current>0?' (vs. '+money(c.current)+' on your current setup \u2014 a <b style="color:var(--green-dark)">+'+money(c.optimal-c.current)+'/yr</b> gain)':'')+'.</li>';
+    }).join("");
+    var bonusLine = d.bonus ? '<div class="cardbonus">\ud83c\udf81 <b>Signup bonus:</b> '+esc2(d.bonus)+'</div>' : "";
     return '<div class="rec '+(i===0?"top":"")+'">'+(i===0?'<span class="tag">Start here</span>':'')+
-      '<h4>'+esc2(name)+' <span class="fee">$0 annual fee</span></h4><div class="why">No-fee card \u2014 every dollar of rewards is yours to keep.</div></div>';
+      '<h4>'+esc2(name)+' <span class="fee">$0 annual fee</span></h4>'+
+      '<div class="cardrate"><b>How it earns:</b> '+esc2(d.rate)+'</div>'+
+      '<div class="cardwhy"><b>Why it\u2019s in your stack:</b> '+esc2(d.why)+'</div>'+
+      (mathRows?'<div class="cardmath"><div class="mathlabel">The math on your spend:</div><ul>'+mathRows+'</ul></div>':'')+
+      bonusLine+'</div>';
   }).join("");
 
   var prem = r.premiums.length ? '<div class="card"><h2 class="sec">\u2b50 Optional premium upgrades</h2>'+
     '<p class="secsub">These carry an annual fee but pay off for your spend \u2014 shown net of the fee.</p>'+
     r.premiums.map(function(p){return '<div class="rec premium"><span class="tag">+'+money(p.net)+'/yr net</span><h4>'+esc2(p.name)+' <span class="fee">'+esc2(p.fee)+'</span></h4><div class="why">'+esc2(p.why)+'</div><div class="yield">Net benefit after fee: '+money(p.net)+'/yr</div><div class="fine">'+esc2(p.fine)+'</div></div>';}).join("")+'</div>' : "";
 
-  // 30-day action plan
+  // ---- DETAILED WEEK-BY-WEEK ACTION PLAN ----
+  var c1 = r.stack[0], c2 = r.stack[1];
+  var biggestCat = r.perCat.slice().sort(function(a,b){return b.annualSpend-a.annualSpend;})[0];
   var planSteps = [];
-  if(r.stack[0]) planSteps.push('<b>Days 1\u20137:</b> Apply for the <b>'+esc2(r.stack[0])+'</b> first \u2014 it\u2019s your highest-impact no-fee card. Route your biggest spend category through it immediately to hit any signup-bonus minimum.');
-  if(r.stack[1]) planSteps.push('<b>Days 8\u201314:</b> Add the <b>'+esc2(r.stack[1])+'</b> to cover your second spend category. Keep each card to its strongest categories.');
-  planSteps.push('<b>Days 8\u201330:</b> Set every card to <b>auto-pay in full</b> each statement. This is non-negotiable \u2014 carrying a balance at 17\u201327% APR wipes out every dollar of rewards.');
-  if(state.supplierSurcharge==="yes") planSteps.push('<b>This week:</b> Call your top 3 suppliers. For any that surcharge cards 2\u20134%, switch those payments to <b>ACH</b> \u2014 the fee saved usually beats the rewards.');
-  if(state.earlyPayDiscount==="yes") planSteps.push('<b>Ongoing:</b> Take every early-payment discount your cash flow allows (e.g. 2/10 net 30 \u2248 36% annualized return).');
-  if(r.premiums.length) planSteps.push('<b>Day 30+:</b> Once your no-fee base is running clean, consider the premium upgrade above \u2014 only if you\u2019ll use it enough to clear the fee.');
-  planSteps.push('<b>Day 30+:</b> Re-check your numbers each quarter. Card offers change \u2014 your report\u2019s rates are dated below.');
+  if(c1){
+    var d1 = CARD_DETAIL[c1]||{};
+    planSteps.push('<b>Days 1\u20133 \u2014 Apply for the '+esc2(c1)+'.</b> This is your highest-impact no-fee card. Apply online (about 10 minutes; you\u2019ll need your EIN or SSN and rough annual revenue). '+
+      (d1.bonus?'It carries a '+esc2(d1.bonus.toLowerCase())+' '+'<br><span class="ex">Example: '+(biggestCat&&biggestCat.annualSpend>0?'route your '+esc2(biggestCat.label.toLowerCase())+' ('+money(biggestCat.annualSpend/12)+'/mo) to this card and you\u2019ll clear the minimum spend naturally without buying anything extra.':'put your regular operating spend on it to hit the minimum without overspending.')+'</span>':''));
+  }
+  planSteps.push('<b>Days 4\u20137 \u2014 Set up auto-pay in full.</b> The day the card arrives, log in and set auto-pay to the <b>full statement balance</b> (not the minimum). This single setting is what protects every dollar of rewards. '+
+    '<br><span class="ex">Example: on '+money(totalMonthly())+'/mo of spend, carrying even one month\u2019s balance at 24% APR would cost about '+money(totalMonthly()*0.24/12)+' in interest \u2014 wiping out a month of rewards. Auto-pay-in-full makes that impossible.</span>');
+  if(c2){
+    planSteps.push('<b>Days 8\u201314 \u2014 Add the '+esc2(c2)+'.</b> Once the first card is active, add your second card to cover your next-biggest category. Keep each card to the categories where it earns the most \u2014 don\u2019t put materials spend on the ad-spend card, etc.');
+  }
+  if(state.supplierSurcharge==="yes"){
+    planSteps.push('<b>Days 8\u201314 \u2014 Audit supplier card fees.</b> Call or check the invoices from your top 3\u20135 suppliers. Ask: \u201cdo you charge a fee for card payment, and do you accept ACH?\u201d For any that surcharge, switch to ACH (see the ACH section below for the exact math).');
+  }
+  if(r.premiums.length){
+    var p0 = r.premiums[0];
+    planSteps.push('<b>Days 15\u201330 \u2014 Evaluate the premium upgrade ('+esc2(p0.name)+').</b> Only after your no-fee base is running clean. It nets <b>'+money(p0.net)+'/yr</b> after its fee on your spend \u2014 worth it if you\u2019ll actually use the bonus categories. If your spend dips, the no-fee stack alone still captures most of the value.');
+  }
+  if(state.earlyPayDiscount==="yes"){
+    planSteps.push('<b>Ongoing \u2014 Take early-payment discounts.</b> Any supplier offering \u201c2/10 net 30\u201d gives 2% off for paying in 10 days instead of 30 \u2014 about a 36% annualized return on that cash. Prioritize these whenever cash flow allows; they beat almost any card reward.');
+  }
+  planSteps.push('<b>Day 30 \u2014 Bank the win, then review quarterly.</b> Your cards are now matched to your spend and auto-paying in full. Re-check your numbers each quarter: card offers and your spend mix both change. Re-run this optimizer anytime your spend shifts meaningfully.');
 
   // levers
   var ecom = audience()==="ecom";
   var levers = [];
-  if(state.supplierSurcharge==="yes") levers.push({t:(ecom?"Route 3PL/supplier invoices by ACH when surcharged":"Pay surcharged supplier invoices by ACH"),p:"On large orders, avoiding a 2\u20134% card surcharge usually beats the rewards you\u2019d earn. Pay those by ACH; keep no-surcharge spend on your rewards cards."});
   if(ecom){
     levers.push({t:"Run all ad spend through your highest-earning card",p:"Google, Meta, and TikTok don\u2019t surcharge cards \u2014 so your single biggest line should always earn rewards. With a 4x card, that\u2019s real money on advertising."});
     levers.push({t:"Use a 0% foreign-transaction card for overseas suppliers",p:"A 3% FX fee quietly eats margin on imports. Ink Preferred, Amex Gold, and Capital One charge 0% \u2014 route international buys there."});
@@ -356,10 +464,66 @@ function renderReport(){
   levers.push({t:"Use a line of credit for float, never balances",p:"A business LOC (8\u201314%) is far cheaper than carrying a card balance (17\u201327%). Use cards for rewards + 0% intro periods, then clear them before interest hits."});
   var leversHTML = levers.map(function(l){return '<div class="lever"><h4>'+esc2(l.t)+'</h4><p>'+esc2(l.p)+'</p></div>';}).join("");
 
-  // points note
-  var pointsNote = state.hasPoints==="yes" ?
-    '<div class="card"><h2 class="sec">\ud83d\udcb3 Your existing points</h2><p class="secsub">You noted about <b>'+esc2(state.pointsBalance||"some")+'</b> idle points/miles.</p>'+
-    '<p style="font-size:14px;color:var(--text-secondary)">Idle points lose value to devaluation every year. Unless you\u2019re holding them for a specific near-term redemption, cash them out or transfer to a travel partner now rather than letting them sit. Check your issuer\u2019s current transfer-partner ratios before redeeming \u2014 a transfer is often worth 25%+ more than cash back.</p></div>' : "";
+  // ---- FULL POINTS PAGE ----
+  var ptsNum = num(state.pointsBalance);
+  var pointsPage = "";
+  if(state.hasPoints==="yes" && ptsNum>0){
+    var cashVal = ptsNum*0.01, portalVal = ptsNum*0.0125, transferLow = ptsNum*0.015, transferHigh = ptsNum*0.02;
+    var redemptionRows = POINTS_REDEMPTION.map(function(rr){
+      return '<tr><td><b>'+esc2(rr.type)+'</b></td><td class="cpp">'+esc2(rr.cpp)+'</td><td>'+esc2(rr.note)+'</td></tr>';
+    }).join("");
+    pointsPage =
+      '<div class="card pagebreak"><h2 class="sec">\ud83d\udcb3 Your idle points \u2014 worth '+money(cashVal)+' to '+money(transferHigh)+' right now</h2>'+
+      '<p class="secsub">You told us you have about <b>'+ptsNum.toLocaleString()+'</b> points/miles sitting unused. Here\u2019s exactly what they\u2019re worth and what to do.</p>'+
+      '<div class="ptsgrid">'+
+        '<div class="ptsbox"><div class="l">Cash value (floor)</div><div class="v">'+money(cashVal)+'</div><div class="n">'+ptsNum.toLocaleString()+' \u00d7 1.0\u00a2</div></div>'+
+        '<div class="ptsbox"><div class="l">Travel portal</div><div class="v">'+money(portalVal)+'</div><div class="n">at ~1.25\u00a2 each</div></div>'+
+        '<div class="ptsbox best"><div class="l">Transfer partners</div><div class="v">'+money(transferLow)+'\u2013'+money(transferHigh)+'</div><div class="n">at 1.5\u20132.0\u00a2+ each</div></div>'+
+      '</div>'+
+      '<div class="mathlabel" style="margin-top:18px">How much each redemption type is worth (cents per point):</div>'+
+      '<table class="ptstable"><thead><tr><th>Redemption type</th><th>Value/point</th><th>When to use it</th></tr></thead><tbody>'+redemptionRows+'</tbody></table>'+
+      '<div class="ptswarn"><b>\u26a0\ufe0f Why you shouldn\u2019t let them sit:</b> Card programs periodically devalue points \u2014 the same points buy less after a program change, and these happen with little warning. Recent real example: in January 2026, Capital One cut its Emirates transfer rate by 25% (1,000 miles became 750). Your '+ptsNum.toLocaleString()+' points only lose purchasing power the longer they sit \u2014 a 15% devaluation would cost you roughly <b>'+money(cashVal*0.15)+'\u2013'+money(transferHigh*0.15)+'</b> of today\u2019s value.</div>'+
+      '<div class="mathlabel" style="margin-top:16px">What to do:</div>'+
+      '<ul class="ptssteps">'+
+        '<li><b>If you travel for business:</b> transfer to an airline/hotel partner for a specific trip \u2014 that\u2019s where you hit 1.5\u20132\u00a2+ and get the most out of them. Check your program\u2019s current transfer ratios first (they change).</li>'+
+        '<li><b>If you don\u2019t travel much:</b> redeem for cash/statement credit now at 1\u00a2 rather than letting them devalue. '+money(cashVal)+' in hand beats '+money(cashVal)+' that erodes.</li>'+
+        '<li><b>Avoid gift-card redemptions</b> \u2014 they\u2019re usually at or below cash value, so you\u2019re leaving money on the table versus just taking cash.</li>'+
+        '<li><b>Example:</b> 89,000 Amex points transferred to a partner for a $1,600 flight = ~1.8\u00a2/point ($1,600 value). The same points as a statement credit = $890. The transfer nearly doubles their value \u2014 but only if you have a trip to use them on.</li>'+
+      '</ul>'+
+      '<div class="ptsfresh">Point values verified as of '+weekStamp()+' from issuer sites and major points trackers. Programs change often \u2014 confirm your specific program\u2019s current transfer ratios before redeeming.</div>'+
+      '</div>';
+  }
+
+  // ---- ACH HALF-PAGE (when supplier surcharge applies) ----
+  var achSection = "";
+  if(state.supplierSurcharge==="yes"){
+    // use their biggest non-ad category as the worked example base
+    var achCat = r.perCat.slice().filter(function(c){return c.id!=="advertising";}).sort(function(a,b){return b.annualSpend-a.annualSpend;})[0];
+    var exMonthly = achCat && achCat.annualSpend>0 ? achCat.annualSpend/12 : 20000;
+    var exOrder = Math.round(exMonthly*0.6/1000)*1000 || 20000; // representative large order
+    var surcharge = exOrder*0.03, reward = exOrder*0.02, netSave = surcharge-reward;
+    achSection =
+      '<div class="card"><h2 class="sec">\ud83c\udfe6 When to pay by ACH instead of card</h2>'+
+      '<p class="secsub">You told us some suppliers charge a fee for card payments. Here\u2019s the exact rule and the math.</p>'+
+      '<div class="achrule"><b>The rule:</b> If a supplier\u2019s card surcharge is <u>higher</u> than the rewards you\u2019d earn, pay by ACH. If it\u2019s <u>lower</u> (or zero), keep it on your rewards card. It\u2019s that simple \u2014 compare the two numbers on every large invoice.</div>'+
+      '<div class="mathlabel" style="margin-top:14px">Worked example on a '+money(exOrder)+' order:</div>'+
+      '<table class="achtable"><tbody>'+
+        '<tr><td>Pay by <b>card</b> \u2014 3% surcharge</td><td class="bad">\u2212'+money(surcharge)+'</td></tr>'+
+        '<tr><td>\u2026 but you\u2019d earn ~2% rewards back</td><td class="good">+'+money(reward)+'</td></tr>'+
+        '<tr class="net"><td><b>Net cost of paying by card</b></td><td class="bad"><b>\u2212'+money(netSave)+'</b></td></tr>'+
+        '<tr class="net"><td><b>Pay by ACH instead</b></td><td class="good"><b>'+money(0)+' fee \u2192 save '+money(netSave)+'</b></td></tr>'+
+      '</tbody></table>'+
+      '<div class="mathlabel" style="margin-top:14px">How to minimize fees in practice:</div>'+
+      '<ul class="achsteps">'+
+        '<li><b>Ask every major supplier two questions:</b> \u201cDo you charge a fee for card payment?\u201d and \u201cDo you accept ACH/bank transfer free?\u201d Most distributors do both \u2014 they just don\u2019t advertise the free ACH option.</li>'+
+        '<li><b>Set a threshold.</b> A simple rule: any invoice over ~'+money(Math.max(2000,Math.round(exOrder*0.25/500)*500))+' that carries a card surcharge goes ACH; smaller ones stay on the card for the rewards and simplicity. Pick a line that fits your bookkeeping.</li>'+
+        '<li><b>Negotiate the surcharge away.</b> Some suppliers will waive the card fee for a reliable customer who asks \u2014 then you get rewards AND no fee. Always worth one ask.</li>'+
+        '<li><b>Use ACH for recurring/large fixed costs</b> (rent, big standing orders) where there\u2019s no card-reward category bonus anyway \u2014 you lose nothing and avoid any processing fee.</li>'+
+        '<li><b>Keep no-surcharge spend on cards.</b> Ad platforms, software, fuel, and most retail don\u2019t surcharge \u2014 those should always run through your rewards cards.</li>'+
+      '</ul>'+
+      '<div class="achnote">Note: surcharge rates and ACH availability vary by supplier. The 3% / 2% figures above are typical; use your supplier\u2019s actual numbers to decide each time.</div>'+
+      '</div>';
+  }
 
   var firstYearLine = r.bonusTotal>0 ?
     '<div class="dual"><div class="box"><div class="l">Recurring / year</div><div class="v">'+money(r.recoverableSteady)+'</div><div class="n">every year, net of fees</div></div>'+
@@ -394,7 +558,9 @@ function renderReport(){
 
       '<div class="card"><h2 class="sec">\ud83d\udcb0 Beyond the card \u2014 more recovery levers</h2><p class="secsub">Payment-method moves that often beat card rewards outright.</p>'+leversHTML+'</div>'+
 
-      pointsNote+
+      achSection+
+
+      pointsPage+
 
       '<div class="card" style="background:#F0FDF8;border-color:var(--green)"><h2 class="sec">\ud83d\udee1\ufe0f Your guarantee</h2>'+
         (r.firstYearValue>=GUARANTEE_AMOUNT
