@@ -159,12 +159,16 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 .preview h2{font-family:var(--font-display);font-size:clamp(20px,4vw,26px);font-weight:800;}
 .preview .psub{text-align:center;color:var(--text-secondary);font-size:15px;max-width:560px;margin:0 auto 22px;}
 .preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.shot{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);overflow:hidden;}
-.shot img{width:100%;height:auto;display:block;}
-.shot .cap{font-size:13px;font-weight:600;color:var(--text-secondary);padding:10px 14px;border-top:1px solid var(--border);background:#fff;}
-.shot .cap b{color:var(--text-primary);}
+.acc-group{display:flex;flex-direction:column;gap:12px;}
+.acc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;}
+.acc-head{width:100%;border:none;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;text-align:left;font-family:var(--font-display);}
+.acc-title{font-weight:700;font-size:15.5px;color:var(--text-primary);}
+.acc-tog{font-size:22px;font-weight:700;color:var(--blue);flex-shrink:0;line-height:1;}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease;background:var(--bg);}
+.acc.open .acc-body{max-height:6000px;}
+.acc-body img{width:100%;height:auto;display:block;padding:14px;}
 .preview .disclaimer{text-align:center;font-size:12.5px;color:var(--text-muted);margin-top:14px;font-style:italic;}
-@media(max-width:640px){.preview-grid{grid-template-columns:1fr;}}
+@media(max-width:640px){.preview-grid{grid-template-columns:1fr;}.acc-title{font-size:14px;}}
 .confirm{text-align:center;padding:24px 0;}
 .confirm .ico{font-size:54px;}
 .confirm h2{font-family:var(--font-display);font-size:26px;font-weight:800;margin:10px 0 8px;}
@@ -268,14 +272,41 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 <div class="wrap">
   <div class="preview">
     <div class="phead"><h2>Here's exactly what you get</h2></div>
-    <p class="psub">A complete, personalized report built from your real numbers — on screen instantly, ready to save as a PDF. Here's a real example:</p>
-    <div class="preview-grid">
-      <div class="shot"><img src="preview-recovery.jpg" alt="Your first-year Recovery Number — a big, clear dollar figure" loading="lazy"><div class="cap"><b>Your Recovery Number</b> — the exact dollars you're leaving on the table</div></div>
-      <div class="shot"><img src="preview-chart.jpg" alt="Where the money is — category-by-category breakdown chart" loading="lazy"><div class="cap"><b>Where the money is</b> — what you capture now vs. optimized, by category</div></div>
-      <div class="shot"><img src="preview-plan.jpg" alt="Your 30-day action plan with numbered steps" loading="lazy"><div class="cap"><b>Your 30-day action plan</b> — exact order and timing, step by step</div></div>
-      <div class="shot"><img src="preview-premium.jpg" alt="Premium card upgrades with net-of-fee dollar benefit" loading="lazy"><div class="cap"><b>Worked-out card picks</b> — net dollar benefit on your spend (exact cards named in your report)</div></div>
+    <p class="psub">A complete, personalized 8-page report built from your real numbers — on screen instantly, ready to save as a PDF. Take a look inside a real one:</p>
+    <div class="acc-group">
+
+      <div class="acc open">
+        <button class="acc-head" onclick="toggleAcc(this)" aria-expanded="true">
+          <span class="acc-title">💰 Your Recovery Number &amp; where the money is</span>
+          <span class="acc-tog">−</span>
+        </button>
+        <div class="acc-body">
+          <img src="preview-acc1.jpg" alt="Report pages showing the first-year Recovery Number and category-by-category breakdown" loading="lazy">
+        </div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head" onclick="toggleAcc(this)" aria-expanded="false">
+          <span class="acc-title">💳 Your card stack &amp; 30-day action plan</span>
+          <span class="acc-tog">+</span>
+        </button>
+        <div class="acc-body">
+          <img src="preview-acc2.jpg" alt="Report pages showing the personalized no-fee card stack with worked math and the 30-day action plan" loading="lazy">
+        </div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head" onclick="toggleAcc(this)" aria-expanded="false">
+          <span class="acc-title">🏦 ACH savings, idle points &amp; the playbook</span>
+          <span class="acc-tog">+</span>
+        </button>
+        <div class="acc-body">
+          <img src="preview-acc3.jpg" alt="Report pages showing ACH payment strategy, idle points valuation, and the pay-in-full playbook" loading="lazy">
+        </div>
+      </div>
+
     </div>
-    <p class="disclaimer">Sample report for an example business. Your report uses your numbers, so your Recovery Number will reflect your actual spend.</p>
+    <p class="disclaimer">A real sample report (general contractor, $66,300/mo). Your report uses your numbers, so your Recovery Number will reflect your actual spend.</p>
   </div>
 
   <div class="card" id="app"></div>
@@ -724,6 +755,13 @@ function setSetup(id){state.currentSetup=id;render();}
 function setPoints(v){state.hasPoints=v;render();}
 function setYN(field,v){state[field]=v;if(state.errors[field])state.errors[field]=null;render();}
 function toggleFaq(el){ el.parentElement.classList.toggle("open"); }
+function toggleAcc(btn){
+  var acc = btn.parentElement;
+  var open = acc.classList.toggle("open");
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  var tog = btn.querySelector(".acc-tog");
+  if(tog) tog.textContent = open ? "−" : "+";
+}
 
 function buildReportParams(){
   // Encode the customer's answers so the post-payment report page can rebuild the report.
