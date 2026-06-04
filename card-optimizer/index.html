@@ -54,6 +54,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 .input-prefix{position:relative;}
 .input-prefix span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:600;font-size:15px;}
 .input-prefix input{padding-left:30px;}
+.input-suffix{position:relative;}
+.input-suffix span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-weight:600;font-size:15px;}
+.input-suffix input{padding-right:32px;width:100%;}
+.dual-input{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.choices.wrap{display:flex;flex-wrap:wrap;gap:8px;}
+.choices.wrap .choice.sm,.choice.sm{flex:0 1 auto;padding:10px 14px;font-size:14px;}
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .choice{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;background:#fff;text-align:left;}
 .choice:hover{border-color:var(--blue);}
@@ -82,6 +88,27 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 .result-hero .big{font-family:var(--font-display);font-size:clamp(40px,9vw,64px);font-weight:800;color:var(--green);line-height:1;margin:6px 0;}
 .result-hero .sub{color:var(--text-secondary);font-size:14px;}
 .dual{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 8px;}
+/* three-pillar opportunity gap */
+.pillars{display:flex;flex-direction:column;gap:10px;margin:8px 0 18px;}
+.pillar{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.pillar .pic{font-size:26px;flex-shrink:0;line-height:1;}
+.pillar .pmid{flex:1;}
+.pillar .pname{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--text-primary);}
+.pillar .pdesc{font-size:12.5px;color:var(--text-muted);margin-top:2px;}
+.pillar .pval{font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--green-dark);white-space:nowrap;}
+.pillar.total{background:linear-gradient(135deg,var(--green),var(--green-dark));border:none;}
+.pillar.total .pname{color:#fff;font-size:17px;}
+.pillar.total .pval{color:#fff;font-size:26px;}
+/* points boxes on results */
+.ptsboxes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:6px 0 4px;}
+.ptb{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;text-align:center;}
+.ptb.best{border-color:var(--green);background:#F0FDF8;}
+.ptb.gap{border-color:var(--orange);background:#FFFBEB;}
+.ptb .l{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted);font-weight:700;}
+.ptb .v{font-family:var(--font-display);font-size:19px;font-weight:800;margin:3px 0;}
+.ptb.best .v{color:var(--green-dark);}.ptb.gap .v{color:var(--orange);}
+.ptb .n{font-size:10px;color:var(--text-muted);}
+.ptswarn-inline{background:#FFF7ED;border:1px solid #FED7AA;border-radius:var(--radius-sm);padding:11px 13px;font-size:12.5px;color:#9A3412;margin-top:12px;}
 .dual .box{border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center;}
 .dual .box.steady{background:#F8FAFC;}
 .dual .box.first{background:#F0FDF8;border-color:var(--green);}
@@ -178,10 +205,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 .foot a{color:var(--text-secondary);}
 @media(max-width:560px){
   .card{padding:20px;}
-  .choices{grid-template-columns:1fr;}
+  .choices:not(.wrap){grid-template-columns:1fr;}
+  .choices.wrap .choice.sm{flex:1 1 calc(50% - 4px);}
   .nav-btns{flex-direction:column-reverse;}
   .dual{grid-template-columns:1fr;}
-}
+  .ptsboxes{grid-template-columns:1fr;}
+  .dual-input{grid-template-columns:1fr;}
+  .pillar .pval{font-size:19px;}}
 .fade-in{animation:fadeIn .45s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 /* founder */
@@ -465,14 +495,27 @@ function premiumUpgrades(spend){
   return out.sort(function(a,b){return b.net-a.net;});
 }
 
-var STEPS = ["Business","Spend","Cards","Points","Results"];
+var STEPS = ["Business","Spend","Cards","Payment","Points","Results"];
 
 var state = {
   step:0, mode:"detailed", bizType:"", monthlyRevenue:"",
   spend:{materials:"",software:"",fuel:"",other:"",advertising:"",shipping:"",inventory:""},
   currentSetup:"", hasPoints:"", pointsBalance:"",
-  // detailed-mode levers
+  // detailed-mode levers (v1 — kept for compatibility)
   supplierSurcharge:"", earlyPayDiscount:"", resaleMaterials:"",
+  // v2 — Pillar 2: Payment Optimization (real dollar inputs)
+  surchargePct:"",        // % of spend with surcharging suppliers (0-100)
+  surchargeRate:"",       // typical surcharge rate they pay (e.g. 2.5)
+  earlyPaySpend:"",       // monthly $ that has early-pay terms available
+  earlyPayTerm:"",        // "1/10net30" | "2/10net30" | "none"
+  carriesBalance:"",      // "yes" | "no"
+  balanceAmount:"",       // approx revolving balance
+  balanceApr:"",          // approx APR %
+  usesLOC:"",             // "yes" | "no"
+  locRate:"",             // LOC interest rate %
+  // v2 — Pillar 3: Points Optimization
+  pointsProgram:"",       // "chase" | "amex" | "capitalone" | "citi" | "cashback" | "other" | "unsure"
+  pointsRedeemHow:"",     // "cash" | "portal" | "giftcards" | "transfer" | "notredeeming" | "unsure"
   email:"", newsletter:true, submitted:false, errors:{}
 };
 
@@ -523,6 +566,158 @@ function calc(){
   };
 }
 
+/* =========================================================================
+   PILLAR 2 — PAYMENT OPTIMIZATION (defensible dollar math)
+   ACH negative-yield routing + forfeited early-pay discount + interest
+   elimination + conditional LOC float. Every number ties to user input.
+   ========================================================================= */
+function calcPaymentOptimization(){
+  var monthly = totalMonthly();
+  var annual = monthly*12;
+  var items = [];   // line items for the report
+  var total = 0;
+
+  // ---- 1. Negative-yield / ACH transition ----
+  // % of spend with surcharging suppliers, at their surcharge rate, vs ~2% card reward.
+  var sPct = Math.min(100, Math.max(0, num(state.surchargePct)))/100;
+  var sRate = num(state.surchargeRate)/100;       // e.g. 0.025
+  var REWARD_BASE = 0.02;                          // honest flat no-fee reward rate
+  if(sPct>0 && sRate>0){
+    var surchargedAnnual = annual * sPct;
+    var netYield = REWARD_BASE - sRate;            // negative = margin leak
+    if(netYield < 0){
+      // they're losing (sRate - reward) on every surcharged dollar by paying card
+      var achSaving = surchargedAnnual * Math.abs(netYield);
+      total += achSaving;
+      items.push({
+        key:"ach",
+        label:"Route surcharged suppliers to ACH",
+        value:achSaving,
+        negativeYield:true,
+        detail:"About "+money(surchargedAnnual)+"/yr of your spend goes to suppliers charging ~"+(sRate*100).toFixed(1)+"% for card payment. "+
+               "That surcharge ("+(sRate*100).toFixed(1)+"%) is higher than the ~2% you earn in rewards — a negative-yield transaction. "+
+               "Paying those by ACH instead nets you "+(Math.abs(netYield)*100).toFixed(1)+"% back = "+money(achSaving)+"/yr."
+      });
+    } else {
+      // surcharge below reward — keep on card, note it
+      items.push({
+        key:"ach",
+        label:"Keep these on card (surcharge below reward)",
+        value:0,
+        negativeYield:false,
+        detail:"Your suppliers' ~"+(sRate*100).toFixed(1)+"% surcharge is at or below your ~2% card reward, so keeping that spend on a rewards card still nets positive. No ACH change needed."
+      });
+    }
+  }
+
+  // ---- 2. Forfeited early-pay discount ----
+  // Annualized value of taking the discount. Formula: (d/(1-d)) * (365/(net-disc days))
+  var epSpend = num(state.earlyPaySpend); // monthly $ with early-pay terms
+  var epTerm = state.earlyPayTerm;
+  var epMap = {
+    "1/10net30": {d:0.01, days:20},
+    "2/10net30": {d:0.02, days:20},
+    "2/10net60": {d:0.02, days:50}
+  };
+  if(epSpend>0 && epMap[epTerm]){
+    var t = epMap[epTerm];
+    // direct discount captured per year (the actual cash saved by taking the discount)
+    var directDiscount = epSpend*12 * t.d;
+    // annualized return for context
+    var annualizedReturn = (t.d/(1-t.d)) * (365/t.days);
+    total += directDiscount;
+    items.push({
+      key:"earlypay",
+      label:"Capture early-payment discounts",
+      value:directDiscount,
+      detail:"You have about "+money(epSpend)+"/mo in spend with "+epTerm.replace("net"," net ").replace("/","%/")+" terms. "+
+             "Taking the discount captures "+money(directDiscount)+"/yr directly — an annualized return of about "+(annualizedReturn*100).toFixed(0)+"% on that cash, "+
+             "far above any card reward. Prioritize these against your cash flow."
+    });
+  }
+
+  // ---- 3. Interest elimination (carrying a balance) ----
+  var bal = num(state.balanceAmount);
+  var apr = num(state.balanceApr)/100;
+  if(state.carriesBalance==="yes" && bal>0 && apr>0){
+    var interestSaved = bal * apr; // annual interest if balance persists ~year
+    total += interestSaved;
+    items.push({
+      key:"interest",
+      label:"Eliminate revolving interest",
+      value:interestSaved,
+      priority:true,
+      detail:"You're carrying about "+money(bal)+" at ~"+(apr*100).toFixed(0)+"% APR. That's roughly "+money(interestSaved)+"/yr in interest — "+
+             "and it wipes out card rewards many times over. Paying this down (and switching to pay-in-full) is the single highest-value move in this audit. "+
+             "Card rewards mean nothing while you carry a balance at this rate."
+    });
+  }
+
+  // ---- 4. LOC float value (ONLY if they actually use a LOC) ----
+  var locRate = num(state.locRate)/100;
+  if(state.usesLOC==="yes" && locRate>0){
+    // Float bridges ~card grace period (use 45 days, conservative vs 55 max) against LOC draw.
+    var floatDays = 45;
+    var monthlyOnCard = monthly; // spend they could float instead of drawing LOC
+    var floatSaving = monthlyOnCard * (locRate/365) * floatDays;
+    total += floatSaving;
+    items.push({
+      key:"float",
+      label:"Use card float instead of your LOC",
+      value:floatSaving,
+      detail:"You draw on a line of credit at ~"+(locRate*100).toFixed(0)+"%. Routing about "+money(monthlyOnCard)+"/mo of material/operating spend through a pay-in-full card's "+
+             "~45-day grace period — then clearing it from receivables — bridges the same gap interest-free. "+
+             "Estimated LOC interest avoided: "+money(floatSaving)+"/yr. (Only works if you pay the card in full each cycle.)"
+    });
+  }
+
+  return { total:total, items:items };
+}
+
+/* =========================================================================
+   PILLAR 3 — POINTS OPTIMIZATION (defensible floor/ceiling gap)
+   ========================================================================= */
+function calcPointsUnlock(){
+  var pts = num(state.pointsBalance);
+  if(state.hasPoints!=="yes" || pts<=0) return { total:0, pts:0 };
+
+  var FLOOR = 0.01, CEILING = 0.02; // verified June 2026 cash floor vs transfer ceiling
+  var floorVal = pts*FLOOR;
+  var ceilingVal = pts*CEILING;
+  var portalVal = pts*0.0125;
+
+  // current redemption estimate based on how they say they redeem
+  var currentCpp = { cash:0.01, portal:0.0125, giftcards:0.009, transfer:0.018, notredeeming:0.0, unsure:0.01 };
+  var curRate = (currentCpp[state.pointsRedeemHow]!=null) ? currentCpp[state.pointsRedeemHow] : 0.01;
+  var curVal = pts*curRate;
+  // the gap = optimized ceiling minus what they're getting now
+  var gap = Math.max(0, ceilingVal - curVal);
+
+  // program-specific best partners (verified June 2026)
+  var partners = {
+    chase:"World of Hyatt, United, Virgin Atlantic",
+    amex:"Delta, Air France/KLM Flying Blue, Virgin Atlantic",
+    capitalone:"Avianca LifeMiles, Air Canada Aeroplan",
+    citi:"Turkish Airlines, Virgin Atlantic",
+    cashback:null, other:null, unsure:null
+  };
+
+  return {
+    total:gap, pts:pts, floorVal:floorVal, ceilingVal:ceilingVal, portalVal:portalVal,
+    curVal:curVal, curRate:curRate, program:state.pointsProgram,
+    partners:partners[state.pointsProgram]||null, redeemHow:state.pointsRedeemHow
+  };
+}
+
+/* combined three-pillar opportunity gap */
+function calcFullAudit(){
+  var card = calc();
+  var pay = calcPaymentOptimization();
+  var points = calcPointsUnlock();
+  var totalGap = card.firstYearValue + pay.total + points.total;
+  return { card:card, pay:pay, points:points, totalGap:totalGap };
+}
+
 /* ---- VALIDATION ---- */
 function validateStep(){
   var e={};
@@ -532,12 +727,12 @@ function validateStep(){
   if(state.step===1){ if(totalMonthly()<=0) e.spend="Enter at least one spend amount to continue."; }
   if(state.step===2){ if(!state.currentSetup) e.currentSetup="Select your current card setup."; }
   if(state.step===3){
+    // Payment step — light validation; these drive Pillar 2 but are optional-friendly
+    if(!state.carriesBalance) e.carriesBalance="Pick one.";
+    if(!state.usesLOC) e.usesLOC="Pick one.";
+  }
+  if(state.step===4){
     if(!state.hasPoints) e.hasPoints="Let us know if you have existing points.";
-    if(isDetailed()){
-      if(!state.supplierSurcharge) e.supplierSurcharge="Pick one.";
-      if(!state.earlyPayDiscount)  e.earlyPayDiscount="Pick one.";
-      if(!state.resaleMaterials)   e.resaleMaterials="Pick one.";
-    }
   }
   state.errors=e; return Object.keys(e).length===0;
 }
@@ -616,19 +811,86 @@ function ynChoice(field,yesLabel,noLabel){
     '<button class="choice '+(state[field]==="no"?"selected":"")+'" onclick="setYN(\''+field+'\',\'no\')">'+esc(noLabel)+'</button></div>';
 }
 
+function stepPayment(){
+  var ecom = audience()==="ecom";
+  var supplierWord = ecom ? "suppliers/3PLs" : "suppliers";
+  // surcharge sub-fields appear once they indicate they have surcharging suppliers
+  var hasSurcharge = num(state.surchargePct)>0 || state.surchargePct==="0" ? true : (state._surchargeAsked||false);
+  var earlyTerms = [
+    {v:"none",l:"None / not sure"},
+    {v:"1/10net30",l:"1% / 10, net 30"},
+    {v:"2/10net30",l:"2% / 10, net 30"},
+    {v:"2/10net60",l:"2% / 10, net 60"}
+  ].map(function(t){return '<button class="choice sm '+(state.earlyPayTerm===t.v?"selected":"")+'" onclick="setVal2(\'earlyPayTerm\',\''+t.v+'\')">'+t.l+'</button>';}).join("");
+
+  return '<div class="step fade-in"><h2>How you pay matters as much as which card</h2>'+
+    '<p class="lead">This is where most owners leak the most money. A few quick questions unlock your Payment Optimization number.</p>'+
+
+    // --- Surcharge / ACH ---
+    '<div class="field"><label>Roughly what % of your spend goes to '+supplierWord+' that charge a fee to pay by card? <span class="hint">(2–4% surcharge is common)</span></label>'+
+      '<div class="input-suffix"><input type="text" inputmode="numeric" value="'+esc(state.surchargePct)+'" oninput="setVal(\'surchargePct\',this.value)" onblur="render()" placeholder="e.g. 40"><span>%</span></div>'+
+      '<div class="hint" style="margin-top:6px">Leave blank or 0 if none surcharge.</div></div>'+
+    (num(state.surchargePct)>0 ?
+      '<div class="field"><label>What surcharge do they typically add?</label>'+
+      '<div class="input-suffix"><input type="text" inputmode="decimal" value="'+esc(state.surchargeRate)+'" oninput="setVal(\'surchargeRate\',this.value)" placeholder="e.g. 2.5"><span>%</span></div></div>' : "")+
+
+    // --- Early pay ---
+    '<div class="field" style="margin-top:8px"><label>Do your '+supplierWord+' offer early-payment discounts? <span class="hint">(like "2/10 net 30")</span></label>'+
+      '<div class="choices wrap">'+earlyTerms+'</div></div>'+
+    (state.earlyPayTerm && state.earlyPayTerm!=="none" ?
+      '<div class="field"><label>About how much monthly spend has those terms available?</label>'+
+      '<div class="input-prefix"><span>$</span><input type="text" inputmode="numeric" value="'+esc(state.earlyPaySpend)+'" oninput="setVal(\'earlyPaySpend\',this.value)" placeholder="monthly $ with early-pay terms"></div></div>' : "")+
+
+    // --- Carry balance ---
+    '<div class="field" style="margin-top:8px"><label>Do you ever carry a balance on a business card month to month?</label>'+
+      ynChoice("carriesBalance","Yes, sometimes","No, paid in full")+
+      (state.errors.carriesBalance?'<div class="err">'+esc(state.errors.carriesBalance)+'</div>':'')+'</div>'+
+    (state.carriesBalance==="yes" ?
+      '<div class="field"><label>Roughly how much, and at what APR?</label>'+
+      '<div class="dual-input"><div class="input-prefix"><span>$</span><input type="text" inputmode="numeric" value="'+esc(state.balanceAmount)+'" oninput="setVal(\'balanceAmount\',this.value)" placeholder="balance"></div>'+
+      '<div class="input-suffix"><input type="text" inputmode="decimal" value="'+esc(state.balanceApr)+'" oninput="setVal(\'balanceApr\',this.value)" placeholder="APR"><span>%</span></div></div>'+
+      '<div class="hint" style="margin-top:6px">No judgment — this is usually the single biggest money leak we find, and the easiest to fix.</div></div>' : "")+
+
+    // --- LOC ---
+    '<div class="field" style="margin-top:8px"><label>Do you use a business line of credit to float material or project costs?</label>'+
+      ynChoice("usesLOC","Yes","No")+
+      (state.errors.usesLOC?'<div class="err">'+esc(state.errors.usesLOC)+'</div>':'')+'</div>'+
+    (state.usesLOC==="yes" ?
+      '<div class="field"><label>About what interest rate?</label>'+
+      '<div class="input-suffix"><input type="text" inputmode="decimal" value="'+esc(state.locRate)+'" oninput="setVal(\'locRate\',this.value)" placeholder="e.g. 11"><span>%</span></div></div>' : "")+
+
+    navHTML(true,"Next: Points")+'</div>';
+}
+
 function stepPoints(){
   var yn=["yes","no"].map(function(v){return '<button class="choice '+(state.hasPoints===v?"selected":"")+'" onclick="setPoints(\''+v+'\')">'+(v==="yes"?"Yes, I have points":"No / not sure")+'</button>';}).join("");
-  var balField=state.hasPoints==="yes"?
-    '<div class="field"><label>Roughly how many points/miles are sitting unused?</label><div class="input-prefix"><span>#</span><input type="text" inputmode="numeric" value="'+esc(state.pointsBalance)+'" oninput="setVal(\'pointsBalance\',this.value)" placeholder="e.g. 120,000"></div><div class="hint" style="margin-top:6px">Idle points lose value to devaluation — your report flags whether to redeem now.</div></div>':"";
-  var detailed = isDetailed() ?
-    '<div class="field" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)"><label>Do any of your suppliers charge a fee to pay by card? <span class="hint">(2–4% is common)</span></label>'+ynChoice("supplierSurcharge","Yes, some do","No / not sure")+(state.errors.supplierSurcharge?'<div class="err">'+esc(state.errors.supplierSurcharge)+'</div>':'')+'</div>'+
-    '<div class="field"><label>Do your suppliers offer early-payment discounts? <span class="hint">(like "2/10 net 30")</span></label>'+ynChoice("earlyPayDiscount","Yes","No / not sure")+(state.errors.earlyPayDiscount?'<div class="err">'+esc(state.errors.earlyPayDiscount)+'</div>':'')+'</div>'+
-    '<div class="field"><label>'+(audience()==="ecom"?"Do you resell physical products / hold inventory?":"Do you resell or install materials into customer jobs?")+'</label>'+ynChoice("resaleMaterials","Yes","No")+(state.errors.resaleMaterials?'<div class="err">'+esc(state.errors.resaleMaterials)+'</div>':'')+'</div>' : "";
-  return '<div class="step fade-in"><h2>Existing points &amp; miles</h2>'+
-    '<p class="lead">Unredeemed points quietly lose value. We\'ll factor this in.</p>'+
+  var programs=[
+    {v:"chase",l:"Chase (Ink / Ultimate Rewards)"},
+    {v:"amex",l:"Amex (Membership Rewards)"},
+    {v:"capitalone",l:"Capital One (Miles)"},
+    {v:"citi",l:"Citi (ThankYou)"},
+    {v:"cashback",l:"Plain cash back"},
+    {v:"unsure",l:"Not sure"}
+  ].map(function(p){return '<button class="choice sm '+(state.pointsProgram===p.v?"selected":"")+'" onclick="setVal2(\'pointsProgram\',\''+p.v+'\')">'+p.l+'</button>';}).join("");
+  var redeem=[
+    {v:"cash",l:"Cash / statement credit"},
+    {v:"portal",l:"Travel portal"},
+    {v:"giftcards",l:"Gift cards"},
+    {v:"transfer",l:"Transfer to airline/hotel"},
+    {v:"notredeeming",l:"Not redeeming them"},
+    {v:"unsure",l:"Not sure"}
+  ].map(function(r){return '<button class="choice sm '+(state.pointsRedeemHow===r.v?"selected":"")+'" onclick="setVal2(\'pointsRedeemHow\',\''+r.v+'\')">'+r.l+'</button>';}).join("");
+
+  var detail = state.hasPoints==="yes" ?
+    '<div class="field"><label>Roughly how many points/miles are sitting unused?</label><div class="input-prefix"><span>#</span><input type="text" inputmode="numeric" value="'+esc(state.pointsBalance)+'" oninput="setVal(\'pointsBalance\',this.value)" placeholder="e.g. 120,000"></div></div>'+
+    '<div class="field"><label>Which program are they in?</label><div class="choices wrap">'+programs+'</div></div>'+
+    '<div class="field"><label>How do you usually redeem them?</label><div class="choices wrap">'+redeem+'</div></div>' : "";
+
+  return '<div class="step fade-in"><h2>Your idle points are an asset</h2>'+
+    '<p class="lead">Unredeemed points quietly lose value to devaluation. We\'ll show the gap between what you\'re getting and what they\'re worth.</p>'+
     '<div class="field"><label>Do you have business points or miles already?</label><div class="choices">'+yn+'</div>'+
     (state.errors.hasPoints?'<div class="err">'+esc(state.errors.hasPoints)+'</div>':'')+'</div>'+
-    balField+detailed+
+    detail+
     navHTML(true,"See My Results")+'</div>';
 }
 
@@ -669,7 +931,8 @@ function leversHTML(){
 }
 
 function stepResults(){
-  var r=calc();
+  var audit=calcFullAudit();
+  var r=audit.card, pay=audit.pay, points=audit.points;
   var maxOpt=Math.max.apply(null,r.perCat.map(function(c){return c.optimal;}).concat([1]));
   var bars=r.perCat.filter(function(c){return c.optimal>0;}).map(function(c){
     var curW=(c.current/maxOpt)*100, optW=(c.optimal/maxOpt)*100, gain=c.optimal-c.current;
@@ -685,38 +948,60 @@ function stepResults(){
     r.premiums.map(function(p){return '<div class="rec premium"><span class="tag">+ '+money(p.net)+'/yr net</span><h4>'+esc(p.name)+' <span class="fee">'+esc(p.fee)+'</span></h4><div class="why">'+esc(p.why)+'</div><div class="yield">Net benefit after fee: '+money(p.net)+'/yr</div><div class="fine">'+esc(p.fine)+'</div></div>';}).join("")+
     '<p style="font-size:12px;color:var(--text-muted)">These carry annual fees — shown net of fee, only where they pay off for your spend.</p></div>' : "";
 
-  var bonusLine = r.bonusTotal>0 ? '<div class="dual"><div class="box steady"><div class="l">Recurring / year</div><div class="v">'+money(r.recoverableSteady)+'</div><div class="n">every year, from rewards (net of fees)</div></div><div class="box first"><div class="l">First-year value</div><div class="v">'+money(r.firstYearValue)+'</div><div class="n">includes '+money(r.bonusTotal)+' in one-time signup bonuses</div></div></div>' :
-    '<div class="dual"><div class="box steady" style="grid-column:1/-1"><div class="l">Recurring recovery / year</div><div class="v">'+money(r.recoverableSteady)+'</div><div class="n">from optimized rewards, net of fees</div></div></div>';
+  // ---- THREE-PILLAR OPPORTUNITY GAP ----
+  var hasPay = pay.total>0, hasPoints = points.total>0;
+  var pillarRows =
+    '<div class="pillar"><div class="pic">💳</div><div class="pmid"><div class="pname">Card Optimization</div><div class="pdesc">Better rewards + signup bonuses, matched to your spend</div></div><div class="pval">'+money(r.firstYearValue)+'</div></div>'+
+    (hasPay?'<div class="pillar"><div class="pic">🏦</div><div class="pmid"><div class="pname">Payment Systemization</div><div class="pdesc">ACH routing, early-pay discounts'+(state.carriesBalance==="yes"?', interest elimination':'')+(state.usesLOC==="yes"?', LOC float':'')+'</div></div><div class="pval">'+money(pay.total)+'</div></div>':'')+
+    (hasPoints?'<div class="pillar"><div class="pic">💰</div><div class="pmid"><div class="pname">Points Asset Unlock</div><div class="pdesc">The gap between cash-out and optimized redemption</div></div><div class="pval">'+money(points.total)+'</div></div>':'');
+
+  var bonusLine = r.bonusTotal>0 ? '<div class="dual"><div class="box steady"><div class="l">Recurring card rewards / year</div><div class="v">'+money(r.recoverableSteady)+'</div><div class="n">every year, net of fees</div></div><div class="box first"><div class="l">Card first-year value</div><div class="v">'+money(r.firstYearValue)+'</div><div class="n">includes '+money(r.bonusTotal)+' in one-time signup bonuses</div></div></div>' :
+    '<div class="dual"><div class="box steady" style="grid-column:1/-1"><div class="l">Recurring card rewards / year</div><div class="v">'+money(r.recoverableSteady)+'</div><div class="n">from optimized rewards, net of fees</div></div></div>';
+
+  // Payment optimization detail section
+  var payHTML = hasPay ? '<div class="rsec"><h3>🏦 Payment systemization</h3><p style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">How you pay — not just which card — moves real money. Here\'s what we found in your answers:</p>'+
+    pay.items.filter(function(it){return it.value>0;}).map(function(it){
+      return '<div class="rec'+(it.priority?' top':'')+(it.negativeYield?' premium':'')+'"><span class="tag">+ '+money(it.value)+'/yr</span><h4>'+(it.priority?'⚡ ':'')+esc(it.label)+'</h4><div class="why">'+esc(it.detail)+'</div></div>';
+    }).join("")+'</div>' : "";
+
+  // Points unlock detail section
+  var pointsHTML = hasPoints ? '<div class="rsec"><h3>💰 Points asset unlock</h3>'+
+    '<div class="ptsboxes"><div class="ptb"><div class="l">Cash floor</div><div class="v">'+money(points.floorVal)+'</div><div class="n">at 1.0¢/pt</div></div>'+
+    '<div class="ptb best"><div class="l">Optimized ceiling</div><div class="v">'+money(points.ceilingVal)+'</div><div class="n">at 2.0¢/pt via transfers</div></div>'+
+    '<div class="ptb gap"><div class="l">Your gap</div><div class="v">'+money(points.total)+'</div><div class="n">left on the table</div></div></div>'+
+    '<p style="font-size:13px;color:var(--text-secondary);margin-top:10px">You have ~<b>'+num(state.pointsBalance).toLocaleString()+'</b> points'+(points.partners?' in a program whose best transfer partners right now are <b>'+esc(points.partners)+'</b>':'')+'. '+
+    (points.redeemHow==="cash"||points.redeemHow==="giftcards"?'You\'re currently redeeming near the cash floor — transferring to partners can nearly double their value.':'Your report shows exactly how to capture the optimized value.')+'</p>'+
+    '<div class="ptswarn-inline">⚠️ Idle points lose value when programs devalue — e.g. Capital One cut its Emirates transfer rate 25% in Jan 2026. Your report flags whether to redeem now or hold.</div></div>' : "";
 
   var topCat=r.perCat.slice().sort(function(a,b){return b.optimal-a.optimal;})[0];
   var checklist=[
     'Personalized no-fee card stack for <b>'+esc(bizLabel())+'</b>, matched to your real spend',
-    'Exact recovery math: <b>'+money(r.recoverableSteady)+'/yr</b> recurring' + (r.bonusTotal>0?' + <b>'+money(r.bonusTotal)+'</b> in signup bonuses':''),
-    (topCat?('Biggest single fix: <b>'+money(topCat.optimal-topCat.current)+'/yr</b> on '+esc(topCat.label).toLowerCase()):'Category-by-category plan'),
+    'Card recovery math: <b>'+money(r.recoverableSteady)+'/yr</b> recurring' + (r.bonusTotal>0?' + <b>'+money(r.bonusTotal)+'</b> in signup bonuses':''),
+    (hasPay?'Payment systemization plan worth <b>'+money(pay.total)+'/yr</b>: ACH routing, early-pay discounts'+(state.carriesBalance==="yes"?', and interest elimination':''):'Payment routing &amp; ACH strategy'),
+    (hasPoints?'Points unlock: close the <b>'+money(points.total)+'</b> gap on your idle balance before devaluation':'Points strategy so future rewards don\'t rot'),
     'Pay-in-full &amp; 0% intro-APR playbook so interest never eats your rewards',
-    'ACH-vs-card routing + supplier early-pay discounts to stop overpaying',
-    (state.hasPoints==="yes"?'Redeem-or-hold call on your <b>'+esc(state.pointsBalance||"existing")+'</b> idle points before devaluation':'Points strategy so future rewards don\'t rot'),
     '30-day action plan with application order and bonus timing'
   ];
   var checkHTML=checklist.map(function(t){return '<li><span class="ck">✓</span><span>'+t+'</span></li>';}).join("");
 
-  var clearsGuarantee = r.firstYearValue >= GUARANTEE_AMOUNT;
+  var clearsGuarantee = audit.totalGap >= GUARANTEE_AMOUNT;
   var guaranteeBlock = clearsGuarantee ?
     '<div class="guarantee-badge" style="margin:0 auto 16px;display:flex">🛡️ $'+GUARANTEE_AMOUNT.toLocaleString()+' Minimum Value Guarantee</div>'+
-      '<p style="font-size:14px;color:var(--text-secondary)">Your first-year identified value of <b>'+money(r.firstYearValue)+'</b> clears the guarantee. If your full report doesn\'t identify at least '+money(GUARANTEE_AMOUNT)+' in value, your purchase is fully refunded.</p>' :
-    '<div class="threshold-note" style="margin:0 0 16px">Your report identifies <b>'+money(r.firstYearValue)+'</b> in first-year value. Our promise is simple: <b>if we can\'t find you real money worth more than the report, you\'re refunded — no risk.</b></div>';
+      '<p style="font-size:14px;color:var(--text-secondary)">Your total identified opportunity of <b>'+money(audit.totalGap)+'</b> clears the guarantee. If your full report doesn\'t identify at least '+money(GUARANTEE_AMOUNT)+' in value, your purchase is fully refunded.</p>' :
+    '<div class="threshold-note" style="margin:0 0 16px">Your audit identifies <b>'+money(audit.totalGap)+'</b> in opportunity. Our promise is simple: <b>if we can\'t find you real money worth more than the report, you\'re refunded — no risk.</b></div>';
 
   return '<div class="step fade-in">'+
-    '<div class="result-hero"><div class="label">First-year value we can identify</div><div class="big" id="bigNum">'+money(0)+'</div><div class="sub">on '+money(totalMonthly())+'/mo in business spend</div></div>'+
+    '<div class="result-hero"><div class="label">Total opportunity we can identify</div><div class="big" id="bigNum">'+money(0)+'</div><div class="sub">across cards, payments &amp; points · on '+money(totalMonthly())+'/mo in spend</div></div>'+
+    '<div class="pillars">'+pillarRows+'<div class="pillar total"><div class="pmid"><div class="pname">Total Opportunity Gap</div></div><div class="pval">'+money(audit.totalGap)+'/yr</div></div></div>'+
+    '<div class="gauge-wrap"><div class="gauge">'+gaugeSVG(r.optimizationPct)+'<div class="gauge-num"><div class="pct">'+r.optimizationPct+'%</div><div class="cap">Optimized</div></div></div><div class="gauge-caption">On cards alone, your current setup captures only <strong>'+r.optimizationPct+'%</strong> of available rewards. Add payments and points, and the full gap is bigger.</div></div>'+
+    '<div class="rsec"><h3>💳 Card optimization — where the money is</h3>'+bars+'<div class="bar-legend"><span><span class="swatch cur"></span>Capturing now</span><span><span class="swatch opt"></span>Optimized (no-fee)</span></div></div>'+
     bonusLine+
-    '<div class="gauge-wrap"><div class="gauge">'+gaugeSVG(r.optimizationPct)+'<div class="gauge-num"><div class="pct">'+r.optimizationPct+'%</div><div class="cap">Optimized</div></div></div><div class="gauge-caption">Your current setup captures only <strong>'+r.optimizationPct+'%</strong> of the rewards available on your spend. The rest is recoverable.</div></div>'+
-    '<div class="rsec"><h3>📊 Where the money is</h3>'+bars+'<div class="bar-legend"><span><span class="swatch cur"></span>Capturing now</span><span><span class="swatch opt"></span>Optimized (no-fee)</span></div></div>'+
-    '<div class="rsec"><div class="proj"><div class="l">5-Year Projected Recovery</div><div class="v">'+money(r.fiveYear)+'</div><div class="n">recurring rewards + one-time bonuses, at today\'s spend</div></div></div>'+
-    '<div class="rsec"><div class="peer"><div class="v">Bottom '+r.bottomPct+'%</div><div class="t">Among '+esc(bizLabel())+' operators, your setup is in the bottom '+r.bottomPct+'%. That\'s the easiest gap to close.</div></div></div>'+
     '<div class="rsec"><h3>💳 Your no-fee card stack</h3>'+stackHTML+'<p style="font-size:12px;color:var(--text-muted)">Full application order, exact earn math, and bonus timing come in your report.</p></div>'+
     premHTML+
-    '<div class="rsec"><h3>💰 Beyond the card — more ways to recover</h3>'+leversHTML()+'</div>'+
-    '<div class="rsec"><h3>📝 Your executive summary <span style="font-weight:500;color:var(--text-muted);font-size:13px">(preview)</span></h3><div class="teaser"><h4>Card &amp; Payment Analysis — '+esc(bizLabel())+'</h4><p>Running about '+money(totalMonthly())+'/mo through a <b>'+esc(r.setup.label.toLowerCase())+'</b> setup, you\'re leaving an estimated <b>'+money(r.recoverableSteady)+'/yr</b> in unclaimed rewards'+(r.bonusTotal>0?' plus <b>'+money(r.bonusTotal)+'</b> in first-year signup bonuses':'')+'. Your heaviest leak is in '+esc((topCat?topCat.label:"materials").toLowerCase())+'.</p><p class="blur">The recommended stack sequences applications to maximize bonuses while staying under issuer velocity rules. Step one is the [REDACTED] card, opened [REDACTED] to capture the [REDACTED] before your [REDACTED]. Routing [REDACTED] supplier spend to ACH avoids [REDACTED] in surcharges, while early-pay terms on [REDACTED] return [REDACTED] annualized...</p><div class="fade"></div><div class="lockmsg">🔒 Full report unlocks the complete plan</div></div></div>'+
+    payHTML+
+    pointsHTML+
+    '<div class="rsec"><div class="proj"><div class="l">5-Year Projected Recovery</div><div class="v">'+money(r.fiveYear)+'</div><div class="n">card rewards + bonuses, at today\'s spend (payments &amp; points add more)</div></div></div>'+
+    '<div class="rsec"><h3>📝 Your executive summary <span style="font-weight:500;color:var(--text-muted);font-size:13px">(preview)</span></h3><div class="teaser"><h4>Complete Payment Intelligence Audit — '+esc(bizLabel())+'</h4><p>Running about '+money(totalMonthly())+'/mo, your total identified opportunity is <b>'+money(audit.totalGap)+'/yr</b> across cards, payments, and points. Your heaviest single leak is in '+esc((topCat?topCat.label:"materials").toLowerCase())+'.</p><p class="blur">The recommended stack sequences applications to maximize bonuses while staying under issuer velocity rules. Step one is the [REDACTED] card, opened [REDACTED] to capture the [REDACTED]. Routing [REDACTED] supplier spend to ACH avoids [REDACTED] in surcharges, while early-pay terms return [REDACTED] annualized. Your idle points transfer to [REDACTED] for [REDACTED]...</p><div class="fade"></div><div class="lockmsg">🔒 Full report unlocks the complete plan</div></div></div>'+
     '<div class="rsec"><h3>✅ What\'s in your full report</h3><ul class="check">'+checkHTML+'</ul></div>'+
     '<div class="pay">'+guaranteeBlock+
       '<div><span class="price">$'+LAUNCH_PRICE+'</span><span class="anchor">$'+STANDARD_PRICE+'</span></div>'+
@@ -745,6 +1030,7 @@ function stepConfirm(){
 function setMode(m){state.mode=m;render();}
 function setBiz(id){state.bizType=id;render();}
 function setVal(k,v){state[k]=v;if(k==="email"&&state.errors.email)state.errors.email=null;}
+function setVal2(k,v){state[k]=v;if(state.errors[k])state.errors[k]=null;render();}
 function setSpend(id,v){
   state.spend[id]=v;
   state.errors.spend=null; // clear silently; do NOT re-render (would drop input focus)
@@ -768,8 +1054,14 @@ function buildReportParams(){
   var p = {
     biz: state.bizType, mode: state.mode, setup: state.currentSetup,
     pts: state.hasPoints, ptsbal: state.pointsBalance,
-    ss: state.supplierSurcharge, ep: state.earlyPayDiscount, rm: state.resaleMaterials,
-    em: state.email, news: state.newsletter ? "1" : "0"
+    em: state.email, news: state.newsletter ? "1" : "0",
+    // v2 Pillar 2
+    scp: state.surchargePct, scr: state.surchargeRate,
+    eps: state.earlyPaySpend, ept: state.earlyPayTerm,
+    cb: state.carriesBalance, ba: state.balanceAmount, bapr: state.balanceApr,
+    loc: state.usesLOC, locr: state.locRate,
+    // v2 Pillar 3
+    pp: state.pointsProgram, prh: state.pointsRedeemHow
   };
   activeCategories().forEach(function(c){ p["s_"+c.id] = num(state.spend[c.id]); });
   var parts = [];
@@ -799,12 +1091,13 @@ function render(){
     case 0: body=stepBusiness(); break;
     case 1: body=stepSpend(); break;
     case 2: body=stepCards(); break;
-    case 3: body=stepPoints(); break;
-    case 4: body=stepResults(); break;
+    case 3: body=stepPayment(); break;
+    case 4: body=stepPoints(); break;
+    case 5: body=stepResults(); break;
     default: body=stepBusiness();
   }
   app.innerHTML=progressHTML()+body;
-  if(state.step===4){ var r=calc(); animateNumber(r.firstYearValue); }
+  if(state.step===5){ var r=calcFullAudit(); animateNumber(r.totalGap); }
 }
 function animateNumber(target){
   var el=document.getElementById("bigNum"); if(!el) return;
