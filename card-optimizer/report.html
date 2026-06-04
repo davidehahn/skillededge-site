@@ -45,6 +45,16 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)
 .dual .box .v{font-family:var(--font-display);font-size:24px;font-weight:800;margin-top:4px;}
 .dual .box.first .v{color:var(--green-dark);}
 .dual .box .n{font-size:11px;color:var(--text-muted);margin-top:3px;}
+/* three-pillar summary on report */
+.pillars-report{margin:18px 0 0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.pr-row{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);}
+.pr-row:last-child{border-bottom:none;}
+.pr-ic{font-size:18px;}
+.pr-name{flex:1;font-weight:600;font-size:14px;color:var(--text-primary);}
+.pr-val{font-family:var(--font-display);font-weight:800;font-size:17px;color:var(--green-dark);}
+.pr-row.total{background:var(--green-dark);}
+.pr-row.total .pr-name{color:#fff;font-family:var(--font-display);}
+.pr-row.total .pr-val{color:#fff;}
 
 h2.sec{font-family:var(--font-display);font-size:20px;font-weight:800;margin:0 0 4px;}
 p.secsub{color:var(--text-secondary);font-size:14px;margin-bottom:16px;}
@@ -269,6 +279,11 @@ var state = {
   currentSetup:"", hasPoints:"", pointsBalance:"",
   // detailed-mode levers
   supplierSurcharge:"", earlyPayDiscount:"", resaleMaterials:"",
+  // v2 Pillar 2
+  surchargePct:"", surchargeRate:"", earlyPaySpend:"", earlyPayTerm:"",
+  carriesBalance:"", balanceAmount:"", balanceApr:"", usesLOC:"", locRate:"",
+  // v2 Pillar 3
+  pointsProgram:"", pointsRedeemHow:"",
   email:"", submitted:false, errors:{}
 };
 
@@ -356,6 +371,157 @@ function weekStamp(){
   return d.toLocaleString("en-US",{month:"long",year:"numeric"});
 }
 
+/* =========================================================================
+   PILLAR 2 — PAYMENT OPTIMIZATION (defensible dollar math)
+   ACH negative-yield routing + forfeited early-pay discount + interest
+   elimination + conditional LOC float. Every number ties to user input.
+   ========================================================================= */
+function calcPaymentOptimization(){
+  var monthly = totalMonthly();
+  var annual = monthly*12;
+  var items = [];   // line items for the report
+  var total = 0;
+
+  // ---- 1. Negative-yield / ACH transition ----
+  // % of spend with surcharging suppliers, at their surcharge rate, vs ~2% card reward.
+  var sPct = Math.min(100, Math.max(0, num(state.surchargePct)))/100;
+  var sRate = num(state.surchargeRate)/100;       // e.g. 0.025
+  var REWARD_BASE = 0.02;                          // honest flat no-fee reward rate
+  if(sPct>0 && sRate>0){
+    var surchargedAnnual = annual * sPct;
+    var netYield = REWARD_BASE - sRate;            // negative = margin leak
+    if(netYield < 0){
+      // they're losing (sRate - reward) on every surcharged dollar by paying card
+      var achSaving = surchargedAnnual * Math.abs(netYield);
+      total += achSaving;
+      items.push({
+        key:"ach",
+        label:"Route surcharged suppliers to ACH",
+        value:achSaving,
+        negativeYield:true,
+        detail:"About "+money(surchargedAnnual)+"/yr of your spend goes to suppliers charging ~"+(sRate*100).toFixed(1)+"% for card payment. "+
+               "That surcharge ("+(sRate*100).toFixed(1)+"%) is higher than the ~2% you earn in rewards — a negative-yield transaction. "+
+               "Paying those by ACH instead nets you "+(Math.abs(netYield)*100).toFixed(1)+"% back = "+money(achSaving)+"/yr."
+      });
+    } else {
+      // surcharge below reward — keep on card, note it
+      items.push({
+        key:"ach",
+        label:"Keep these on card (surcharge below reward)",
+        value:0,
+        negativeYield:false,
+        detail:"Your suppliers' ~"+(sRate*100).toFixed(1)+"% surcharge is at or below your ~2% card reward, so keeping that spend on a rewards card still nets positive. No ACH change needed."
+      });
+    }
+  }
+
+  // ---- 2. Forfeited early-pay discount ----
+  // Annualized value of taking the discount. Formula: (d/(1-d)) * (365/(net-disc days))
+  var epSpend = num(state.earlyPaySpend); // monthly $ with early-pay terms
+  var epTerm = state.earlyPayTerm;
+  var epMap = {
+    "1/10net30": {d:0.01, days:20},
+    "2/10net30": {d:0.02, days:20},
+    "2/10net60": {d:0.02, days:50}
+  };
+  if(epSpend>0 && epMap[epTerm]){
+    var t = epMap[epTerm];
+    // direct discount captured per year (the actual cash saved by taking the discount)
+    var directDiscount = epSpend*12 * t.d;
+    // annualized return for context
+    var annualizedReturn = (t.d/(1-t.d)) * (365/t.days);
+    total += directDiscount;
+    items.push({
+      key:"earlypay",
+      label:"Capture early-payment discounts",
+      value:directDiscount,
+      detail:"You have about "+money(epSpend)+"/mo in spend with "+epTerm.replace("net"," net ").replace("/","%/")+" terms. "+
+             "Taking the discount captures "+money(directDiscount)+"/yr directly — an annualized return of about "+(annualizedReturn*100).toFixed(0)+"% on that cash, "+
+             "far above any card reward. Prioritize these against your cash flow."
+    });
+  }
+
+  // ---- 3. Interest elimination (carrying a balance) ----
+  var bal = num(state.balanceAmount);
+  var apr = num(state.balanceApr)/100;
+  if(state.carriesBalance==="yes" && bal>0 && apr>0){
+    var interestSaved = bal * apr; // annual interest if balance persists ~year
+    total += interestSaved;
+    items.push({
+      key:"interest",
+      label:"Eliminate revolving interest",
+      value:interestSaved,
+      priority:true,
+      detail:"You're carrying about "+money(bal)+" at ~"+(apr*100).toFixed(0)+"% APR. That's roughly "+money(interestSaved)+"/yr in interest — "+
+             "and it wipes out card rewards many times over. Paying this down (and switching to pay-in-full) is the single highest-value move in this audit. "+
+             "Card rewards mean nothing while you carry a balance at this rate."
+    });
+  }
+
+  // ---- 4. LOC float value (ONLY if they actually use a LOC) ----
+  var locRate = num(state.locRate)/100;
+  if(state.usesLOC==="yes" && locRate>0){
+    // Float bridges ~card grace period (use 45 days, conservative vs 55 max) against LOC draw.
+    var floatDays = 45;
+    var monthlyOnCard = monthly; // spend they could float instead of drawing LOC
+    var floatSaving = monthlyOnCard * (locRate/365) * floatDays;
+    total += floatSaving;
+    items.push({
+      key:"float",
+      label:"Use card float instead of your LOC",
+      value:floatSaving,
+      detail:"You draw on a line of credit at ~"+(locRate*100).toFixed(0)+"%. Routing about "+money(monthlyOnCard)+"/mo of material/operating spend through a pay-in-full card's "+
+             "~45-day grace period — then clearing it from receivables — bridges the same gap interest-free. "+
+             "Estimated LOC interest avoided: "+money(floatSaving)+"/yr. (Only works if you pay the card in full each cycle.)"
+    });
+  }
+
+  return { total:total, items:items };
+}
+
+/* =========================================================================
+   PILLAR 3 — POINTS OPTIMIZATION (defensible floor/ceiling gap)
+   ========================================================================= */
+function calcPointsUnlock(){
+  var pts = num(state.pointsBalance);
+  if(state.hasPoints!=="yes" || pts<=0) return { total:0, pts:0 };
+
+  var FLOOR = 0.01, CEILING = 0.02; // verified June 2026 cash floor vs transfer ceiling
+  var floorVal = pts*FLOOR;
+  var ceilingVal = pts*CEILING;
+  var portalVal = pts*0.0125;
+
+  // current redemption estimate based on how they say they redeem
+  var currentCpp = { cash:0.01, portal:0.0125, giftcards:0.009, transfer:0.018, notredeeming:0.0, unsure:0.01 };
+  var curRate = (currentCpp[state.pointsRedeemHow]!=null) ? currentCpp[state.pointsRedeemHow] : 0.01;
+  var curVal = pts*curRate;
+  // the gap = optimized ceiling minus what they're getting now
+  var gap = Math.max(0, ceilingVal - curVal);
+
+  // program-specific best partners (verified June 2026)
+  var partners = {
+    chase:"World of Hyatt, United, Virgin Atlantic",
+    amex:"Delta, Air France/KLM Flying Blue, Virgin Atlantic",
+    capitalone:"Avianca LifeMiles, Air Canada Aeroplan",
+    citi:"Turkish Airlines, Virgin Atlantic",
+    cashback:null, other:null, unsure:null
+  };
+
+  return {
+    total:gap, pts:pts, floorVal:floorVal, ceilingVal:ceilingVal, portalVal:portalVal,
+    curVal:curVal, curRate:curRate, program:state.pointsProgram,
+    partners:partners[state.pointsProgram]||null, redeemHow:state.pointsRedeemHow
+  };
+}
+
+/* combined three-pillar opportunity gap */
+function calcFullAudit(){
+  var card = calc();
+  var pay = calcPaymentOptimization();
+  var points = calcPointsUnlock();
+  var totalGap = card.firstYearValue + pay.total + points.total;
+  return { card:card, pay:pay, points:points, totalGap:totalGap };
+}
 
 /* ---- decode URL params into state ---- */
 function loadStateFromURL(){
@@ -373,6 +539,19 @@ function loadStateFromURL(){
   if(qs.get("ep")) state.earlyPayDiscount = qs.get("ep");
   if(qs.get("rm")) state.resaleMaterials = qs.get("rm");
   if(qs.get("em")) state.email = qs.get("em");
+  // v2 Pillar 2 params
+  if(qs.get("scp")) state.surchargePct = qs.get("scp");
+  if(qs.get("scr")) state.surchargeRate = qs.get("scr");
+  if(qs.get("eps")) state.earlyPaySpend = qs.get("eps");
+  if(qs.get("ept")) state.earlyPayTerm = qs.get("ept");
+  if(qs.get("cb")) state.carriesBalance = qs.get("cb");
+  if(qs.get("ba")) state.balanceAmount = qs.get("ba");
+  if(qs.get("bapr")) state.balanceApr = qs.get("bapr");
+  if(qs.get("loc")) state.usesLOC = qs.get("loc");
+  if(qs.get("locr")) state.locRate = qs.get("locr");
+  // v2 Pillar 3 params
+  if(qs.get("pp")) state.pointsProgram = qs.get("pp");
+  if(qs.get("prh")) state.pointsRedeemHow = qs.get("prh");
   // spend categories: keys like s_materials, s_advertising
   ["materials","software","fuel","other","advertising","shipping","inventory"].forEach(function(k){
     var v = qs.get("s_"+k);
@@ -394,6 +573,8 @@ function renderReport(){
     return;
   }
   var r = calc();
+  var audit = calcFullAudit();
+  var pay = audit.pay, points = audit.points;
   var bizName = (BUSINESS_TYPES.find(function(b){return b.id===state.bizType;})||{label:"your business"}).label;
   var setupLabel = (CURRENT_SETUP.find(function(s){return s.id===state.currentSetup;})||{label:""}).label;
   var maxOpt = Math.max.apply(null, r.perCat.map(function(c){return c.optimal;}).concat([1]));
@@ -469,64 +650,54 @@ function renderReport(){
 
   // ---- FULL POINTS PAGE ----
   var ptsNum = num(state.pointsBalance);
+  // ---- v2 PAYMENT SYSTEMIZATION SECTION (real dollar math) ----
+  var paySection = "";
+  if(pay.total>0){
+    var payRows = pay.items.filter(function(it){return it.value>0;}).map(function(it){
+      return '<div class="rec'+(it.priority?' top':'')+(it.negativeYield?' premium':'')+'">'+
+        '<span class="tag">+ '+money(it.value)+'/yr</span>'+
+        '<h4>'+(it.priority?'\u26a1 ':'')+esc2(it.label)+'</h4>'+
+        '<div class="why">'+esc2(it.detail)+'</div></div>';
+    }).join("");
+    paySection =
+      '<div class="card"><h2 class="sec">\ud83c\udfe6 Payment systemization \u2014 '+money(pay.total)+'/yr</h2>'+
+      '<p class="secsub">How you pay \u2014 not just which card \u2014 moves real money. Each item below is calculated from your actual answers.</p>'+
+      payRows+
+      '<div class="achnote">Surcharge rates, supplier terms, and rates vary \u2014 these figures use the numbers you entered. Confirm specifics with each supplier.</div></div>';
+  }
+
+  // ---- v2 POINTS ASSET UNLOCK SECTION ----
   var pointsPage = "";
-  if(state.hasPoints==="yes" && ptsNum>0){
-    var cashVal = ptsNum*0.01, portalVal = ptsNum*0.0125, transferLow = ptsNum*0.015, transferHigh = ptsNum*0.02;
+  if(state.hasPoints==="yes" && points.pts>0){
     var redemptionRows = POINTS_REDEMPTION.map(function(rr){
       return '<tr><td><b>'+esc2(rr.type)+'</b></td><td class="cpp">'+esc2(rr.cpp)+'</td><td>'+esc2(rr.note)+'</td></tr>';
     }).join("");
+    var partnerLine = points.partners ? ' Your program\u2019s strongest transfer partners right now: <b>'+esc2(points.partners)+'</b>.' : '';
     pointsPage =
-      '<div class="card pagebreak"><h2 class="sec">\ud83d\udcb3 Your idle points \u2014 worth '+money(cashVal)+' to '+money(transferHigh)+' right now</h2>'+
-      '<p class="secsub">You told us you have about <b>'+ptsNum.toLocaleString()+'</b> points/miles sitting unused. Here\u2019s exactly what they\u2019re worth and what to do.</p>'+
+      '<div class="card pagebreak"><h2 class="sec">\ud83d\udcb0 Points asset unlock \u2014 '+money(points.total)+' gap</h2>'+
+      '<p class="secsub">You have about <b>'+points.pts.toLocaleString()+'</b> points/miles sitting unused. Here\u2019s the gap between cashing out and optimizing.</p>'+
       '<div class="ptsgrid">'+
-        '<div class="ptsbox"><div class="l">Cash value (floor)</div><div class="v">'+money(cashVal)+'</div><div class="n">'+ptsNum.toLocaleString()+' \u00d7 1.0\u00a2</div></div>'+
-        '<div class="ptsbox"><div class="l">Travel portal</div><div class="v">'+money(portalVal)+'</div><div class="n">at ~1.25\u00a2 each</div></div>'+
-        '<div class="ptsbox best"><div class="l">Transfer partners</div><div class="v">'+money(transferLow)+'\u2013'+money(transferHigh)+'</div><div class="n">at 1.5\u20132.0\u00a2+ each</div></div>'+
+        '<div class="ptsbox"><div class="l">Cash floor</div><div class="v">'+money(points.floorVal)+'</div><div class="n">'+points.pts.toLocaleString()+' \u00d7 1.0\u00a2</div></div>'+
+        '<div class="ptsbox"><div class="l">Travel portal</div><div class="v">'+money(points.portalVal)+'</div><div class="n">at ~1.25\u00a2 each</div></div>'+
+        '<div class="ptsbox best"><div class="l">Optimized ceiling</div><div class="v">'+money(points.ceilingVal)+'</div><div class="n">at ~2.0\u00a2 via transfers</div></div>'+
       '</div>'+
-      '<div class="mathlabel" style="margin-top:18px">How much each redemption type is worth (cents per point):</div>'+
+      '<div class="ptswarn" style="background:#FFFBEB;border-color:#FDE68A;color:#92400E"><b>Your opportunity gap: '+money(points.total)+'.</b> '+
+        (points.redeemHow==="cash"||points.redeemHow==="giftcards"||points.redeemHow==="notredeeming"
+          ? 'You told us you redeem near the cash floor \u2014 so transferring to partners can nearly double their value.'
+          : 'This is the spread between a straight cash-out and an optimized transfer redemption.')+partnerLine+'</div>'+
+      '<div class="mathlabel" style="margin-top:18px">What each redemption type is worth (cents per point):</div>'+
       '<table class="ptstable"><thead><tr><th>Redemption type</th><th>Value/point</th><th>When to use it</th></tr></thead><tbody>'+redemptionRows+'</tbody></table>'+
-      '<div class="ptswarn"><b>\u26a0\ufe0f Why you shouldn\u2019t let them sit:</b> Card programs periodically devalue points \u2014 the same points buy less after a program change, and these happen with little warning. Recent real example: in January 2026, Capital One cut its Emirates transfer rate by 25% (1,000 miles became 750). Your '+ptsNum.toLocaleString()+' points only lose purchasing power the longer they sit \u2014 a 15% devaluation would cost you roughly <b>'+money(cashVal*0.15)+'\u2013'+money(transferHigh*0.15)+'</b> of today\u2019s value.</div>'+
+      '<div class="ptswarn"><b>\u26a0\ufe0f Why you shouldn\u2019t let them sit:</b> Card programs periodically devalue points, often with little warning. Recent real example: in January 2026, Capital One cut its Emirates transfer rate by 25% (1,000 miles became 750). Idle points only lose purchasing power the longer they sit \u2014 redeem or transfer with intent rather than letting them erode.</div>'+
       '<div class="mathlabel" style="margin-top:16px">What to do:</div>'+
       '<ul class="ptssteps">'+
-        '<li><b>If you travel for business:</b> transfer to an airline/hotel partner for a specific trip \u2014 that\u2019s where you hit 1.5\u20132\u00a2+ and get the most out of them. Check your program\u2019s current transfer ratios first (they change).</li>'+
-        '<li><b>If you don\u2019t travel much:</b> redeem for cash/statement credit now at 1\u00a2 rather than letting them devalue. '+money(cashVal)+' in hand beats '+money(cashVal)+' that erodes.</li>'+
-        '<li><b>Avoid gift-card redemptions</b> \u2014 they\u2019re usually at or below cash value, so you\u2019re leaving money on the table versus just taking cash.</li>'+
-        '<li><b>Example:</b> your '+ptsNum.toLocaleString()+' points transferred to a travel partner at ~1.8\u00a2 each are worth about '+money(ptsNum*0.018)+' \u2014 versus '+money(cashVal)+' as a straight statement credit. The transfer nearly doubles their value \u2014 but only if you have a trip to use them on.</li>'+
+        '<li><b>If you travel for business:</b> transfer to an airline/hotel partner for a specific trip \u2014 that\u2019s where you hit the ~2\u00a2 ceiling. Check current transfer ratios first (they change).</li>'+
+        '<li><b>If you don\u2019t travel much:</b> redeem for cash/statement credit now at 1\u00a2 rather than letting them devalue. '+money(points.floorVal)+' in hand beats '+money(points.floorVal)+' that erodes.</li>'+
+        '<li><b>Avoid gift-card redemptions</b> \u2014 they\u2019re usually at or below cash value.</li>'+
       '</ul>'+
       '<div class="ptsfresh">Point values verified as of '+weekStamp()+' from issuer sites and major points trackers. Programs change often \u2014 confirm your specific program\u2019s current transfer ratios before redeeming.</div>'+
       '</div>';
   }
-
-  // ---- ACH HALF-PAGE (when supplier surcharge applies) ----
-  var achSection = "";
-  if(state.supplierSurcharge==="yes"){
-    // use their biggest non-ad category as the worked example base
-    var achCat = r.perCat.slice().filter(function(c){return c.id!=="advertising";}).sort(function(a,b){return b.annualSpend-a.annualSpend;})[0];
-    var exMonthly = achCat && achCat.annualSpend>0 ? achCat.annualSpend/12 : 20000;
-    var exOrder = Math.round(exMonthly*0.6/1000)*1000 || 20000; // representative large order
-    var surcharge = exOrder*0.03, reward = exOrder*0.02, netSave = surcharge-reward;
-    achSection =
-      '<div class="card"><h2 class="sec">\ud83c\udfe6 When to pay by ACH instead of card</h2>'+
-      '<p class="secsub">You told us some suppliers charge a fee for card payments. Here\u2019s the exact rule and the math.</p>'+
-      '<div class="achrule"><b>The rule:</b> If a supplier\u2019s card surcharge is <u>higher</u> than the rewards you\u2019d earn, pay by ACH. If it\u2019s <u>lower</u> (or zero), keep it on your rewards card. It\u2019s that simple \u2014 compare the two numbers on every large invoice.</div>'+
-      '<div class="mathlabel" style="margin-top:14px">Worked example on a '+money(exOrder)+' order:</div>'+
-      '<table class="achtable"><tbody>'+
-        '<tr><td>Pay by <b>card</b> \u2014 3% surcharge</td><td class="bad">\u2212'+money(surcharge)+'</td></tr>'+
-        '<tr><td>\u2026 but you\u2019d earn ~2% rewards back</td><td class="good">+'+money(reward)+'</td></tr>'+
-        '<tr class="net"><td><b>Net cost of paying by card</b></td><td class="bad"><b>\u2212'+money(netSave)+'</b></td></tr>'+
-        '<tr class="net"><td><b>Pay by ACH instead</b></td><td class="good"><b>'+money(0)+' fee \u2192 save '+money(netSave)+'</b></td></tr>'+
-      '</tbody></table>'+
-      '<div class="mathlabel" style="margin-top:14px">How to minimize fees in practice:</div>'+
-      '<ul class="achsteps">'+
-        '<li><b>Ask every major supplier two questions:</b> \u201cDo you charge a fee for card payment?\u201d and \u201cDo you accept ACH/bank transfer free?\u201d Most distributors do both \u2014 they just don\u2019t advertise the free ACH option.</li>'+
-        '<li><b>Set a threshold.</b> A simple rule: any invoice over ~'+money(Math.max(2000,Math.round(exOrder*0.25/500)*500))+' that carries a card surcharge goes ACH; smaller ones stay on the card for the rewards and simplicity. Pick a line that fits your bookkeeping.</li>'+
-        '<li><b>Negotiate the surcharge away.</b> Some suppliers will waive the card fee for a reliable customer who asks \u2014 then you get rewards AND no fee. Always worth one ask.</li>'+
-        '<li><b>Use ACH for recurring/large fixed costs</b> (rent, big standing orders) where there\u2019s no card-reward category bonus anyway \u2014 you lose nothing and avoid any processing fee.</li>'+
-        '<li><b>Keep no-surcharge spend on cards.</b> Ad platforms, software, fuel, and most retail don\u2019t surcharge \u2014 those should always run through your rewards cards.</li>'+
-      '</ul>'+
-      '<div class="achnote">Note: surcharge rates and ACH availability vary by supplier. The 3% / 2% figures above are typical; use your supplier\u2019s actual numbers to decide each time.</div>'+
-      '</div>';
-  }
+  var achSection = ""; // replaced by paySection above
 
   var firstYearLine = r.bonusTotal>0 ?
     '<div class="dual"><div class="box"><div class="l">Recurring / year</div><div class="v">'+money(r.recoverableSteady)+'</div><div class="n">every year, net of fees</div></div>'+
@@ -535,15 +706,21 @@ function renderReport(){
 
   el.innerHTML =
     '<div class="banner"><div class="ok">\u2705 Payment confirmed \u2014 here\u2019s your report</div>'+
-      '<h1>Your Card &amp; Payment Optimizer Report</h1>'+
+      '<h1>Your Complete Payment Intelligence Audit</h1>'+
       '<p>Personalized for '+esc2(bizName)+' \u00b7 '+money(totalMonthly())+'/mo in business spend</p></div>'+
     '<div class="wrap">'+
-      '<div class="card"><div class="rhero"><div class="label">Your first-year Recovery Number</div>'+
-        '<div class="big">'+money(r.firstYearValue)+'</div>'+
-        '<div class="sub">currently leaving an estimated '+money(r.recoverableSteady)+'/yr in recurring value on the table</div></div>'+
+      '<div class="card"><div class="rhero"><div class="label">Your total opportunity gap</div>'+
+        '<div class="big">'+money(audit.totalGap)+'</div>'+
+        '<div class="sub">across cards, payments &amp; points \u2014 identified from your numbers</div></div>'+
+        '<div class="pillars-report">'+
+          '<div class="pr-row"><span class="pr-ic">\ud83d\udcb3</span><span class="pr-name">Card Optimization</span><span class="pr-val">'+money(r.firstYearValue)+'</span></div>'+
+          (pay.total>0?'<div class="pr-row"><span class="pr-ic">\ud83c\udfe6</span><span class="pr-name">Payment Systemization</span><span class="pr-val">'+money(pay.total)+'</span></div>':'')+
+          (points.total>0?'<div class="pr-row"><span class="pr-ic">\ud83d\udcb0</span><span class="pr-name">Points Asset Unlock</span><span class="pr-val">'+money(points.total)+'</span></div>':'')+
+          '<div class="pr-row total"><span class="pr-name">Total Opportunity Gap</span><span class="pr-val">'+money(audit.totalGap)+'/yr</span></div>'+
+        '</div>'+
         firstYearLine+'</div>'+
 
-      '<div class="card"><h2 class="sec">\ud83d\udcca Where the money is</h2><p class="secsub">What you capture now vs. what an optimized setup earns, by category.</p>'+
+      '<div class="card"><h2 class="sec">\ud83d\udcb3 Card optimization \u2014 where the money is</h2><p class="secsub">What you capture now vs. what an optimized setup earns, by category.</p>'+
         bars+'<div class="bar-legend"><span><span class="swatch cur"></span>Capturing now</span><span><span class="swatch opt"></span>Optimized (no-fee)</span></div></div>'+
 
       '<div class="card"><h2 class="sec">\ud83d\udcb3 Your no-fee card stack</h2><p class="secsub">Built around your spend. Open in the order shown in the 30-day plan below.</p>'+stack+'</div>'+
@@ -561,13 +738,13 @@ function renderReport(){
 
       '<div class="card"><h2 class="sec">\ud83d\udcb0 Beyond the card \u2014 more recovery levers</h2><p class="secsub">Payment-method moves that often beat card rewards outright.</p>'+leversHTML+'</div>'+
 
-      achSection+
+      paySection+
 
       pointsPage+
 
       '<div class="card" style="background:#F0FDF8;border-color:var(--green)"><h2 class="sec">\ud83d\udee1\ufe0f Your guarantee</h2>'+
-        (r.firstYearValue>=GUARANTEE_AMOUNT
-          ? '<p style="font-size:14px;color:var(--text-secondary)">This report identifies <b>'+money(r.firstYearValue)+'</b> in first-year value \u2014 well above the $3,000 minimum. If you implement the plan and don\u2019t find at least '+money(GUARANTEE_AMOUNT)+' in identified value, email us for a full refund.</p>'
+        (audit.totalGap>=GUARANTEE_AMOUNT
+          ? '<p style="font-size:14px;color:var(--text-secondary)">This audit identifies <b>'+money(audit.totalGap)+'</b> in total first-year opportunity \u2014 well above the $3,000 minimum. If you implement the plan and don\u2019t find at least '+money(GUARANTEE_AMOUNT)+' in identified value, email us for a full refund.</p>'
           : '<p style="font-size:14px;color:var(--text-secondary)">If this report didn\u2019t identify real value worth more than you paid, email <a href="mailto:Dave@SkilledEdge.io">Dave@SkilledEdge.io</a> for a full refund \u2014 no questions asked.</p>')+'</div>'+
 
       '<div class="verified">Card rates and offers verified as of '+CARD_DATA_VERSION+'. Offers change often and some signup bonuses are targeted \u2014 confirm current terms on the issuer\u2019s site before applying. Figures are good-faith estimates based on the numbers you entered, not guarantees, and not financial, tax, or legal advice.</div>'+
