@@ -1,1 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profit Leak Detector — Skilled Edge Group</title>
+<meta name="description" content="One audit that reveals hidden profit leaks from operations, knowledge loss, risk exposure, and credit card/payment waste. See your total annual leakage in minutes." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ================================================================
+     SHARED DESIGN TOKENS — Skilled Edge Group
+     Light-mode industrial palette. Both files use these values.
+     Brand orange corrected to #FF6B00 (unified from #ff6b1a).
+  ================================================================ */
+  :root{
+    /* Brand */
+    --edge:#FF6B00;
+    --edge-deep:#E05E00;
+    --edge-tint:rgba(255,107,0,0.06);
+    --edge-glow:rgba(255,107,0,0.14);
+
+    /* Page surfaces */
+    --ink:#F7F8FA;
+    --steel:#FFFFFF;
+    --panel:#F0F2F5;
+    --line:#E2E8F0;
+    --line-strong:#CBD5E0;
+
+    /* Text hierarchy */
+    --text:#1A202C;
+    --mute:#4A5568;
+    --faint:#718096;
+
+    /* Semantic */
+    --amber:#FF6B00;
+    --green:#27834A;
+    --red:#C53030;
+
+    /* Typography */
+    --font-display:'Archivo',sans-serif;
+    --font-body:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font-body);
+    background:var(--ink);
+    color:var(--text);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+  .display{font-family:var(--font-display);font-weight:800;letter-spacing:-0.02em;line-height:1.05}
+
+  /* ── Header ── */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:2px solid var(--line);margin-bottom:8px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:-0.01em;color:var(--text)}
+  .brand .gear{color:var(--edge);font-size:18px}
+  .tagpill{font-size:11px;color:var(--edge);border:1.5px solid var(--edge);border-radius:999px;padding:4px 11px;font-weight:700;letter-spacing:0.04em;background:var(--edge-tint)}
+
+  /* ── Hero ── */
+  .hero{padding:42px 0 14px;text-align:center;position:relative}
+  .hero h1{font-size:clamp(26px,6.5vw,44px);margin-bottom:16px;font-family:var(--font-display);font-weight:800;color:var(--text);letter-spacing:-0.02em;line-height:1.1}
+  .hero h1 .hl{color:var(--edge)}
+  .hero p{color:var(--mute);font-size:17px;max-width:540px;margin:0 auto 28px;line-height:1.6}
+  .start-btn{
+    background:var(--edge);
+    color:#fff;border:none;border-radius:10px;padding:17px 40px;
+    font-family:var(--font-display);font-weight:700;font-size:17px;cursor:pointer;
+    box-shadow:0 4px 16px var(--edge-glow);transition:transform .15s,box-shadow .15s,background .15s;
+  }
+  .start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--edge-glow);background:var(--edge-deep)}
+  .start-btn:active{transform:translateY(0)}
+  .trust{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:22px;font-size:13px;color:var(--faint)}
+  .trust span{display:flex;align-items:center;gap:6px}
+
+  /* ── Progress ── */
+  .progress-shell{position:sticky;top:0;background:#fff;padding:14px 0 12px;z-index:20;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+  .progress-track{height:5px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--edge),var(--edge-deep));border-radius:99px;width:0%;transition:width .4s ease}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--faint);margin-top:8px;font-weight:500}
+
+  /* ── Cards / steps ── */
+  .step{display:none;animation:rise .45s ease both}
+  .step.active{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .card{background:var(--steel);border:1px solid var(--line);border-radius:14px;padding:28px 24px;margin-top:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+  .step-tag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;color:var(--edge);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+  .step-tag .n{background:var(--edge);color:#fff;width:22px;height:22px;border-radius:5px;display:grid;place-items:center;font-family:var(--font-display);font-size:12px}
+  .step h2{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:-0.015em;margin-bottom:7px;color:var(--text)}
+  .step .sub{color:var(--mute);font-size:14.5px;margin-bottom:22px;line-height:1.55}
+
+  label.field{display:block;margin-bottom:18px}
+  label.field .q{display:block;font-weight:600;font-size:15px;margin-bottom:9px;color:var(--text)}
+  label.field .hint{font-weight:400;color:var(--faint);font-size:13px}
+  input[type=text],input[type=number],input[type=email],select{
+    width:100%;background:#fff;border:1.5px solid var(--line-strong);border-radius:9px;
+    padding:12px 14px;color:var(--text);font-size:16px;font-family:var(--font-body);transition:border-color .15s,box-shadow .15s
+  }
+  input:focus,select:focus{outline:none;border-color:var(--edge);box-shadow:0 0 0 3px var(--edge-tint)}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5568' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-color:#fff}
+
+  .toggle-row{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line-strong);border-radius:9px;padding:11px 14px;margin-top:8px;cursor:pointer;transition:border-color .15s}
+  .toggle-row:hover{border-color:var(--faint)}
+  .toggle-row input{width:auto;accent-color:var(--edge);width:18px;height:18px}
+  .toggle-row span{font-size:13.5px;color:var(--mute)}
+
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:13px 15px;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+  .opt:hover{border-color:var(--line-strong);background:var(--ink)}
+  .opt input{accent-color:var(--edge);width:18px;height:18px;flex-shrink:0}
+  .opt.sel{border-color:var(--edge);background:var(--edge-tint);box-shadow:0 0 0 3px var(--edge-glow)}
+  .opt .ot{font-size:14.5px;font-weight:500;color:var(--text)}
+
+  .nav{display:flex;gap:12px;margin-top:24px}
+  .btn{flex:1;border-radius:9px;padding:14px;font-family:var(--font-display);font-weight:700;font-size:15px;cursor:pointer;border:none;transition:transform .12s,background .15s}
+  .btn:active{transform:scale(.985)}
+  .btn-next{background:var(--edge);color:#fff;box-shadow:0 3px 12px var(--edge-glow)}
+  .btn-next:hover{background:var(--edge-deep)}
+  .btn-back{background:var(--panel);color:var(--mute);border:1.5px solid var(--line);flex:0 0 110px}
+  .btn-back:hover{background:var(--line);color:var(--text)}
+
+  .running-tally{text-align:center;margin-top:18px;font-size:13px;color:var(--faint)}
+  .running-tally b{color:var(--edge);font-family:var(--font-display);font-weight:700}
+
+  /* ── Email gate ── */
+  .gate{text-align:center}
+  .gate .lock{font-size:40px;margin-bottom:12px}
+  .gate h2{font-size:26px;margin-bottom:10px;font-family:var(--font-display);font-weight:800;color:var(--text)}
+  .gate .big-num{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,12vw,68px);color:var(--edge);line-height:1;margin:18px 0}
+  .gate p{color:var(--mute);max-width:440px;margin:0 auto 8px;line-height:1.6}
+  .gate .blurred{filter:blur(7px);user-select:none;pointer-events:none;opacity:.35;margin:16px 0;color:var(--faint)}
+  .gate-form{max-width:380px;margin:22px auto 0}
+  .gate-form input{margin-bottom:11px;text-align:center}
+  .gate-note{font-size:12px;color:var(--faint);margin-top:10px;line-height:1.5}
+  .err{color:var(--red);font-size:13px;margin-top:6px;min-height:16px}
+
+  /* ── Results ── */
+  .results{display:none}
+  .results.show{display:block;animation:rise .5s ease both}
+  .res-hero{text-align:center;padding:32px 0 10px}
+  .res-hero .eyebrow{color:var(--edge);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.1em}
+  .res-hero .total{font-family:var(--font-display);font-weight:900;font-size:clamp(46px,15vw,84px);color:var(--edge);line-height:1;margin:10px 0}
+  .res-hero .total-sub{color:var(--mute);font-size:15px}
+  .res-section-title{font-family:var(--font-display);font-weight:700;font-size:17px;margin:32px 0 8px;display:flex;align-items:center;gap:10px;color:var(--text)}
+  .res-section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--edge);flex-shrink:0}
+
+  .leak-bar{margin:14px 0}
+  .leak-bar .lb-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .leak-bar .lb-name{font-size:14px;font-weight:600;color:var(--text)}
+  .leak-bar .lb-val{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--edge)}
+  .leak-bar .lb-track{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+  .leak-bar .lb-fill{height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .leak-bar .lb-pct{font-size:11.5px;color:var(--faint);margin-top:3px}
+
+  .insight{background:#FFF8F4;border:1px solid #FED7AA;border-left:3px solid var(--edge);border-radius:0 9px 9px 0;padding:15px 17px;margin-top:13px;font-size:14.5px;color:var(--text);line-height:1.55}
+  .insight b{color:var(--edge);font-weight:600}
+
+  .footer{text-align:center;color:var(--faint);font-size:12px;margin-top:44px;padding-top:22px;border-top:1px solid var(--line);line-height:1.6}
+  .footer a{color:var(--mute);text-decoration:none}
+  .footer a:hover{color:var(--edge)}
+
+  .save-row{text-align:center;margin-top:28px}
+  .save-btn{background:#fff;border:1.5px solid var(--line-strong);color:var(--mute);border-radius:9px;padding:12px 24px;font-family:var(--font-display);font-weight:600;font-size:14px;cursor:pointer;transition:border-color .15s,color .15s}
+  .save-btn:hover{border-color:var(--edge);color:var(--edge)}
+
+  /* ── Detail cards ── */
+  .detail-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 20px;margin-top:16px;border-left:3px solid var(--edge);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+  .detail-card.risk-card{border-left-color:var(--red)}
+  .detail-card.cards-card{border-left-color:var(--green)}
+  .dc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+  .dc-title{font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--text)}
+  .dc-amount{font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--edge)}
+  .dc-tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--faint);margin-bottom:12px}
+  .dc-section{margin-top:14px}
+  .dc-section-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--edge);margin-bottom:6px}
+  .dc-section-label.risk-label{color:var(--red)}
+  .dc-section-label.cards-label{color:var(--green)}
+  .dc-text{font-size:14.5px;color:var(--text);line-height:1.6}
+  .dc-text .hl{color:var(--edge);font-weight:600}
+  .dc-benchmark{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:7px;padding:10px 13px;margin-top:10px;font-size:13px;color:var(--mute)}
+  .dc-benchmark .bm-icon{font-size:16px}
+  .dc-benchmark b{color:var(--text);font-weight:600}
+  .dc-fix{background:#FFF8F4;border:1px solid #FED7AA;border-radius:7px;padding:11px 14px;margin-top:10px;font-size:14px;color:var(--text);line-height:1.55}
+  .dc-fix .fix-label{font-weight:700;color:var(--edge);font-size:11.5px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+  .dc-sub-levers{margin-top:10px}
+  .dc-lever{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+  .dc-lever:last-child{border-bottom:none}
+  .dc-lever-name{font-size:14px;font-weight:500;color:var(--text)}
+  .dc-lever-val{font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--edge)}
+
+  /* ── Action plan ── */
+  .action-item{display:flex;gap:14px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:18px 18px;margin-top:12px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+  .action-num{flex:0 0 32px;height:32px;background:var(--edge);color:#fff;border-radius:7px;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:14px;flex-shrink:0}
+  .action-body{flex:1}
+  .action-title{font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:4px;color:var(--text)}
+  .action-desc{font-size:14px;color:var(--mute);line-height:1.55}
+  .action-impact{font-size:13px;color:var(--edge);font-weight:700;margin-top:6px}
+
+  .hide{display:none!important}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:7px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand"><span class="gear">⚙</span> Skilled Edge Group</div>
+    <div class="tagpill">PROFIT LEAK DETECTOR</div>
+  </div>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="hero">
+      <h1>Find exactly where your trades business is leaking <span class="hl">$8,000–$50,000+</span> a year</h1>
+      <p>One audit. Four blind spots — knowledge loss, operational drag, risk exposure, and the money quietly bleeding out of your cards and payments. See your real number in about 4 minutes.</p>
+      <button class="start-btn" onclick="start()">Run My Audit →</button>
+      <div class="trust">
+        <span>🔒 Your numbers stay private</span>
+        <span>⚡ Instant on-screen results</span>
+        <span>📊 Built on SHRM / NIST / McKinsey data</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WIZARD -->
+  <section id="wizard" class="hide">
+    <div class="progress-shell">
+      <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+      <div class="progress-label"><span id="pStep">Step 1 of 8</span><span id="pName">Setup</span></div>
+    </div>
+    <div id="steps"></div>
+    <div class="running-tally" id="tally"></div>
+  </section>
+
+  <!-- EMAIL GATE -->
+  <section id="gate" class="hide">
+    <div class="card gate">
+      <div class="lock">🔓</div>
+      <h2>Your audit is ready</h2>
+      <p>We found leaks across all four areas of your business. Your total estimated annual leakage is:</p>
+      <div class="big-num" id="gatePreview">$0</div>
+      <p>Enter your email to unlock the full breakdown — every leak ranked by dollar impact, plus your prioritized fix list.</p>
+      <div class="blurred">▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓▓▓▓▓ ▓▓▓▓▓ ▓▓▓▓▓▓▓▓ ▓▓▓ ▓▓▓▓▓▓▓▓▓▓</div>
+      <div class="gate-form">
+        <input type="email" id="emailInput" placeholder="you@yourbusiness.com" autocomplete="email" />
+        <button class="btn btn-next" style="width:100%" id="unlockBtn" onclick="unlock()">Unlock My Full Report →</button>
+        <div class="err" id="emailErr"></div>
+        <div class="gate-note">You'll also get the Operators AI Edge newsletter — practical AI + ops moves for trades owners. Unsubscribe anytime.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="results">
+    <div class="res-hero">
+      <div class="eyebrow">Your Total Annual Profit Leakage</div>
+      <div class="total" id="resTotal">$0</div>
+      <div class="total-sub" id="resSub">across operations, risk, and payments</div>
+    </div>
+
+    <div class="res-section-title"><span class="dot"></span> Leaks ranked by dollar impact</div>
+    <div id="leakBars"></div>
+
+    <div class="res-section-title"><span class="dot"></span> Your detailed breakdown</div>
+    <div id="detailCards"></div>
+
+    <div class="res-section-title"><span class="dot"></span> Your priority action plan</div>
+    <div id="actionPlan"></div>
+
+    <div class="save-row">
+      <button class="save-btn" onclick="window.print()">💾 Save / Print My Report</button>
+    </div>
+  </section>
+
+  <div class="footer">
+    © 2026 Skilled Edge Group · Estimates are good-faith projections based on your inputs and published industry benchmarks, not a guarantee of results. Not financial advice. · <a href="https://skillededge.io">skillededge.io</a>
+  </div>
+
+</div>
+
+<script>
+/* ============ CONFIG ============ */
+var BEEHIIV_PUB = "pub_b9ffbd01-aab6-41d9-98e7-b8a72be5370f";
+/* Beehiiv subscribe is routed through a serverless endpoint to keep the API key off the client.
+   Set BEEHIIV_ENDPOINT to your function URL (e.g. /api/subscribe). If left blank the email is
+   stored locally and the report still unlocks, so you never lose a lead to a config gap. */
+var BEEHIIV_ENDPOINT = "/api/subscribe";
+
+/* ============ STATE ============ */
+var state = {
+  trade:"", state_loc:"", employees:0, revenue:0,
+  answers:{}, leaks:{}, email:""
+};
+var current = 0;
+
+/* ============ STEP DEFINITIONS ============ */
+/* Each step: id, name, render(), compute() -> {leakKey, label, group, amount} or null */
+var GROUPS = { ops:"Operations", risk:"Risk & Knowledge", cards:"Cards & Payments" };
+
+var STEPS = [
+  /* 0 — SETUP */
+  {
+    name:"Your Business",
+    tag:"Setup",
+    render:function(){return `
+      <div class="step-tag"><span class="n">1</span> About your shop</div>
+      <h2>Let's start with the basics</h2>
+      <div class="sub">These anchor every calculation to your real size — no generic averages.</div>
+      <label class="field"><span class="q">Your trade</span>
+        <select id="f_trade">
+          <option value="">Select your trade…</option>
+          <optgroup label="Construction & Mechanical">
+            <option>Electrical</option><option>HVAC</option><option>Plumbing</option>
+            <option>General Contracting</option><option>Carpentry</option><option>Masonry</option>
+          </optgroup>
+          <optgroup label="Industrial & Manufacturing">
+            <option>Welding / Fabrication</option><option>CNC / Machining</option><option>Industrial Maintenance</option>
+            <option>Shipbuilding / Marine</option><option>Robotics / Automation</option><option>Tool & Die</option>
+          </optgroup>
+          <optgroup label="Specialized & Service">
+            <option>Elevator Tech</option><option>Auto / Diesel</option><option>Landscaping</option>
+            <option>Roofing</option><option>Concrete</option><option>Other Skilled Trade</option>
+          </optgroup>
+        </select>
+      </label>
+      <label class="field"><span class="q">How many employees? <span class="hint">(including yourself)</span></span>
+        <input type="number" id="f_emp" min="1" placeholder="e.g. 12" value="${state.employees||''}" />
+      </label>
+      <label class="field"><span class="q">Approximate annual revenue</span>
+        <select id="f_rev">
+          <option value="">Select range…</option>
+          <option value="500000">Under $1M</option>
+          <option value="1500000">$1M – $2M</option>
+          <option value="3500000">$2M – $5M</option>
+          <option value="7500000">$5M – $10M</option>
+          <option value="15000000">$10M+</option>
+        </select>
+      </label>`;
+    },
+    save:function(){
+      state.trade = val('f_trade');
+      state.employees = +val('f_emp')||0;
+      state.revenue = +val('f_rev')||0;
+    },
+    valid:function(){return state.trade && state.employees>0 && state.revenue>0;},
+    compute:function(){return null;}
+  },
+
+  /* 1 — KNOWLEDGE LOSS (retiring veterans / tribal knowledge) */
+  {
+    name:"Knowledge Loss",
+    tag:"Risk & Knowledge",
+    render:function(){return `
+      <div class="step-tag"><span class="n">2</span> Knowledge walk-out risk</div>
+      <h2>Who's retiring — and what leaves with them?</h2>
+      <div class="sub">When a 25-year veteran walks out, decades of judgment go too. SHRM puts replacement cost at 50–200% of salary; tribal knowledge loss compounds it.</div>
+      <label class="field"><span class="q">How many key people could retire or leave in the next 3 years?</span>
+        <input type="number" id="k_count" min="0" placeholder="e.g. 2" value="${gv('k_count')}" />
+      </label>
+      <label class="field"><span class="q">Average annual salary of those people</span>
+        <select id="k_sal">
+          <option value="">Select…</option>
+          <option value="65000">$50k – $70k</option>
+          <option value="85000">$70k – $95k</option>
+          <option value="110000">$95k – $125k</option>
+          <option value="140000">$125k+</option>
+        </select>
+      </label>
+      <div class="opts" id="k_doc_wrap">
+        <div style="font-weight:600;font-size:15px;margin-bottom:4px">Is their knowledge documented anywhere?</div>
+      </div>
+      <div class="opts" data-radio="k_doc">
+        <label class="opt"><input type="radio" name="k_doc" value="1.0"><span class="ot">No — it's all in their heads</span></label>
+        <label class="opt"><input type="radio" name="k_doc" value="0.6"><span class="ot">A little — scattered notes</span></label>
+        <label class="opt"><input type="radio" name="k_doc" value="0.25"><span class="ot">Mostly documented &amp; current</span></label>
+      </div>`;
+    },
+    save:function(){
+      setv('k_count',val('k_count'));
+      setv('k_sal',val('k_sal'));
+      var d=document.querySelector('input[name=k_doc]:checked');
+      setv('k_doc', d?d.value:'');
+    },
+    valid:function(){return gv('k_count')!=='' && gv('k_sal') && gv('k_doc');},
+    compute:function(){
+      var n=+gv('k_count')||0, sal=+gv('k_sal')||0, risk=+gv('k_doc')||0;
+      // amortized annual exposure: replacement+ramp ~ 1.0x salary, x risk factor, spread over 3yr horizon
+      var amt = Math.round((n * sal * 1.0 * risk) / 3);
+      return {key:'knowledge', label:'Tribal knowledge walk-out', group:'risk', amount:amt};
+    }
+  },
+
+  /* 2 — SINGLE POINTS OF FAILURE / customer concentration */
+  {
+    name:"Single Points of Failure",
+    tag:"Risk & Knowledge",
+    render:function(){return `
+      <div class="step-tag"><span class="n">3</span> Single points of failure</div>
+      <h2>What breaks if one person — or one customer — disappears?</h2>
+      <div class="sub">Concentration is invisible until it bites. One key client or one irreplaceable tech can take a chunk of revenue with them.</div>
+      <label class="field"><span class="q">Your largest customer is what % of revenue?</span>
+        <div class="opts" data-radio="s_conc">
+          <label class="opt"><input type="radio" name="s_conc" value="0.04"><span class="ot">Under 10% — well spread</span></label>
+          <label class="opt"><input type="radio" name="s_conc" value="0.10"><span class="ot">10–25%</span></label>
+          <label class="opt"><input type="radio" name="s_conc" value="0.20"><span class="ot">25–40%</span></label>
+          <label class="opt"><input type="radio" name="s_conc" value="0.35"><span class="ot">Over 40% — heavy reliance</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Are there jobs only ONE person can do?</span>
+        <div class="opts" data-radio="s_key">
+          <label class="opt"><input type="radio" name="s_key" value="0.06"><span class="ot">Yes — several critical ones</span></label>
+          <label class="opt"><input type="radio" name="s_key" value="0.03"><span class="ot">One or two</span></label>
+          <label class="opt"><input type="radio" name="s_key" value="0.01"><span class="ot">No — we cross-train</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var c=document.querySelector('input[name=s_conc]:checked');
+      var k=document.querySelector('input[name=s_key]:checked');
+      setv('s_conc',c?c.value:''); setv('s_key',k?k.value:'');
+    },
+    valid:function(){return gv('s_conc')&&gv('s_key');},
+    compute:function(){
+      var conc=+gv('s_conc')||0, key=+gv('s_key')||0;
+      // expected-value of disruption: probability-weighted MARGIN at risk, not full revenue
+      var amt = Math.round(state.revenue * 0.18 * (conc*0.10 + key*0.4));
+      return {key:'spof', label:'Customer / staff concentration', group:'risk', amount:amt};
+    }
+  },
+
+  /* 3 — OPERATIONAL EFFICIENCY */
+  {
+    name:"Operational Drag",
+    tag:"Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">4</span> Operational efficiency</div>
+      <h2>Where does the day leak away?</h2>
+      <div class="sub">Rework, hunting for info, and idle time rarely show up on a P&amp;L — but they're paid for in full every week.</div>
+      <label class="field"><span class="q">Roughly what share of labor hours goes to rework, searching for info, or waiting?</span>
+        <div class="opts" data-radio="o_waste">
+          <label class="opt"><input type="radio" name="o_waste" value="0.05"><span class="ot">Under 5% — tight ship</span></label>
+          <label class="opt"><input type="radio" name="o_waste" value="0.12"><span class="ot">5–15%</span></label>
+          <label class="opt"><input type="radio" name="o_waste" value="0.22"><span class="ot">15–30%</span></label>
+          <label class="opt"><input type="radio" name="o_waste" value="0.35"><span class="ot">Over 30% — lots of friction</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Scrap, callbacks, or warranty rework as % of revenue?</span>
+        <div class="opts" data-radio="o_scrap">
+          <label class="opt"><input type="radio" name="o_scrap" value="0.01"><span class="ot">Under 1%</span></label>
+          <label class="opt"><input type="radio" name="o_scrap" value="0.03"><span class="ot">1–3% <span class="hint">(NIST avg for mfg)</span></span></label>
+          <label class="opt"><input type="radio" name="o_scrap" value="0.06"><span class="ot">3–8%</span></label>
+          <label class="opt"><input type="radio" name="o_scrap" value="0.10"><span class="ot">Over 8%</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var w=document.querySelector('input[name=o_waste]:checked');
+      var s=document.querySelector('input[name=o_scrap]:checked');
+      setv('o_waste',w?w.value:''); setv('o_scrap',s?s.value:'');
+    },
+    valid:function(){return gv('o_waste')&&gv('o_scrap');},
+    compute:function(){
+      var waste=+gv('o_waste')||0, scrap=+gv('o_scrap')||0;
+      // labor cost ~ 32% of revenue typical for trades. Apply a recovery factor —
+      // you never claw back 100% of waste, so 0.35 of labor waste and 0.4 of scrap is realistic recoverable cash.
+      var laborCost = state.revenue * 0.32;
+      var amt = Math.round(laborCost*waste*0.35 + state.revenue*scrap*0.4);
+      return {key:'ops', label:'Operational drag (rework + idle)', group:'ops', amount:amt};
+    }
+  },
+
+  /* 4 — COMPLIANCE & LIABILITY */
+  {
+    name:"Compliance Exposure",
+    tag:"Risk & Knowledge",
+    render:function(){return `
+      <div class="step-tag"><span class="n">5</span> Compliance &amp; liability</div>
+      <h2>What's your exposure if an inspector — or a lawyer — shows up?</h2>
+      <div class="sub">This one's a probability bet. Low odds, high cost. We weight it conservatively so the number stays honest.</div>
+      <label class="field"><span class="q">How current is your safety / compliance documentation?</span>
+        <div class="opts" data-radio="c_doc">
+          <label class="opt"><input type="radio" name="c_doc" value="0.7"><span class="ot">Behind / unsure what we have</span></label>
+          <label class="opt"><input type="radio" name="c_doc" value="0.35"><span class="ot">Mostly current</span></label>
+          <label class="opt"><input type="radio" name="c_doc" value="0.1"><span class="ot">Fully current &amp; audited</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Had a near-miss, fine, or close call in the last 2 years?</span>
+        <div class="opts" data-radio="c_hist">
+          <label class="opt"><input type="radio" name="c_hist" value="1.4"><span class="ot">Yes</span></label>
+          <label class="opt"><input type="radio" name="c_hist" value="1.0"><span class="ot">No</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var d=document.querySelector('input[name=c_doc]:checked');
+      var h=document.querySelector('input[name=c_hist]:checked');
+      setv('c_doc',d?d.value:''); setv('c_hist',h?h.value:'');
+    },
+    valid:function(){return gv('c_doc')&&gv('c_hist');},
+    compute:function(){
+      var doc=+gv('c_doc')||0, hist=+gv('c_hist')||0;
+      // annualized probability-weighted exposure; conservative recovery factor
+      var base = Math.min(state.revenue*0.015, 45000) + state.employees*400;
+      var amt = Math.round(base * doc * hist * 0.5);
+      return {key:'compliance', label:'Compliance / liability exposure', group:'risk', amount:amt};
+    }
+  },
+
+  /* 5 — GROWTH CEILING */
+  {
+    name:"Growth Ceiling",
+    tag:"Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">6</span> Growth ceiling</div>
+      <h2>What are you turning away?</h2>
+      <div class="sub">Capacity left on the table is invisible profit. If you're saying no to work, that's a leak with your name on it.</div>
+      <label class="field"><span class="q">How often do you turn down work or delay jobs because of capacity?</span>
+        <div class="opts" data-radio="g_turn">
+          <label class="opt"><input type="radio" name="g_turn" value="0.0"><span class="ot">Rarely / never</span></label>
+          <label class="opt"><input type="radio" name="g_turn" value="0.04"><span class="ot">Occasionally</span></label>
+          <label class="opt"><input type="radio" name="g_turn" value="0.09"><span class="ot">Monthly</span></label>
+          <label class="opt"><input type="radio" name="g_turn" value="0.16"><span class="ot">Constantly — we're maxed</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Main bottleneck?</span>
+        <div class="opts" data-radio="g_bottle">
+          <label class="opt"><input type="radio" name="g_bottle" value="people"><span class="ot">Can't find / train enough skilled people</span></label>
+          <label class="opt"><input type="radio" name="g_bottle" value="systems"><span class="ot">Systems &amp; processes can't scale</span></label>
+          <label class="opt"><input type="radio" name="g_bottle" value="me"><span class="ot">Everything runs through me</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var t=document.querySelector('input[name=g_turn]:checked');
+      var b=document.querySelector('input[name=g_bottle]:checked');
+      setv('g_turn',t?t.value:''); setv('g_bottle',b?b.value:'');
+    },
+    valid:function(){return gv('g_turn')!==''&&gv('g_bottle');},
+    compute:function(){
+      var turn=+gv('g_turn')||0;
+      // foregone margin on turned-away work (~18% net), recovery factor 0.5 (you can't capture all of it)
+      var amt = Math.round(state.revenue * turn * 0.18 * 0.5);
+      return {key:'growth', label:'Foregone growth (capacity ceiling)', group:'ops', amount:amt};
+    }
+  },
+
+  /* 6 — FINANCIAL BLIND SPOTS */
+  {
+    name:"Financial Blind Spots",
+    tag:"Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">7</span> Financial blind spots</div>
+      <h2>Where are the numbers fuzzy?</h2>
+      <div class="sub">You can't plug what you can't see. Stale pricing and unwatched costs are the most common silent drains.</div>
+      <label class="field"><span class="q">When did you last raise prices to match rising costs?</span>
+        <div class="opts" data-radio="b_price">
+          <label class="opt"><input type="radio" name="b_price" value="0.0"><span class="ot">Within the last 6 months</span></label>
+          <label class="opt"><input type="radio" name="b_price" value="0.025"><span class="ot">6–12 months ago</span></label>
+          <label class="opt"><input type="radio" name="b_price" value="0.05"><span class="ot">1–2 years ago</span></label>
+          <label class="opt"><input type="radio" name="b_price" value="0.08"><span class="ot">Longer / not sure</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Do you know your true job-level profit margin?</span>
+        <div class="opts" data-radio="b_margin">
+          <label class="opt"><input type="radio" name="b_margin" value="0.0"><span class="ot">Yes — per job, current</span></label>
+          <label class="opt"><input type="radio" name="b_margin" value="0.02"><span class="ot">Roughly</span></label>
+          <label class="opt"><input type="radio" name="b_margin" value="0.045"><span class="ot">Not really — we guess</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var p=document.querySelector('input[name=b_price]:checked');
+      var m=document.querySelector('input[name=b_margin]:checked');
+      setv('b_price',p?p.value:''); setv('b_margin',m?m.value:'');
+    },
+    valid:function(){return gv('b_price')!==''&&gv('b_margin')!=='';},
+    compute:function(){
+      var price=+gv('b_price')||0, margin=+gv('b_margin')||0;
+      // pricing lag + margin leakage applies to recoverable margin, not full revenue
+      var amt = Math.round(state.revenue * (price + margin) * 0.25);
+      return {key:'financial', label:'Pricing &amp; margin blind spots', group:'ops', amount:amt};
+    }
+  },
+
+  /* 7 — CARD & PAYMENT OPTIMIZATION (the folded-in module) */
+  {
+    name:"Cards & Payments",
+    tag:"Cards & Payments",
+    render:function(){return `
+      <div class="step-tag"><span class="n">8</span> Cards &amp; payment optimization</div>
+      <h2>The money leaking out before it hits your pocket</h2>
+      <div class="sub">Three levers: the cards you swipe, how you pay suppliers, and points you're letting expire. Most shops leave thousands here every year.</div>
+      <label class="field"><span class="q">Roughly how much do you put on cards / pay suppliers monthly?</span>
+        <select id="p_spend">
+          <option value="">Select…</option>
+          <option value="15000">Under $20k/mo</option>
+          <option value="35000">$20k – $50k/mo</option>
+          <option value="75000">$50k – $100k/mo</option>
+          <option value="150000">$100k+/mo</option>
+        </select>
+      </label>
+      <label class="field"><span class="q">Lever 1 — Card rewards: are your cards matched to where you actually spend?</span>
+        <div class="opts" data-radio="p_card">
+          <label class="opt"><input type="radio" name="p_card" value="0.018"><span class="ot">No idea / one generic card</span></label>
+          <label class="opt"><input type="radio" name="p_card" value="0.009"><span class="ot">Somewhat optimized</span></label>
+          <label class="opt"><input type="radio" name="p_card" value="0.002"><span class="ot">Dialed in by category</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Lever 2 — Payments: using ACH / early-pay discounts where you could?</span>
+        <div class="opts" data-radio="p_ach">
+          <label class="opt"><input type="radio" name="p_ach" value="0.012"><span class="ot">Paying fees / missing discounts</span></label>
+          <label class="opt"><input type="radio" name="p_ach" value="0.005"><span class="ot">Some of the time</span></label>
+          <label class="opt"><input type="radio" name="p_ach" value="0.0"><span class="ot">Fully optimized</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Lever 3 — Points: sitting on unredeemed rewards?</span>
+        <div class="opts" data-radio="p_pts">
+          <label class="opt"><input type="radio" name="p_pts" value="2500"><span class="ot">Probably a big pile</span></label>
+          <label class="opt"><input type="radio" name="p_pts" value="900"><span class="ot">Some</span></label>
+          <label class="opt"><input type="radio" name="p_pts" value="0"><span class="ot">Redeem regularly</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      setv('p_spend',val('p_spend'));
+      ['p_card','p_ach','p_pts'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked'); setv(n,e?e.value:'');
+      });
+    },
+    valid:function(){return gv('p_spend')&&gv('p_card')&&gv('p_ach')&&gv('p_pts');},
+    compute:function(){
+      var spend=+gv('p_spend')||0, card=+gv('p_card')||0, ach=+gv('p_ach')||0, pts=+gv('p_pts')||0;
+      var annual = spend*12;
+      var amt = Math.round(annual*card + annual*ach + pts);
+      return {key:'cards', label:'Card / payment / points waste', group:'cards', amount:amt};
+    }
+  }
+];
+
+/* ============ HELPERS ============ */
+function val(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function gv(k){return state.answers[k]!==undefined?state.answers[k]:'';}
+function setv(k,v){state.answers[k]=v;}
+function money(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function persist(){try{localStorage.setItem('pld_state',JSON.stringify(state));localStorage.setItem('pld_step',current);}catch(e){}}
+function restore(){
+  try{
+    var s=localStorage.getItem('pld_state'); if(s){state=JSON.parse(s);}
+  }catch(e){}
+}
+
+/* ============ FLOW ============ */
+function start(){
+  document.getElementById('intro').classList.add('hide');
+  document.getElementById('wizard').classList.remove('hide');
+  current=0; renderStep();
+  window.scrollTo(0,0);
+}
+
+function renderStep(){
+  var step=STEPS[current];
+  document.getElementById('steps').innerHTML='<div class="step active card">'+step.render()+
+    '<div class="nav">'+
+      (current>0?'<button class="btn btn-back" onclick="back()">← Back</button>':'')+
+      '<button class="btn btn-next" onclick="next()">'+(current===STEPS.length-1?'See My Results →':'Continue →')+'</button>'+
+    '</div></div>';
+
+  // progress
+  var pct=Math.round(((current)/(STEPS.length))*100);
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pStep').textContent='Step '+(current+1)+' of '+STEPS.length;
+  document.getElementById('pName').textContent=step.tag;
+
+  restoreSelections();
+  wireOptHighlights();
+  updateTally();
+}
+
+/* re-check radios/selects from saved state when navigating back */
+function restoreSelections(){
+  // selects with explicit ids
+  ['f_trade','f_emp','f_rev','f_trade','k_count','k_sal','p_spend'].forEach(function(id){
+    var e=document.getElementById(id); if(!e)return;
+    if(id==='f_trade'&&state.trade)e.value=state.trade;
+    if(id==='f_emp'&&state.employees)e.value=state.employees;
+    if(id==='f_rev'&&state.revenue)e.value=state.revenue;
+    if(id==='k_count'&&gv('k_count')!=='')e.value=gv('k_count');
+    if(id==='k_sal'&&gv('k_sal'))e.value=gv('k_sal');
+    if(id==='p_spend'&&gv('p_spend'))e.value=gv('p_spend');
+  });
+  // radios
+  document.querySelectorAll('.opts[data-radio]').forEach(function(grp){
+    var name=grp.getAttribute('data-radio');
+    var saved=gv(name);
+    if(saved!==''){
+      var r=grp.querySelector('input[value="'+saved+'"]');
+      if(r){r.checked=true;r.closest('.opt').classList.add('sel');}
+    }
+  });
+}
+
+function wireOptHighlights(){
+  document.querySelectorAll('.opt input[type=radio]').forEach(function(r){
+    r.addEventListener('change',function(){
+      var name=r.name;
+      document.querySelectorAll('input[name='+name+']').forEach(function(o){o.closest('.opt').classList.remove('sel');});
+      r.closest('.opt').classList.add('sel');
+    });
+  });
+}
+
+function updateTally(){
+  // live partial total from steps already answered
+  var sum=0,counted=0;
+  for(var i=1;i<=current;i++){
+    if(STEPS[i]&&STEPS[i].compute){
+      var r=STEPS[i].compute(); if(r){sum+=r.amount;counted++;}
+    }
+  }
+  var t=document.getElementById('tally');
+  if(counted>0){t.innerHTML='Running estimate so far: <b>'+money(sum)+'</b> / year';}
+  else{t.innerHTML='';}
+}
+
+function next(){
+  var step=STEPS[current];
+  step.save();
+  if(!step.valid()){
+    flashIncomplete();
+    return;
+  }
+  if(current===0){
+    if(state.trade) {} // setup saved in save()
+  }
+  persist();
+  if(current<STEPS.length-1){
+    current++; renderStep(); window.scrollTo(0,0);
+  } else {
+    computeAll(); showGate();
+  }
+}
+
+function back(){
+  STEPS[current].save();
+  if(current>0){current--; renderStep(); window.scrollTo(0,0);}
+}
+
+function flashIncomplete(){
+  var btn=document.querySelector('.btn-next');
+  if(!btn)return;
+  var orig=btn.textContent;
+  btn.textContent='Please answer all fields';
+  btn.style.background='var(--red)';
+  setTimeout(function(){btn.textContent=orig;btn.style.background='';},1400);
+}
+
+/* ============ COMPUTE ============ */
+function computeAll(){
+  state.leaks={};
+  STEPS.forEach(function(s){
+    if(s.compute){var r=s.compute(); if(r&&r.amount>0){state.leaks[r.key]=r;}}
+  });
+  persist();
+}
+function totalLeak(){
+  var t=0; for(var k in state.leaks){t+=state.leaks[k].amount;} return t;
+}
+
+/* ============ GATE ============ */
+function showGate(){
+  document.getElementById('wizard').classList.add('hide');
+  var g=document.getElementById('gate'); g.classList.remove('hide');
+  document.getElementById('pFill').style.width='100%';
+  document.getElementById('gatePreview').textContent=money(totalLeak());
+  window.scrollTo(0,0);
+}
+
+function unlock(){
+  var email=val('emailInput');
+  var err=document.getElementById('emailErr');
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    err.textContent='Please enter a valid email address.';
+    return;
+  }
+  err.textContent='';
+  state.email=email; persist();
+  var btn=document.getElementById('unlockBtn');
+  btn.innerHTML='<span class="spinner"></span>Unlocking…';
+  btn.disabled=true;
+
+  subscribe(email).finally(function(){
+    document.getElementById('gate').classList.add('hide');
+    renderResults();
+    document.getElementById('results').classList.add('show');
+    window.scrollTo(0,0);
+  });
+}
+
+function subscribe(email){
+  // never block the report on a network/config failure — we already have the lead
+  if(!BEEHIIV_ENDPOINT){
+    try{localStorage.setItem('pld_lead',email);}catch(e){}
+    return Promise.resolve();
+  }
+  return fetch(BEEHIIV_ENDPOINT,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      email:email,
+      publication_id:BEEHIIV_PUB,
+      utm_source:'profit_leak_detector',
+      custom_fields:{
+        trade:state.trade,
+        total_leak:totalLeak(),
+        revenue:state.revenue,
+        employees:state.employees
+      }
+    })
+  }).catch(function(){
+    try{localStorage.setItem('pld_lead',email);}catch(e){}
+  });
+}
+
+/* ============ RESULTS ============ */
+function renderResults(){
+  var total=totalLeak();
+  document.getElementById('resTotal').textContent=money(total);
+
+  // sort leaks desc
+  var arr=Object.keys(state.leaks).map(function(k){return state.leaks[k];})
+    .sort(function(a,b){return b.amount-a.amount;});
+
+  var max=arr.length?arr[0].amount:1;
+  var colors={risk:'linear-gradient(90deg,#C53030,#E05E00)',ops:'linear-gradient(90deg,#FF6B00,#E05E00)',cards:'linear-gradient(90deg,#27834A,#3DA35D)'};
+
+  var bars='';
+  arr.forEach(function(l,i){
+    var w=Math.round((l.amount/max)*100);
+    var pct=total?Math.round((l.amount/total)*100):0;
+    bars+='<div class="leak-bar">'+
+      '<div class="lb-top"><span class="lb-name">'+l.label+'</span><span class="lb-val">'+money(l.amount)+'/yr</span></div>'+
+      '<div class="lb-track"><div class="lb-fill" data-w="'+w+'" style="background:'+(colors[l.group]||colors.ops)+'"></div></div>'+
+      '<div class="lb-pct">'+pct+'% of your total leak · '+GROUPS[l.group]+'</div>'+
+    '</div>';
+  });
+  document.getElementById('leakBars').innerHTML=bars;
+
+  // animate bars
+  setTimeout(function(){
+    document.querySelectorAll('.lb-fill').forEach(function(f){f.style.width=f.getAttribute('data-w')+'%';});
+  },120);
+
+  /* ===== DETAILED BREAKDOWN CARDS ===== */
+  var details='';
+  arr.forEach(function(l){
+    var cardClass = l.group==='risk'?'risk-card':l.group==='cards'?'cards-card':'';
+    var labelClass = l.group==='risk'?'risk-label':l.group==='cards'?'cards-label':'';
+    var d = getLeakDetail(l.key);
+    details+='<div class="detail-card '+cardClass+'">';
+    details+='<div class="dc-head"><span class="dc-title">'+l.label+'</span><span class="dc-amount">'+money(l.amount)+'/yr</span></div>';
+    details+='<div class="dc-tag">'+GROUPS[l.group]+'</div>';
+
+    // What's happening
+    details+='<div class="dc-section"><div class="dc-section-label '+labelClass+'">What\'s happening</div>';
+    details+='<div class="dc-text">'+d.diagnosis+'</div></div>';
+
+    // Benchmark if available
+    if(d.benchmark){
+      details+='<div class="dc-benchmark"><span class="bm-icon">📊</span><span>'+d.benchmark+'</span></div>';
+    }
+
+    // Sub-levers for cards
+    if(d.levers){
+      details+='<div class="dc-sub-levers">';
+      d.levers.forEach(function(lv){
+        details+='<div class="dc-lever"><span class="dc-lever-name">'+lv.name+'</span><span class="dc-lever-val">'+money(lv.amount)+'/yr</span></div>';
+      });
+      details+='</div>';
+    }
+
+    // Fix
+    details+='<div class="dc-fix"><div class="fix-label">🔧 Recommended fix</div>'+d.fix+'</div>';
+    details+='</div>';
+  });
+  document.getElementById('detailCards').innerHTML=details;
+
+  /* ===== PRIORITY ACTION PLAN ===== */
+  var plan='';
+  var top3=arr.slice(0,3);
+  top3.forEach(function(l,i){
+    var a=getActionItem(l.key);
+    plan+='<div class="action-item">';
+    plan+='<div class="action-num">'+(i+1)+'</div>';
+    plan+='<div class="action-body">';
+    plan+='<div class="action-title">'+a.title+'</div>';
+    plan+='<div class="action-desc">'+a.desc+'</div>';
+    plan+='<div class="action-impact">Potential recovery: '+money(l.amount*a.recoveryPct)+'/yr</div>';
+    plan+='</div></div>';
+  });
+  if(arr.length>3){
+    plan+='<div class="action-item"><div class="action-num">…</div><div class="action-body"><div class="action-title">'+(arr.length-3)+' more leaks identified</div><div class="action-desc">Fix your top 3 first. These smaller leaks become easier to address once the big ones are plugged.</div></div></div>';
+  }
+  document.getElementById('actionPlan').innerHTML=plan;
+}
+
+/* ===== PERSONALIZED DETAIL GENERATORS ===== */
+function getLeakDetail(key){
+  var a=state.answers, emp=state.employees, rev=state.revenue, trade=state.trade;
+  var revLabel = rev>=10000000?'$10M+':rev>=5000000?'$5–10M':rev>=2000000?'$2–5M':rev>=1000000?'$1–2M':'under $1M';
+
+  var details = {
+    knowledge: (function(){
+      var count=+gv('k_count')||0, salLabel=+gv('k_sal')||0, docLevel=+gv('k_doc');
+      var docDesc = docLevel>=0.8?'virtually undocumented':docLevel>=0.5?'only partially documented':'mostly documented';
+      return {
+        diagnosis:'You have <span class="hl">'+count+' key '+(count===1?'person':'people')+'</span> who could retire or leave in the next 3 years. At an average salary of <span class="hl">'+money(salLabel)+'</span>, their institutional knowledge is '+docDesc+'. SHRM research shows replacing a skilled trades worker costs 50–200% of their annual salary — and that doesn\'t account for the tribal knowledge, customer relationships, and problem-solving instincts that walk out with them.',
+        benchmark:'<b>Industry benchmark:</b> Companies that capture tribal knowledge before retirement reduce replacement ramp-up time by 40–60% (SHRM 2024).',
+        fix:'Start a structured knowledge capture process with your '+count+' at-risk '+(count===1?'veteran':'veterans')+' now — even 2 hours of recorded interviews per person can recover the most critical decision-making knowledge. Focus on: emergency procedures, customer-specific quirks, and the "I just know" judgment calls that no manual covers.',
+        levers:null
+      };
+    })(),
+
+    spof: (function(){
+      var conc=+gv('s_conc'), keyPerson=+gv('s_key');
+      var concDesc = conc>=0.30?'heavily concentrated in a single client':conc>=0.18?'concentrated in 1–2 major clients':conc>=0.08?'moderately concentrated':'well diversified';
+      var keyDesc = keyPerson>=0.05?'several jobs that only one person can do':keyPerson>=0.025?'a couple single-person dependencies':'good cross-training coverage';
+      return {
+        diagnosis:'Your revenue is '+concDesc+', and you have '+keyDesc+'. Both create fragility — if your biggest customer leaves or your key person gets hurt, the revenue impact hits immediately with no buffer. For a '+trade+' shop doing '+revLabel+', that concentration carries real downside risk.',
+        benchmark:'<b>Industry rule of thumb:</b> No single customer should exceed 15–20% of revenue. Businesses above that threshold trade at a 20–30% discount in valuations.',
+        fix:'Two moves: (1) Actively develop 2–3 new customer relationships this quarter to dilute concentration. (2) Cross-train at least one backup person on every critical skill — even partial cross-training cuts your single-point-of-failure risk in half.',
+        levers:null
+      };
+    })(),
+
+    ops: (function(){
+      var waste=+gv('o_waste'), scrap=+gv('o_scrap');
+      var wasteDesc = waste>=0.30?'over 30%':waste>=0.18?'15–30%':waste>=0.10?'5–15%':'under 5%';
+      var scrapDesc = scrap>=0.08?'over 8%':scrap>=0.05?'3–8%':scrap>=0.02?'1–3%':'under 1%';
+      var laborCost = rev*0.32;
+      return {
+        diagnosis:'You estimated <span class="hl">'+wasteDesc+'</span> of labor hours go to rework, searching for info, or waiting — across your '+emp+' employees, that\'s paid labor producing zero output. Your scrap/callback rate of <span class="hl">'+scrapDesc+' of revenue</span> compounds it. On an estimated labor cost of '+money(laborCost)+'/year, even the recoverable portion adds up fast.',
+        benchmark:'<b>NIST manufacturing benchmark:</b> Average scrap and rework runs 2–4% of revenue. The best shops run under 1%. Every point you shave goes straight to margin.',
+        fix:'Identify the top 3 recurring rework triggers this week — the jobs that keep coming back. Build a simple checklist or pre-flight inspection for each one. Shops that implement standardized QC checklists typically cut callbacks by 30–50% within 90 days. For time waste: track where people spend the first 15 minutes of each job — if it\'s hunting for info, specs, or parts, that\'s a systems fix, not a people fix.',
+        levers:null
+      };
+    })(),
+
+    compliance: (function(){
+      var doc=+gv('c_doc'), hist=+gv('c_hist');
+      var docDesc = doc>=0.6?'behind or uncertain':doc>=0.3?'mostly current':'fully current';
+      var histDesc = hist>1.2?'You\'ve had a near-miss, fine, or close call in the last 2 years, which means your actual risk is elevated above baseline.':'No recent incidents, but that doesn\'t mean the exposure isn\'t there.';
+      return {
+        diagnosis:'Your safety and compliance documentation is '+docDesc+'. '+histDesc+' For a '+trade+' operation with '+emp+' employees, the annualized cost of a single OSHA citation starts at $16,131 per violation (2024 rates), and serious violations run $161,323. That doesn\'t include the project delays, insurance premium increases, and legal fees that follow.',
+        benchmark:'<b>OSHA data:</b> Trades with poor documentation are 3.4x more likely to receive citations. Insurance carriers increasingly audit compliance records before renewal.',
+        fix:'Do a 2-hour documentation audit: pull every safety cert, training record, and compliance doc you have. Make a simple spreadsheet: what you have, what\'s expired, what\'s missing. The gap list becomes your 30-day fix list. Prioritize anything a surprise OSHA visit would flag.',
+        levers:null
+      };
+    })(),
+
+    growth: (function(){
+      var turn=+gv('g_turn'), bottle=gv('g_bottle');
+      var turnDesc = turn>=0.14?'constantly — you\'re maxed out':turn>=0.07?'monthly':turn>=0.03?'occasionally':'rarely';
+      var bottleDesc = bottle==='people'?'finding and training skilled people':bottle==='systems'?'systems and processes that can\'t scale':'everything running through you personally';
+      var margin = rev*0.18;
+      return {
+        diagnosis:'You\'re turning down work <span class="hl">'+turnDesc+'</span>, and the main bottleneck is '+bottleDesc+'. Every job you turn away isn\'t just lost revenue — it\'s lost margin. On a '+revLabel+' business with typical trades margins around 18%, that foregone work carries real profit you\'ll never see.',
+        benchmark:'<b>McKinsey operations research:</b> Trades businesses that solve their primary capacity bottleneck grow revenue 15–25% in the following 12 months.',
+        fix:bottle==='people'?'The labor market is tight, but shops that offer structured onboarding with documented SOPs attract candidates faster and retain 40% longer. Start with one detailed "Day 1 to Day 90" training plan for your most common role.':bottle==='me'?'You are the bottleneck. Pick the 2 decisions you make most often each week and write down your decision criteria. Delegate those two decisions to your most capable person with the written criteria as their guide. Review weekly for a month, then stop reviewing.':'Map your current workflow for your highest-volume job type. Find the step where things stack up and wait. That\'s your constraint — fix that one step before anything else.',
+        levers:null
+      };
+    })(),
+
+    financial: (function(){
+      var price=+gv('b_price'), margin=+gv('b_margin');
+      var priceDesc = price>=0.07?'over a year (or unknown)':price>=0.04?'1–2 years ago':price>=0.02?'6–12 months ago':'within the last 6 months';
+      var marginDesc = margin>=0.04?'don\'t really know your true job-level margins':margin>=0.015?'have a rough sense of margins':'track margins per job';
+      return {
+        diagnosis:'You last adjusted pricing <span class="hl">'+priceDesc+'</span>, and you '+marginDesc+'. In a trades business doing '+revLabel+', material and labor costs shift every quarter. If your prices don\'t keep pace, you\'re doing the same work for less real profit every month. And without job-level margin tracking, your most profitable work subsidizes your least profitable — but you can\'t see which is which.',
+        benchmark:'<b>Industry data:</b> Trades businesses that review pricing quarterly and track job-level margins average 3–5 points higher net margin than those that don\'t.',
+        fix:'This week: pull your 5 most recent completed jobs. Calculate true cost (labor hours × loaded rate + materials + subs + overhead allocation) vs. what you billed. Rank them by margin. You\'ll likely find 1–2 job types that are barely breaking even — those get repriced or dropped. Then set a calendar reminder to repeat this exercise quarterly.',
+        levers:null
+      };
+    })(),
+
+    cards: (function(){
+      var spend=+gv('p_spend')||0, card=+gv('p_card')||0, ach=+gv('p_ach')||0, pts=+gv('p_pts')||0;
+      var annual=spend*12;
+      var cardAmt=Math.round(annual*card);
+      var achAmt=Math.round(annual*ach);
+      var ptsAmt=Math.round(pts);
+      var cardDesc = card>=0.015?'using a generic card not matched to your spend categories':card>=0.007?'somewhat optimized but leaving reward tiers on the table':'well matched to your spending';
+      var achDesc = ach>=0.01?'paying processing fees and missing early-pay discounts on supplier invoices':ach>=0.004?'capturing some but not all payment optimization':'fully optimized';
+      var ptsDesc = pts>=2000?'sitting on a significant pile of unredeemed points losing value':'have some unredeemed rewards';
+      return {
+        diagnosis:'You\'re putting roughly <span class="hl">'+money(spend)+'/month</span> through cards and supplier payments. You\'re '+cardDesc+'. On payments, you\'re '+achDesc+'. And you\'re '+(pts>0?ptsDesc:'redeeming points regularly — good')+'.',
+        benchmark:'<b>Benchmark:</b> A well-optimized card strategy on '+money(annual)+'/year in spend should return 2.5–4% in rewards. Most businesses capture under 1%.',
+        fix:'Three quick moves: (1) <b>Cards:</b> Match a high-rewards card to your top 2 spend categories — fuel, materials, or equipment. Cards like the Amex Blue Business Plus (2x on first $50K) or Chase Ink Business (5x on office/internet) often beat generic 1% cards by 2–3x. (2) <b>Payments:</b> Ask your top 5 suppliers if they offer a 2/10 net 30 discount for early payment — most do, and 2% for paying 20 days early is a 36% annualized return. Switch recurring payments to ACH to eliminate processing fees. (3) <b>Points:</b> Redeem everything sitting over 90 days old. Points devalue over time. Cash back or statement credits are almost always the best redemption.',
+        levers:[
+          {name:'Card rewards gap',amount:cardAmt},
+          {name:'Payment optimization gap',amount:achAmt},
+          {name:'Unredeemed points/rewards',amount:ptsAmt}
+        ]
+      };
+    })()
+  };
+
+  return details[key]||{diagnosis:'Analysis based on your inputs.',benchmark:null,fix:'Review this area with a financial advisor.',levers:null};
+}
+
+function getActionItem(key){
+  var actions={
+    knowledge:{title:'Start knowledge capture now',desc:'Schedule 2-hour recorded sessions with your at-risk veterans. Focus on the decisions they make that nobody else understands. Even partial capture cuts your replacement risk dramatically.',recoveryPct:0.5},
+    spof:{title:'Diversify revenue and cross-train',desc:'Open conversations with 2–3 new potential clients this month. Pick your riskiest single-person skill and start cross-training a backup this week.',recoveryPct:0.4},
+    ops:{title:'Attack your top 3 rework triggers',desc:'Identify the 3 jobs that generate the most callbacks or rework. Build a pre-flight checklist for each. Track rework rate weekly.',recoveryPct:0.45},
+    compliance:{title:'Run a 2-hour documentation audit',desc:'Pull every cert, training record, and compliance doc. List what\'s current, expired, and missing. Fix the expired items first.',recoveryPct:0.6},
+    growth:{title:'Fix your #1 bottleneck',desc:'You identified your main constraint. Solve that one thing before anything else — don\'t spread effort across multiple improvements.',recoveryPct:0.35},
+    financial:{title:'Audit your last 5 jobs for true margin',desc:'Calculate real cost vs. billed on your 5 most recent completed jobs. Reprice or drop the losers. Set a quarterly pricing review.',recoveryPct:0.5},
+    cards:{title:'Optimize your card stack and payment terms',desc:'Match high-rewards cards to your top spend categories. Ask top 5 suppliers about early-pay discounts. Redeem all sitting points.',recoveryPct:0.7}
+  };
+  return actions[key]||{title:'Review this area',desc:'Consult with an advisor to address this leak.',recoveryPct:0.3};
+}
+
+/* ============ INIT ============ */
+(function(){ restore(); })();
+</script>
+</body>
+</html>
 
