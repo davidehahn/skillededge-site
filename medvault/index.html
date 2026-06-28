@@ -1,1 +1,649 @@
-<h1>MedVault — Coming Soon</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedVault — AI-Powered Protocol Capture for Med Spas</title>
+  <meta name="description" content="MedVault captures your exact treatment protocols and turns them into staff training materials your team can actually follow — so your clinic runs your way, even when you're not there." />
+  <meta property="og:title" content="MedVault — AI-Powered Protocol Capture for Med Spas" />
+  <meta property="og:description" content="Stop doing every treatment yourself. MedVault systematizes your protocols into SOPs, checklists, quizzes, and video training your staff can follow." />
+  <meta property="og:url" content="https://skillededge.io/medvault" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230D2B5E'/><text y='.9em' font-size='72' x='12'>🏥</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:      #0D2B5E;
+      --navy-deep: #071830;
+      --navy-mid:  #122444;
+      --teal:      #00B4A0;
+      --teal-dark: #008C7D;
+      --gold:      #E8B84B;
+      --copper:    #B87333;
+      --white:     #F2F6FB;
+      --off:       #E8EEF6;
+      --gray:      #7A8FAD;
+      --light-bg:  #F4F7FB;
+      --border:    #D4DFEF;
+      --text:      #1A2A42;
+      --radius:    10px;
+      --shadow:    0 4px 24px rgba(13,43,94,0.10);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: #fff; color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: var(--navy-deep); border-bottom: 2px solid var(--teal); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; max-width: 1100px; margin: 0 auto; height: 60px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo-mark { width: 36px; height: 36px; border-radius: 7px; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.1); }
+    .nav-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+    .nav-logo-name { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: var(--white); }
+    .nav-logo-sub { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); }
+    .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
+    .nav-links a { color: rgba(242,246,251,0.75); font-size: 13px; font-weight: 500; padding: 6px 12px; border-radius: 6px; transition: color 0.2s, background 0.2s; }
+    .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.07); }
+    .nav-cta { background: var(--teal) !important; color: #fff !important; font-weight: 600 !important; padding: 7px 16px !important; border-radius: 7px !important; }
+    .nav-cta:hover { background: var(--teal-dark) !important; }
+    .nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); margin: 4px 0; border-radius: 2px; transition: 0.3s; }
+    @media(max-width:768px) {
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0; background: var(--navy-deep); padding: 16px 20px; gap: 4px; border-bottom: 2px solid var(--teal); }
+      .nav-links.open { display: flex; }
+      .nav-hamburger { display: block; }
+    }
+
+    /* HERO */
+    .hero { background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 60%, #0a3a6e 100%); padding: 80px 20px 90px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 20% 50%, rgba(0,180,160,0.08) 0%, transparent 60%), radial-gradient(circle at 80% 20%, rgba(232,184,75,0.06) 0%, transparent 50%); pointer-events: none; }
+    .hero-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(0,180,160,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,160,0.04) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; }
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,180,160,0.15); border: 1px solid rgba(0,180,160,0.3); color: var(--teal); font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 14px; border-radius: 20px; margin-bottom: 20px; }
+    .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(42px, 6vw, 72px); line-height: 0.95; letter-spacing: 2px; color: var(--white); margin-bottom: 16px; }
+    .hero h1 em { font-style: normal; color: var(--teal); display: block; }
+    .hero-tagline { font-size: 18px; color: rgba(242,246,251,0.75); margin-bottom: 12px; line-height: 1.5; }
+    .hero-sub { font-size: 15px; color: rgba(242,246,251,0.55); margin-bottom: 36px; line-height: 1.6; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--teal); color: #fff; font-weight: 700; font-size: 15px; padding: 14px 28px; border-radius: var(--radius); border: none; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,180,160,0.35); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); color: var(--white); font-weight: 600; font-size: 15px; padding: 14px 28px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .btn-secondary:hover { background: rgba(255,255,255,0.14); }
+    .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+    .hero-pill { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(242,246,251,0.65); font-size: 12px; padding: 4px 12px; border-radius: 20px; }
+    .hero-right { display: flex; flex-direction: column; gap: 12px; }
+    .hero-stat-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px 24px; backdrop-filter: blur(10px); transition: border-color 0.2s; }
+    .hero-stat-card:hover { border-color: rgba(0,180,160,0.4); }
+    .hero-stat-card.featured { border-color: rgba(0,180,160,0.3); background: rgba(0,180,160,0.08); }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--teal); margin-bottom: 6px; }
+    .stat-value { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--white); letter-spacing: 1px; line-height: 1; }
+    .stat-desc { font-size: 13px; color: rgba(242,246,251,0.55); margin-top: 4px; }
+    .stat-cta { display: inline-flex; align-items: center; gap: 6px; color: var(--teal); font-size: 13px; font-weight: 600; margin-top: 10px; cursor: pointer; text-decoration: none; }
+    .stat-cta:hover { text-decoration: underline; }
+    @media(max-width:768px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero-right { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    }
+    @media(max-width:480px) { .hero-right { grid-template-columns: 1fr; } }
+
+    /* PAIN POINTS */
+    .section { padding: 72px 20px; }
+    .section-alt { background: var(--light-bg); }
+    .section-dark { background: var(--navy-deep); }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 5vw, 52px); letter-spacing: 2px; color: var(--navy); margin-bottom: 12px; }
+    .section-dark .section-title { color: var(--white); }
+    .section-sub { font-size: 17px; color: var(--gray); max-width: 560px; margin: 0 auto; line-height: 1.6; }
+    .section-dark .section-sub { color: rgba(242,246,251,0.6); }
+
+    /* PAIN GRID */
+    .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1100px; margin: 0 auto; }
+    .pain-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 28px; box-shadow: var(--shadow); border-left: 4px solid var(--copper); }
+    .pain-icon { font-size: 28px; margin-bottom: 12px; }
+    .pain-title { font-weight: 700; font-size: 16px; color: var(--navy); margin-bottom: 8px; }
+    .pain-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+    /* HOW IT WORKS */
+    .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 900px; margin: 0 auto; }
+    .how-step { text-align: center; padding: 32px 20px; }
+    .how-num { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 26px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .how-title { font-weight: 700; font-size: 18px; color: var(--navy); margin-bottom: 8px; }
+    .how-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+    @media(max-width:600px) { .how-grid { grid-template-columns: 1fr; } }
+
+    /* WHAT'S IN THE VAULT */
+    .vault-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; max-width: 1100px; margin: 0 auto; }
+    .vault-item { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 24px; display: flex; align-items: flex-start; gap: 14px; box-shadow: var(--shadow); transition: all 0.2s; }
+    .vault-item:hover { border-color: var(--teal); transform: translateY(-2px); }
+    .vault-item-icon { font-size: 24px; flex-shrink: 0; }
+    .vault-item-title { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+    .vault-item-desc { font-size: 13px; color: var(--gray); line-height: 1.5; }
+
+    /* PRICING */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1000px; margin: 0 auto; }
+    .pricing-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow); display: flex; flex-direction: column; position: relative; }
+    .pricing-card.featured { border-color: var(--teal); background: linear-gradient(135deg, #fff 0%, #f0faf9 100%); }
+    .pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--teal); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; white-space: nowrap; }
+    .pricing-name { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1.5px; color: var(--navy); margin-bottom: 4px; }
+    .pricing-price { font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: var(--teal); letter-spacing: 1px; line-height: 1; margin-bottom: 4px; }
+    .pricing-price span { font-size: 18px; color: var(--gray); font-family: 'DM Sans', sans-serif; font-weight: 400; }
+    .pricing-setup { font-size: 13px; color: var(--gray); margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .pricing-setup strong { color: var(--navy); }
+    .pricing-features { list-style: none; margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .pricing-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text); }
+    .pricing-features li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .pricing-btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 14px; border-radius: var(--radius); font-weight: 700; font-size: 14px; transition: all 0.2s; text-decoration: none; background: var(--teal); color: #fff; border: none; cursor: pointer; }
+    .pricing-btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .pricing-btn-outline { background: transparent; color: var(--navy); border: 2px solid var(--border); }
+    .pricing-btn-outline:hover { border-color: var(--teal); color: var(--teal); background: transparent; transform: translateY(-1px); }
+    @media(max-width:768px) { .pricing-grid { grid-template-columns: 1fr; max-width: 400px; } }
+
+    /* LEAD MAGNET BANNER */
+    .lead-banner { background: linear-gradient(135deg, var(--navy) 0%, #0a3a6e 100%); border-radius: 20px; padding: 48px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; max-width: 1100px; margin: 0 auto; position: relative; overflow: hidden; }
+    .lead-banner::before { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,180,160,0.15), transparent); border-radius: 50%; }
+    .lb-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+    .lb-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 4vw, 44px); letter-spacing: 2px; color: var(--white); margin-bottom: 12px; line-height: 1; }
+    .lb-desc { font-size: 15px; color: rgba(242,246,251,0.7); line-height: 1.6; margin-bottom: 24px; max-width: 500px; }
+    .lb-stats { display: flex; gap: 32px; }
+    .lb-stat { text-align: center; }
+    .lb-stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--gold); letter-spacing: 1px; }
+    .lb-stat-label { font-size: 11px; color: rgba(242,246,251,0.55); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+    @media(max-width:768px) { .lead-banner { grid-template-columns: 1fr; } .lb-stats { justify-content: flex-start; } }
+
+    /* WHO IT'S FOR */
+    .icp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; max-width: 1100px; margin: 0 auto; }
+    .icp-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px 16px; text-align: center; transition: all 0.2s; }
+    .icp-card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .icp-icon { font-size: 28px; margin-bottom: 10px; }
+    .icp-label { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+    .icp-sub { font-size: 12px; color: var(--gray); }
+
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 1100px; margin: 0 auto; }
+    .about-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 32px; }
+    .pillar { background: var(--light-bg); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .pillar-title { font-weight: 700; font-size: 14px; color: var(--navy); margin-bottom: 4px; }
+    .pillar-sub { font-size: 12px; color: var(--gray); }
+    .about-stats { display: flex; flex-direction: column; gap: 20px; }
+    .about-stat { display: flex; align-items: center; gap: 20px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; box-shadow: var(--shadow); }
+    .about-stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--teal); letter-spacing: 1px; flex-shrink: 0; min-width: 80px; }
+    .about-stat-text { font-size: 14px; color: var(--gray); line-height: 1.5; }
+    .about-stat-text strong { color: var(--navy); display: block; font-size: 15px; margin-bottom: 2px; }
+    @media(max-width:768px) { .about-grid { grid-template-columns: 1fr; } .about-pillars { grid-template-columns: 1fr 1fr; } }
+
+    /* CONTACT */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px; margin: 0 auto; }
+    .contact-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 28px; text-align: center; transition: border-color 0.2s; }
+    .contact-card:hover { border-color: rgba(0,180,160,0.4); }
+    .contact-icon { font-size: 32px; margin-bottom: 12px; }
+    .contact-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+    .contact-value { font-size: 18px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+    .contact-sub { font-size: 13px; color: rgba(242,246,251,0.5); }
+    .contact-form { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 32px; max-width: 600px; margin: 40px auto 0; }
+    .contact-form h3 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1.5px; color: var(--white); margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: rgba(242,246,251,0.7); margin-bottom: 6px; }
+    .form-group select, .form-group textarea, .form-group input { width: 100%; padding: 10px 14px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; transition: border-color 0.2s; }
+    .form-group select:focus, .form-group textarea:focus, .form-group input:focus { outline: none; border-color: var(--teal); }
+    .form-group select option { background: var(--navy-deep); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-submit { width: 100%; padding: 13px; background: var(--teal); color: #fff; font-weight: 700; font-size: 15px; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; font-family: 'DM Sans', sans-serif; }
+    .form-submit:hover { background: var(--teal-dark); }
+    @media(max-width:600px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    /* FOOTER */
+    footer { background: var(--navy-deep); border-top: 1px solid rgba(255,255,255,0.06); padding: 48px 20px 24px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand-name { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--white); margin-bottom: 4px; }
+    .footer-brand-tag { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 12px; }
+    .footer-brand-desc { font-size: 13px; color: rgba(242,246,251,0.45); line-height: 1.7; max-width: 260px; }
+    .footer-col h4 { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col ul li a { font-size: 13px; color: rgba(242,246,251,0.5); transition: color 0.2s; }
+    .footer-col ul li a:hover { color: var(--teal); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-copy { font-size: 12px; color: rgba(242,246,251,0.3); }
+    .footer-disclaimer { font-size: 11px; color: rgba(242,246,251,0.25); max-width: 500px; line-height: 1.6; }
+    @media(max-width:768px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:480px) { .footer-inner { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-mark">🏥</div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">MedVault</span>
+        <span class="nav-logo-sub">by Skilled Edge Group</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#whats-inside">What's Inside</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#who-its-for">Who It's For</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#contact" class="nav-cta">📅 Book a Demo</a></li>
+    </ul>
+    <button class="nav-hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">🏥 MedVault — Protocol Systematization</div>
+      <h1>Your Med Spa Runs<br>on Your Protocols.<br><em>Not Just on You.</em></h1>
+      <p class="hero-tagline">AI-powered protocol capture for med spa owners who are ready to scale.</p>
+      <p class="hero-sub">MedVault captures your exact treatment protocols and turns them into staff training materials your team can actually follow — so your clinic runs your way, even when you're not there.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">📅 Book a Demo Call</a>
+        <a href="#lead-magnet" class="btn-secondary">📄 Free Botox Template</a>
+      </div>
+      <div class="hero-pills">
+        <span class="hero-pill">💉 Botox & Fillers</span>
+        <span class="hero-pill">🔆 Laser Treatments</span>
+        <span class="hero-pill">✨ Microneedling</span>
+        <span class="hero-pill">💆 Skincare Protocols</span>
+        <span class="hero-pill">🩺 PRP Therapy</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stat-card featured">
+        <div class="stat-label">⏱ Training Time Saved</div>
+        <div class="stat-value">10 HRS</div>
+        <div class="stat-desc">Average hours saved per new hire when protocols are systematized versus learned by shadowing</div>
+        <a href="#how-it-works" class="stat-cta">See how it works →</a>
+      </div>
+      <div class="hero-stat-card">
+        <div class="stat-label">📋 Protocols at Risk</div>
+        <div class="stat-value">80%</div>
+        <div class="stat-desc">Of med spa owners currently performing the majority of treatments themselves — because nobody else does it right</div>
+        <a href="#pricing" class="stat-cta">See pricing →</a>
+      </div>
+      <div class="hero-stat-card">
+        <div class="stat-label">🚀 Time to Confident Staff</div>
+        <div class="stat-value">2 WKS</div>
+        <div class="stat-desc">Average time for new hires to reach full confidence using MedVault training vs. 4–6 weeks of shadowing</div>
+        <a href="#contact" class="stat-cta">Book your demo →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="section section-alt">
+  <div class="section-header">
+    <div class="section-eyebrow">Sound Familiar?</div>
+    <div class="section-title">You Built This Clinic. But It Can't Run Without You.</div>
+    <p class="section-sub">If any of these hit close to home, MedVault was built for you.</p>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">😤</div>
+      <div class="pain-title">You're doing 80% of treatments yourself</div>
+      <p class="pain-desc">Because nobody else does it the way you do. Your technique, your touch, your protocols — all locked in your head with no way to transfer them.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📅</div>
+      <div class="pain-title">New hires take weeks to train</div>
+      <p class="pain-desc">Every new injector or aesthetician means weeks of shadowing, constant questions, and treatments you have to supervise personally before you can trust them.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">✈️</div>
+      <div class="pain-title">You can't take a day off</div>
+      <p class="pain-desc">Vacations, sick days, family time — all come with anxiety. If you're not there, things fall apart. Your clinic is a job, not a business.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">⚠️</div>
+      <div class="pain-title">One inconsistent treatment away from a bad review</div>
+      <p class="pain-desc">Staff performing treatments differently than you do creates inconsistent results, patient complaints, and reputation damage that takes months to repair.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📉</div>
+      <div class="pain-title">You can't scale what's in your head</div>
+      <p class="pain-desc">Every new location, every new hire, every expansion plan is blocked by the same bottleneck — your protocols live in your brain, not in a system.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <div class="pain-title">Staff turnover costs you every time</div>
+      <p class="pain-desc">When a trained staff member leaves, they take everything with them. You're back to square one, spending weeks training the next person from scratch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how-it-works">
+  <div class="section-header">
+    <div class="section-eyebrow">How It Works</div>
+    <div class="section-title">Three Steps to a Clinic That Runs Your Way</div>
+    <p class="section-sub">No complicated software. No lengthy implementations. Just your protocols, systematized and ready for your team.</p>
+  </div>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <div class="how-title">Record</div>
+      <p class="how-desc">You spend 60 minutes walking through your top treatments on camera. Your technique. Your products. Your exact process. Nothing scripted — just you doing what you already do.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <div class="how-title">Build</div>
+      <p class="how-desc">Our AI system converts your recordings into complete staff training materials: written SOPs, step-by-step checklists, video training clips, and staff competency quizzes. All formatted and ready to use.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <div class="how-title">Train</div>
+      <p class="how-desc">Your staff access their personalized MedVault on any device. They watch, they study, they pass the quiz. New hires go from day one to confident in two weeks instead of two months.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INSIDE -->
+<section class="section section-alt" id="whats-inside">
+  <div class="section-header">
+    <div class="section-eyebrow">What's Inside Your Vault</div>
+    <div class="section-title">Everything Your Staff Needs. All in One Place.</div>
+    <p class="section-sub">Built from your exact protocols. Accessible on any device. Ready to use from day one.</p>
+  </div>
+  <div class="vault-grid">
+    <div class="vault-item">
+      <div class="vault-item-icon">📄</div>
+      <div>
+        <div class="vault-item-title">Written SOPs</div>
+        <p class="vault-item-desc">Step-by-step written protocols for every captured treatment, formatted for clarity and easy reference.</p>
+      </div>
+    </div>
+    <div class="vault-item">
+      <div class="vault-item-icon">✅</div>
+      <div>
+        <div class="vault-item-title">Staff Checklists</div>
+        <p class="vault-item-desc">Printable chairside checklists so staff follow your exact process during every treatment, every time.</p>
+      </div>
+    </div>
+    <div class="vault-item">
+      <div class="vault-item-icon">🎥</div>
+      <div>
+        <div class="vault-item-title">Video Training Library</div>
+        <p class="vault-item-desc">Indexed video clips of your exact technique so new hires can watch, rewatch, and learn at their own pace.</p>
+      </div>
+    </div>
+    <div class="vault-item">
+      <div class="vault-item-icon">📝</div>
+      <div>
+        <div class="vault-item-title">Competency Quizzes</div>
+        <p class="vault-item-desc">Pass/fail quizzes for each protocol so you know your staff are ready before they treat their first patient.</p>
+      </div>
+    </div>
+    <div class="vault-item">
+      <div class="vault-item-icon">🎓</div>
+      <div>
+        <div class="vault-item-title">New Hire Curriculum</div>
+        <p class="vault-item-desc">A structured onboarding path so every new hire goes through the same process in the same order.</p>
+      </div>
+    </div>
+    <div class="vault-item">
+      <div class="vault-item-icon">📱</div>
+      <div>
+        <div class="vault-item-title">Mobile-Friendly Dashboard</div>
+        <p class="vault-item-desc">Staff access their Vault on any phone, tablet, or computer — right from the treatment room if they need it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-header">
+    <div class="section-eyebrow">Simple, Transparent Pricing</div>
+    <div class="section-title">One Setup. Three Ways to Scale.</div>
+    <p class="section-sub">All plans include a one-time $1,299 setup fee covering your full protocol extraction, SOP build, and Vault launch.</p>
+  </div>
+  <div class="pricing-grid">
+
+    <!-- Starter -->
+    <div class="pricing-card">
+      <div class="pricing-name">Vault Starter</div>
+      <div class="pricing-price">$199<span>/mo</span></div>
+      <div class="pricing-setup">+ <strong>$1,299</strong> one-time setup fee</div>
+      <ul class="pricing-features">
+        <li>Up to 3 protocols captured</li>
+        <li>Written SOPs and checklists</li>
+        <li>Staff competency quizzes</li>
+        <li>Video training library</li>
+        <li>Mobile-friendly Vault dashboard</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#contact" class="pricing-btn pricing-btn-outline">Get Started →</a>
+    </div>
+
+    <!-- Pro (Featured) -->
+    <div class="pricing-card featured">
+      <div class="pricing-badge">⭐ Most Popular</div>
+      <div class="pricing-name">Vault Pro</div>
+      <div class="pricing-price">$349<span>/mo</span></div>
+      <div class="pricing-setup">+ <strong>$1,299</strong> one-time setup fee</div>
+      <ul class="pricing-features">
+        <li>Up to 5 protocols captured</li>
+        <li>Written SOPs and checklists</li>
+        <li>Staff competency quizzes</li>
+        <li>Video training library</li>
+        <li>AI Lead Responder for Instagram & Facebook DMs</li>
+        <li>Monthly check-in call</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get Started →</a>
+    </div>
+
+    <!-- Elite -->
+    <div class="pricing-card">
+      <div class="pricing-name">Vault Elite</div>
+      <div class="pricing-price">$499<span>/mo</span></div>
+      <div class="pricing-setup">+ <strong>$1,299</strong> one-time setup fee</div>
+      <ul class="pricing-features">
+        <li>Unlimited protocol captures</li>
+        <li>Written SOPs and checklists</li>
+        <li>Staff competency quizzes</li>
+        <li>Video training library</li>
+        <li>AI Lead Responder for Instagram & Facebook DMs</li>
+        <li>AI Review Responder for Google & Yelp</li>
+        <li>AI Content Creator for social media</li>
+        <li>Quarterly business review call</li>
+        <li>Dedicated account support</li>
+      </ul>
+      <a href="#contact" class="pricing-btn pricing-btn-outline">Get Started →</a>
+    </div>
+
+  </div>
+  <p style="text-align:center;font-size:13px;color:var(--gray);margin-top:24px;">Setup fee covers full onboarding. Monthly subscription begins after your Vault goes live. Cancel anytime after month 3. Not medical advice. Not a compliance tool.</p>
+</section>
+
+<!-- LEAD MAGNET BANNER -->
+<section class="section section-alt" id="lead-magnet">
+  <div class="lead-banner">
+    <div>
+      <div class="lb-eyebrow">Free Resource</div>
+      <div class="lb-title">Download the Free<br>Botox Protocol<br>Starter Template</div>
+      <p class="lb-desc">We built a one-page Botox consultation SOP you can use to start training your staff this week. Patient assessment checklist, injection zones, product amounts, aftercare instructions. Free. No catch.</p>
+      <a href="https://subscribe-forms.beehiiv.com/89ec7439-0e98-4cc7-abb2-de137d2931a0" target="_blank" class="btn-primary">📄 Download Free Template →</a>
+      <p style="font-size:12px;color:rgba(242,246,251,0.35);margin-top:12px;">You'll also receive the MedVault weekly newsletter. Unsubscribe anytime.</p>
+    </div>
+    <div class="lb-stats">
+      <div class="lb-stat">
+        <div class="lb-stat-val">FREE</div>
+        <div class="lb-stat-label">No Cost</div>
+      </div>
+      <div class="lb-stat">
+        <div class="lb-stat-val">1 PG</div>
+        <div class="lb-stat-label">Ready to Use</div>
+      </div>
+      <div class="lb-stat">
+        <div class="lb-stat-val">NOW</div>
+        <div class="lb-stat-label">Instant Access</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="section" id="who-its-for">
+  <div class="section-header">
+    <div class="section-eyebrow">Who It's For</div>
+    <div class="section-title">Built for Med Spa Owners Ready to Scale</div>
+    <p class="section-sub">MedVault works for any licensed aesthetic practice with staff and protocols worth protecting.</p>
+  </div>
+  <div class="icp-grid">
+    <div class="icp-card"><div class="icp-icon">💉</div><div class="icp-label">Injectors & NPs</div><div class="icp-sub">Botox, fillers, neuromodulators</div></div>
+    <div class="icp-card"><div class="icp-icon">🔆</div><div class="icp-label">Laser Specialists</div><div class="icp-sub">IPL, resurfacing, body contouring</div></div>
+    <div class="icp-card"><div class="icp-icon">✨</div><div class="icp-label">Aestheticians</div><div class="icp-sub">Facials, peels, microneedling</div></div>
+    <div class="icp-card"><div class="icp-icon">🩺</div><div class="icp-label">Med Spa Owners</div><div class="icp-sub">Multi-staff aesthetic clinics</div></div>
+    <div class="icp-card"><div class="icp-icon">💆</div><div class="icp-label">Wellness Clinics</div><div class="icp-sub">IV therapy, hormone, PRP</div></div>
+    <div class="icp-card"><div class="icp-icon">🏥</div><div class="icp-label">Plastic Surgery Practices</div><div class="icp-sub">Post-op care, non-surgical treatments</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section section-alt">
+  <div class="about-grid">
+    <div>
+      <div class="section-eyebrow">About MedVault</div>
+      <div class="section-title" style="text-align:left">Built by an Operator, for Operators</div>
+      <p style="font-size:15px;color:var(--gray);line-height:1.7;margin-top:16px;">MedVault is a product of Skilled Edge Group LLC — a systems and operations company that helps service businesses capture their expertise and turn it into scalable training infrastructure.</p>
+      <p style="font-size:15px;color:var(--gray);line-height:1.7;margin-top:12px;">We're not a med spa company. We're an operations company. We don't tell you how to do Botox. We build the system that captures how you already do it — and makes sure your whole team can do it the same way.</p>
+      <p style="font-size:15px;color:var(--gray);line-height:1.7;margin-top:12px;">Founded by Dave Hahn, Springfield VA. Not medical advice. Not a compliance tool. A training and systematization platform for licensed professionals.</p>
+      <div class="about-pillars">
+        <div class="pillar"><div class="pillar-title">🧠 Protocol First</div><div class="pillar-sub">Capture it before it walks out the door</div></div>
+        <div class="pillar"><div class="pillar-title">🏥 Clinic Focused</div><div class="pillar-sub">Built for aesthetic practices</div></div>
+        <div class="pillar"><div class="pillar-title">🤖 AI-Powered</div><div class="pillar-sub">Technology that does the heavy lifting</div></div>
+        <div class="pillar"><div class="pillar-title">💰 ROI-Driven</div><div class="pillar-sub">Pays for itself with one new hire</div></div>
+      </div>
+    </div>
+    <div class="about-stats">
+      <div class="about-stat">
+        <div class="about-stat-val">80%</div>
+        <div class="about-stat-text"><strong>Treatments Done by Owners</strong>Most med spa owners are trapped doing the majority of treatments because no one else follows their protocols correctly.</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-val">2WK</div>
+        <div class="about-stat-text"><strong>New Hire Confidence Timeline</strong>With MedVault, new staff reach full confidence in two weeks instead of the industry average of four to six.</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-val">$0</div>
+        <div class="about-stat-text"><strong>Cost to Download the Template</strong>Get our free Botox Protocol Starter Template and start training your staff this week.</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-val">USA</div>
+        <div class="about-stat-text"><strong>Nationwide Coverage</strong>Serving med spa owners, injectors, and aesthetic clinic operators across all 50 states.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section section-dark" id="contact">
+  <div class="section-header">
+    <div class="section-eyebrow">Get in Touch</div>
+    <div class="section-title">Ready to Talk?</div>
+    <p class="section-sub" style="color:rgba(242,246,251,0.6)">No gatekeepers. No sales team. Reach Dave directly.</p>
+  </div>
+  <div class="contact-grid">
+    <a href="tel:+17035685161" class="contact-card">
+      <div class="contact-icon">📞</div>
+      <div class="contact-label">Call or Text</div>
+      <div class="contact-value">(703) 568-5161</div>
+      <div class="contact-sub">Dave — MedVault / Skilled Edge Group</div>
+    </a>
+    <a href="mailto:dave@medvault.io" class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div class="contact-label">Email</div>
+      <div class="contact-value">dave@medvault.io</div>
+      <div class="contact-sub">Responses within 1 business day</div>
+    </a>
+  </div>
+  <div class="contact-form">
+    <h3>Book a Demo Call</h3>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" placeholder="Jane Smith" />
+    </div>
+    <div class="form-group">
+      <label>Your Med Spa Name</label>
+      <input type="text" placeholder="Glow Aesthetics" />
+    </div>
+    <div class="form-group">
+      <label>I am a...</label>
+      <select>
+        <option>Med Spa Owner — I want to systematize my protocols</option>
+        <option>Injector / NP — I want to train my staff better</option>
+        <option>Aesthetic Clinic Owner — I want to scale without me doing everything</option>
+        <option>Other inquiry</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea placeholder="Tell us about your clinic and what you're trying to solve..."></textarea>
+    </div>
+    <button class="form-submit" onclick="window.location.href='mailto:dave@medvault.io'">Book My Demo Call →</button>
+    <p style="text-align:center;font-size:12px;color:rgba(242,246,251,0.35);margin-top:12px;">Or email directly: dave@medvault.io</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">MedVault</div>
+      <div class="footer-brand-tag">AI-Powered Protocol Capture for Med Spas</div>
+      <p class="footer-brand-desc">A product of Skilled Edge Group LLC. Capturing treatment protocols, systematizing staff training, and helping med spa owners scale without doing every treatment themselves.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#whats-inside">What's Inside</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#lead-magnet">Free Template</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/">Skilled Edge Group</a></li>
+        <li><a href="#who-its-for">Who It's For</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="https://subscribe-forms.beehiiv.com/89ec7439-0e98-4cc7-abb2-de137d2931a0">Newsletter</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:dave@medvault.io">dave@medvault.io</a></li>
+        <li><a href="tel:+17035685161">(703) 568-5161</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Skilled Edge Group LLC. All rights reserved. MedVault is a product of Skilled Edge Group LLC.</div>
+      <div class="footer-disclaimer">MedVault is a training and systematization platform for licensed professionals. Not medical advice. Not a compliance tool. Results may vary. Always consult appropriate licensing and regulatory requirements in your state.</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
