@@ -1,1 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1735689180857933');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1735689180857933&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Med Spa Profit Leak Detector — MedVault</title>
+<meta name="description" content="Find exactly where your med spa is leaking $85,000–$200,000+ a year. One audit covers missed leads, no-shows, staff training waste, supply leaks, and payment optimization." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --edge:#00B4A0;
+    --edge-deep:#008C7D;
+    --edge-tint:rgba(0,180,160,0.06);
+    --edge-glow:rgba(0,180,160,0.14);
+    --ink:#F7F8FA;
+    --steel:#FFFFFF;
+    --panel:#F0F2F5;
+    --line:#E2E8F0;
+    --line-strong:#CBD5E0;
+    --text:#1A202C;
+    --mute:#4A5568;
+    --faint:#718096;
+    --amber:#E8B84B;
+    --green:#27834A;
+    --red:#C53030;
+    --font-display:'Archivo',sans-serif;
+    --font-body:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-body);background:var(--ink);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+  .display{font-family:var(--font-display);font-weight:800;letter-spacing:-0.02em;line-height:1.05}
+
+  /* Header */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:2px solid var(--line);margin-bottom:8px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:-0.01em;color:var(--text)}
+  .brand .icon{color:var(--edge);font-size:18px}
+  .tagpill{font-size:11px;color:var(--edge);border:1.5px solid var(--edge);border-radius:999px;padding:4px 11px;font-weight:700;letter-spacing:0.04em;background:var(--edge-tint)}
+
+  /* Hero */
+  .hero{padding:42px 0 14px;text-align:center;position:relative}
+  .hero h1{font-size:clamp(26px,6.5vw,44px);margin-bottom:16px;font-family:var(--font-display);font-weight:800;color:var(--text);letter-spacing:-0.02em;line-height:1.1}
+  .hero h1 .hl{color:var(--edge)}
+  .hero p{color:var(--mute);font-size:17px;max-width:540px;margin:0 auto 28px;line-height:1.6}
+  .start-btn{background:var(--edge);color:#fff;border:none;border-radius:10px;padding:17px 40px;font-family:var(--font-display);font-weight:700;font-size:17px;cursor:pointer;box-shadow:0 4px 16px var(--edge-glow);transition:transform .15s,box-shadow .15s,background .15s;}
+  .start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--edge-glow);background:var(--edge-deep)}
+  .start-btn:active{transform:translateY(0)}
+  .trust{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:22px;font-size:13px;color:var(--faint)}
+  .trust span{display:flex;align-items:center;gap:6px}
+
+  /* Progress */
+  .progress-shell{position:sticky;top:0;background:#fff;padding:14px 0 12px;z-index:20;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+  .progress-track{height:5px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--edge),var(--edge-deep));border-radius:99px;width:0%;transition:width .4s ease}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--faint);margin-top:8px;font-weight:500}
+
+  /* Steps */
+  .step{display:none;animation:rise .45s ease both}
+  .step.active{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .card{background:var(--steel);border:1px solid var(--line);border-radius:14px;padding:28px 24px;margin-top:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+  .step-tag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;color:var(--edge);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+  .step-tag .n{background:var(--edge);color:#fff;width:22px;height:22px;border-radius:5px;display:grid;place-items:center;font-family:var(--font-display);font-size:12px}
+  .step h2{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:-0.015em;margin-bottom:7px;color:var(--text)}
+  .step .sub{color:var(--mute);font-size:14.5px;margin-bottom:22px;line-height:1.55}
+
+  label.field{display:block;margin-bottom:18px}
+  label.field .q{display:block;font-weight:600;font-size:15px;margin-bottom:9px;color:var(--text)}
+  label.field .hint{font-weight:400;color:var(--faint);font-size:13px}
+  input[type=text],input[type=number],input[type=email],select{width:100%;background:#fff;border:1.5px solid var(--line-strong);border-radius:9px;padding:12px 14px;color:var(--text);font-size:16px;font-family:var(--font-body);transition:border-color .15s,box-shadow .15s}
+  input:focus,select:focus{outline:none;border-color:var(--edge);box-shadow:0 0 0 3px var(--edge-tint)}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5568' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-color:#fff}
+
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:13px 15px;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+  .opt:hover{border-color:var(--line-strong);background:var(--ink)}
+  .opt input{accent-color:var(--edge);width:18px;height:18px;flex-shrink:0}
+  .opt.sel{border-color:var(--edge);background:var(--edge-tint);box-shadow:0 0 0 3px var(--edge-glow)}
+  .opt .ot{font-size:14.5px;font-weight:500;color:var(--text)}
+
+  .nav{display:flex;gap:12px;margin-top:24px}
+  .btn{flex:1;border-radius:9px;padding:14px;font-family:var(--font-display);font-weight:700;font-size:15px;cursor:pointer;border:none;transition:transform .12s,background .15s}
+  .btn:active{transform:scale(.985)}
+  .btn-next{background:var(--edge);color:#fff;box-shadow:0 3px 12px var(--edge-glow)}
+  .btn-next:hover{background:var(--edge-deep)}
+  .btn-back{background:var(--panel);color:var(--mute);border:1.5px solid var(--line);flex:0 0 110px}
+  .btn-back:hover{background:var(--line);color:var(--text)}
+
+  .running-tally{text-align:center;margin-top:18px;font-size:13px;color:var(--faint)}
+  .running-tally b{color:var(--edge);font-family:var(--font-display);font-weight:700}
+
+  /* Email gate */
+  .gate{text-align:center}
+  .gate .lock{font-size:40px;margin-bottom:12px}
+  .gate h2{font-size:26px;margin-bottom:10px;font-family:var(--font-display);font-weight:800;color:var(--text)}
+  .gate .big-num{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,12vw,68px);color:var(--edge);line-height:1;margin:18px 0}
+  .gate p{color:var(--mute);max-width:440px;margin:0 auto 8px;line-height:1.6}
+  .gate .blurred{filter:blur(7px);user-select:none;pointer-events:none;opacity:.35;margin:16px 0;color:var(--faint)}
+  .gate-form{max-width:380px;margin:22px auto 0}
+  .gate-form input{margin-bottom:11px;text-align:center}
+  .gate-note{font-size:12px;color:var(--faint);margin-top:10px;line-height:1.5}
+  .err{color:var(--red);font-size:13px;margin-top:6px;min-height:16px}
+
+  /* Results */
+  .results{display:none}
+  .results.show{display:block;animation:rise .5s ease both}
+  .res-hero{text-align:center;padding:32px 0 10px}
+  .res-hero .eyebrow{color:var(--edge);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.1em}
+  .res-hero .total{font-family:var(--font-display);font-weight:900;font-size:clamp(46px,15vw,84px);color:var(--edge);line-height:1;margin:10px 0}
+  .res-hero .total-sub{color:var(--mute);font-size:15px}
+  .res-section-title{font-family:var(--font-display);font-weight:700;font-size:17px;margin:32px 0 8px;display:flex;align-items:center;gap:10px;color:var(--text)}
+  .res-section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--edge);flex-shrink:0}
+
+  .leak-bar{margin:14px 0}
+  .leak-bar .lb-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .leak-bar .lb-name{font-size:14px;font-weight:600;color:var(--text)}
+  .leak-bar .lb-val{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--edge)}
+  .leak-bar .lb-track{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+  .leak-bar .lb-fill{height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .leak-bar .lb-pct{font-size:11.5px;color:var(--faint);margin-top:3px}
+
+  .insight{background:#F0FAF9;border:1px solid #B2DFDB;border-left:3px solid var(--edge);border-radius:0 9px 9px 0;padding:15px 17px;margin-top:13px;font-size:14.5px;color:var(--text);line-height:1.55}
+  .insight b{color:var(--edge);font-weight:600}
+
+  .footer{text-align:center;color:var(--faint);font-size:12px;margin-top:44px;padding-top:22px;border-top:1px solid var(--line);line-height:1.6}
+  .footer a{color:var(--mute);text-decoration:none}
+  .footer a:hover{color:var(--edge)}
+
+  .save-row{text-align:center;margin-top:28px}
+  .save-btn{background:#fff;border:1.5px solid var(--line-strong);color:var(--mute);border-radius:9px;padding:12px 24px;font-family:var(--font-display);font-weight:600;font-size:14px;cursor:pointer;transition:border-color .15s,color .15s}
+  .save-btn:hover{border-color:var(--edge);color:var(--edge)}
+
+  .cta-row{text-align:center;margin-top:32px;padding:28px;background:linear-gradient(135deg,#0D2B5E,#0a3a6e);border-radius:14px}
+  .cta-row h3{font-family:var(--font-display);font-weight:800;font-size:22px;color:#fff;margin-bottom:8px}
+  .cta-row p{color:rgba(255,255,255,0.7);font-size:14px;margin-bottom:18px}
+  .cta-btn{display:inline-block;background:var(--edge);color:#fff;font-family:var(--font-display);font-weight:700;font-size:15px;padding:14px 32px;border-radius:9px;text-decoration:none;transition:background .15s}
+  .cta-btn:hover{background:var(--edge-deep)}
+
+  .detail-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 20px;margin-top:16px;border-left:3px solid var(--edge);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+  .detail-card.risk-card{border-left-color:var(--red)}
+  .detail-card.cards-card{border-left-color:var(--green)}
+  .dc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+  .dc-title{font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--text)}
+  .dc-amount{font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--edge)}
+  .dc-tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--faint);margin-bottom:12px}
+  .dc-section{margin-top:14px}
+  .dc-section-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--edge);margin-bottom:6px}
+  .dc-section-label.risk-label{color:var(--red)}
+  .dc-section-label.cards-label{color:var(--green)}
+  .dc-text{font-size:14.5px;color:var(--text);line-height:1.6}
+  .dc-text .hl{color:var(--edge);font-weight:600}
+  .dc-benchmark{display:flex;align-items:center;gap:8px;background:var(--panel);border-radius:7px;padding:10px 13px;margin-top:10px;font-size:13px;color:var(--mute)}
+  .dc-benchmark .bm-icon{font-size:16px}
+  .dc-benchmark b{color:var(--text);font-weight:600}
+  .dc-fix{background:#F0FAF9;border:1px solid #B2DFDB;border-radius:7px;padding:11px 14px;margin-top:10px;font-size:14px;color:var(--text);line-height:1.55}
+  .dc-fix .fix-label{font-weight:700;color:var(--edge);font-size:11.5px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+  .dc-sub-levers{margin-top:10px}
+  .dc-lever{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+  .dc-lever:last-child{border-bottom:none}
+  .dc-lever-name{font-size:14px;font-weight:500;color:var(--text)}
+  .dc-lever-val{font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--edge)}
+
+  .action-item{display:flex;gap:14px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:18px 18px;margin-top:12px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+  .action-num{flex:0 0 32px;height:32px;background:var(--edge);color:#fff;border-radius:7px;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:14px;flex-shrink:0}
+  .action-body{flex:1}
+  .action-title{font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:4px;color:var(--text)}
+  .action-desc{font-size:14px;color:var(--mute);line-height:1.55}
+  .action-impact{font-size:13px;color:var(--edge);font-weight:700;margin-top:6px}
+
+  .hide{display:none!important}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:7px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand"><span class="icon">🏥</span> MedVault</div>
+    <div class="tagpill">PROFIT LEAK DETECTOR</div>
+  </div>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="hero">
+      <h1>Find exactly where your med spa is leaking <span class="hl">$85,000–$200,000+</span> a year</h1>
+      <p>One audit. Five blind spots — missed leads, no-show revenue, staff training waste, supply optimization, and payment inefficiency. See your real number in about 4 minutes.</p>
+      <button class="start-btn" onclick="start()">Run My Audit →</button>
+      <div class="trust">
+        <span>🔒 Your numbers stay private</span>
+        <span>⚡ Instant on-screen results</span>
+        <span>📊 Built on AmSpa / PatientNow / Egma data</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WIZARD -->
+  <section id="wizard" class="hide">
+    <div class="progress-shell">
+      <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+      <div class="progress-label"><span id="pStep">Step 1 of 8</span><span id="pName">Setup</span></div>
+    </div>
+    <div id="steps"></div>
+    <div class="running-tally" id="tally"></div>
+  </section>
+
+  <!-- EMAIL GATE -->
+  <section id="gate" class="hide">
+    <div class="card gate">
+      <div class="lock">🔓</div>
+      <h2>Your audit is ready</h2>
+      <p>We found leaks across your clinic. Your total estimated annual leakage is:</p>
+      <div class="big-num" id="gatePreview">$0</div>
+      <p>Enter your email to unlock the full breakdown — every leak ranked by dollar impact, plus your prioritized fix list.</p>
+      <div class="blurred">▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓▓▓▓▓ ▓▓▓▓▓ ▓▓▓▓▓▓▓▓ ▓▓▓ ▓▓▓▓▓▓▓▓▓▓</div>
+      <div class="gate-form">
+        <input type="email" id="emailInput" placeholder="you@yourclinic.com" autocomplete="email" />
+        <button class="btn btn-next" style="width:100%" id="unlockBtn" onclick="unlock()">Unlock My Full Report →</button>
+        <div class="err" id="emailErr"></div>
+        <div class="gate-note">You'll also receive the MedVault weekly newsletter — practical ops and AI moves for med spa owners. Unsubscribe anytime.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="results">
+    <div class="res-hero">
+      <div class="eyebrow">Your Total Annual Profit Leakage</div>
+      <div class="total" id="resTotal">$0</div>
+      <div class="total-sub" id="resSub">across leads, no-shows, training, supply, and payments</div>
+    </div>
+
+    <div class="res-section-title"><span class="dot"></span> Leaks ranked by dollar impact</div>
+    <div id="leakBars"></div>
+
+    <div class="res-section-title"><span class="dot"></span> Your detailed breakdown</div>
+    <div id="detailCards"></div>
+
+    <div class="res-section-title"><span class="dot"></span> Your priority action plan</div>
+    <div id="actionPlan"></div>
+
+    <div class="cta-row">
+      <h3>MedVault fixes all five of these leaks.</h3>
+      <p>Protocol capture, AI lead responder, staff training system, supply optimization report, and payment audit — all in one system. Your $1,299 setup fee pays back in under one week.</p>
+      <a class="cta-btn" href="/medvault#contact">Book Your Free Demo Call →</a>
+    </div>
+
+    <div class="save-row">
+      <button class="save-btn" onclick="window.print()">💾 Save / Print My Report</button>
+    </div>
+  </section>
+
+  <div class="footer">
+    © 2026 Skilled Edge Group LLC · MedVault is a product of Skilled Edge Group LLC · Estimates are good-faith projections based on your inputs and published industry benchmarks including AmSpa 2024 State of the Industry Report, PatientNow, and Egma research. Not a guarantee of results. Not financial or medical advice. · <a href="https://skillededge.io/medvault">medvault.io</a>
+  </div>
+
+</div>
+
+<script>
+/* ============ CONFIG ============ */
+var BEEHIIV_PUB = "pub_b9ffbd01-aab6-41d9-98e7-b8a72be5370f";
+var BEEHIIV_ENDPOINT = "/api/subscribe";
+
+/* ============ STATE ============ */
+var state = {
+  clinicType:"", staff:0, monthlyRevenue:0,
+  answers:{}, leaks:{}, email:""
+};
+var current = 0;
+
+/* ============ GROUPS ============ */
+var GROUPS = { leads:"Missed Lead Revenue", noshows:"No-Show Revenue", training:"Staff Training & Turnover", supply:"Supply & Product Waste", payments:"Payment Optimization" };
+
+/* ============ STEPS ============ */
+var STEPS = [
+
+  /* 0 — SETUP */
+  {
+    name:"Your Clinic",
+    tag:"Setup",
+    render:function(){return `
+      <div class="step-tag"><span class="n">1</span> About your clinic</div>
+      <h2>Let's start with the basics</h2>
+      <div class="sub">These anchor every calculation to your real size — no generic averages.</div>
+      <label class="field"><span class="q">Your clinic type</span>
+        <select id="f_type">
+          <option value="">Select your clinic type…</option>
+          <optgroup label="Injectable Focus">
+            <option>Botox & Filler Focused</option>
+            <option>Full Injectable Menu</option>
+          </optgroup>
+          <optgroup label="Full Service">
+            <option>Full Service Med Spa</option>
+            <option>Laser & Skin Focus</option>
+            <option>IV Therapy & Wellness</option>
+          </optgroup>
+          <optgroup label="Specialty">
+            <option>Weight Loss & GLP-1</option>
+            <option>PRP & Regenerative</option>
+            <option>Multi-Location Practice</option>
+          </optgroup>
+        </select>
+      </label>
+      <label class="field"><span class="q">How many staff? <span class="hint">(including yourself)</span></span>
+        <input type="number" id="f_staff" min="1" placeholder="e.g. 5" value="${state.staff||''}" />
+      </label>
+      <label class="field"><span class="q">Approximate monthly revenue</span>
+        <select id="f_rev">
+          <option value="">Select range…</option>
+          <option value="50000">Under $75k/month</option>
+          <option value="100000">$75k – $125k/month</option>
+          <option value="166000">$125k – $200k/month</option>
+          <option value="250000">$200k – $300k/month</option>
+          <option value="400000">$300k+/month</option>
+        </select>
+      </label>`;
+    },
+    save:function(){
+      state.clinicType = val('f_type');
+      state.staff = +val('f_staff')||0;
+      state.monthlyRevenue = +val('f_rev')||0;
+    },
+    valid:function(){return state.clinicType && state.staff>0 && state.monthlyRevenue>0;},
+    compute:function(){return null;}
+  },
+
+  /* 1 — MISSED LEADS */
+  {
+    name:"Missed Lead Revenue",
+    tag:"Missed Leads",
+    render:function(){return `
+      <div class="step-tag"><span class="n">2</span> Missed lead revenue</div>
+      <h2>How many leads are slipping through the cracks?</h2>
+      <div class="sub">Industry analysis shows med spas lose $100,000+ annually from missed calls, unanswered DMs, and slow follow-up. Most owners dramatically underestimate this number.</div>
+      <label class="field"><span class="q">What percentage of Instagram and Facebook DMs go unanswered for more than 1 hour?</span>
+        <div class="opts" data-radio="l_dm">
+          <label class="opt"><input type="radio" name="l_dm" value="0.60"><span class="ot">Over 50% — we miss a lot of DMs</span></label>
+          <label class="opt"><input type="radio" name="l_dm" value="0.35"><span class="ot">25–50% — we respond when we can</span></label>
+          <label class="opt"><input type="radio" name="l_dm" value="0.15"><span class="ot">Under 25% — we're pretty responsive</span></label>
+          <label class="opt"><input type="radio" name="l_dm" value="0.02"><span class="ot">Nearly zero — we respond within minutes</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">What percentage of inbound calls go unanswered during business hours?</span>
+        <div class="opts" data-radio="l_calls">
+          <label class="opt"><input type="radio" name="l_calls" value="0.42"><span class="ot">Over 30% — phones often go unanswered</span></label>
+          <label class="opt"><input type="radio" name="l_calls" value="0.20"><span class="ot">15–30% — sometimes we miss calls</span></label>
+          <label class="opt"><input type="radio" name="l_calls" value="0.08"><span class="ot">Under 15% — we answer most calls</span></label>
+          <label class="opt"><input type="radio" name="l_calls" value="0.02"><span class="ot">Nearly all calls answered</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var d=document.querySelector('input[name=l_dm]:checked');
+      var c=document.querySelector('input[name=l_calls]:checked');
+      setv('l_dm',d?d.value:''); setv('l_calls',c?c.value:'');
+    },
+    valid:function(){return gv('l_dm')&&gv('l_calls');},
+    compute:function(){
+      var dm=+gv('l_dm')||0, calls=+gv('l_calls')||0;
+      // Estimate monthly inbound leads from social and phone
+      // Industry: average patient value $504 per visit, 3 visits/year = $1,512 LTV
+      // Estimate leads = monthly revenue / avg treatment $450 * 0.3 lead ratio
+      var monthlyLeads = (state.monthlyRevenue / 450) * 0.3;
+      var dmLeads = monthlyLeads * 0.5; // half come from social
+      var callLeads = monthlyLeads * 0.5; // half from calls
+      var missedDM = dmLeads * dm;
+      var missedCalls = callLeads * calls;
+      var totalMissed = missedDM + missedCalls;
+      // Each missed lead worth avg $450 first visit + 2 return visits
+      var ltvPerLead = 450 * 3;
+      var amt = Math.round(totalMissed * ltvPerLead * 0.25 * 12); // 25% would have converted
+      return {key:'leads', label:'Missed lead revenue (DMs + calls)', group:'leads', amount:amt};
+    }
+  },
+
+  /* 2 — NO-SHOWS */
+  {
+    name:"No-Show Revenue",
+    tag:"No-Shows",
+    render:function(){return `
+      <div class="step-tag"><span class="n">3</span> No-show revenue loss</div>
+      <h2>What's your no-show rate actually costing you?</h2>
+      <div class="sub">Research shows a med spa doing $2M annually with a 12% no-show rate loses $240,000 in direct revenue per year. Most owners track this loosely if at all.</div>
+      <label class="field"><span class="q">What is your approximate no-show and last-minute cancellation rate?</span>
+        <div class="opts" data-radio="n_rate">
+          <label class="opt"><input type="radio" name="n_rate" value="0.22"><span class="ot">Over 15% — it's a real problem</span></label>
+          <label class="opt"><input type="radio" name="n_rate" value="0.12"><span class="ot">10–15% — industry average range</span></label>
+          <label class="opt"><input type="radio" name="n_rate" value="0.07"><span class="ot">5–10% — below average</span></label>
+          <label class="opt"><input type="radio" name="n_rate" value="0.03"><span class="ot">Under 5% — well managed</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Do you have automated appointment reminders in place?</span>
+        <div class="opts" data-radio="n_reminders">
+          <label class="opt"><input type="radio" name="n_reminders" value="1.0"><span class="ot">No — reminders are manual or inconsistent</span></label>
+          <label class="opt"><input type="radio" name="n_reminders" value="0.65"><span class="ot">Some automation — email only</span></label>
+          <label class="opt"><input type="radio" name="n_reminders" value="0.4"><span class="ot">SMS and email automated</span></label>
+          <label class="opt"><input type="radio" name="n_reminders" value="0.2"><span class="ot">Full automated sequence — SMS, email, call</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var r=document.querySelector('input[name=n_rate]:checked');
+      var m=document.querySelector('input[name=n_reminders]:checked');
+      setv('n_rate',r?r.value:''); setv('n_reminders',m?m.value:'');
+    },
+    valid:function(){return gv('n_rate')&&gv('n_reminders');},
+    compute:function(){
+      var rate=+gv('n_rate')||0, reminderFactor=+gv('n_reminders')||1.0;
+      // Monthly appointments estimated
+      var avgTreatment = 450;
+      var monthlyAppts = state.monthlyRevenue / avgTreatment;
+      // No-shows per month
+      var noShows = monthlyAppts * rate * reminderFactor;
+      // Each no-show: lost treatment + lost slot opportunity
+      var costPerNoShow = avgTreatment * 1.5; // 1.5x because slot can't be refilled last minute
+      var monthlyLoss = noShows * costPerNoShow;
+      // Recoverable portion (can't get all of it back)
+      var amt = Math.round(monthlyLoss * 0.6 * 12);
+      return {key:'noshows', label:'No-show and cancellation revenue loss', group:'noshows', amount:amt};
+    }
+  },
+
+  /* 3 — STAFF TRAINING */
+  {
+    name:"Staff Training & Turnover",
+    tag:"Training",
+    render:function(){return `
+      <div class="step-tag"><span class="n">4</span> Staff training and turnover</div>
+      <h2>What does inconsistent training actually cost you?</h2>
+      <div class="sub">Every new hire who takes 4–6 weeks to ramp up instead of 2 weeks is costing you productivity and patient outcomes. Turnover costs $2,500–$10,000 per person before they're even contributing.</div>
+      <label class="field"><span class="q">How long does it typically take a new injector or aesthetician to reach full confidence?</span>
+        <div class="opts" data-radio="t_ramp">
+          <label class="opt"><input type="radio" name="t_ramp" value="6"><span class="ot">6+ weeks — long shadow period required</span></label>
+          <label class="opt"><input type="radio" name="t_ramp" value="4"><span class="ot">3–5 weeks — standard for us</span></label>
+          <label class="opt"><input type="radio" name="t_ramp" value="2"><span class="ot">2–3 weeks — we have decent systems</span></label>
+          <label class="opt"><input type="radio" name="t_ramp" value="1"><span class="ot">Under 2 weeks — well systematized</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">How many new staff did you hire or replace in the last 12 months?</span>
+        <input type="number" id="t_hires" min="0" placeholder="e.g. 3" value="${gv('t_hires')}" />
+      </label>
+      <label class="field"><span class="q">Are your treatment protocols documented anywhere staff can access?</span>
+        <div class="opts" data-radio="t_docs">
+          <label class="opt"><input type="radio" name="t_docs" value="1.0"><span class="ot">No — it's all in the owner's head</span></label>
+          <label class="opt"><input type="radio" name="t_docs" value="0.65"><span class="ot">Partial — some notes and verbal instructions</span></label>
+          <label class="opt"><input type="radio" name="t_docs" value="0.3"><span class="ot">Mostly documented but outdated</span></label>
+          <label class="opt"><input type="radio" name="t_docs" value="0.1"><span class="ot">Fully documented and current</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var r=document.querySelector('input[name=t_ramp]:checked');
+      var d=document.querySelector('input[name=t_docs]:checked');
+      setv('t_ramp',r?r.value:'');
+      setv('t_hires',val('t_hires'));
+      setv('t_docs',d?d.value:'');
+    },
+    valid:function(){return gv('t_ramp')&&gv('t_hires')!==''&&gv('t_docs');},
+    compute:function(){
+      var ramp=+gv('t_ramp')||4, hires=+gv('t_hires')||0, docs=+gv('t_docs')||1.0;
+      // Avg aesthetician salary $65k/year = $1,250/week
+      var weeklyRate = 1250;
+      // Ramp-up waste: extra weeks beyond optimal 2 weeks
+      var extraWeeks = Math.max(0, ramp - 2);
+      var rampCost = hires * extraWeeks * weeklyRate * docs;
+      // Turnover cost: $5,000 per hire (recruiting + onboarding)
+      var turnoverCost = hires * 5000 * docs;
+      // Inconsistent protocol cost: patient callbacks, rework, reputation
+      var protocolWaste = state.monthlyRevenue * 0.03 * docs * 12;
+      var amt = Math.round(rampCost + turnoverCost + protocolWaste);
+      return {key:'training', label:'Staff training inefficiency and turnover', group:'training', amount:amt};
+    }
+  },
+
+  /* 4 — SUPPLY WASTE */
+  {
+    name:"Supply & Product Waste",
+    tag:"Supply",
+    render:function(){return `
+      <div class="step-tag"><span class="n">5</span> Supply and product waste</div>
+      <h2>How much product is walking out the door or going to waste?</h2>
+      <div class="sub">Inconsistent protocols cause over-application and product waste. Poor inventory tracking leads to expired product and emergency orders at premium prices. Most med spas lose 8–15% of product spend this way.</div>
+      <label class="field"><span class="q">Monthly spend on injectables, skincare, laser consumables, and supplies</span>
+        <select id="s_spend">
+          <option value="">Select range…</option>
+          <option value="5000">Under $8k/month</option>
+          <option value="12000">$8k – $15k/month</option>
+          <option value="22000">$15k – $30k/month</option>
+          <option value="45000">$30k – $60k/month</option>
+          <option value="80000">$60k+/month</option>
+        </select>
+      </label>
+      <label class="field"><span class="q">How consistent are your staff at following exact product amounts per protocol?</span>
+        <div class="opts" data-radio="s_consistency">
+          <label class="opt"><input type="radio" name="s_consistency" value="0.15"><span class="ot">Inconsistent — everyone does it differently</span></label>
+          <label class="opt"><input type="radio" name="s_consistency" value="0.10"><span class="ot">Somewhat consistent — varies by provider</span></label>
+          <label class="opt"><input type="radio" name="s_consistency" value="0.05"><span class="ot">Mostly consistent — minor variations</span></label>
+          <label class="opt"><input type="radio" name="s_consistency" value="0.02"><span class="ot">Very consistent — documented and followed</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">How do you manage inventory?</span>
+        <div class="opts" data-radio="s_inventory">
+          <label class="opt"><input type="radio" name="s_inventory" value="0.08"><span class="ot">Manually — we order when we notice we're low</span></label>
+          <label class="opt"><input type="radio" name="s_inventory" value="0.04"><span class="ot">Spreadsheet tracking — somewhat organized</span></label>
+          <label class="opt"><input type="radio" name="s_inventory" value="0.01"><span class="ot">Software — automated reorder points</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      setv('s_spend',val('s_spend'));
+      var c=document.querySelector('input[name=s_consistency]:checked');
+      var i=document.querySelector('input[name=s_inventory]:checked');
+      setv('s_consistency',c?c.value:''); setv('s_inventory',i?i.value:'');
+    },
+    valid:function(){return gv('s_spend')&&gv('s_consistency')&&gv('s_inventory');},
+    compute:function(){
+      var spend=+gv('s_spend')||0, consistency=+gv('s_consistency')||0.10, inventory=+gv('s_inventory')||0.04;
+      var annualSpend = spend * 12;
+      // Protocol inconsistency waste
+      var protocolWaste = annualSpend * consistency;
+      // Inventory mismanagement: expired product, emergency orders, over-stocking
+      var inventoryWaste = annualSpend * inventory;
+      var amt = Math.round(protocolWaste + inventoryWaste);
+      return {key:'supply', label:'Supply and product waste', group:'supply', amount:amt};
+    }
+  },
+
+  /* 5 — CHAIR UTILIZATION */
+  {
+    name:"Chair Utilization",
+    tag:"Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">6</span> Chair and provider utilization</div>
+      <h2>How much revenue capacity is sitting idle?</h2>
+      <div class="sub">Top-performing med spas run 80–85% provider utilization. The industry average is 65–70%. Every percentage point below your potential is revenue you're paying for but not capturing.</div>
+      <label class="field"><span class="q">Roughly what percentage of available treatment time is actually booked?</span>
+        <div class="opts" data-radio="c_util">
+          <label class="opt"><input type="radio" name="c_util" value="0.50"><span class="ot">Under 60% — lots of open slots</span></label>
+          <label class="opt"><input type="radio" name="c_util" value="0.67"><span class="ot">60–75% — could be fuller</span></label>
+          <label class="opt"><input type="radio" name="c_util" value="0.80"><span class="ot">75–85% — reasonably full</span></label>
+          <label class="opt"><input type="radio" name="c_util" value="0.88"><span class="ot">Over 85% — nearly maxed out</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">How many treatment rooms do you have?</span>
+        <input type="number" id="c_rooms" min="1" placeholder="e.g. 4" value="${gv('c_rooms')}" />
+      </label>`;
+    },
+    save:function(){
+      var u=document.querySelector('input[name=c_util]:checked');
+      setv('c_util',u?u.value:'');
+      setv('c_rooms',val('c_rooms'));
+    },
+    valid:function(){return gv('c_util')&&gv('c_rooms')!=='';},
+    compute:function(){
+      var util=+gv('c_util')||0.67, rooms=+gv('c_rooms')||1;
+      // Gap to optimal 85% utilization
+      var optimal = 0.85;
+      var gap = Math.max(0, optimal - util);
+      // Revenue per room per month at current utilization
+      var revenuePerRoom = state.monthlyRevenue / rooms;
+      // Recoverable revenue from closing utilization gap
+      var amt = Math.round(revenuePerRoom * rooms * (gap / util) * 0.4 * 12);
+      return {key:'chairs', label:'Chair and provider underutilization', group:'noshows', amount:amt};
+    }
+  },
+
+  /* 6 — PAYMENT OPTIMIZATION */
+  {
+    name:"Payment Optimization",
+    tag:"Payments",
+    render:function(){return `
+      <div class="step-tag"><span class="n">7</span> Payment and card optimization</div>
+      <h2>The money leaking before it hits your pocket</h2>
+      <div class="sub">Three levers: the cards you use to buy supplies, how you pay vendors, and rewards you're letting expire. Most med spas leave thousands here every year.</div>
+      <label class="field"><span class="q">Are your business credit cards matched to your top spend categories?</span>
+        <div class="opts" data-radio="p_card">
+          <label class="opt"><input type="radio" name="p_card" value="0.018"><span class="ot">No idea — one generic card for everything</span></label>
+          <label class="opt"><input type="radio" name="p_card" value="0.009"><span class="ot">Somewhat — one or two cards</span></label>
+          <label class="opt"><input type="radio" name="p_card" value="0.002"><span class="ot">Dialed in — matched by spend category</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Are you using ACH or early-pay discounts with major suppliers like Allergan?</span>
+        <div class="opts" data-radio="p_ach">
+          <label class="opt"><input type="radio" name="p_ach" value="0.012"><span class="ot">No — paying full price, no discounts</span></label>
+          <label class="opt"><input type="radio" name="p_ach" value="0.005"><span class="ot">Sometimes — using some programs</span></label>
+          <label class="opt"><input type="radio" name="p_ach" value="0.0"><span class="ot">Yes — fully optimized supplier payment terms</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Sitting on unredeemed points or rewards?</span>
+        <div class="opts" data-radio="p_pts">
+          <label class="opt"><input type="radio" name="p_pts" value="2500"><span class="ot">Yes — big pile sitting there</span></label>
+          <label class="opt"><input type="radio" name="p_pts" value="900"><span class="ot">Some — redeem occasionally</span></label>
+          <label class="opt"><input type="radio" name="p_pts" value="0"><span class="ot">No — redeem regularly</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      ['p_card','p_ach','p_pts'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked'); setv(n,e?e.value:'');
+      });
+    },
+    valid:function(){return gv('p_card')&&gv('p_ach')&&gv('p_pts');},
+    compute:function(){
+      var card=+gv('p_card')||0, ach=+gv('p_ach')||0, pts=+gv('p_pts')||0;
+      var annualSupplySpend = (+gv('s_spend')||12000) * 12;
+      var cardAmt = Math.round(annualSupplySpend * card);
+      var achAmt = Math.round(annualSupplySpend * ach);
+      var amt = Math.round(cardAmt + achAmt + pts);
+      return {key:'payments', label:'Card, payment, and rewards optimization', group:'payments', amount:amt};
+    }
+  },
+
+  /* 7 — GROWTH CEILING */
+  {
+    name:"Growth Ceiling",
+    tag:"Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">8</span> Growth ceiling</div>
+      <h2>What's holding your clinic back from scaling?</h2>
+      <div class="sub">Most med spa owners are the bottleneck in their own business. You're doing 80% of treatments yourself because no one else follows your protocols. That's a systems problem, not a staffing problem.</div>
+      <label class="field"><span class="q">What percentage of treatments do you personally perform?</span>
+        <div class="opts" data-radio="g_owner">
+          <label class="opt"><input type="radio" name="g_owner" value="0.16"><span class="ot">Over 70% — I do almost everything</span></label>
+          <label class="opt"><input type="radio" name="g_owner" value="0.10"><span class="ot">50–70% — I do most treatments</span></label>
+          <label class="opt"><input type="radio" name="g_owner" value="0.05"><span class="ot">30–50% — shared with staff</span></label>
+          <label class="opt"><input type="radio" name="g_owner" value="0.01"><span class="ot">Under 30% — well delegated</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Main reason you can't delegate more treatments?</span>
+        <div class="opts" data-radio="g_reason">
+          <label class="opt"><input type="radio" name="g_reason" value="training"><span class="ot">Staff aren't trained to my standard yet</span></label>
+          <label class="opt"><input type="radio" name="g_reason" value="trust"><span class="ot">I don't trust the outcomes will match mine</span></label>
+          <label class="opt"><input type="radio" name="g_reason" value="docs"><span class="ot">My protocols aren't documented anywhere</span></label>
+          <label class="opt"><input type="radio" name="g_reason" value="fine"><span class="ot">I'm satisfied with current delegation</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      var o=document.querySelector('input[name=g_owner]:checked');
+      var r=document.querySelector('input[name=g_reason]:checked');
+      setv('g_owner',o?o.value:''); setv('g_reason',r?r.value:'');
+    },
+    valid:function(){return gv('g_owner')&&gv('g_reason');},
+    compute:function(){
+      var ownerPct=+gv('g_owner')||0;
+      // Revenue locked to owner's time
+      var ownerRevenue = state.monthlyRevenue * ownerPct;
+      // If owner could delegate 50% of their treatments to trained staff:
+      // Freed capacity at same revenue rate + new patients owner could see
+      var recoverablePct = 0.35; // conservative — can't delegate all of it
+      var amt = Math.round(ownerRevenue * recoverablePct * 12 * 0.3);
+      return {key:'growth', label:'Owner bottleneck — locked growth capacity', group:'leads', amount:amt};
+    }
+  }
+];
+
+/* ============ HELPERS ============ */
+function val(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function gv(k){return state.answers[k]!==undefined?state.answers[k]:'';}
+function setv(k,v){state.answers[k]=v;}
+function money(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function persist(){try{localStorage.setItem('mvpld_state',JSON.stringify(state));localStorage.setItem('mvpld_step',current);}catch(e){}}
+function restore(){try{var s=localStorage.getItem('mvpld_state'); if(s){state=JSON.parse(s);}}catch(e){}}
+
+/* ============ FLOW ============ */
+function start(){
+  document.getElementById('intro').classList.add('hide');
+  document.getElementById('wizard').classList.remove('hide');
+  current=0; renderStep();
+  window.scrollTo(0,0);
+}
+
+function renderStep(){
+  var step=STEPS[current];
+  document.getElementById('steps').innerHTML='<div class="step active card">'+step.render()+
+    '<div class="nav">'+
+      (current>0?'<button class="btn btn-back" onclick="back()">← Back</button>':'')+
+      '<button class="btn btn-next" onclick="next()">'+(current===STEPS.length-1?'See My Results →':'Continue →')+'</button>'+
+    '</div></div>';
+
+  var pct=Math.round(((current)/(STEPS.length))*100);
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pStep').textContent='Step '+(current+1)+' of '+STEPS.length;
+  document.getElementById('pName').textContent=step.tag;
+
+  restoreSelections();
+  wireOptHighlights();
+  updateTally();
+}
+
+function restoreSelections(){
+  ['f_type','f_staff','f_rev','t_hires','s_spend','c_rooms'].forEach(function(id){
+    var e=document.getElementById(id); if(!e)return;
+    if(id==='f_type'&&state.clinicType)e.value=state.clinicType;
+    if(id==='f_staff'&&state.staff)e.value=state.staff;
+    if(id==='f_rev'&&state.monthlyRevenue)e.value=state.monthlyRevenue;
+    if(id==='t_hires'&&gv('t_hires')!=='')e.value=gv('t_hires');
+    if(id==='s_spend'&&gv('s_spend'))e.value=gv('s_spend');
+    if(id==='c_rooms'&&gv('c_rooms')!=='')e.value=gv('c_rooms');
+  });
+  document.querySelectorAll('.opts[data-radio]').forEach(function(grp){
+    var name=grp.getAttribute('data-radio');
+    var saved=gv(name);
+    if(saved!==''){
+      var r=grp.querySelector('input[value="'+saved+'"]');
+      if(r){r.checked=true;r.closest('.opt').classList.add('sel');}
+    }
+  });
+}
+
+function wireOptHighlights(){
+  document.querySelectorAll('.opt input[type=radio]').forEach(function(r){
+    r.addEventListener('change',function(){
+      var name=r.name;
+      document.querySelectorAll('input[name='+name+']').forEach(function(o){o.closest('.opt').classList.remove('sel');});
+      r.closest('.opt').classList.add('sel');
+    });
+  });
+}
+
+function updateTally(){
+  var sum=0,counted=0;
+  for(var i=1;i<=current;i++){
+    if(STEPS[i]&&STEPS[i].compute){
+      var r=STEPS[i].compute(); if(r){sum+=r.amount;counted++;}
+    }
+  }
+  var t=document.getElementById('tally');
+  if(counted>0){t.innerHTML='Running estimate so far: <b>'+money(sum)+'</b> / year';}
+  else{t.innerHTML='';}
+}
+
+function next(){
+  var step=STEPS[current];
+  step.save();
+  if(!step.valid()){flashIncomplete();return;}
+  persist();
+  if(current<STEPS.length-1){current++;renderStep();window.scrollTo(0,0);}
+  else{computeAll();showGate();}
+}
+
+function back(){
+  STEPS[current].save();
+  if(current>0){current--;renderStep();window.scrollTo(0,0);}
+}
+
+function flashIncomplete(){
+  var btn=document.querySelector('.btn-next');
+  if(!btn)return;
+  var orig=btn.textContent;
+  btn.textContent='Please answer all fields';
+  btn.style.background='var(--red)';
+  setTimeout(function(){btn.textContent=orig;btn.style.background='';},1400);
+}
+
+/* ============ COMPUTE ============ */
+function computeAll(){
+  state.leaks={};
+  STEPS.forEach(function(s){
+    if(s.compute){var r=s.compute(); if(r&&r.amount>0){state.leaks[r.key]=r;}}
+  });
+  persist();
+}
+
+function totalLeak(){
+  var t=0; for(var k in state.leaks){t+=state.leaks[k].amount;} return t;
+}
+
+/* ============ GATE ============ */
+function showGate(){
+  document.getElementById('wizard').classList.add('hide');
+  var g=document.getElementById('gate'); g.classList.remove('hide');
+  document.getElementById('pFill').style.width='100%';
+  document.getElementById('gatePreview').textContent=money(totalLeak());
+  window.scrollTo(0,0);
+}
+
+function unlock(){
+  var email=val('emailInput');
+  var err=document.getElementById('emailErr');
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    err.textContent='Please enter a valid email address.';
+    return;
+  }
+  err.textContent='';
+  state.email=email; persist();
+  var btn=document.getElementById('unlockBtn');
+  btn.innerHTML='<span class="spinner"></span>Unlocking…';
+  btn.disabled=true;
+
+  subscribe(email).finally(function(){
+    document.getElementById('gate').classList.add('hide');
+    renderResults();
+    document.getElementById('results').classList.add('show');
+    window.scrollTo(0,0);
+  });
+}
+
+function subscribe(email){
+  if(!BEEHIIV_ENDPOINT){
+    try{localStorage.setItem('mvpld_lead',email);}catch(e){}
+    return Promise.resolve();
+  }
+  return fetch(BEEHIIV_ENDPOINT,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      email:email,
+      publication_id:BEEHIIV_PUB,
+      utm_source:'medspa_profit_leak_detector',
+      custom_fields:{
+        clinic_type:state.clinicType,
+        total_leak:totalLeak(),
+        monthly_revenue:state.monthlyRevenue,
+        staff:state.staff
+      }
+    })
+  }).catch(function(){
+    try{localStorage.setItem('mvpld_lead',email);}catch(e){}
+  });
+}
+
+/* ============ RESULTS ============ */
+function renderResults(){
+  var total=totalLeak();
+  document.getElementById('resTotal').textContent=money(total);
+
+  var arr=Object.keys(state.leaks).map(function(k){return state.leaks[k];})
+    .sort(function(a,b){return b.amount-a.amount;});
+
+  var max=arr.length?arr[0].amount:1;
+  var colors={
+    leads:'linear-gradient(90deg,#00B4A0,#008C7D)',
+    noshows:'linear-gradient(90deg,#0D2B5E,#122444)',
+    training:'linear-gradient(90deg,#E8B84B,#B87333)',
+    supply:'linear-gradient(90deg,#C53030,#E05E00)',
+    payments:'linear-gradient(90deg,#27834A,#3DA35D)'
+  };
+
+  var bars='';
+  arr.forEach(function(l){
+    var w=Math.round((l.amount/max)*100);
+    var pct=total?Math.round((l.amount/total)*100):0;
+    bars+='<div class="leak-bar">'+
+      '<div class="lb-top"><span class="lb-name">'+l.label+'</span><span class="lb-val">'+money(l.amount)+'/yr</span></div>'+
+      '<div class="lb-track"><div class="lb-fill" data-w="'+w+'" style="background:'+(colors[l.group]||colors.leads)+'"></div></div>'+
+      '<div class="lb-pct">'+pct+'% of your total leak · '+(GROUPS[l.group]||l.group)+'</div>'+
+    '</div>';
+  });
+  document.getElementById('leakBars').innerHTML=bars;
+
+  setTimeout(function(){
+    document.querySelectorAll('.lb-fill').forEach(function(f){f.style.width=f.getAttribute('data-w')+'%';});
+  },120);
+
+  var details='';
+  arr.forEach(function(l){
+    var cardClass = l.group==='supply'?'risk-card':l.group==='payments'?'cards-card':'';
+    var labelClass = l.group==='supply'?'risk-label':l.group==='payments'?'cards-label':'';
+    var d=getLeakDetail(l.key);
+    details+='<div class="detail-card '+cardClass+'">';
+    details+='<div class="dc-head"><span class="dc-title">'+l.label+'</span><span class="dc-amount">'+money(l.amount)+'/yr</span></div>';
+    details+='<div class="dc-tag">'+(GROUPS[l.group]||l.group)+'</div>';
+    details+='<div class="dc-section"><div class="dc-section-label '+labelClass+'">What\'s happening</div>';
+    details+='<div class="dc-text">'+d.diagnosis+'</div></div>';
+    if(d.benchmark){
+      details+='<div class="dc-benchmark"><span class="bm-icon">📊</span><span>'+d.benchmark+'</span></div>';
+    }
+    if(d.levers){
+      details+='<div class="dc-sub-levers">';
+      d.levers.forEach(function(lv){
+        details+='<div class="dc-lever"><span class="dc-lever-name">'+lv.name+'</span><span class="dc-lever-val">'+money(lv.amount)+'/yr</span></div>';
+      });
+      details+='</div>';
+    }
+    details+='<div class="dc-fix"><div class="fix-label">🔧 How MedVault fixes this</div>'+d.fix+'</div>';
+    details+='</div>';
+  });
+  document.getElementById('detailCards').innerHTML=details;
+
+  var plan='';
+  var top3=arr.slice(0,3);
+  top3.forEach(function(l,i){
+    var a=getActionItem(l.key);
+    plan+='<div class="action-item">';
+    plan+='<div class="action-num">'+(i+1)+'</div>';
+    plan+='<div class="action-body">';
+    plan+='<div class="action-title">'+a.title+'</div>';
+    plan+='<div class="action-desc">'+a.desc+'</div>';
+    plan+='<div class="action-impact">Potential recovery: '+money(l.amount*a.recoveryPct)+'/yr</div>';
+    plan+='</div></div>';
+  });
+  if(arr.length>3){
+    plan+='<div class="action-item"><div class="action-num">…</div><div class="action-body"><div class="action-title">'+(arr.length-3)+' more leaks identified</div><div class="action-desc">Fix your top 3 first. The remaining leaks become easier to address once the biggest ones are plugged.</div></div></div>';
+  }
+  document.getElementById('actionPlan').innerHTML=plan;
+}
+
+/* ============ DETAIL GENERATORS ============ */
+function getLeakDetail(key){
+  var rev=state.monthlyRevenue, staff=state.staff, clinic=state.clinicType;
+  var revLabel = rev>=400000?'$300k+/mo':rev>=250000?'$200–300k/mo':rev>=166000?'$125–200k/mo':rev>=100000?'$75–125k/mo':'under $75k/mo';
+
+  var details = {
+    leads:(function(){
+      var dm=+gv('l_dm')||0, calls=+gv('l_calls')||0;
+      var dmPct = Math.round(dm*100);
+      var callPct = Math.round(calls*100);
+      return {
+        diagnosis:'You estimated <span class="hl">'+dmPct+'%</span> of Instagram and Facebook DMs go unanswered beyond an hour, and <span class="hl">'+callPct+'%</span> of inbound calls go unanswered. Industry analysis from PatientNow shows that for a med spa with a $500 average treatment, missing just two calls per day costs $20,000 per month — not counting lifetime patient value. Most missed callers go directly to a competitor and never call back.',
+        benchmark:'<b>Industry data (Lani AI, 2026):</b> Med spas lose $100,000+ annually from missed calls and slow DM responses. A 28% increase in social media bookings was achieved within 90 days by implementing instant DM response.',
+        fix:'MedVault\'s AI Lead Responder (included in Vault Pro and Elite) responds to every Instagram and Facebook DM instantly — 24 hours a day, 7 days a week. It answers questions, qualifies leads, and books consultations directly into your calendar. You stop losing leads to competitors at 11pm on a Sunday.',
+        levers:null
+      };
+    })(),
+
+    noshows:(function(){
+      var rate=+gv('n_rate')||0;
+      var ratePct = Math.round(rate*100);
+      var monthlyAppts = Math.round(rev/450);
+      return {
+        diagnosis:'At your estimated <span class="hl">'+ratePct+'% no-show rate</span> on approximately '+monthlyAppts+' monthly appointments, you\'re losing meaningful revenue every week to empty treatment rooms. Egma research shows a med spa doing $2M annually at 12% no-show rate loses $240,000 per year. Each empty slot also wastes provider time, supply prep, and room overhead that was already paid for.',
+        benchmark:'<b>Research data (Egma, 2026):</b> Practices deploying automated reminder sequences cut no-show rates by 35–49% within 90 days. Moving from 12% to 4% no-shows recovers approximately $160,000 per year.',
+        fix:'Systematic protocol documentation through MedVault reduces a major source of no-shows: patient uncertainty about what to expect. When new hires are consistently trained and deliver predictable outcomes, patients build trust and show up. Combined with automated reminder systems, you recover a substantial portion of this leak.',
+        levers:null
+      };
+    })(),
+
+    training:(function(){
+      var ramp=+gv('t_ramp')||4, hires=+gv('t_hires')||0, docs=+gv('t_docs')||1.0;
+      var extraWeeks = Math.max(0,ramp-2);
+      return {
+        diagnosis:'Your staff take approximately <span class="hl">'+ramp+' weeks</span> to reach full confidence, and you hired or replaced <span class="hl">'+hires+' people</span> in the last 12 months. Every week beyond the optimal 2-week ramp is a week of paid staff time generating below-capacity output. And without documented protocols, each departure takes institutional knowledge with it — you start the training cycle from scratch every time.',
+        benchmark:'<b>AmSpa 2024 / SHRM data:</b> Replacing a trained aesthetician costs $2,500–$10,000 in recruiting and onboarding before they\'re contributing. Med spas with documented protocols reduce staff ramp-up time by 40–60%.',
+        fix:'MedVault captures your exact protocols in a 60-minute extraction session. New hires access your protocols through an AI assistant they can ask questions in real time — "What\'s our exact Botox dosage for crow\'s feet?" — and get your answer instantly. New hires go from day one to confident in 2 weeks instead of 4–6.',
+        levers:null
+      };
+    })(),
+
+    supply:(function(){
+      var spend=+gv('s_spend')||12000, consistency=+gv('s_consistency')||0.10;
+      var wastePct = Math.round(consistency*100);
+      return {
+        diagnosis:'With approximately <span class="hl">'+money(spend)+'/month</span> in supply spend, even small waste rates add up significantly. Your staff\'s inconsistency in following exact product amounts means <span class="hl">'+wastePct+'%</span> of product spend goes to over-application, waste, or callbacks requiring additional product. Poor inventory tracking compounds this with expired product and expensive emergency reorders.',
+        benchmark:'<b>Industry data:</b> Cloud-based inventory tracking cuts supply costs by up to 20% (Botox Profitability Guide, 2026). Protocol standardization reduces product waste and over-application by 30–50% for practices with documented dosing guidelines.',
+        fix:'MedVault\'s protocol documentation includes exact product amounts, application techniques, and dosing guidelines for every captured treatment. When every staff member follows the same documented protocol, over-application drops, callbacks drop, and your supply spend becomes predictable. The weekly PDF report tracks supply efficiency over time.',
+        levers:null
+      };
+    })(),
+
+    chairs:(function(){
+      var util=+gv('c_util')||0.67, rooms=+gv('c_rooms')||1;
+      var utilPct = Math.round(util*100);
+      return {
+        diagnosis:'Your treatment rooms are running at approximately <span class="hl">'+utilPct+'% utilization</span> across <span class="hl">'+rooms+' room'+(rooms>1?'s':'')+'</span>. Top-performing med spas run 80–85% utilization. The gap represents revenue you\'re paying fixed costs for — rent, equipment, staff — but not capturing. Often this gap exists because the owner is the only one trusted to do treatments, creating a ceiling on how many patients can be seen.',
+        benchmark:'<b>Zenoti 2025 Benchmark Report:</b> Top earning med spas have staff utilization rates of 84% vs. 65–70% for average practices. That utilization gap translates directly to the revenue gap between top and average performers.',
+        fix:'When your staff are trained on your exact protocols through MedVault, you can safely delegate more treatments. Every treatment you delegate frees your time to see additional patients or focus on higher-value work. Utilization climbs because you\'re no longer the bottleneck.',
+        levers:null
+      };
+    })(),
+
+    growth:(function(){
+      var ownerPct=+gv('g_owner')||0, reason=gv('g_reason');
+      var ownerPctDisplay = Math.round(ownerPct*100/0.16*70);
+      var reasonDesc = reason==='training'?'staff aren\'t trained to your standard':reason==='trust'?'you don\'t trust outcomes will match yours':reason==='docs'?'your protocols aren\'t documented anywhere':'other constraints';
+      return {
+        diagnosis:'You personally perform the majority of treatments because '+reasonDesc+'. This creates a hard ceiling on your clinic\'s revenue — your capacity is limited to your available hours. For a '+clinic+' doing '+revLabel+', that means significant growth potential is locked behind you personally.',
+        benchmark:'<b>AmSpa 2024:</b> The average med spa owner performing over 70% of treatments is one injury, illness, or vacation away from a revenue crisis. Clinics that successfully delegate to trained staff consistently report 15–25% revenue growth in the 12 months following systematization.',
+        fix:'MedVault captures your exact technique and protocols, then trains your staff to replicate your outcomes. When your staff can do it your way, you can safely delegate. Your revenue ceiling lifts as your capacity expands beyond your personal hours.',
+        levers:null
+      };
+    })(),
+
+    payments:(function(){
+      var card=+gv('p_card')||0, ach=+gv('p_ach')||0, pts=+gv('p_pts')||0;
+      var spend=+gv('s_spend')||12000;
+      var annualSpend=spend*12;
+      var cardAmt=Math.round(annualSpend*card);
+      var achAmt=Math.round(annualSpend*ach);
+      return {
+        diagnosis:'You\'re putting approximately <span class="hl">'+money(spend)+'/month</span> through cards and supplier payments. Mismatched cards, missed early-pay discounts with suppliers like Allergan, and unredeemed points represent real dollars leaving your clinic before you ever see them.',
+        benchmark:'<b>Industry benchmark:</b> A well-optimized card strategy on '+money(annualSpend)+'/year in supply spend should return 2.5–4% in rewards. Most businesses capture under 1%. Allergan and major distributors offer 2% early-pay discounts — a 36% annualized return on paying 20 days early.',
+        fix:'MedVault\'s payment optimization audit (included in all tiers) identifies your highest-impact card and payment improvements. Match high-rewards cards to your top spend categories, activate supplier early-pay programs, and redeem existing points sitting idle.',
+        levers:[
+          {name:'Card rewards gap',amount:cardAmt},
+          {name:'Supplier payment optimization',amount:achAmt},
+          {name:'Unredeemed points and rewards',amount:pts}
+        ]
+      };
+    })()
+  };
+
+  return details[key]||{diagnosis:'Analysis based on your inputs.',benchmark:null,fix:'Book a demo call to discuss this specific leak.',levers:null};
+}
+
+function getActionItem(key){
+  var actions={
+    leads:{title:'Deploy AI Lead Responder for DMs and calls',desc:'Every unanswered DM is a lead going to your competitor. An AI responder that answers within 60 seconds — 24/7 — recovers the majority of this leak with zero additional staff.',recoveryPct:0.55},
+    noshows:{title:'Implement automated multi-touch reminder sequences',desc:'SMS plus email sequences sent 72 hours and 24 hours before appointments reduce no-shows by 35–49%. This is the single highest-ROI operational improvement most med spas can make.',recoveryPct:0.5},
+    training:{title:'Systematize your top 5 protocols with MedVault',desc:'One 60-minute extraction session captures your technique. New hires access it through an AI assistant and reach full confidence in 2 weeks. Staff don\'t leave taking your protocols with them.',recoveryPct:0.55},
+    supply:{title:'Document exact dosing protocols and implement inventory tracking',desc:'Standardized protocols with exact product amounts reduce over-application and waste. Basic inventory tracking with reorder points eliminates expired product and emergency premium orders.',recoveryPct:0.45},
+    chairs:{title:'Delegate treatments to protocol-trained staff',desc:'Your utilization ceiling is your personal treatment hours. Every treatment you can delegate to a staff member trained on your exact protocols removes one constraint from your growth.',recoveryPct:0.4},
+    growth:{title:'Capture your protocols and train your staff to your standard',desc:'Your technique is your competitive advantage. Document it, train your staff on it, and you can safely delegate. Your clinic\'s revenue stops being limited by your personal capacity.',recoveryPct:0.35},
+    payments:{title:'Optimize your card stack and supplier payment terms',desc:'Match high-rewards cards to your injectable and supply spend. Activate Allergan and distributor early-pay discount programs. Redeem all sitting points within 90 days.',recoveryPct:0.7}
+  };
+  return actions[key]||{title:'Address this leak',desc:'Book a demo call to build a specific action plan.',recoveryPct:0.3};
+}
+
+/* ============ INIT ============ */
+(function(){restore();})();
+</script>
+</body>
+</html>
 
