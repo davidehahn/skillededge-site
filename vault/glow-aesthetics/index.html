@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glow Aesthetics — Staff Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --teal:       #00B4A0;
+      --teal-dark:  #008C7D;
+      --teal-light: #E6F7F5;
+      --teal-mid:   #B2E4DE;
+      --gold:       #C9956C;
+      --black:      #1A1A2E;
+      --gray-dark:  #4A5568;
+      --gray:       #718096;
+      --gray-light: #A0AEC0;
+      --border:     #E2E8F0;
+      --bg:         #F8FAFB;
+      --white:      #FFFFFF;
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.08);
+      --shadow:     0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg:  0 12px 40px rgba(0,0,0,0.12);
+      --radius:     12px;
+      --radius-sm:  8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--black); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── LOGIN SCREEN ─── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #F0F9F8 0%, #FFFFFF 50%, #F8F4F0 100%);
+      padding: 20px;
+      position: relative;
+    }
+    #login-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 30%, rgba(0,180,160,0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(201,149,108,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .login-box {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 52px 48px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo-mark {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 26px;
+    }
+    .login-clinic-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px;
+      color: var(--black);
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .login-powered {
+      font-size: 11px;
+      color: var(--gray-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .login-powered span { color: var(--teal); font-weight: 600; }
+    .login-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 24px 0;
+    }
+    .login-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-dark);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .login-input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-family: 'Inter', sans-serif;
+      color: var(--black);
+      background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.08em;
+    }
+    .login-input:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0,180,160,0.12);
+    }
+    .login-input::placeholder { letter-spacing: 0.03em; color: var(--gray-light); }
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,180,160,0.3); }
+    .login-btn:active { transform: translateY(0); }
+    .login-error {
+      color: #E53E3E;
+      font-size: 13px;
+      margin-top: 10px;
+      text-align: center;
+      min-height: 20px;
+    }
+    .login-footer {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--gray-light);
+    }
+    .login-footer a { color: var(--teal); font-weight: 500; }
+
+    /* ─── VAULT APP ─── */
+    #vault-app { display: none; min-height: 100vh; }
+
+    /* HEADER */
+    .vault-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-logo-mark {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .header-clinic { display: flex; flex-direction: column; line-height: 1.2; }
+    .header-clinic-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 17px; color: var(--black); letter-spacing: -0.01em;
+    }
+    .header-vault-tag {
+      font-size: 10px; color: var(--teal);
+      text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;
+    }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    .header-badge {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      font-size: 11px; font-weight: 600;
+      padding: 4px 10px; border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+    .header-logout {
+      font-size: 13px; color: var(--gray);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .header-logout:hover { color: var(--black); }
+
+    /* NAV TABS */
+    .vault-nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      gap: 4px;
+    }
+    .nav-tab {
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--black); }
+    .nav-tab.active { color: var(--teal); border-bottom-color: var(--teal); font-weight: 600; }
+
+    /* MAIN CONTENT */
+    .vault-main { max-width: 1000px; margin: 0 auto; padding: 32px 24px 120px; }
+
+    /* TAB PANELS */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* WELCOME PANEL */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      color: white;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      right: -40px; top: -40px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+    }
+    .welcome-banner h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px; letter-spacing: -0.02em;
+      margin-bottom: 6px; position: relative;
+    }
+    .welcome-banner p {
+      font-size: 14px; opacity: 0.85; max-width: 480px;
+      line-height: 1.6; position: relative;
+    }
+    .welcome-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .welcome-stat {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .welcome-stat-val {
+      font-size: 28px; font-weight: 700;
+      color: var(--teal); line-height: 1;
+      margin-bottom: 4px;
+    }
+    .welcome-stat-label { font-size: 12px; color: var(--gray); font-weight: 500; }
+    .quick-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .quick-link {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .quick-link:hover { border-color: var(--teal); transform: translateY(-1px); box-shadow: var(--shadow); }
+    .quick-link-icon { font-size: 24px; flex-shrink: 0; }
+    .quick-link-title { font-weight: 600; font-size: 14px; color: var(--black); margin-bottom: 2px; }
+    .quick-link-sub { font-size: 12px; color: var(--gray); }
+
+    /* SECTION HEADERS */
+    .panel-header { margin-bottom: 20px; }
+    .panel-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 22px; color: var(--black);
+      letter-spacing: -0.02em; margin-bottom: 4px;
+    }
+    .panel-sub { font-size: 14px; color: var(--gray); }
+
+    /* PROTOCOL CARDS */
+    .protocol-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .protocol-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+    .protocol-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--teal-mid); }
+    .protocol-card-header {
+      background: var(--teal-light);
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--teal-mid);
+    }
+    .protocol-icon { font-size: 22px; }
+    .protocol-name { font-weight: 700; font-size: 15px; color: var(--teal-dark); }
+    .protocol-tag { font-size: 11px; color: var(--teal); font-weight: 500; }
+    .protocol-card-body { padding: 20px; }
+    .protocol-desc { font-size: 13px; color: var(--gray-dark); line-height: 1.6; margin-bottom: 16px; }
+    .protocol-actions { display: flex; flex-direction: column; gap: 8px; }
+    .protocol-btn {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      border: none; text-decoration: none; width: 100%;
+    }
+    .protocol-btn-primary {
+      background: var(--teal);
+      color: white;
+    }
+    .protocol-btn-primary:hover { background: var(--teal-dark); }
+    .protocol-btn-secondary {
+      background: var(--bg);
+      color: var(--gray-dark);
+      border: 1px solid var(--border);
+    }
+    .protocol-btn-secondary:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+    .protocol-btn-quiz {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    .protocol-btn-quiz:hover { opacity: 0.9; }
+    .protocol-coming-soon {
+      background: var(--bg);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 32px 20px;
+      text-align: center;
+    }
+    .coming-soon-icon { font-size: 32px; margin-bottom: 10px; }
+    .coming-soon-title { font-weight: 600; font-size: 14px; color: var(--gray-dark); margin-bottom: 4px; }
+    .coming-soon-sub { font-size: 12px; color: var(--gray-light); }
+
+    /* VIDEO MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 200;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--white);
+      border-radius: var(--radius);
+      width: 100%; max-width: 720px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+    }
+    .modal-header {
+      padding: 16px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title { font-weight: 700; font-size: 15px; color: var(--black); }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 50%; border: none;
+      background: var(--bg); color: var(--gray);
+      font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { background: var(--border); color: var(--black); }
+    .modal-video { aspect-ratio: 16/9; background: #000; }
+    .modal-video iframe { width: 100%; height: 100%; border: none; }
+
+    /* RESOURCES PANEL */
+    .resource-list { display: flex; flex-direction: column; gap: 12px; }
+    .resource-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+    .resource-item:hover { border-color: var(--teal); transform: translateX(2px); }
+    .resource-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .resource-icon.teal { background: var(--teal-light); }
+    .resource-icon.gold { background: #FDF0E8; }
+    .resource-icon.purple { background: #F0EEFF; }
+    .resource-body { flex: 1; }
+    .resource-title { font-weight: 600; font-size: 14px; color: var(--black); margin-bottom: 2px; }
+    .resource-sub { font-size: 12px; color: var(--gray); }
+    .resource-action {
+      font-size: 13px; font-weight: 600; color: var(--teal);
+      white-space: nowrap; cursor: pointer;
+    }
+
+    /* QUIZZES PANEL */
+    .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .quiz-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+    .quiz-card:hover { border-color: #764ba2; transform: translateY(-2px); box-shadow: var(--shadow); }
+    .quiz-emoji { font-size: 32px; margin-bottom: 12px; }
+    .quiz-name { font-weight: 700; font-size: 15px; color: var(--black); margin-bottom: 4px; }
+    .quiz-desc { font-size: 12px; color: var(--gray); margin-bottom: 16px; line-height: 1.5; }
+    .quiz-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; padding: 11px 16px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white; border: none; border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: opacity 0.2s;
+      text-decoration: none;
+    }
+    .quiz-btn:hover { opacity: 0.9; }
+    .quiz-coming {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 100%; padding: 11px 16px;
+      background: var(--bg); color: var(--gray-light);
+      border: 1px dashed var(--border); border-radius: var(--radius-sm);
+      font-size: 13px;
+    }
+
+    /* ─── AI CHAT WIDGET ─── */
+    .chat-toggle {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border-radius: 50%; border: none;
+      cursor: pointer; z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,180,160,0.4);
+      transition: all 0.3s;
+      font-size: 22px;
+    }
+    .chat-toggle:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(0,180,160,0.5); }
+    .chat-toggle.open { background: linear-gradient(135deg, #E53E3E, #C53030); }
+    .chat-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 18px; height: 18px;
+      background: var(--gold); color: white;
+      border-radius: 50%; font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--white);
+    }
+    .chat-window {
+      position: fixed; bottom: 92px; right: 24px;
+      width: 360px; height: 520px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      display: none;
+      flex-direction: column;
+      z-index: 100;
+      overflow: hidden;
+    }
+    .chat-window.open { display: flex; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .chat-header {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      padding: 16px 18px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .chat-header-avatar {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .chat-header-info { flex: 1; }
+    .chat-header-name { font-weight: 700; font-size: 14px; color: white; }
+    .chat-header-status { font-size: 11px; color: rgba(255,255,255,0.8); }
+    .chat-header-dot {
+      width: 7px; height: 7px;
+      background: #68D391; border-radius: 50%;
+      display: inline-block; margin-right: 4px;
+    }
+    .chat-messages {
+      flex: 1; overflow-y: auto;
+      padding: 16px; display: flex;
+      flex-direction: column; gap: 12px;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .msg { display: flex; flex-direction: column; max-width: 85%; }
+    .msg.bot { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+    .msg-bubble {
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px; line-height: 1.55;
+    }
+    .msg.bot .msg-bubble {
+      background: var(--bg);
+      color: var(--black);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user .msg-bubble {
+      background: var(--teal);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .msg-time { font-size: 10px; color: var(--gray-light); margin-top: 4px; padding: 0 4px; }
+    .msg.user .msg-time { text-align: right; }
+    .chat-suggestions {
+      padding: 8px 16px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .suggestion-chip {
+      font-size: 11px; font-weight: 500;
+      padding: 5px 10px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px; color: var(--gray-dark);
+      cursor: pointer; transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .suggestion-chip:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+    .chat-input-area {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex; gap: 8px; align-items: flex-end;
+    }
+    .chat-input {
+      flex: 1; border: 1.5px solid var(--border);
+      border-radius: 20px; padding: 9px 14px;
+      font-size: 13px; font-family: 'Inter', sans-serif;
+      resize: none; max-height: 80px; line-height: 1.4;
+      transition: border-color 0.2s;
+      color: var(--black);
+    }
+    .chat-input:focus { outline: none; border-color: var(--teal); }
+    .chat-input::placeholder { color: var(--gray-light); }
+    .chat-send {
+      width: 36px; height: 36px;
+      background: var(--teal); color: white;
+      border: none; border-radius: 50%;
+      cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; transition: all 0.2s;
+    }
+    .chat-send:hover { background: var(--teal-dark); transform: scale(1.05); }
+    .chat-send:disabled { background: var(--border); color: var(--gray-light); cursor: default; transform: none; }
+    .typing-indicator {
+      display: flex; align-items: center; gap: 4px;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px; border-bottom-left-radius: 4px;
+      width: fit-content;
+    }
+    .typing-dot {
+      width: 6px; height: 6px;
+      background: var(--gray-light); border-radius: 50%;
+      animation: typingBounce 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); background: var(--teal); } }
+
+    /* RESPONSIVE */
+    @media(max-width:768px) {
+      .vault-main { padding: 20px 16px 100px; }
+      .welcome-stats { grid-template-columns: repeat(3, 1fr); }
+      .quick-links { grid-template-columns: 1fr; }
+      .protocol-grid { grid-template-columns: 1fr; }
+      .quiz-grid { grid-template-columns: 1fr; }
+      .chat-window { width: calc(100vw - 32px); right: 16px; }
+      .login-box { padding: 36px 28px; }
+    }
+    @media(max-width:480px) {
+      .welcome-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     LOGIN SCREEN
+═══════════════════════════════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-mark">🏥</div>
+      <div class="login-clinic-name">Glow Aesthetics</div>
+      <div class="login-powered">Staff Portal · Powered by <span>MedVault</span></div>
+    </div>
+    <div class="login-divider"></div>
+    <label class="login-label" for="vault-password">Staff Access Code</label>
+    <input
+      type="password"
+      id="vault-password"
+      class="login-input"
+      placeholder="Enter your access code"
+      autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')attemptLogin()"
+    />
+    <div class="login-error" id="login-error"></div>
+    <button class="login-btn" onclick="attemptLogin()">Access Staff Vault →</button>
+    <div class="login-footer">
+      Need help? Contact <a href="mailto:dave@medvault.io">dave@medvault.io</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     VAULT APP
+═══════════════════════════════════ -->
+<div id="vault-app">
+
+  <!-- HEADER -->
+  <header class="vault-header">
+    <div class="header-left">
+      <div class="header-logo-mark">🏥</div>
+      <div class="header-clinic">
+        <div class="header-clinic-name">Glow Aesthetics</div>
+        <div class="header-vault-tag">MedVault · Staff Portal</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-badge">✓ Protocols Active</div>
+      <div class="header-logout" onclick="logout()">Sign Out</div>
+    </div>
+  </header>
+
+  <!-- NAV TABS -->
+  <nav class="vault-nav">
+    <div class="nav-tab active" onclick="showTab('welcome', this)">🏠 Home</div>
+    <div class="nav-tab" onclick="showTab('protocols', this)">📋 Protocols</div>
+    <div class="nav-tab" onclick="showTab('quizzes', this)">✏️ Quizzes</div>
+    <div class="nav-tab" onclick="showTab('resources', this)">📁 Resources</div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="vault-main">
+
+    <!-- WELCOME TAB -->
+    <div class="tab-panel active" id="tab-welcome">
+      <div class="welcome-banner">
+        <h1>Welcome to Your MedVault 👋</h1>
+        <p>Your complete protocol library, training videos, and AI assistant — all in one place. Ask the AI any question about our protocols anytime.</p>
+      </div>
+      <div class="welcome-stats">
+        <div class="welcome-stat">
+          <div class="welcome-stat-val">5</div>
+          <div class="welcome-stat-label">Protocols Captured</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="welcome-stat-val">3</div>
+          <div class="welcome-stat-label">Quizzes Available</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="welcome-stat-val">24/7</div>
+          <div class="welcome-stat-label">AI Assistant Active</div>
+        </div>
+      </div>
+      <div class="quick-links">
+        <div class="quick-link" onclick="showTab('protocols', document.querySelectorAll('.nav-tab')[1])">
+          <div class="quick-link-icon">💉</div>
+          <div>
+            <div class="quick-link-title">View All Protocols</div>
+            <div class="quick-link-sub">SOPs, videos, and checklists</div>
+          </div>
+        </div>
+        <div class="quick-link" onclick="showTab('quizzes', document.querySelectorAll('.nav-tab')[2])">
+          <div class="quick-link-icon">✏️</div>
+          <div>
+            <div class="quick-link-title">Take a Quiz</div>
+            <div class="quick-link-sub">Test your protocol knowledge</div>
+          </div>
+        </div>
+        <div class="quick-link" onclick="toggleChat()">
+          <div class="quick-link-icon">🤖</div>
+          <div>
+            <div class="quick-link-title">Ask the AI Assistant</div>
+            <div class="quick-link-sub">Get instant protocol answers</div>
+          </div>
+        </div>
+        <div class="quick-link" onclick="showTab('resources', document.querySelectorAll('.nav-tab')[3])">
+          <div class="quick-link-icon">📁</div>
+          <div>
+            <div class="quick-link-title">Staff Resources</div>
+            <div class="quick-link-sub">Checklists and reference docs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROTOCOLS TAB -->
+    <div class="tab-panel" id="tab-protocols">
+      <div class="panel-header">
+        <div class="panel-title">Protocol Library</div>
+        <div class="panel-sub">Click any protocol to watch the training video, read the SOP, or take the competency quiz.</div>
+      </div>
+      <div class="protocol-grid">
+
+        <!-- BOTOX PROTOCOL -->
+        <div class="protocol-card">
+          <div class="protocol-card-header">
+            <div class="protocol-icon">💉</div>
+            <div>
+              <div class="protocol-name">Botox / Neurotoxin</div>
+              <div class="protocol-tag">Injectable · Core Protocol</div>
+            </div>
+          </div>
+          <div class="protocol-card-body">
+            <div class="protocol-desc">Our complete Botox consultation and injection protocol — patient assessment, reconstitution, injection zones, dosing, aftercare, and documentation.</div>
+            <div class="protocol-actions">
+              <button class="protocol-btn protocol-btn-primary" onclick="openVideo('Botox Protocol', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">▶ Watch Training Video</button>
+              <a href="/medvault/botox-template" target="_blank" class="protocol-btn protocol-btn-secondary">📄 Read Full SOP</a>
+              <button class="protocol-btn protocol-btn-quiz" onclick="showTab('quizzes', document.querySelectorAll('.nav-tab')[2])">✏️ Take Competency Quiz</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILLER PROTOCOL -->
+        <div class="protocol-card">
+          <div class="protocol-card-header">
+            <div class="protocol-icon">✨</div>
+            <div>
+              <div class="protocol-name">Dermal Fillers</div>
+              <div class="protocol-tag">Injectable · Core Protocol</div>
+            </div>
+          </div>
+          <div class="protocol-card-body">
+            <div class="protocol-desc">Lip, cheek, jawline, and under-eye filler protocols — product selection, injection technique, volume guidelines, and patient communication.</div>
+            <div class="protocol-actions">
+              <button class="protocol-btn protocol-btn-primary" onclick="openVideo('Dermal Filler Protocol', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">▶ Watch Training Video</button>
+              <button class="protocol-btn protocol-btn-secondary">📄 Read Full SOP</button>
+              <button class="protocol-btn protocol-btn-quiz" onclick="showTab('quizzes', document.querySelectorAll('.nav-tab')[2])">✏️ Take Competency Quiz</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LASER PROTOCOL -->
+        <div class="protocol-card">
+          <div class="protocol-card-header">
+            <div class="protocol-icon">🔆</div>
+            <div>
+              <div class="protocol-name">Laser / IPL</div>
+              <div class="protocol-tag">Energy Device · Core Protocol</div>
+            </div>
+          </div>
+          <div class="protocol-card-body">
+            <div class="protocol-desc">Laser hair removal and IPL photofacial protocols — device settings, skin type assessment, treatment passes, cooling, and aftercare.</div>
+            <div class="protocol-actions">
+              <button class="protocol-btn protocol-btn-primary" onclick="openVideo('Laser Protocol', 'https://www.youtube.com/embed/dQw4w9WgXcQ')">▶ Watch Training Video</button>
+              <button class="protocol-btn protocol-btn-secondary">📄 Read Full SOP</button>
+              <button class="protocol-btn protocol-btn-quiz" onclick="showTab('quizzes', document.querySelectorAll('.nav-tab')[2])">✏️ Take Competency Quiz</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MICRONEEDLING - COMING SOON -->
+        <div class="protocol-coming-soon">
+          <div class="coming-soon-icon">⏳</div>
+          <div class="coming-soon-title">Microneedling Protocol</div>
+          <div class="coming-soon-sub">Coming soon — being captured in next session</div>
+        </div>
+
+        <!-- IV THERAPY - COMING SOON -->
+        <div class="protocol-coming-soon">
+          <div class="coming-soon-icon">⏳</div>
+          <div class="coming-soon-title">IV Therapy Protocol</div>
+          <div class="coming-soon-sub">Coming soon — being captured in next session</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QUIZZES TAB -->
+    <div class="tab-panel" id="tab-quizzes">
+      <div class="panel-header">
+        <div class="panel-title">Competency Quizzes</div>
+        <div class="panel-sub">Complete a quiz for each protocol you've been trained on. Your results are reviewed by the clinic owner.</div>
+      </div>
+      <div class="quiz-grid">
+        <div class="quiz-card">
+          <div class="quiz-emoji">💉</div>
+          <div class="quiz-name">Botox / Neurotoxin</div>
+          <div class="quiz-desc">10 questions covering patient assessment, dosing, injection technique, and aftercare.</div>
+          <a href="https://forms.gle/placeholder" target="_blank" class="quiz-btn">Start Quiz →</a>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-emoji">✨</div>
+          <div class="quiz-name">Dermal Fillers</div>
+          <div class="quiz-desc">10 questions covering product selection, zones, volume, and patient communication.</div>
+          <a href="https://forms.gle/placeholder" target="_blank" class="quiz-btn">Start Quiz →</a>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-emoji">🔆</div>
+          <div class="quiz-name">Laser / IPL</div>
+          <div class="quiz-desc">10 questions covering device settings, skin typing, treatment protocol, and safety.</div>
+          <a href="https://forms.gle/placeholder" target="_blank" class="quiz-btn">Start Quiz →</a>
+        </div>
+        <div class="quiz-card">
+          <div class="quiz-emoji">⏳</div>
+          <div class="quiz-name">Microneedling</div>
+          <div class="quiz-desc">Quiz coming soon once protocol is captured.</div>
+          <div class="quiz-coming">Coming Soon</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESOURCES TAB -->
+    <div class="tab-panel" id="tab-resources">
+      <div class="panel-header">
+        <div class="panel-title">Staff Resources</div>
+        <div class="panel-sub">Reference documents, checklists, and materials for your day-to-day work.</div>
+      </div>
+      <div class="resource-list">
+        <div class="resource-item">
+          <div class="resource-icon teal">📋</div>
+          <div class="resource-body">
+            <div class="resource-title">New Hire Onboarding Checklist</div>
+            <div class="resource-sub">Week-by-week guide for your first 30 days at Glow Aesthetics</div>
+          </div>
+          <div class="resource-action">View →</div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon teal">📄</div>
+          <div class="resource-body">
+            <div class="resource-title">Botox Protocol — Quick Reference Card</div>
+            <div class="resource-sub">One-page chairside reference for dosing and injection zones</div>
+          </div>
+          <a href="/medvault/botox-template" target="_blank" class="resource-action">View →</a>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon gold">🛡️</div>
+          <div class="resource-body">
+            <div class="resource-title">Patient Aftercare Instructions</div>
+            <div class="resource-sub">What to tell patients after Botox, filler, and laser treatments</div>
+          </div>
+          <div class="resource-action">View →</div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon gold">⚠️</div>
+          <div class="resource-body">
+            <div class="resource-title">Adverse Event Response Protocol</div>
+            <div class="resource-sub">What to do if a patient has a reaction — step by step</div>
+          </div>
+          <div class="resource-action">View →</div>
+        </div>
+        <div class="resource-item">
+          <div class="resource-icon purple">📞</div>
+          <div class="resource-body">
+            <div class="resource-title">Clinic Contact Directory</div>
+            <div class="resource-sub">Emergency contacts, medical director line, supplier numbers</div>
+          </div>
+          <div class="resource-action">View →</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════
+     VIDEO MODAL
+═══════════════════════════════════ -->
+<div class="modal-overlay" id="video-modal" onclick="closeVideoIfOverlay(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Protocol Training Video</div>
+      <button class="modal-close" onclick="closeVideo()">✕</button>
+    </div>
+    <div class="modal-video">
+      <iframe id="modal-iframe" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     AI CHAT WIDGET
+═══════════════════════════════════ -->
+<button class="chat-toggle" id="chat-toggle" onclick="toggleChat()" title="Ask the AI Assistant">
+  <span id="chat-toggle-icon">🤖</span>
+  <div class="chat-badge">AI</div>
+</button>
+
+<div class="chat-window" id="chat-window">
+  <div class="chat-header">
+    <div class="chat-header-avatar">🤖</div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">Glow Aesthetics AI Assistant</div>
+      <div class="chat-header-status"><span class="chat-header-dot"></span>Trained on your protocols · Always available</div>
+    </div>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="msg bot">
+      <div class="msg-bubble">Hi! I'm your protocol assistant for Glow Aesthetics. I'm trained on your clinic's exact protocols and can answer questions about Botox, fillers, laser, patient care, and more. What do you need help with?</div>
+      <div class="msg-time">Now</div>
+    </div>
+  </div>
+  <div class="chat-suggestions" id="chat-suggestions">
+    <div class="suggestion-chip" onclick="sendSuggestion(this)">Botox dosage for forehead?</div>
+    <div class="suggestion-chip" onclick="sendSuggestion(this)">Filler aftercare instructions</div>
+    <div class="suggestion-chip" onclick="sendSuggestion(this)">Patient reaction protocol</div>
+  </div>
+  <div class="chat-input-area">
+    <textarea
+      class="chat-input"
+      id="chat-input"
+      placeholder="Ask about any protocol..."
+      rows="1"
+      onkeydown="handleChatKey(event)"
+      oninput="autoResize(this)"
+    ></textarea>
+    <button class="chat-send" id="chat-send" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════
+   CONFIG — REPLACE BEFORE DEPLOYING
+═══════════════════════════════════ */
+const VAULT_PASSWORD = "glow2024";
+const API_KEY = "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";
+const CLINIC_NAME = "Glow Aesthetics";
+
+/* ═══ PROTOCOL CONTEXT — Replace with real extracted protocol content ═══ */
+const PROTOCOL_CONTEXT = `
+You are the AI staff assistant for ${CLINIC_NAME} med spa. You are trained exclusively on this clinic's documented protocols. Answer all questions based on these protocols. Be specific, practical, and direct. If something isn't covered in the protocols, say so clearly.
+
+BOTOX / NEUROTOXIN PROTOCOL:
+- Standard reconstitution: 2.5mL preservative-free saline per 100U vial = 4U per 0.1mL
+- Forehead: 10-20U, 4-6 injection points, inject at hairline level to avoid brow drop
+- Glabella (11 lines): 20-25U, 5 points (procerus + corrugators), our standard starting dose
+- Crow's feet: 6-12U per side, 2-4 points, stay lateral to orbital rim
+- Brow lift: 2-4U per side, optional add-on
+- Bunny lines: 4-8U, 2-4 points on nasalis
+- Lip flip: 4-6U, 4 points on orbicularis oris — warn patient about straws/speech for 2-4 weeks
+- Total typical full face: 40-60U (Botox/Xeomin), 120-180U (Dysport)
+- Patient prep: remove makeup, clean with alcohol, let dry completely before injecting
+- Do NOT massage after injection — spreads toxin to unintended muscles
+- After photos: 3 angles — frontal neutral, frontal full expression, lateral 45 degrees
+- Document exact units per zone in patient chart every time
+- Onset: 3-7 days, full effect at 14 days, duration 3-6 months
+- Aftercare: stay upright 4 hours, no exercise/alcohol/sauna 24 hours, no massage
+
+PATIENT ASSESSMENT:
+- Always check: allergies (especially albumin/eggs), neuromuscular disorders, blood thinners
+- Not pregnant or breastfeeding
+- Previous treatment history — date and units used
+- Signed consent form before any treatment
+- Before photos required — 3 angles minimum
+
+ADVERSE EVENTS:
+- Any concerning reaction: stop treatment immediately, notify medical director
+- Keep epinephrine on hand for allergic reactions
+- Document everything — time, reaction type, action taken
+- Medical director on-call number is posted at front desk
+
+If asked about something not covered in these protocols, say: "That's not in my protocol training. Please check with the clinic owner directly."
+`;
+
+/* ═══ AUTH ═══ */
+function attemptLogin() {
+  const input = document.getElementById('vault-password').value;
+  const error = document.getElementById('login-error');
+  if (input === VAULT_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('vault-app').style.display = 'block';
+    error.textContent = '';
+  } else {
+    error.textContent = 'Incorrect access code. Please try again.';
+    document.getElementById('vault-password').value = '';
+    document.getElementById('vault-password').focus();
+  }
+}
+
+function logout() {
+  document.getElementById('vault-app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('vault-password').value = '';
+}
+
+/* ═══ TABS ═══ */
+function showTab(tabId, tabEl) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+}
+
+/* ═══ VIDEO MODAL ═══ */
+function openVideo(title, url) {
+  document.getElementById('modal-title').textContent = title + ' — Training Video';
+  document.getElementById('modal-iframe').src = url + '?autoplay=1';
+  document.getElementById('video-modal').classList.add('open');
+}
+function closeVideo() {
+  document.getElementById('video-modal').classList.remove('open');
+  document.getElementById('modal-iframe').src = '';
+}
+function closeVideoIfOverlay(e) {
+  if (e.target === document.getElementById('video-modal')) closeVideo();
+}
+
+/* ═══ CHAT ═══ */
+let chatOpen = false;
+let chatHistory = [];
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chat-window');
+  const icon = document.getElementById('chat-toggle-icon');
+  const toggle = document.getElementById('chat-toggle');
+  win.classList.toggle('open', chatOpen);
+  toggle.classList.toggle('open', chatOpen);
+  icon.textContent = chatOpen ? '✕' : '🤖';
+  if (chatOpen) {
+    setTimeout(() => document.getElementById('chat-input').focus(), 300);
+  }
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+function sendSuggestion(el) {
+  const text = el.textContent;
+  document.getElementById('chat-suggestions').style.display = 'none';
+  addMessage('user', text);
+  callClaude(text);
+}
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('chat-suggestions').style.display = 'none';
+  addMessage('user', text);
+  callClaude(text);
+}
+
+function addMessage(role, content) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  div.innerHTML = `<div class="msg-bubble">${content}</div><div class="msg-time">${now}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  chatHistory.push({role: role === 'user' ? 'user' : 'assistant', content});
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+async function callClaude(userMessage) {
+  const sendBtn = document.getElementById('chat-send');
+  sendBtn.disabled = true;
+  showTyping();
+
+  const messages = chatHistory.slice(-8).map(m => ({
+    role: m.role,
+    content: m.content
+  }));
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 500,
+        system: PROTOCOL_CONTEXT,
+        messages: messages
+      })
+    });
+
+    const data = await response.json();
+    removeTyping();
+
+    if (data.content && data.content[0]) {
+      const reply = data.content[0].text;
+      addMessage('bot', reply);
+    } else {
+      addMessage('bot', 'Sorry, I had trouble connecting. Please try again or ask the clinic owner directly.');
+    }
+  } catch (err) {
+    removeTyping();
+    addMessage('bot', 'Connection issue. Please check your internet and try again.');
+  } finally {
+    sendBtn.disabled = false;
+    document.getElementById('chat-input').focus();
+  }
+}
+</script>
+</body>
+</html>
