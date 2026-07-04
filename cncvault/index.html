@@ -1,1 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1735689180857933');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1735689180857933&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CNCVault — Profit Capture System for Precision Machine Shops</title>
+<meta name="description" content="We guarantee to find at least $25,000/year in specific profit leaks in your CNC shop — or the audit is free. Setup playbooks, operator checklists, and quoting accuracy tools built from your best machinist's process." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #2A7FD4;
+    --blue-deep: #1A6BBF;
+    --blue-tint: rgba(42,127,212,0.07);
+    --blue-glow: rgba(42,127,212,0.22);
+    --steel: #1E2D3D;
+    --steel-mid: #2C3E50;
+    --ink: #F4F6F8;
+    --line: #D4DAE2;
+    --line-strong: #B0BAC8;
+    --text: #1A202C;
+    --mute: #4A5568;
+    --faint: #718096;
+    --silver: #8A9BB0;
+    --green: #27834A;
+    --font-display: 'Archivo', sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: #fff; color: var(--text); line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
+  /* NAV */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 5%; border-bottom: 1px solid var(--line); background: #fff; position: sticky; top: 0; z-index: 50; }
+  .nav-brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-brand .icon { color: var(--blue); font-size: 20px; }
+  .nav-sub { font-family: var(--font-mono); font-size: 10px; color: var(--silver); letter-spacing: 0.5px; margin-left: 4px; }
+  .nav-cta { background: var(--blue); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-family: var(--font-display); font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; transition: background .15s, transform .12s; }
+  .nav-cta:hover { background: var(--blue-deep); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero { background: var(--steel); color: #fff; padding: 72px 5% 64px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 0%, rgba(42,127,212,0.20) 0%, transparent 60%); pointer-events: none; }
+  .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(42,127,212,0.4), transparent); }
+  .hero-eyebrow { font-family: var(--font-mono); font-size: 12px; color: var(--blue); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px; }
+  .hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(30px, 5.5vw, 56px); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 22px; max-width: 820px; margin-left: auto; margin-right: auto; }
+  .hero h1 .hl { color: var(--blue); }
+  .hero-sub { font-size: clamp(15px, 2.2vw, 18px); color: rgba(255,255,255,0.7); max-width: 580px; margin: 0 auto 36px; line-height: 1.7; }
+  .hero-cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+  .btn-primary { background: var(--blue); color: #fff; border: none; border-radius: 10px; padding: 18px 40px; font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 20px var(--blue-glow); transition: transform .15s, background .15s, box-shadow .15s; }
+  .btn-primary:hover { background: var(--blue-deep); transform: translateY(-2px); box-shadow: 0 8px 32px var(--blue-glow); }
+  .btn-ghost { background: transparent; color: rgba(255,255,255,0.72); border: 1.5px solid rgba(255,255,255,0.22); border-radius: 10px; padding: 18px 32px; font-family: var(--font-display); font-weight: 600; font-size: 16px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color .15s, color .15s; }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.55); color: #fff; }
+  .hero-trust { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; font-size: 13px; color: rgba(255,255,255,0.48); }
+  .hero-trust span { display: flex; align-items: center; gap: 6px; }
+
+  /* GUARANTEE */
+  .guarantee-strip { background: #fff; border-bottom: 2px solid var(--line); padding: 0 5%; }
+  .guarantee-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 24px; padding: 32px 0; }
+  .guarantee-icon { font-size: 48px; flex-shrink: 0; }
+  .guarantee-text h2 { font-family: var(--font-display); font-weight: 800; font-size: 22px; color: var(--text); margin-bottom: 7px; }
+  .guarantee-text p { font-size: 15px; color: var(--mute); line-height: 1.6; max-width: 640px; }
+  .guarantee-text strong { color: var(--blue); }
+  @media (max-width: 600px) { .guarantee-inner { flex-direction: column; text-align: center; } }
+
+  /* SECTION WRAPPER */
+  .section { padding: 72px 5%; }
+  .section-inner { max-width: 900px; margin: 0 auto; }
+  .section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--blue); margin-bottom: 14px; }
+  .section-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(24px, 4vw, 36px); letter-spacing: -0.02em; line-height: 1.15; color: var(--text); margin-bottom: 16px; }
+  .section-sub { font-size: 16px; color: var(--mute); line-height: 1.65; max-width: 600px; margin-bottom: 40px; }
+
+  /* PROBLEM */
+  .problem-section { background: var(--ink); }
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 580px) { .problem-grid { grid-template-columns: 1fr; } }
+  .problem-item { background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; padding: 18px 20px; }
+  .problem-item h4 { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 5px; }
+  .problem-item p { font-size: 13.5px; color: var(--mute); line-height: 1.55; }
+
+  /* HOW IT WORKS */
+  .steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
+  .steps-row::before { content: ''; position: absolute; top: 28px; left: calc(16.67% + 12px); width: calc(66.67% - 24px); height: 1.5px; background: var(--line); z-index: 0; }
+  @media (max-width: 640px) { .steps-row { grid-template-columns: 1fr; } .steps-row::before { display: none; } }
+  .step-item { text-align: center; position: relative; z-index: 1; }
+  .step-num { width: 56px; height: 56px; border-radius: 50%; background: var(--blue); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 4px 16px var(--blue-glow); }
+  .step-item:nth-child(2) .step-num { background: var(--steel); box-shadow: none; }
+  .step-item:nth-child(3) .step-num { background: var(--green); box-shadow: 0 4px 16px rgba(39,131,74,0.25); }
+  .step-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 7px; }
+  .step-desc { font-size: 14px; color: var(--mute); line-height: 1.55; }
+
+  /* OFFER TIERS */
+  .offer-section { background: var(--steel); color: #fff; }
+  .offer-section .section-title { color: #fff; }
+  .offer-section .section-sub { color: rgba(255,255,255,0.62); }
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 680px) { .tiers { grid-template-columns: 1fr; } }
+  .tier { background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.10); border-radius: 12px; padding: 24px 22px; }
+  .tier.featured { background: rgba(42,127,212,0.14); border-color: var(--blue); }
+  .tier-tag { font-family: var(--font-mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
+  .tier.featured .tier-tag { color: var(--blue); }
+  .tier-name { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: #fff; margin-bottom: 5px; }
+  .tier-price { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .tier.featured .tier-price { color: var(--blue); }
+  .tier-desc { font-size: 13.5px; color: rgba(255,255,255,0.62); line-height: 1.6; }
+
+  /* DELIVERABLES */
+  .deliverables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 580px) { .deliverables-grid { grid-template-columns: 1fr; } }
+  .del-item { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; background: var(--ink); border: 1px solid var(--line); border-radius: 10px; }
+  .del-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .del-text strong { display: block; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 3px; }
+  .del-text span { font-size: 13px; color: var(--mute); line-height: 1.5; }
+
+  /* KNOWLEDGE CAPTURE HIGHLIGHT */
+  .vet-block { background: var(--steel); color: #fff; border-radius: 12px; padding: 32px 28px; margin-bottom: 40px; display: flex; gap: 24px; align-items: flex-start; }
+  .vet-icon { font-size: 42px; flex-shrink: 0; }
+  .vet-text h3 { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: #fff; margin-bottom: 8px; }
+  .vet-text p { font-size: 14.5px; color: rgba(255,255,255,0.68); line-height: 1.65; }
+  .vet-text strong { color: var(--blue); }
+  @media (max-width: 580px) { .vet-block { flex-direction: column; } }
+
+  /* STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  @media (max-width: 640px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat-item { text-align: center; padding: 24px 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
+  .stat-num { font-family: var(--font-display); font-weight: 900; font-size: 32px; color: var(--blue); line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 12px; color: var(--faint); line-height: 1.4; }
+
+  /* CTA */
+  .cta-section { background: var(--blue); padding: 72px 5%; text-align: center; }
+  .cta-section h2 { font-family: var(--font-display); font-weight: 900; font-size: clamp(24px, 4vw, 40px); color: #fff; letter-spacing: -0.02em; margin-bottom: 16px; max-width: 720px; margin-left: auto; margin-right: auto; }
+  .cta-section p { font-size: 17px; color: rgba(255,255,255,0.78); max-width: 520px; margin: 0 auto 32px; line-height: 1.65; }
+  .btn-white { background: #fff; color: var(--blue); border: none; border-radius: 10px; padding: 18px 44px; font-family: var(--font-display); font-weight: 800; font-size: 17px; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.18); transition: transform .15s, box-shadow .15s; }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.22); }
+  .cta-sub { font-size: 13px; color: rgba(255,255,255,0.58); margin-top: 14px; }
+
+  /* FOOTER */
+  .footer { background: var(--steel); color: rgba(255,255,255,0.42); text-align: center; padding: 28px 5%; font-size: 12.5px; line-height: 1.7; }
+  .footer a { color: rgba(255,255,255,0.52); text-decoration: none; }
+  .footer a:hover { color: var(--blue); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="https://skillededge.io" class="nav-brand">
+    <span class="icon">⚙️</span> CNCVault<span class="nav-sub">· Skilled Edge Group</span>
+  </a>
+  <a href="https://skillededge.io/cncvault/profit-leak-detector" class="nav-cta">Run Free Audit →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">For precision CNC & machine shops · 5–19 employees</div>
+  <h1>We'll find <span class="hl">$25,000+</span> in profit leaks hiding in your shop — guaranteed.</h1>
+  <p class="hero-sub">Most precision shops are leaving real money on the table — not from slow order flow, but from quoting gaps, setup variability, and decades of veteran machinist knowledge that's one retirement away from being gone forever.</p>
+  <div class="hero-cta-row">
+    <a href="https://skillededge.io/cncvault/profit-leak-detector" class="btn-primary">Run My Free Profit Audit →</a>
+    <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+  </div>
+  <div class="hero-trust">
+    <span>🛡️ $25K identification guarantee</span>
+    <span>⚡ Results in 5 minutes</span>
+    <span>🔒 Your numbers stay private</span>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<div class="guarantee-strip">
+  <div class="guarantee-inner">
+    <div class="guarantee-icon">🛡️</div>
+    <div class="guarantee-text">
+      <h2>The $25,000 Identification Guarantee</h2>
+      <p>We run the Profit Leak Calculator live with your real numbers. It will identify at least <strong>$25,000/year in specific, actionable profit leaks</strong> — quoting gaps, veteran knowledge loss, setup errors, callback costs, downtime. If it doesn't hit $25K, your initial engagement is <strong>completely free</strong>. No catch, no fine print.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section problem-section">
+  <div class="section-inner">
+    <div class="section-label">Where your shop is leaking</div>
+    <h2 class="section-title">Busy machines, thin margins. Here's why.</h2>
+    <p class="section-sub">CNC shops have tools and ERPs — but operators don't consistently feed them good data or execute correctly. Here's what that costs you every year.</p>
+    <div class="problem-grid">
+      <div class="problem-item">
+        <h4>Quoting accuracy gaps</h4>
+        <p>One bad estimate on a complex multi-axis job can eat an entire month's margin. Without quote-to-actual tracking, you don't know which job families are bleeding you.</p>
+      </div>
+      <div class="problem-item">
+        <h4>Setup variability</h4>
+        <p>Your best machinist sets up in 45 minutes. Your newest operator takes 2.5 hours on the same job. That gap is documented process — and it's completely transferable.</p>
+      </div>
+      <div class="problem-item">
+        <h4>Veteran knowledge walking out the door</h4>
+        <p>When your lead machinist retires, 30 years of Fanuc and Mazak institutional knowledge goes with them. That's a $50K–$100K event in lost throughput and ramp time.</p>
+      </div>
+      <div class="problem-item">
+        <h4>First article and callback costs</h4>
+        <p>Every part that fails first article or comes back for rework is paid labor with zero output. A 5-point pre-run checklist eliminates most of these.</p>
+      </div>
+      <div class="problem-item">
+        <h4>Slow operator ramp</h4>
+        <p>New machinists at 60% productivity for 6+ months is a recurring drag. Documented setup playbooks cut that to 6–8 weeks in most shops.</p>
+      </div>
+      <div class="problem-item">
+        <h4>No enforcement visibility</h4>
+        <p>You can't hold operators accountable for setup time or first article pass rate without tracking it. The system only works if you can see who's following it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VETERAN KNOWLEDGE CALLOUT -->
+<section class="section">
+  <div class="section-inner">
+    <div class="vet-block">
+      <div class="vet-icon">🧠</div>
+      <div class="vet-text">
+        <h3>The veteran departure problem is bigger than you think.</h3>
+        <p>Ask your lead machinist why they adjust a parameter at a certain point and you'll hear <em>"I just know"</em> or <em>"it feels right."</em> They're not being evasive — decades of pattern recognition compressed into instinct. <strong>Extracting that knowledge requires observation, not interviews.</strong> CNCVault's D-Series capture methodology documents it before it walks out the door and turns it into onboarding material your next hire uses day one.</p>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="section-label" id="how-it-works">The process</div>
+    <h2 class="section-title">Three steps. You run it. We make it easy.</h2>
+    <p class="section-sub">We deliver the complete system and visibility. You lead the accountability. Shops that implement and stay consistent see real movement in setup times, quote accuracy, and throughput.</p>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-title">We audit</div>
+        <div class="step-desc">Run the Profit Leak Calculator live — your real numbers, your specific leaks, ranked by dollar impact. Guaranteed to hit $25K.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-title">We build</div>
+        <div class="step-desc">You complete the intake form. We populate pre-built templates with your shop's specifics. Deployed in 2 weeks.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-title">You run it</div>
+        <div class="step-desc">Deploy with the rollout guide. You lead the floor. We keep the system current as your machines and processes evolve.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER TIERS -->
+<section class="section offer-section">
+  <div class="section-inner">
+    <div class="section-label">The offer</div>
+    <h2 class="section-title">Start with the audit. Build from there.</h2>
+    <p class="section-sub">The Detector is free — or costs you nothing if we don't hit $25K. Everything else comes after you've seen the numbers.</p>
+    <div class="tiers">
+      <div class="tier featured">
+        <div class="tier-tag">⚡ Start here</div>
+        <div class="tier-name">Detector</div>
+        <div class="tier-price">Free*</div>
+        <div class="tier-desc">Live Profit Leak Calculator session. Pinpoints your specific leaks with a written report ranked by dollar impact. *Free if we don't find $25K.</div>
+      </div>
+      <div class="tier">
+        <div class="tier-tag">Core system</div>
+        <div class="tier-name">Accelerator</div>
+        <div class="tier-price">$1,499 setup + $249–$549/mo</div>
+        <div class="tier-desc">Setup playbooks, operator checklists, quoting accuracy tools, and new operator onboarding — built from your intake form and best machinist's process.</div>
+      </div>
+      <div class="tier">
+        <div class="tier-tag">Add-on</div>
+        <div class="tier-name">Knowledge Capture</div>
+        <div class="tier-price">$497 flat</div>
+        <div class="tier-desc">90-minute D-Series recorded session with your lead machinist. Tribal knowledge documented and turned into onboarding assets before they retire.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">What's included in the Accelerator</div>
+    <h2 class="section-title">13 deliverables. 4 hours of your time to deploy.</h2>
+    <p class="section-sub">You complete the intake form. We populate everything else. Most shops are running the system within 2 weeks of setup.</p>
+    <div class="deliverables-grid">
+      <div class="del-item">
+        <div class="del-icon">📋</div>
+        <div class="del-text"><strong>Machine Setup Playbook</strong><span>Step-by-step setup procedure for each machine, captured from your lead machinist and formatted for operator use.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">💻</div>
+        <div class="del-text"><strong>Programming Standards Guide</strong><span>G-code conventions, toolpath naming, offset documentation — consistent across every operator.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🔩</div>
+        <div class="del-text"><strong>Fixture & Tooling Reference</strong><span>Documented fixture IDs, tooling specs, and setup "gotchas" per job family. Ends the tribal knowledge dependency.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">✅</div>
+        <div class="del-text"><strong>Pre-Setup Checklist</strong><span>What to verify before first cut — material, offsets, tooling, program version. Eliminates the most common setup errors.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🔍</div>
+        <div class="del-text"><strong>First Article Inspection Checklist</strong><span>What to measure and document before running full quantity. Catches problems before they become scrap runs.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🗂️</div>
+        <div class="del-text"><strong>Post-Run Teardown Checklist</strong><span>Cleanup, tool condition log, notes for next run. Cuts setup time on repeat jobs by 20–40%.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🎓</div>
+        <div class="del-text"><strong>New Operator Onboarding Curriculum</strong><span>6-week structured ramp using the captured playbooks. New hires performing at 90% in weeks, not months.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">📊</div>
+        <div class="del-text"><strong>Quoting Accuracy Tracker</strong><span>Template tracking quote hours vs. actual hours per job family. Surfaces which jobs are bleeding margin.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🧮</div>
+        <div class="del-text"><strong>Burden Rate Calculator</strong><span>True machine hour cost tool — so you know your real cost per spindle hour before you quote.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">📈</div>
+        <div class="del-text"><strong>Owner Accountability Scorecard</strong><span>Weekly one-page view: which operators followed the system, setup times vs. standard, first article pass rate.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section problem-section">
+  <div class="section-inner">
+    <div class="section-label">By the numbers</div>
+    <h2 class="section-title">What precision shops see when they implement.</h2>
+    <p class="section-sub">Based on 2026 manufacturing industry benchmarks and shops implementing structured machinist playbook systems.</p>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">$41K</div>
+        <div class="stat-label">Average profit leak identified per CNC shop audit</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">40%</div>
+        <div class="stat-label">Average setup time reduction with documented playbooks</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6 wks</div>
+        <div class="stat-label">Average new operator ramp with structured onboarding vs. 6+ months</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">$50K+</div>
+        <div class="stat-label">Estimated throughput loss when one veteran machinist retires undocumented</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Find out exactly where your shop is leaking money — in 5 minutes.</h2>
+  <p>Run the free Profit Leak Calculator now. We guarantee we'll find at least $25,000/year in specific leaks — or the whole thing is free.</p>
+  <a href="https://skillededge.io/cncvault/profit-leak-detector" class="btn-white">Run My Free Audit →</a>
+  <div class="cta-sub">No credit card · No sales call required · Results in under 5 minutes</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  © 2026 Skilled Edge Group LLC · <a href="https://skillededge.io">skillededge.io</a> · dave@skillededge.io · (703) 568-5161<br>
+  CNCVault is a Skilled Edge Group product. Estimates based on published 2026 manufacturing industry benchmarks. Not financial advice.
+</footer>
+
+</body>
+</html>
