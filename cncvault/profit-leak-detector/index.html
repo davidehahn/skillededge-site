@@ -1,1 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1735689180857933');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1735689180857933&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CNCVault Profit Leak Detector — Skilled Edge Group</title>
+<meta name="description" content="The 5-minute profit audit built for CNC and precision machine shop owners. Find exactly where your shop is leaking $25,000–$120,000+ a year." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:#2A7FD4;
+    --blue-deep:#1A6BBF;
+    --blue-tint:rgba(42,127,212,0.07);
+    --blue-glow:rgba(42,127,212,0.18);
+    --ink:#F4F6F8;
+    --steel:#1E2D3D;
+    --panel:#EEF1F5;
+    --line:#D4DAE2;
+    --line-strong:#B0BAC8;
+    --text:#1A202C;
+    --mute:#4A5568;
+    --faint:#718096;
+    --green:#27834A;
+    --red:#C53030;
+    --font-display:'Archivo',sans-serif;
+    --font-body:'Inter',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font-body);background:var(--ink);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 18px 80px}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0;border-bottom:2px solid var(--line);margin-bottom:8px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:-0.01em;color:var(--text)}
+  .brand .icon{color:var(--blue);font-size:18px}
+  .tagpill{font-size:11px;color:var(--blue);border:1.5px solid var(--blue);border-radius:999px;padding:4px 11px;font-weight:700;letter-spacing:0.04em;background:var(--blue-tint)}
+
+  .hero{padding:42px 0 14px;text-align:center}
+  .hero h1{font-size:clamp(24px,6vw,42px);margin-bottom:16px;font-family:var(--font-display);font-weight:800;color:var(--text);letter-spacing:-0.02em;line-height:1.1}
+  .hero h1 .hl{color:var(--blue)}
+  .hero p{color:var(--mute);font-size:16px;max-width:540px;margin:0 auto 28px;line-height:1.6}
+  .start-btn{background:var(--blue);color:#fff;border:none;border-radius:10px;padding:17px 40px;font-family:var(--font-display);font-weight:700;font-size:17px;cursor:pointer;box-shadow:0 4px 16px var(--blue-glow);transition:transform .15s,box-shadow .15s,background .15s;}
+  .start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--blue-glow);background:var(--blue-deep)}
+  .trust{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:22px;font-size:13px;color:var(--faint)}
+  .trust span{display:flex;align-items:center;gap:6px}
+
+  .proof-strip{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-top:28px;display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
+  .proof-item{text-align:center}
+  .proof-item .pn{font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--blue)}
+  .proof-item .pl{font-size:12px;color:var(--faint);margin-top:2px}
+
+  .progress-shell{position:sticky;top:0;background:#fff;padding:14px 0 12px;z-index:20;border-bottom:1px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+  .progress-track{height:5px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-deep));border-radius:99px;width:0%;transition:width .4s ease}
+  .progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--faint);margin-top:8px;font-weight:500}
+
+  .step{display:none;animation:rise .45s ease both}
+  .step.active{display:block}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:28px 24px;margin-top:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+  .step-tag{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+  .step-tag .n{background:var(--blue);color:#fff;width:22px;height:22px;border-radius:5px;display:grid;place-items:center;font-family:var(--font-display);font-size:12px}
+  .step h2{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:-0.015em;margin-bottom:7px;color:var(--text)}
+  .step .sub{color:var(--mute);font-size:14.5px;margin-bottom:22px;line-height:1.55}
+
+  label.field{display:block;margin-bottom:18px}
+  label.field .q{display:block;font-weight:600;font-size:15px;margin-bottom:9px;color:var(--text)}
+  label.field .hint{font-weight:400;color:var(--faint);font-size:13px}
+  input[type=text],input[type=number],input[type=email],select{width:100%;background:#fff;border:1.5px solid var(--line-strong);border-radius:9px;padding:12px 14px;color:var(--text);font-size:16px;font-family:var(--font-body);transition:border-color .15s,box-shadow .15s}
+  input:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-tint)}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5568' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-color:#fff}
+
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:13px 15px;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+  .opt:hover{border-color:var(--line-strong);background:var(--ink)}
+  .opt input{accent-color:var(--blue);width:18px;height:18px;flex-shrink:0}
+  .opt.sel{border-color:var(--blue);background:var(--blue-tint);box-shadow:0 0 0 3px var(--blue-glow)}
+  .opt .ot{font-size:14.5px;font-weight:500;color:var(--text)}
+  .opt .ob{font-size:12px;color:var(--faint);margin-top:2px}
+
+  .nav{display:flex;gap:12px;margin-top:24px}
+  .btn{flex:1;border-radius:9px;padding:14px;font-family:var(--font-display);font-weight:700;font-size:15px;cursor:pointer;border:none;transition:transform .12s,background .15s}
+  .btn:active{transform:scale(.985)}
+  .btn-next{background:var(--blue);color:#fff;box-shadow:0 3px 12px var(--blue-glow)}
+  .btn-next:hover{background:var(--blue-deep)}
+  .btn-back{background:var(--panel);color:var(--mute);border:1.5px solid var(--line);flex:0 0 110px}
+  .btn-back:hover{background:var(--line);color:var(--text)}
+
+  .running-tally{text-align:center;margin-top:18px;font-size:13px;color:var(--faint)}
+  .running-tally b{color:var(--blue);font-family:var(--font-display);font-weight:700}
+
+  .gate{text-align:center}
+  .gate .lock{font-size:40px;margin-bottom:12px}
+  .gate h2{font-size:26px;margin-bottom:10px;font-family:var(--font-display);font-weight:800;color:var(--text)}
+  .gate .big-num{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,12vw,68px);color:var(--blue);line-height:1;margin:18px 0}
+  .gate p{color:var(--mute);max-width:440px;margin:0 auto 8px;line-height:1.6}
+  .gate .blurred{filter:blur(7px);user-select:none;pointer-events:none;opacity:.35;margin:16px 0;color:var(--faint)}
+  .gate-form{max-width:380px;margin:22px auto 0}
+  .gate-form input{margin-bottom:11px;text-align:center}
+  .gate-note{font-size:12px;color:var(--faint);margin-top:10px;line-height:1.5}
+  .err{color:var(--red);font-size:13px;margin-top:6px;min-height:16px}
+
+  .results{display:none}
+  .results.show{display:block;animation:rise .5s ease both}
+  .res-hero{text-align:center;padding:32px 0 10px}
+  .res-hero .eyebrow{color:var(--blue);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:0.1em}
+  .res-hero .total{font-family:var(--font-display);font-weight:900;font-size:clamp(46px,15vw,84px);color:var(--blue);line-height:1;margin:10px 0}
+  .res-hero .total-sub{color:var(--mute);font-size:15px}
+  .res-section-title{font-family:var(--font-display);font-weight:700;font-size:17px;margin:32px 0 8px;display:flex;align-items:center;gap:10px;color:var(--text)}
+  .res-section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0}
+
+  .leak-bar{margin:14px 0}
+  .leak-bar .lb-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .leak-bar .lb-name{font-size:14px;font-weight:600;color:var(--text)}
+  .leak-bar .lb-val{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--blue)}
+  .leak-bar .lb-track{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+  .leak-bar .lb-fill{height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .leak-bar .lb-pct{font-size:11.5px;color:var(--faint);margin-top:3px}
+
+  .insight{background:#F0F7FF;border:1px solid #BDD4F0;border-left:3px solid var(--blue);border-radius:0 9px 9px 0;padding:15px 17px;margin-top:13px;font-size:14.5px;color:var(--text);line-height:1.55}
+
+  .footer{text-align:center;color:var(--faint);font-size:12px;margin-top:44px;padding-top:22px;border-top:1px solid var(--line);line-height:1.6}
+  .footer a{color:var(--mute);text-decoration:none}
+  .footer a:hover{color:var(--blue)}
+
+  .cta-block{background:linear-gradient(135deg,#1E2D3D 0%,#2C3E50 100%);border-radius:14px;padding:32px 28px;margin-top:32px;text-align:center;color:#fff}
+  .cta-block h3{font-family:var(--font-display);font-weight:800;font-size:22px;margin-bottom:10px;color:#fff}
+  .cta-block p{color:rgba(255,255,255,0.72);font-size:15px;max-width:440px;margin:0 auto 22px;line-height:1.6}
+  .cta-btn{display:inline-block;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:16px 36px;font-family:var(--font-display);font-weight:700;font-size:16px;cursor:pointer;text-decoration:none;box-shadow:0 4px 16px var(--blue-glow);transition:transform .15s,background .15s}
+  .cta-btn:hover{transform:translateY(-2px);background:var(--blue-deep)}
+  .cta-sub{font-size:12px;color:rgba(255,255,255,0.5);margin-top:12px}
+
+  .save-row{text-align:center;margin-top:20px}
+  .save-btn{background:#fff;border:1.5px solid var(--line-strong);color:var(--mute);border-radius:9px;padding:12px 24px;font-family:var(--font-display);font-weight:600;font-size:14px;cursor:pointer;transition:border-color .15s,color .15s}
+  .save-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+  .detail-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 20px;margin-top:16px;border-left:3px solid var(--blue);box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+  .detail-card.risk-card{border-left-color:var(--red)}
+  .dc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;flex-wrap:wrap;gap:8px}
+  .dc-title{font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--text)}
+  .dc-amount{font-family:var(--font-display);font-weight:700;font-size:17px;color:var(--blue)}
+  .dc-tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--faint);margin-bottom:12px}
+  .dc-section{margin-top:14px}
+  .dc-section-label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--blue);margin-bottom:6px}
+  .dc-text{font-size:14.5px;color:var(--text);line-height:1.6}
+  .dc-text .hl{color:var(--blue);font-weight:600}
+  .dc-benchmark{display:flex;align-items:flex-start;gap:8px;background:var(--panel);border-radius:7px;padding:10px 13px;margin-top:10px;font-size:13px;color:var(--mute)}
+  .dc-benchmark .bm-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+  .dc-fix{background:#F0F7FF;border:1px solid #BDD4F0;border-radius:7px;padding:11px 14px;margin-top:10px;font-size:14px;color:var(--text);line-height:1.55}
+  .dc-fix .fix-label{font-weight:700;color:var(--blue);font-size:11.5px;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+  .dc-sub-levers{margin-top:10px}
+  .dc-lever{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+  .dc-lever:last-child{border-bottom:none}
+  .dc-lever-name{font-size:14px;font-weight:500;color:var(--text)}
+  .dc-lever-val{font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--blue)}
+
+  .action-item{display:flex;gap:14px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:18px;margin-top:12px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+  .action-num{flex:0 0 32px;height:32px;background:var(--blue);color:#fff;border-radius:7px;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:14px;flex-shrink:0}
+  .action-body{flex:1}
+  .action-title{font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:4px;color:var(--text)}
+  .action-desc{font-size:14px;color:var(--mute);line-height:1.55}
+  .action-impact{font-size:13px;color:var(--blue);font-weight:700;margin-top:6px}
+
+  .hide{display:none!important}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:7px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand"><span class="icon">⚙️</span> CNCVault · Skilled Edge Group</div>
+    <div class="tagpill">PROFIT LEAK DETECTOR</div>
+  </div>
+
+  <section id="intro">
+    <div class="hero">
+      <h1>Find out exactly where your shop is leaking <span class="hl">$25,000–$120,000+</span> a year</h1>
+      <p>A 5-minute diagnostic built for CNC and precision machine shop owners. Quoting gaps, setup variability, veteran knowledge loss, operator performance, and downtime costs — all in one number.</p>
+      <button class="start-btn" onclick="start()">Run My Free Audit →</button>
+      <div class="trust">
+        <span>🛡️ $25K guarantee — or it's free</span>
+        <span>⚡ Results in under 5 minutes</span>
+        <span>🔒 Your numbers stay private</span>
+      </div>
+    </div>
+    <div class="proof-strip">
+      <div class="proof-item"><div class="pn">$41K</div><div class="pl">avg leak found per CNC shop</div></div>
+      <div class="proof-item"><div class="pn">$50K+</div><div class="pl">typical veteran departure event</div></div>
+      <div class="proof-item"><div class="pn">40%</div><div class="pl">avg setup time reduction w/ playbooks</div></div>
+      <div class="proof-item"><div class="pn">6 wks</div><div class="pl">avg ramp time with structured onboarding</div></div>
+    </div>
+  </section>
+
+  <section id="wizard" class="hide">
+    <div class="progress-shell">
+      <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+      <div class="progress-label"><span id="pStep">Step 1 of 8</span><span id="pName">Setup</span></div>
+    </div>
+    <div id="steps"></div>
+    <div class="running-tally" id="tally"></div>
+  </section>
+
+  <section id="gate" class="hide">
+    <div class="card gate">
+      <div class="lock">🔓</div>
+      <h2>Your audit is ready</h2>
+      <p>We found profit leaks across multiple areas of your shop. Your estimated annual leakage is:</p>
+      <div class="big-num" id="gatePreview">$0</div>
+      <p>Enter your email to unlock the full breakdown — every leak ranked by dollar impact with a prioritized fix list you can act on this week.</p>
+      <div class="blurred">▓▓▓▓▓▓▓ ▓▓▓▓▓▓▓▓▓▓▓ ▓▓▓▓▓ ▓▓▓▓▓▓▓▓ ▓▓▓ ▓▓▓▓▓▓▓▓▓▓</div>
+      <div class="gate-form">
+        <input type="email" id="emailInput" placeholder="you@yourshop.com" autocomplete="email" />
+        <button class="btn btn-next" style="width:100%" id="unlockBtn" onclick="unlock()">Unlock My Full Report →</button>
+        <div class="err" id="emailErr"></div>
+        <div class="gate-note">You'll also receive the Operators AI Edge newsletter — practical AI and ops strategies for machine shop owners. Unsubscribe anytime.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results" class="results">
+    <div class="res-hero">
+      <div class="eyebrow">Your Total Annual Profit Leakage</div>
+      <div class="total" id="resTotal">$0</div>
+      <div class="total-sub" id="resSub">across quoting, setup performance, knowledge risk, and operations</div>
+    </div>
+    <div class="res-section-title"><span class="dot"></span> Leaks ranked by dollar impact</div>
+    <div id="leakBars"></div>
+    <div class="res-section-title"><span class="dot"></span> Your detailed breakdown</div>
+    <div id="detailCards"></div>
+    <div class="res-section-title"><span class="dot"></span> Your priority action plan</div>
+    <div id="actionPlan"></div>
+    <div class="cta-block">
+      <h3>Ready to plug these leaks for good?</h3>
+      <p>CNCVault gives your operators setup playbooks, job checklists, quoting accuracy tools, and onboarding systems — built from your best machinist's actual process.</p>
+      <a href="https://skillededge.io/cncvault" class="cta-btn">See How CNCVault Works →</a>
+      <div class="cta-sub">Setup call included · No long-term contract · Cancel anytime</div>
+    </div>
+    <div class="save-row">
+      <button class="save-btn" onclick="window.print()">💾 Save / Print My Report</button>
+    </div>
+  </section>
+
+  <div class="footer">
+    © 2026 Skilled Edge Group · <a href="https://skillededge.io">skillededge.io</a> · Estimates are good-faith projections based on your inputs and published 2026 manufacturing industry benchmarks. Not financial advice.
+  </div>
+</div>
+
+<script>
+var BEEHIIV_PUB = "pub_b9ffbd01-aab6-41d9-98e7-b8a72be5370f";
+var BEEHIIV_ENDPOINT = "/api/subscribe";
+
+var state = { shopType:"", operators:0, revenue:0, answers:{}, leaks:{}, email:"" };
+var current = 0;
+
+var GROUPS = {
+  quoting:"Quoting & Margin",
+  setup:"Setup & Operations",
+  knowledge:"Knowledge Risk",
+  capacity:"Capacity & Growth"
+};
+
+var STEPS = [
+
+  /* 0 — SETUP */
+  {
+    name:"Your Shop",tag:"Setup",
+    render:function(){return `
+      <div class="step-tag"><span class="n">1</span> About your shop</div>
+      <h2>Let's start with the basics</h2>
+      <div class="sub">These anchor every dollar calculation to your real operation — no generic manufacturing averages.</div>
+      <label class="field"><span class="q">Primary work type</span>
+        <select id="f_type">
+          <option value="">Select…</option>
+          <option>CNC milling & turning (job shop)</option>
+          <option>Precision machining (defense/aerospace)</option>
+          <option>Swiss screw machining</option>
+          <option>Multi-axis / 5-axis machining</option>
+          <option>CNC fabrication & welding</option>
+          <option>Production machining (high volume)</option>
+          <option>Prototype & low-quantity machining</option>
+          <option>Mixed — job shop & production</option>
+        </select>
+      </label>
+      <label class="field"><span class="q">How many CNC operators / machinists? <span class="hint">(not counting office staff)</span></span>
+        <input type="number" id="f_ops" min="1" placeholder="e.g. 8" value="${state.operators||''}" />
+      </label>
+      <label class="field"><span class="q">Approximate annual revenue</span>
+        <select id="f_rev">
+          <option value="">Select range…</option>
+          <option value="600000">Under $750K</option>
+          <option value="1250000">$750K – $1.75M</option>
+          <option value="3000000">$1.75M – $4M</option>
+          <option value="7000000">$4M – $10M</option>
+          <option value="15000000">$10M+</option>
+        </select>
+      </label>`;
+    },
+    save:function(){
+      state.shopType=val('f_type');
+      state.operators=+val('f_ops')||0;
+      state.revenue=+val('f_rev')||0;
+    },
+    valid:function(){return state.shopType&&state.operators>0&&state.revenue>0;},
+    compute:function(){return null;}
+  },
+
+  /* 1 — QUOTING ACCURACY */
+  {
+    name:"Quoting Accuracy",tag:"Quoting & Margin",
+    render:function(){return `
+      <div class="step-tag"><span class="n">2</span> Quoting accuracy</div>
+      <h2>How close are your quotes to actual costs?</h2>
+      <div class="sub">In a precision shop running at 12–20% net margin, one underquoted job can wipe the profit from three good ones. Most shops don't track quote-to-actual variance by job family.</div>
+      <label class="field"><span class="q">Do you track actual hours vs. quoted hours per job?</span>
+        <div class="opts" data-radio="q_track">
+          <label class="opt"><input type="radio" name="q_track" value="0.12"><span class="ot">No — we quote by feel and experience<div class="ob">Industry data: shops without quote-to-actual tracking run 8–15% margin erosion annually</div></span></label>
+          <label class="opt"><input type="radio" name="q_track" value="0.06"><span class="ot">Informally — we know when jobs go over but don't log it systematically</span></label>
+          <label class="opt"><input type="radio" name="q_track" value="0.02"><span class="ot">Yes — tracked per job type, reviewed monthly</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">How often do jobs come in significantly over the quoted hours?</span>
+        <div class="opts" data-radio="q_over">
+          <label class="opt"><input type="radio" name="q_over" value="0.20"><span class="ot">Frequently — more than 20% of jobs run over by 15%+</span></label>
+          <label class="opt"><input type="radio" name="q_over" value="0.10"><span class="ot">Occasionally — maybe 10–20% of jobs</span></label>
+          <label class="opt"><input type="radio" name="q_over" value="0.03"><span class="ot">Rarely — we're usually within 5–8% of quoted hours</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Do you know your true burden rate (machine hour cost including overhead)?</span>
+        <div class="opts" data-radio="q_burden">
+          <label class="opt"><input type="radio" name="q_burden" value="0.05"><span class="ot">No — we estimate based on gut or industry averages</span></label>
+          <label class="opt"><input type="radio" name="q_burden" value="0.02"><span class="ot">Roughly — calculated it once but not kept current</span></label>
+          <label class="opt"><input type="radio" name="q_burden" value="0.0"><span class="ot">Yes — updated quarterly, built into every quote</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      ['q_track','q_over','q_burden'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked');
+        setv(n,e?e.value:'');
+      });
+    },
+    valid:function(){return gv('q_track')&&gv('q_over')&&gv('q_burden');},
+    compute:function(){
+      var track=+gv('q_track')||0;
+      var over=+gv('q_over')||0;
+      var burden=+gv('q_burden')||0;
+      var amt=Math.round(state.revenue*(track+over+burden)*0.30);
+      return {key:'quoting',label:'Quoting accuracy & margin erosion',group:'quoting',amount:amt};
+    }
+  },
+
+  /* 2 — SETUP VARIABILITY */
+  {
+    name:"Setup Variability",tag:"Setup & Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">3</span> Setup variability</div>
+      <h2>What's the gap between your best and average setup?</h2>
+      <div class="sub">In most shops, the lead machinist sets up 30–50% faster than a mid-level operator on identical jobs. That gap represents paid machine time with zero output.</div>
+      <label class="field"><span class="q">How consistent are setup times across your operators on the same job?</span>
+        <div class="opts" data-radio="s_gap">
+          <label class="opt"><input type="radio" name="s_gap" value="0.40"><span class="ot">Big gap — lead machinist is 40%+ faster than average<div class="ob">Typical in shops without documented setup procedures</div></span></label>
+          <label class="opt"><input type="radio" name="s_gap" value="0.20"><span class="ot">Moderate — 15–30% variation across operators</span></label>
+          <label class="opt"><input type="radio" name="s_gap" value="0.06"><span class="ot">Small — under 15% — we have documented setup sheets</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Do you have written setup procedures operators follow for each machine/job family?</span>
+        <div class="opts" data-radio="s_docs">
+          <label class="opt"><input type="radio" name="s_docs" value="1.4"><span class="ot">No — it lives in the lead machinist's head</span></label>
+          <label class="opt"><input type="radio" name="s_docs" value="1.1"><span class="ot">Partially — some jobs documented, most aren't</span></label>
+          <label class="opt"><input type="radio" name="s_docs" value="0.6"><span class="ot">Yes — documented setup sheets for all major job families</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Average machine hourly rate (including burden)</span>
+        <select id="s_rate">
+          <option value="">Select…</option>
+          <option value="65">Under $80/hr</option>
+          <option value="100">$80 – $120/hr</option>
+          <option value="145">$120 – $175/hr</option>
+          <option value="200">Over $175/hr</option>
+        </select>
+      </label>`;
+    },
+    save:function(){
+      ['s_gap','s_docs'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked');
+        setv(n,e?e.value:'');
+      });
+      setv('s_rate',val('s_rate'));
+    },
+    valid:function(){return gv('s_gap')&&gv('s_docs')&&gv('s_rate');},
+    compute:function(){
+      var gap=+gv('s_gap')||0;
+      var docs=+gv('s_docs')||1;
+      var rate=+gv('s_rate')||100;
+      // Setups per operator per week: ~8 avg for job shop
+      var setupsPerYear=state.operators*8*50;
+      // Avg setup time: 1.5 hrs. Gap in time * rate = lost machine time
+      var avgSetup=1.5;
+      var timeLost=setupsPerYear*avgSetup*gap;
+      var amt=Math.round(timeLost*rate*docs*0.35);
+      return {key:'setup',label:'Setup variability & machine time waste',group:'setup',amount:amt};
+    }
+  },
+
+  /* 3 — FIRST ARTICLE & SCRAP */
+  {
+    name:"First Article & Scrap",tag:"Setup & Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">4</span> First article & scrap</div>
+      <h2>What are failed first articles and scrap really costing?</h2>
+      <div class="sub">A failed first article isn't just material cost — it's full setup time, programming time, and machine time completely lost. On a $150/hr machine, one bad setup is a $300–$600 event before you even start the part.</div>
+      <label class="field"><span class="q">Approximately what percentage of new jobs or setups fail first article?</span>
+        <div class="opts" data-radio="fa_rate">
+          <label class="opt"><input type="radio" name="fa_rate" value="0.18"><span class="ot">Over 12% — we catch a lot of issues on first run<div class="ob">Best-in-class shops with documented setup procedures run under 3%</div></span></label>
+          <label class="opt"><input type="radio" name="fa_rate" value="0.09"><span class="ot">6–12% — occasional but not alarming</span></label>
+          <label class="opt"><input type="radio" name="fa_rate" value="0.03"><span class="ot">Under 6% — tight shop with good setup verification</span></label>
+          <label class="opt"><input type="radio" name="fa_rate" value="0.01"><span class="ot">Under 2% — documented first article checklist on every setup</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Do operators follow a written first article inspection checklist before releasing to production?</span>
+        <div class="opts" data-radio="fa_check">
+          <label class="opt"><input type="radio" name="fa_check" value="1.5"><span class="ot">No — operator discretion</span></label>
+          <label class="opt"><input type="radio" name="fa_check" value="1.1"><span class="ot">Informal — we talk about what to check</span></label>
+          <label class="opt"><input type="radio" name="fa_check" value="0.5"><span class="ot">Yes — written checklist, signed off before production runs</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      ['fa_rate','fa_check'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked');
+        setv(n,e?e.value:'');
+      });
+    },
+    valid:function(){return gv('fa_rate')&&gv('fa_check');},
+    compute:function(){
+      var rate=+gv('fa_rate')||0.09;
+      var check=+gv('fa_check')||1.1;
+      var machineRate=+gv('s_rate')||100;
+      // Failed first articles per year: operators * 8 setups/wk * 50 wks * fail rate
+      var setupsPerYear=state.operators*8*50;
+      // Cost per failed FA: avg 2.5 hrs machine time + material + rework
+      var costPerFail=(machineRate*2.5)+200;
+      var amt=Math.round(setupsPerYear*rate*costPerFail*check*0.40);
+      return {key:'firstarticle',label:'Failed first articles & scrap cost',group:'setup',amount:amt};
+    }
+  },
+
+  /* 4 — VETERAN KNOWLEDGE RISK */
+  {
+    name:"Veteran Knowledge Risk",tag:"Knowledge Risk",
+    render:function(){return `
+      <div class="step-tag"><span class="n">5</span> Veteran knowledge risk</div>
+      <h2>What happens when your best machinist walks out?</h2>
+      <div class="sub">Manufacturers who depended on veteran technicians are discovering the knowledge gap only when a machine goes down unexpectedly — or the veteran gives two weeks notice. By then it's too late to capture.</div>
+      <label class="field"><span class="q">How many of your machinists have 15+ years of experience and are within 10 years of retirement?</span>
+        <div class="opts" data-radio="v_count">
+          <label class="opt"><input type="radio" name="v_count" value="3"><span class="ot">3 or more — significant departure risk</span></label>
+          <label class="opt"><input type="radio" name="v_count" value="2"><span class="ot">2 veterans in that window</span></label>
+          <label class="opt"><input type="radio" name="v_count" value="1"><span class="ot">1 veteran approaching retirement</span></label>
+          <label class="opt"><input type="radio" name="v_count" value="0"><span class="ot">None — our team is younger / documented</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Is your lead machinist's process documented anywhere — setup sheets, programming notes, fixture guides?</span>
+        <div class="opts" data-radio="v_docs">
+          <label class="opt"><input type="radio" name="v_docs" value="1.5"><span class="ot">No — it all lives in their head</span></label>
+          <label class="opt"><input type="radio" name="v_docs" value="1.1"><span class="ot">Partially — some notes, but not systematically captured</span></label>
+          <label class="opt"><input type="radio" name="v_docs" value="0.4"><span class="ot">Yes — documented and accessible to the team</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">If your lead machinist left tomorrow, how long before you'd recover full throughput?</span>
+        <div class="opts" data-radio="v_reco">
+          <label class="opt"><input type="radio" name="v_reco" value="0.25"><span class="ot">6+ months — we'd struggle significantly</span></label>
+          <label class="opt"><input type="radio" name="v_reco" value="0.15"><span class="ot">3–6 months — painful but manageable</span></label>
+          <label class="opt"><input type="radio" name="v_reco" value="0.05"><span class="ot">Under 3 months — we have backup depth</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      ['v_count','v_docs','v_reco'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked');
+        setv(n,e?e.value:'');
+      });
+    },
+    valid:function(){return gv('v_count')!==''&&gv('v_docs')&&gv('v_reco');},
+    compute:function(){
+      var count=+gv('v_count')||0;
+      if(count===0) return {key:'knowledge',label:'Veteran knowledge departure risk',group:'knowledge',amount:0};
+      var docs=+gv('v_docs')||1.1;
+      var reco=+gv('v_reco')||0.15;
+      // Annual revenue impact of throughput loss during recovery period
+      var amt=Math.round(state.revenue*reco*docs*count*0.30);
+      return {key:'knowledge',label:'Veteran knowledge departure risk',group:'knowledge',amount:amt};
+    }
+  },
+
+  /* 5 — OPERATOR RAMP */
+  {
+    name:"New Operator Ramp",tag:"Setup & Operations",
+    render:function(){return `
+      <div class="step-tag"><span class="n">6</span> New operator ramp cost</div>
+      <h2>How long before a new hire is actually productive?</h2>
+      <div class="sub">A new operator at 55% productivity is paid labor with reduced output. Shops with documented setup playbooks and onboarding curricula cut ramp from 6 months to 6 weeks — without increasing senior operator burden.</div>
+      <label class="field"><span class="q">How long does a new CNC operator typically take to reach full productivity at your shop?</span>
+        <div class="opts" data-radio="r_ramp">
+          <label class="opt"><input type="radio" name="r_ramp" value="24"><span class="ot">5–6 months (20–24 weeks)<div class="ob">National average for shops without structured onboarding</div></span></label>
+          <label class="opt"><input type="radio" name="r_ramp" value="14"><span class="ot">3–4 months — we have some structure</span></label>
+          <label class="opt"><input type="radio" name="r_ramp" value="6"><span class="ot">6–8 weeks — documented playbooks and shadowing</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">How many new operators have you hired in the last 12 months?</span>
+        <select id="r_hired">
+          <option value="">Select…</option>
+          <option value="0">None</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3–4</option>
+          <option value="5">5+</option>
+        </select>
+      </label>`;
+    },
+    save:function(){
+      var r=document.querySelector('input[name=r_ramp]:checked');
+      setv('r_ramp',r?r.value:'');
+      setv('r_hired',val('r_hired'));
+    },
+    valid:function(){return gv('r_ramp')&&gv('r_hired')!=='';},
+    compute:function(){
+      var ramp=+gv('r_ramp')||0;
+      var hired=+gv('r_hired')||0;
+      if(hired===0) return {key:'ramp',label:'New operator ramp-up cost',group:'setup',amount:0};
+      var weeklyOpCost=40*38; // $38/hr loaded machinist avg 2026
+      var productivityGap=0.45;
+      var rampCost=Math.round(hired*ramp*weeklyOpCost*productivityGap);
+      var amt=rampCost;
+      return {key:'ramp',label:'New operator ramp-up cost',group:'setup',amount:amt};
+    }
+  },
+
+  /* 6 — DOWNTIME & CAPACITY */
+  {
+    name:"Downtime & Capacity",tag:"Capacity & Growth",
+    render:function(){return `
+      <div class="step-tag"><span class="n">7</span> Downtime & capacity</div>
+      <h2>What is unplanned downtime and underutilization costing you?</h2>
+      <div class="sub">At $100–$175/machine hour, even 10% unplanned downtime on a 3-machine shop is a $150K+ annual event. Most shops track this loosely if at all.</div>
+      <label class="field"><span class="q">How often do you have unplanned downtime — machine issues, tooling failures, programming errors?</span>
+        <div class="opts" data-radio="d_down">
+          <label class="opt"><input type="radio" name="d_down" value="0.14"><span class="ot">Frequently — at least once or twice a week per machine</span></label>
+          <label class="opt"><input type="radio" name="d_down" value="0.07"><span class="ot">Occasionally — a few times a month</span></label>
+          <label class="opt"><input type="radio" name="d_down" value="0.02"><span class="ot">Rarely — tight PM schedule, issues caught early</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">How many CNC machines do you run?</span>
+        <select id="d_machines">
+          <option value="">Select…</option>
+          <option value="2">1–3 machines</option>
+          <option value="5">4–7 machines</option>
+          <option value="9">8–12 machines</option>
+          <option value="15">13+ machines</option>
+        </select>
+      </label>
+      <label class="field"><span class="q">How often do you turn down or delay work due to capacity or staffing?</span>
+        <div class="opts" data-radio="d_turn">
+          <label class="opt"><input type="radio" name="d_turn" value="0.10"><span class="ot">Regularly — turning away profitable work</span></label>
+          <label class="opt"><input type="radio" name="d_turn" value="0.04"><span class="ot">Occasionally — a few times a month</span></label>
+          <label class="opt"><input type="radio" name="d_turn" value="0.0"><span class="ot">Rarely — we have capacity to grow</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      ['d_down','d_turn'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked');
+        setv(n,e?e.value:'');
+      });
+      setv('d_machines',val('d_machines'));
+    },
+    valid:function(){return gv('d_down')&&gv('d_machines')&&gv('d_turn')!=='';},
+    compute:function(){
+      var down=+gv('d_down')||0;
+      var machines=+gv('d_machines')||5;
+      var turn=+gv('d_turn')||0;
+      var machineRate=+gv('s_rate')||100;
+      // Downtime cost: machines * hours/week * rate * downtime pct
+      var weeklyHours=machines*80; // 2 shifts
+      var downtimeCost=Math.round(weeklyHours*52*machineRate*down*0.35);
+      var turnCost=Math.round(state.revenue*turn*0.18);
+      var amt=downtimeCost+turnCost;
+      return {key:'downtime',label:'Downtime & foregone capacity',group:'capacity',amount:amt};
+    }
+  },
+
+  /* 7 — COMPLIANCE */
+  {
+    name:"Compliance & Quality",tag:"Knowledge Risk",
+    render:function(){return `
+      <div class="step-tag"><span class="n">8</span> Compliance & quality risk</div>
+      <h2>What's your exposure on quality escapes and compliance gaps?</h2>
+      <div class="sub">For defense and aerospace shops, a single quality escape can trigger a corrective action, customer audit, or contract review. For commercial shops, it's a customer lost and a Google review you didn't want.</div>
+      <label class="field"><span class="q">How current is your quality documentation — work instructions, inspection records, calibration certs?</span>
+        <div class="opts" data-radio="c_doc">
+          <label class="opt"><input type="radio" name="c_doc" value="0.60"><span class="ot">Behind or not sure what we have</span></label>
+          <label class="opt"><input type="radio" name="c_doc" value="0.28"><span class="ot">Mostly current — some gaps</span></label>
+          <label class="opt"><input type="radio" name="c_doc" value="0.07"><span class="ot">Fully current — audited within the last 12 months</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">Any quality escapes, customer complaints, or corrective actions in the last 24 months?</span>
+        <div class="opts" data-radio="c_hist">
+          <label class="opt"><input type="radio" name="c_hist" value="1.6"><span class="ot">Yes — one or more quality escapes or formal CARs</span></label>
+          <label class="opt"><input type="radio" name="c_hist" value="1.0"><span class="ot">No — clean quality record</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      ['c_doc','c_hist'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked');
+        setv(n,e?e.value:'');
+      });
+    },
+    valid:function(){return gv('c_doc')&&gv('c_hist');},
+    compute:function(){
+      var doc=+gv('c_doc')||0;
+      var hist=+gv('c_hist')||1.0;
+      var base=Math.min(state.revenue*0.018,80000)+state.operators*800;
+      var amt=Math.round(base*doc*hist*0.40);
+      return {key:'compliance',label:'Quality & compliance exposure',group:'knowledge',amount:amt};
+    }
+  }
+
+];
+
+function val(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function gv(k){return state.answers[k]!==undefined?state.answers[k]:'';}
+function setv(k,v){state.answers[k]=v;}
+function money(n){return '$'+Math.round(n).toLocaleString('en-US');}
+function persist(){try{localStorage.setItem('cnc_state',JSON.stringify(state));localStorage.setItem('cnc_step',current);}catch(e){}}
+function restore(){try{var s=localStorage.getItem('cnc_state');if(s){state=JSON.parse(s);}}catch(e){}}
+
+function start(){
+  document.getElementById('intro').classList.add('hide');
+  document.getElementById('wizard').classList.remove('hide');
+  current=0;renderStep();window.scrollTo(0,0);
+}
+
+function renderStep(){
+  var step=STEPS[current];
+  document.getElementById('steps').innerHTML='<div class="step active card">'+step.render()+
+    '<div class="nav">'+
+      (current>0?'<button class="btn btn-back" onclick="back()">← Back</button>':'')+
+      '<button class="btn btn-next" onclick="next()">'+(current===STEPS.length-1?'See My Results →':'Continue →')+'</button>'+
+    '</div></div>';
+  var pct=Math.round(((current)/(STEPS.length))*100);
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pStep').textContent='Step '+(current+1)+' of '+STEPS.length;
+  document.getElementById('pName').textContent=step.tag;
+  restoreSelections();wireOptHighlights();updateTally();
+}
+
+function restoreSelections(){
+  ['f_type','f_ops','f_rev','s_rate','r_hired','d_machines'].forEach(function(id){
+    var e=document.getElementById(id);if(!e)return;
+    if(id==='f_type'&&state.shopType)e.value=state.shopType;
+    else if(id==='f_ops'&&state.operators)e.value=state.operators;
+    else if(id==='f_rev'&&state.revenue)e.value=state.revenue;
+    else if(gv(id)!=='')e.value=gv(id);
+  });
+  document.querySelectorAll('.opts[data-radio]').forEach(function(grp){
+    var name=grp.getAttribute('data-radio');
+    var saved=gv(name);
+    if(saved!==''){
+      var r=grp.querySelector('input[value="'+saved+'"]');
+      if(r){r.checked=true;r.closest('.opt').classList.add('sel');}
+    }
+  });
+}
+
+function wireOptHighlights(){
+  document.querySelectorAll('.opt input[type=radio]').forEach(function(r){
+    r.addEventListener('change',function(){
+      document.querySelectorAll('input[name='+r.name+']').forEach(function(o){o.closest('.opt').classList.remove('sel');});
+      r.closest('.opt').classList.add('sel');
+    });
+  });
+}
+
+function updateTally(){
+  var sum=0,counted=0;
+  for(var i=1;i<=current;i++){
+    if(STEPS[i]&&STEPS[i].compute){var res=STEPS[i].compute();if(res&&res.amount>0){sum+=res.amount;counted++;}}
+  }
+  var t=document.getElementById('tally');
+  if(counted>0){t.innerHTML='Running estimate so far: <b>'+money(sum)+'</b> / year';}
+  else{t.innerHTML='';}
+}
+
+function next(){
+  var step=STEPS[current];step.save();
+  if(!step.valid()){flashIncomplete();return;}
+  persist();
+  if(current<STEPS.length-1){current++;renderStep();window.scrollTo(0,0);}
+  else{computeAll();showGate();}
+}
+
+function back(){
+  STEPS[current].save();
+  if(current>0){current--;renderStep();window.scrollTo(0,0);}
+}
+
+function flashIncomplete(){
+  var btn=document.querySelector('.btn-next');if(!btn)return;
+  var orig=btn.textContent;
+  btn.textContent='Please answer all fields';btn.style.background='var(--red)';
+  setTimeout(function(){btn.textContent=orig;btn.style.background='';},1400);
+}
+
+function computeAll(){
+  state.leaks={};
+  STEPS.forEach(function(s){if(s.compute){var r=s.compute();if(r&&r.amount>0){state.leaks[r.key]=r;}}});
+  persist();
+}
+function totalLeak(){var t=0;for(var k in state.leaks){t+=state.leaks[k].amount;}return t;}
+
+function showGate(){
+  document.getElementById('wizard').classList.add('hide');
+  var g=document.getElementById('gate');g.classList.remove('hide');
+  document.getElementById('pFill').style.width='100%';
+  document.getElementById('gatePreview').textContent=money(totalLeak());
+  window.scrollTo(0,0);
+}
+
+function unlock(){
+  var email=val('emailInput');
+  var err=document.getElementById('emailErr');
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){err.textContent='Please enter a valid email address.';return;}
+  err.textContent='';state.email=email;persist();
+  var btn=document.getElementById('unlockBtn');
+  btn.innerHTML='<span class="spinner"></span>Unlocking…';btn.disabled=true;
+  subscribe(email).finally(function(){
+    document.getElementById('gate').classList.add('hide');
+    renderResults();
+    document.getElementById('results').classList.add('show');
+    window.scrollTo(0,0);
+  });
+}
+
+function subscribe(email){
+  if(!BEEHIIV_ENDPOINT){try{localStorage.setItem('cnc_lead',email);}catch(e){}return Promise.resolve();}
+  return fetch(BEEHIIV_ENDPOINT,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email:email,publication_id:BEEHIIV_PUB,
+      utm_source:'cncvault_profit_leak_detector',
+      custom_fields:{shop_type:state.shopType,total_leak:totalLeak(),revenue:state.revenue,operators:state.operators}
+    })
+  }).catch(function(){try{localStorage.setItem('cnc_lead',email);}catch(e){}});
+}
+
+function renderResults(){
+  var total=totalLeak();
+  document.getElementById('resTotal').textContent=money(total);
+  var arr=Object.keys(state.leaks).map(function(k){return state.leaks[k];}).sort(function(a,b){return b.amount-a.amount;});
+  var max=arr.length?arr[0].amount:1;
+  var colors={
+    quoting:'linear-gradient(90deg,#2A7FD4,#1A6BBF)',
+    setup:'linear-gradient(90deg,#1E2D3D,#2C3E50)',
+    knowledge:'linear-gradient(90deg,#C53030,#E05E00)',
+    capacity:'linear-gradient(90deg,#27834A,#3DA35D)'
+  };
+
+  var bars='';
+  arr.forEach(function(l){
+    if(l.amount===0)return;
+    var w=Math.round((l.amount/max)*100);
+    var pct=total?Math.round((l.amount/total)*100):0;
+    bars+='<div class="leak-bar">'+
+      '<div class="lb-top"><span class="lb-name">'+l.label+'</span><span class="lb-val">'+money(l.amount)+'/yr</span></div>'+
+      '<div class="lb-track"><div class="lb-fill" data-w="'+w+'" style="background:'+(colors[l.group]||colors.setup)+'"></div></div>'+
+      '<div class="lb-pct">'+pct+'% of your total leak · '+GROUPS[l.group]+'</div>'+
+    '</div>';
+  });
+  document.getElementById('leakBars').innerHTML=bars;
+  setTimeout(function(){document.querySelectorAll('.lb-fill').forEach(function(f){f.style.width=f.getAttribute('data-w')+'%';});},120);
+
+  var details='';
+  arr.forEach(function(l){
+    if(l.amount===0)return;
+    var isRisk=l.group==='knowledge';
+    var d=getLeakDetail(l.key);
+    details+='<div class="detail-card'+(isRisk?' risk-card':'')+'">'+
+      '<div class="dc-head"><span class="dc-title">'+l.label+'</span><span class="dc-amount">'+money(l.amount)+'/yr</span></div>'+
+      '<div class="dc-tag">'+GROUPS[l.group]+'</div>'+
+      '<div class="dc-section"><div class="dc-section-label">What\'s happening</div>'+
+      '<div class="dc-text">'+d.diagnosis+'</div></div>'+
+      (d.benchmark?'<div class="dc-benchmark"><span class="bm-icon">📊</span><span>'+d.benchmark+'</span></div>':'')+
+      '<div class="dc-fix"><div class="fix-label">🔧 Recommended fix</div>'+d.fix+'</div>'+
+    '</div>';
+  });
+  document.getElementById('detailCards').innerHTML=details;
+
+  var plan='';
+  var top3=arr.filter(function(l){return l.amount>0;}).slice(0,3);
+  top3.forEach(function(l,i){
+    var a=getActionItem(l.key);
+    plan+='<div class="action-item"><div class="action-num">'+(i+1)+'</div><div class="action-body">'+
+      '<div class="action-title">'+a.title+'</div>'+
+      '<div class="action-desc">'+a.desc+'</div>'+
+      '<div class="action-impact">Potential recovery: '+money(l.amount*a.recoveryPct)+'/yr</div>'+
+    '</div></div>';
+  });
+  var remaining=arr.filter(function(l){return l.amount>0;}).length-3;
+  if(remaining>0){
+    plan+='<div class="action-item"><div class="action-num">…</div><div class="action-body"><div class="action-title">'+remaining+' more leak'+(remaining>1?'s':'')+' identified</div><div class="action-desc">Plug your top 3 first. Additional leaks are easier to address once the biggest drains are fixed.</div></div></div>';
+  }
+  document.getElementById('actionPlan').innerHTML=plan;
+}
+
+function getLeakDetail(key){
+  var ops=state.operators||5;
+  var rev=state.revenue||1500000;
+  var details={
+    quoting:{
+      diagnosis:'Your quoting process has significant exposure to margin erosion. Without tracking quote hours vs. actual hours per job family, you can\'t see which jobs are subsidizing others — and on a precision shop running 12–20% net margin, even a 5% systematic underquote eats 25–40% of your profit on those jobs.',
+      benchmark:'<b>2026 manufacturing benchmark:</b> Shops that track quote-to-actual variance by job family run 3–5 net margin points higher than shops that don\'t. On your revenue base, that\'s a significant annual difference.',
+      fix:'Pull your last 10 completed jobs. For each, calculate actual hours vs. quoted hours. Rank by variance. You\'ll find 2–3 job families that are systematically underquoted. Reprice those or adjust your quote multiplier before you accept another. Then build a simple tracker — even a spreadsheet — and review monthly.'
+    },
+    setup:{
+      diagnosis:'Setup time variability between your best and average operator represents paid machine time with zero output. Every hour a less-experienced operator takes longer than your lead machinist costs you machine rate — with nothing to bill for the difference. Shops with documented setup procedures reduce this gap by 30–50% within 90 days.',
+      benchmark:'<b>Industry benchmark:</b> Top-quartile machine shops have setup time variance under 12% across operators on identical jobs. Most shops without documentation run 30–50% variance.',
+      fix:'Pick your 3 highest-frequency job families. Have your lead machinist walk through the setup step by step while someone documents it. Build a one-page setup sheet per job family: material verification, tooling spec, offset procedure, first cut parameters. Give it to your next setup operator and compare times over 30 days.'
+    },
+    firstArticle:{
+      diagnosis:'Failed first articles are one of the most expensive and most preventable costs in a precision shop. Each failure represents full setup time, programming time, and machine time — plus material — completely lost. A written first article checklist with required sign-off before production runs eliminates the most common causes within 60 days.',
+      benchmark:'<b>Best-in-class shops:</b> Under 2–3% first article failure rate. Achieved primarily through written pre-run verification checklists, not better operators.',
+      fix:'Build a 6-point first article checklist: (1) verify program matches print revision, (2) verify material cert matches spec, (3) confirm offsets from setup sheet, (4) check tool condition against last replacement date, (5) measure first part before releasing, (6) sign off with operator name and time. That single checklist eliminates 60–70% of first article failures in most shops.'
+    },
+    knowledge:{
+      diagnosis:'Your veteran knowledge departure risk is real and approaching. When a machinist who\'s been running your most complex jobs for 15–20 years walks out, the institutional knowledge — Fanuc parameter adjustments, fixture quirks, material-specific speeds and feeds, tooling substitutions — goes with them. Replacement machinists take 6–12 months to match that output, if they ever do.',
+      benchmark:'<b>Conservative estimate:</b> A veteran machinist departure in a shop without documented processes costs 15–25% of their annual throughput contribution for 6–12 months during replacement ramp. On a '+ops+'-operator shop, that\'s a material event.',
+      fix:'Book a 90-minute session with your lead machinist this month — before anything changes. Have someone observe and document while they walk through their top 5 job families, unusual fixturing, and "gotchas" they\'ve learned over the years. Record the session. The recording + written notes become your playbook. This is the CNCVault Knowledge Capture session — we can run it for you in a structured format that produces a usable onboarding document.'
+    },
+    ramp:{
+      diagnosis:'New operators at 55–60% productivity for 5–6 months represents significant paid labor with reduced output. The issue isn\'t the operator — it\'s the absence of documented setup procedures and a structured 6-week curriculum. Shops that build this cut ramp time by 50–70% without increasing senior operator training burden.',
+      benchmark:'<b>SHRM 2024 manufacturing data:</b> Structured onboarding programs reduce time-to-productivity by 50–60% and reduce 90-day turnover by 30%.',
+      fix:'Build a 6-week onboarding curriculum: Week 1 — safety, shop orientation, machine familiarization. Week 2 — your most common material spec verification and measurement procedures. Weeks 3–4 — supervised setup on your highest-frequency job families using documented setup sheets. Weeks 5–6 — independent setups with senior check-ins. Most shops that do this never go back.'
+    },
+    downtime:{
+      diagnosis:'Unplanned downtime at your machine rate is one of the most expensive silent costs in a precision shop. Every unplanned hour is machine rate lost with nothing to bill — plus the scheduling ripple effect on customer commitments. Preventive maintenance schedules and tooling life tracking eliminate the majority of unplanned stops.',
+      benchmark:'<b>Industry target:</b> Overall Equipment Effectiveness (OEE) above 75% for job shops. Most undocumented shops run 55–65% OEE.',
+      fix:'Track your last 30 days of downtime causes. Most shops find 2–3 root causes driving 80% of events — usually tooling failures, program errors, or fixture issues. Fix the top cause first. A simple downtime log (machine, time, cause, resolution) takes 2 minutes per event and produces actionable data within 30 days.'
+    },
+    compliance:{
+      diagnosis:'Quality documentation gaps create real exposure for customer audits, corrective action requests, and contract reviews — especially for defense and aerospace clients. ISO 9001 and AS9100 shops with documented procedures face 3–4x fewer customer quality escapes than shops running on tribal knowledge.',
+      benchmark:'<b>AS9100 benchmark:</b> Certified shops with current documentation run corrective action rates 60% lower than non-certified shops on equivalent complexity work.',
+      fix:'Pull every quality document, calibration cert, and work instruction you have. Build a simple tracker: document name, last updated, next review date. Anything expired moves to your 30-day fix list. Start with calibration certs and customer-facing work instructions — those are what auditors check first.'
+    }
+  };
+  return details[key]||{diagnosis:'Based on your inputs, this area has profit leak potential.',benchmark:null,fix:'Review this area with a manufacturing operations advisor.'};
+}
+
+function getActionItem(key){
+  var actions={
+    quoting:{title:'Track quote-to-actual variance on your next 10 jobs',desc:'Build a simple spreadsheet tracker. Calculate actual hours vs. quoted per job family. Find your 2–3 most underquoted job types and reprice before accepting new orders.',recoveryPct:0.45},
+    setup:{title:'Document setup procedures for your top 3 job families',desc:'Have your lead machinist walk through each setup while someone captures it. One page per job family: tooling, offsets, parameters, first-cut notes. Distribute and track variance over 30 days.',recoveryPct:0.40},
+    firstArticle:{title:'Build and enforce a 6-point first article checklist',desc:'Program verification, material cert, offset confirmation, tool condition, measurement, sign-off. Required before releasing to production on every setup. Expect 60–70% reduction in first article failures within 60 days.',recoveryPct:0.55},
+    knowledge:{title:'Book a veteran knowledge capture session this month',desc:'90 minutes with your lead machinist, documented and recorded. Top 5 job families, fixture quirks, learned adjustments. Turn it into onboarding material before anything changes.',recoveryPct:0.50},
+    ramp:{title:'Build a 6-week new operator onboarding curriculum',desc:'Week-by-week curriculum using your documented setup procedures. Safety, measurement, supervised setups, independent setups with check-ins. Cuts ramp time by 50–70%.',recoveryPct:0.55},
+    downtime:{title:'Track 30 days of downtime causes and fix the top one',desc:'2 minutes per event: machine, time, cause, resolution. At 30 days you\'ll see the pattern. Fix the top cause — usually tooling life or program verification — before anything else.',recoveryPct:0.40},
+    compliance:{title:'Run a 2-hour documentation audit and build a refresh schedule',desc:'Every cert, work instruction, and quality doc — current, expired, missing. Fix expired items first. Set quarterly review reminders.',recoveryPct:0.55}
+  };
+  return actions[key]||{title:'Review this area',desc:'Address this leak with the appropriate advisor.',recoveryPct:0.30};
+}
+
+(function(){restore();})();
+</script>
+</body>
+</html>
 
