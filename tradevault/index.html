@@ -1,1 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1735689180857933');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1735689180857933&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TradeVault — Profit Capture System for HVAC, Plumbing & Electrical Shops</title>
+<meta name="description" content="We guarantee to find at least $10,000/year in specific profit leaks in your shop — or the audit is free. Mobile playbooks, checklists, and scorecards built from your best tech's process." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --edge: #FF6B00;
+    --edge-deep: #E05E00;
+    --edge-tint: rgba(255,107,0,0.07);
+    --edge-glow: rgba(255,107,0,0.18);
+    --ink: #F7F8FA;
+    --black: #0F0F0F;
+    --steel: #1A202C;
+    --panel: #F0F2F5;
+    --line: #E2E8F0;
+    --line-strong: #CBD5E0;
+    --text: #1A202C;
+    --mute: #4A5568;
+    --faint: #718096;
+    --green: #27834A;
+    --font-display: 'Archivo', sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: #fff; color: var(--text); line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  /* NAV */
+  .nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 5%; border-bottom: 1px solid var(--line); background: #fff; position: sticky; top: 0; z-index: 50; }
+  .nav-brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-brand .icon { color: var(--edge); font-size: 20px; }
+  .nav-cta { background: var(--edge); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-family: var(--font-display); font-weight: 700; font-size: 14px; cursor: pointer; text-decoration: none; transition: background .15s, transform .12s; }
+  .nav-cta:hover { background: var(--edge-deep); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero { background: var(--steel); color: #fff; padding: 72px 5% 64px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 0%, rgba(255,107,0,0.18) 0%, transparent 60%); pointer-events: none; }
+  .hero-eyebrow { font-family: var(--font-mono); font-size: 12px; color: var(--edge); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 18px; }
+  .hero h1 { font-family: var(--font-display); font-weight: 900; font-size: clamp(32px, 6vw, 58px); line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 22px; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .hero h1 .hl { color: var(--edge); }
+  .hero-sub { font-size: clamp(16px, 2.5vw, 19px); color: rgba(255,255,255,0.72); max-width: 580px; margin: 0 auto 36px; line-height: 1.65; }
+  .hero-cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+  .btn-primary { background: var(--edge); color: #fff; border: none; border-radius: 10px; padding: 18px 40px; font-family: var(--font-display); font-weight: 700; font-size: 17px; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 20px var(--edge-glow); transition: transform .15s, background .15s, box-shadow .15s; }
+  .btn-primary:hover { background: var(--edge-deep); transform: translateY(-2px); box-shadow: 0 8px 32px var(--edge-glow); }
+  .btn-ghost { background: transparent; color: rgba(255,255,255,0.75); border: 1.5px solid rgba(255,255,255,0.25); border-radius: 10px; padding: 18px 32px; font-family: var(--font-display); font-weight: 600; font-size: 16px; cursor: pointer; text-decoration: none; display: inline-block; transition: border-color .15s, color .15s; }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+  .hero-trust { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; font-size: 13px; color: rgba(255,255,255,0.5); }
+  .hero-trust span { display: flex; align-items: center; gap: 6px; }
+
+  /* GUARANTEE */
+  .guarantee-strip { background: #fff; border-bottom: 2px solid var(--line); padding: 0 5%; }
+  .guarantee-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 24px; padding: 32px 0; }
+  .guarantee-icon { font-size: 48px; flex-shrink: 0; }
+  .guarantee-text h2 { font-family: var(--font-display); font-weight: 800; font-size: 22px; color: var(--text); margin-bottom: 7px; }
+  .guarantee-text p { font-size: 15px; color: var(--mute); line-height: 1.6; max-width: 640px; }
+  .guarantee-text strong { color: var(--edge); }
+  @media (max-width: 600px) { .guarantee-inner { flex-direction: column; text-align: center; } }
+
+  /* SECTION WRAPPER */
+  .section { padding: 72px 5%; }
+  .section-inner { max-width: 900px; margin: 0 auto; }
+  .section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--edge); margin-bottom: 14px; }
+  .section-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(26px, 4vw, 36px); letter-spacing: -0.02em; line-height: 1.15; color: var(--text); margin-bottom: 16px; }
+  .section-sub { font-size: 16px; color: var(--mute); line-height: 1.65; max-width: 600px; margin-bottom: 40px; }
+
+  /* PROBLEM SECTION */
+  .problem-section { background: var(--ink); }
+  .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 580px) { .problem-grid { grid-template-columns: 1fr; } }
+  .problem-item { background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--edge); border-radius: 0 10px 10px 0; padding: 18px 20px; }
+  .problem-item h4 { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 5px; }
+  .problem-item p { font-size: 13.5px; color: var(--mute); line-height: 1.55; }
+
+  /* HOW IT WORKS */
+  .steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
+  .steps-row::before { content: ''; position: absolute; top: 28px; left: calc(16.67% + 12px); width: calc(66.67% - 24px); height: 1.5px; background: var(--line); z-index: 0; }
+  @media (max-width: 640px) { .steps-row { grid-template-columns: 1fr; } .steps-row::before { display: none; } }
+  .step-item { text-align: center; position: relative; z-index: 1; }
+  .step-num { width: 56px; height: 56px; border-radius: 50%; background: var(--edge); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 4px 16px var(--edge-glow); }
+  .step-item:nth-child(2) .step-num { background: var(--steel); box-shadow: none; }
+  .step-item:nth-child(3) .step-num { background: var(--green); box-shadow: 0 4px 16px rgba(39,131,74,0.25); }
+  .step-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 7px; }
+  .step-desc { font-size: 14px; color: var(--mute); line-height: 1.55; }
+
+  /* OFFER TIERS */
+  .offer-section { background: var(--steel); color: #fff; }
+  .offer-section .section-title { color: #fff; }
+  .offer-section .section-sub { color: rgba(255,255,255,0.65); }
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 680px) { .tiers { grid-template-columns: 1fr; } }
+  .tier { background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 24px 22px; }
+  .tier.featured { background: rgba(255,107,0,0.12); border-color: var(--edge); }
+  .tier-tag { font-family: var(--font-mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+  .tier.featured .tier-tag { color: var(--edge); }
+  .tier-name { font-family: var(--font-display); font-weight: 800; font-size: 18px; color: #fff; margin-bottom: 5px; }
+  .tier-price { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.55); margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .tier.featured .tier-price { color: var(--edge); }
+  .tier-desc { font-size: 13.5px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+
+  /* DELIVERABLES */
+  .deliverables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 580px) { .deliverables-grid { grid-template-columns: 1fr; } }
+  .del-item { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; background: var(--ink); border: 1px solid var(--line); border-radius: 10px; }
+  .del-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .del-text strong { display: block; font-family: var(--font-display); font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 3px; }
+  .del-text span { font-size: 13px; color: var(--mute); line-height: 1.5; }
+
+  /* PROOF / STATS */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  @media (max-width: 640px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+  .stat-item { text-align: center; padding: 24px 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; }
+  .stat-num { font-family: var(--font-display); font-weight: 900; font-size: 32px; color: var(--edge); line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 12px; color: var(--faint); line-height: 1.4; }
+
+  /* CTA SECTION */
+  .cta-section { background: var(--edge); padding: 72px 5%; text-align: center; }
+  .cta-section h2 { font-family: var(--font-display); font-weight: 900; font-size: clamp(26px, 4vw, 42px); color: #fff; letter-spacing: -0.02em; margin-bottom: 16px; max-width: 700px; margin-left: auto; margin-right: auto; }
+  .cta-section p { font-size: 17px; color: rgba(255,255,255,0.8); max-width: 520px; margin: 0 auto 32px; line-height: 1.65; }
+  .btn-white { background: #fff; color: var(--edge); border: none; border-radius: 10px; padding: 18px 44px; font-family: var(--font-display); font-weight: 800; font-size: 17px; cursor: pointer; text-decoration: none; display: inline-block; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform .15s, box-shadow .15s; }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.25); }
+  .cta-sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 14px; }
+
+  /* FOOTER */
+  .footer { background: var(--steel); color: rgba(255,255,255,0.45); text-align: center; padding: 28px 5%; font-size: 12.5px; line-height: 1.7; }
+  .footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+  .footer a:hover { color: var(--edge); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="https://skillededge.io" class="nav-brand"><span class="icon">🔧</span> TradeVault · Skilled Edge Group</a>
+  <a href="https://skillededge.io/tradevault/profit-leak-detector" class="nav-cta">Run Free Audit →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">For HVAC, plumbing & electrical shops · 2–10 techs</div>
+  <h1>We'll find <span class="hl">$10,000+</span> in profit leaks hiding in your shop — guaranteed.</h1>
+  <p class="hero-sub">Most busy trades shops are leaving real money on the table — not from slow seasons, but from tech performance gaps, inconsistent execution, and knowledge that walks out with your veterans. TradeVault surfaces the leaks and gives your team the tools to plug them.</p>
+  <div class="hero-cta-row">
+    <a href="https://skillededge.io/tradevault/profit-leak-detector" class="btn-primary">Run My Free Profit Audit →</a>
+    <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+  </div>
+  <div class="hero-trust">
+    <span>🛡️ $10K identification guarantee</span>
+    <span>⚡ Results in 5 minutes</span>
+    <span>🔒 Your numbers stay private</span>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<div class="guarantee-strip">
+  <div class="guarantee-inner">
+    <div class="guarantee-icon">🛡️</div>
+    <div class="guarantee-text">
+      <h2>The $10,000 Identification Guarantee</h2>
+      <p>We run the Profit Leak Calculator live with your real numbers. It will identify at least <strong>$10,000/year in specific, actionable profit leaks</strong> — tech performance gaps, callback costs, knowledge loss, missed upsells. If it doesn't hit $10K, your initial engagement is <strong>completely free</strong>. No catch, no fine print.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="section problem-section">
+  <div class="section-inner">
+    <div class="section-label">Where your shop is leaking</div>
+    <h2 class="section-title">Busy but broke? Here's why.</h2>
+    <p class="section-sub">Most trades shops have the tools — they just don't have the system to make sure techs use them consistently. Here's what that costs you.</p>
+    <div class="problem-grid">
+      <div class="problem-item">
+        <h4>Tech performance gap</h4>
+        <p>Your best tech generates 35–50% more revenue per job than your average. That gap is pure process — and it's fixable.</p>
+      </div>
+      <div class="problem-item">
+        <h4>Callback costs</h4>
+        <p>Every callback is a dispatch cost, a senior tech's time, and a Google review waiting to happen. Most are preventable with a 5-point checklist.</p>
+      </div>
+      <div class="problem-item">
+        <h4>Knowledge walking out the door</h4>
+        <p>When your best tech leaves or retires, their process leaves with them. The next hire starts from zero. That gap takes months to close.</p>
+      </div>
+      <div class="problem-item">
+        <h4>No enforcement visibility</h4>
+        <p>You can't hold techs accountable for what you can't see. Without a scorecard, the system only works for the techs who already want it to.</p>
+      </div>
+      <div class="problem-item">
+        <h4>Slow new hire ramp</h4>
+        <p>New techs at 60% productivity for 4–6 months is a recurring drag. Documented playbooks cut that to 4–6 weeks in most shops.</p>
+      </div>
+      <div class="problem-item">
+        <h4>Missed upsell execution</h4>
+        <p>Your top tech upsells on 40% of calls. Your other techs average 12%. The difference is a script — not personality.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-label">The process</div>
+    <h2 class="section-title">Three steps. You run it. We make it easy.</h2>
+    <p class="section-sub">We deliver the complete system and visibility. You lead the accountability. Shops that implement and stay consistent see real movement.</p>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-title">We audit</div>
+        <div class="step-desc">Run the Profit Leak Calculator live with your real numbers. Identifies your specific leaks — dollar amounts, ranked by impact.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-title">We build</div>
+        <div class="step-desc">Capture your best tech's process and turn it into mobile-ready playbooks, checklists, and scorecards in 2 weeks.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-title">You run it</div>
+        <div class="step-desc">Deploy with the rollout guide. You lead the team huddle. We keep the system fresh. You keep the gains.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER TIERS -->
+<section class="section offer-section">
+  <div class="section-inner">
+    <div class="section-label">The offer</div>
+    <h2 class="section-title">Start with the audit. Build from there.</h2>
+    <p class="section-sub">The Detector is free — or it costs you nothing if we don't hit $10K. Everything else comes after you've seen the numbers.</p>
+    <div class="tiers">
+      <div class="tier featured">
+        <div class="tier-tag">⚡ Start here</div>
+        <div class="tier-name">Detector</div>
+        <div class="tier-price">Free*</div>
+        <div class="tier-desc">Live Profit Leak Calculator session. Pinpoints your specific leaks with a written report ranked by dollar impact. *Free if we don't find $10K.</div>
+      </div>
+      <div class="tier">
+        <div class="tier-tag">Core system</div>
+        <div class="tier-name">Accelerator</div>
+        <div class="tier-price">$997 setup + $199–$349/mo</div>
+        <div class="tier-desc">Mobile playbooks, checklists, and scorecards built from your best tech's process. Owner rollout guide included. Deployed in 2 weeks.</div>
+      </div>
+      <div class="tier">
+        <div class="tier-tag">Ongoing</div>
+        <div class="tier-name">Retainer</div>
+        <div class="tier-price">$149/mo</div>
+        <div class="tier-desc">Quarterly playbook refreshes and ongoing support so you can maintain accountability as your team evolves.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">What's included</div>
+    <h2 class="section-title">Everything your team needs. Nothing they won't use.</h2>
+    <p class="section-sub">Every deliverable is built from your best tech's actual process — not generic templates pulled from an industry playbook.</p>
+    <div class="deliverables-grid">
+      <div class="del-item">
+        <div class="del-icon">📋</div>
+        <div class="del-text"><strong>Mobile Job Checklists</strong><span>Pre-job, during-job, and post-job scripts your techs follow on their phone. Reduces callbacks by 30–50%.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🧠</div>
+        <div class="del-text"><strong>Knowledge Capture</strong><span>Your best tech's process documented and turned into repeatable SOPs before they walk out the door.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">📊</div>
+        <div class="del-text"><strong>Owner Scorecard</strong><span>Simple weekly view of tech execution — who's following the system and who isn't. Accountability made easy.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🎯</div>
+        <div class="del-text"><strong>Upsell Playbook</strong><span>Word-for-word prompts so techs ask the right questions without feeling like salespeople.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">🚀</div>
+        <div class="del-text"><strong>Owner Rollout Guide</strong><span>Step-by-step huddle script to introduce the system to your team in under 30 minutes.</span></div>
+      </div>
+      <div class="del-item">
+        <div class="del-icon">📞</div>
+        <div class="del-text"><strong>New Hire Curriculum</strong><span>Structured onboarding checklist so new techs ramp in weeks, not months.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="section problem-section">
+  <div class="section-inner">
+    <div class="section-label">By the numbers</div>
+    <h2 class="section-title">What shops using the system see.</h2>
+    <p class="section-sub">Based on 2026 trades industry benchmarks and shops implementing structured playbook systems.</p>
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">$31K</div>
+        <div class="stat-label">Average profit leak identified per shop audit</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">40%</div>
+        <div class="stat-label">Average reduction in callback rate within 60 days</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">6 wks</div>
+        <div class="stat-label">Average new hire ramp with structured onboarding vs. 4–6 months</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">35%</div>
+        <div class="stat-label">Revenue gap between top and average tech — closed with a script</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Find out exactly where your shop is leaking money — in 5 minutes.</h2>
+  <p>Run the free Profit Leak Calculator now. We guarantee we'll find at least $10,000/year in specific leaks — or the whole thing is free.</p>
+  <a href="https://skillededge.io/tradevault/profit-leak-detector" class="btn-white">Run My Free Audit →</a>
+  <div class="cta-sub">No credit card · No sales call required · Results in under 5 minutes</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  © 2026 Skilled Edge Group LLC · <a href="https://skillededge.io">skillededge.io</a> · dave@skillededge.io · (703) 568-5161<br>
+  Estimates are good-faith projections based on published 2026 industry benchmarks. Not financial advice.
+</footer>
+
+</body>
+</html>
 
