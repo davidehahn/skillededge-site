@@ -1,200 +1,1014 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Skilled Edge | Warehouse & 3PL Labor Margin Audits</title>
-  <meta name="description" content="Remote Labor Margin & Throughput Audits for 3PLs and Warehousing Companies. We identify $75,000+ in hidden waste from overtime, turnover, and VAS leakage." />
-  <meta property="og:title" content="Skilled Edge | Warehouse & 3PL Labor Margin Audits" />
-  <meta property="og:description" content="Fast remote audits that recover significant labor costs for mid-market 3PL and warehousing operations." />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%230D2B5E'/><text y='.9em' font-size='72' x='12'>⚙</text></svg>" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --navy:      #0D2B5E;
-      --navy-deep: #071830;
-      --navy-mid:  #122444;
-      --teal:      #00B4A0;
-      --teal-dark: #008C7D;
-      --gold:      #E8B84B;
-      --copper:    #B87333;
-      --white:     #F2F6FB;
-      --off:       #E8EEF6;
-      --gray:      #7A8FAD;
-      --light-bg:  #F4F7FB;
-      --border:    #D4DFEF;
-      --text:      #1A2A42;
-      --radius:    10px;
-      --shadow:    0 4px 24px rgba(13,43,94,0.10);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: #fff; color: var(--text); line-height: 1.6; overflow-x: hidden; }
-    /* Your original full CSS styles go here. Copy all the <style> content from your current file into this section */
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skilled Edge Group — 3PL & Warehouse Labor Margin Audits</title>
+<meta name="description" content="We identify $75,000+ in hidden labor waste for mid-market 3PL and warehousing operations — or the audit is completely free. Remote delivery, 5–7 days." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0F1E2E;
+    --navy-mid: #162436;
+    --navy-light: #1E3247;
+    --orange: #E8600A;
+    --orange-light: rgba(232,96,10,0.10);
+    --orange-glow: rgba(232,96,10,0.20);
+    --blue: #2A7FD4;
+    --blue-light: #EBF4FF;
+    --white: #FFFFFF;
+    --off-white: #F5F7FA;
+    --border: #D4DAE2;
+    --border-dark: rgba(255,255,255,0.10);
+    --text: #1A202C;
+    --mute: #4A5568;
+    --faint: #718096;
+    --green: #27834A;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--white); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── NAV ── */
+  .nav {
+    background: var(--navy);
+    padding: 0 5%;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .nav-brand-dot {
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.60);
+    font-weight: 500;
+    transition: color .15s;
+    font-family: var(--mono);
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--orange);
+    color: var(--white) !important;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--mono);
+    transition: opacity .15s, transform .12s;
+    display: inline-block;
+  }
+  .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    padding: 80px 5% 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(42,127,212,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42,127,212,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(232,96,10,0.10) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--orange);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 2px;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    margin-bottom: 24px;
+    max-width: 740px;
+  }
+  .hero h1 .hl {
+    color: var(--orange);
+    position: relative;
+  }
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 18px);
+    color: rgba(255,255,255,0.65);
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 56px;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 15px 32px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.02em;
+    transition: opacity .15s, transform .12s, box-shadow .15s;
+    box-shadow: 0 4px 20px var(--orange-glow);
+  }
+  .btn-primary:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 32px var(--orange-glow); }
+  .btn-ghost {
+    background: transparent;
+    color: rgba(255,255,255,0.72);
+    border: 1.5px solid rgba(255,255,255,0.22);
+    border-radius: 8px;
+    padding: 15px 28px;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.55); color: var(--white); }
+
+  /* ── HERO STATS ── */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 600px;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.04);
+    padding: 18px 20px;
+  }
+  .hero-stat-val {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .hero-stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.4;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  @media (max-width: 500px) { .hero-stats { grid-template-columns: 1fr; } }
+
+  /* ── GUARANTEE STRIP ── */
+  .guarantee {
+    background: var(--orange);
+    padding: 0 5%;
+  }
+  .guarantee-inner {
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 0;
+    flex-wrap: wrap;
+  }
+  .guarantee-icon { font-size: 28px; flex-shrink: 0; }
+  .guarantee-text {
+    flex: 1;
+    min-width: 240px;
+  }
+  .guarantee-text strong {
+    display: block;
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 3px;
+  }
+  .guarantee-text p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.5;
+  }
+  .guarantee-badge {
+    background: rgba(255,255,255,0.18);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section { padding: 80px 5%; }
+  .section-inner { max-width: 880px; margin: 0 auto; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--orange);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 2px;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: var(--mono);
+    font-size: clamp(22px, 3.5vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .section-sub {
+    font-size: 16px;
+    color: var(--mute);
+    line-height: 1.7;
+    max-width: 580px;
+    margin-bottom: 48px;
+  }
+
+  /* ── PAIN POINTS ── */
+  .pain-section { background: var(--off-white); }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 580px) { .pain-grid { grid-template-columns: 1fr; } }
+  .pain-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 22px;
+  }
+  .pain-card h4 {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .pain-card p {
+    font-size: 13px;
+    color: var(--mute);
+    line-height: 1.6;
+  }
+
+  /* ── AUDIT AREAS ── */
+  .audit-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .audit-row {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .audit-row:hover { border-color: var(--orange); box-shadow: 0 2px 12px var(--orange-light); }
+  .audit-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--orange);
+    background: var(--orange-light);
+    border: 1px solid rgba(232,96,10,0.2);
+    padding: 4px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.06em;
+  }
+  .audit-body { flex: 1; }
+  .audit-name {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .audit-desc {
+    font-size: 13.5px;
+    color: var(--mute);
+    line-height: 1.6;
+  }
+  .audit-metrics {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .audit-metric {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    background: var(--off-white);
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  /* ── LEAK MATH ── */
+  .math-section { background: var(--navy); }
+  .math-section .section-title { color: var(--white); }
+  .math-section .section-sub { color: rgba(255,255,255,0.60); }
+  .math-section .section-label { color: var(--orange); }
+  .math-section .section-label::before { background: var(--orange); }
+  .math-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 640px) { .math-grid { grid-template-columns: 1fr; } }
+  .math-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 8px;
+    padding: 22px 20px;
+  }
+  .math-card-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 10px;
+  }
+  .math-card-amount {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .math-card-desc {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.55;
+  }
+  .math-total {
+    background: var(--orange);
+    border-radius: 8px;
+    padding: 22px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .math-total-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .math-total-amount {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+  .math-total-note {
+    font-size: 12px;
+    color: rgba(255,255,255,0.70);
+    margin-top: 4px;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
+  }
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: calc(12.5% + 10px);
+    width: calc(75% - 20px);
+    height: 1.5px;
+    background: var(--border);
+    z-index: 0;
+  }
+  @media (max-width: 680px) {
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+    .steps-grid::before { display: none; }
+  }
+  @media (max-width: 400px) { .steps-grid { grid-template-columns: 1fr; } }
+  .step {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .step-num {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    border: 2px solid var(--border);
+  }
+  .step:first-child .step-num { background: var(--orange); border-color: var(--orange); }
+  .step-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .step-desc {
+    font-size: 12.5px;
+    color: var(--mute);
+    line-height: 1.55;
+  }
+
+  /* ── DELIVERABLES ── */
+  .del-section { background: var(--off-white); }
+  .del-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 640px) { .del-grid { grid-template-columns: 1fr; } }
+  .del-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px 20px;
+  }
+  .del-icon { font-size: 26px; margin-bottom: 12px; }
+  .del-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .del-desc {
+    font-size: 13px;
+    color: var(--mute);
+    line-height: 1.6;
+  }
+
+  /* ── ICP ── */
+  .icp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 580px) { .icp-grid { grid-template-columns: 1fr; } }
+  .icp-box {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px 22px;
+  }
+  .icp-box-title {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .icp-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .icp-list li {
+    font-size: 13px;
+    color: var(--mute);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .icp-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+    font-size: 12px;
+  }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--navy);
+    padding: 80px 5%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(232,96,10,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,96,10,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+  .cta-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+  .cta-section h2 {
+    font-family: var(--mono);
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+  .cta-section p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 36px;
+    line-height: 1.7;
+  }
+  .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+  .btn-white {
+    background: var(--white);
+    color: var(--navy);
+    border: none;
+    border-radius: 8px;
+    padding: 15px 32px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity .15s, transform .12s;
+  }
+  .btn-white:hover { opacity: 0.92; transform: translateY(-2px); }
+  .cta-note {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.40);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--navy-mid);
+    border-top: 1px solid var(--border-dark);
+    padding: 32px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-brand {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 12px;
+    color: rgba(255,255,255,0.40);
+    font-family: var(--mono);
+    transition: color .15s;
+  }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(255,255,255,0.30);
+    font-family: var(--mono);
+    width: 100%;
+  }
+</style>
 </head>
 <body>
 
-<!-- NAV (kept your original) -->
-<nav>
-  <div class="nav-inner">
-    <a href="/" class="nav-logo">
-      <div class="nav-logo-mark">⚙</div>
-      <div class="nav-logo-text">
-        <span class="nav-logo-name">Skilled Edge</span>
-        <span class="nav-logo-sub">Group</span>
-      </div>
-    </a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#audit">The Audit</a></li>
-      <li><a href="#how-it-works">How It Works</a></li>
-      <li><a href="#who-we-serve">Who We Serve</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <button class="nav-hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-brand-dot"></div>
+    Skilled Edge Group
   </div>
+  <ul class="nav-links">
+    <li><a href="#audit">The Audit</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#deliverables">Deliverables</a></li>
+    <li><a href="https://skillededge.io/cncvault">CNCVault</a></li>
+    <li><a href="https://skillededge.io/tradevault">TradeVault</a></li>
+    <li><a href="tel:+17035685161" class="nav-cta">Call Dave →</a></li>
+  </ul>
 </nav>
 
-<!-- NEW WAREHOUSE HERO -->
-<section class="hero" style="background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 60%, #0a3a6e 100%); padding: 80px 20px 90px;">
-  <div class="hero-grid-bg"></div>
-  <div class="hero-inner container">
-    <div>
-      <div class="hero-eyebrow">REMOTE LABOR MARGIN AUDIT</div>
-      <h2>Most Warehouses Are Losing <span style="color:var(--teal);">$75,000+</span><br>in Hidden Labor Waste</h2>
-      <p class="hero-tagline">We find it fast — overtime fatigue, labor churn, VAS billing leakage, mis-picks, and throughput gaps.</p>
-      <p class="hero-sub">$2,500 fixed price • 5–7 day delivery • Fully remote</p>
-      <div class="hero-btns">
-        <a href="#get-started" class="btn-primary">Get Your Audit →</a>
-        <a href="tel:+17035685161" class="btn-secondary">Call Dave (703) 568-5161</a>
-      </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">3PL & Warehouse Labor Margin Audits</div>
+    <h1>Your warehouse is leaking<br><span class="hl">$75,000+</span> a year.<br>We'll find it in 5 days.</h1>
+    <p class="hero-sub">A remote data audit that bridges the gap between your WMS and your P&L — identifying hidden labor waste across five operational blind spots most warehouse managers never see.</p>
+    <div class="hero-actions">
+      <a href="tel:+17035685161" class="btn-primary">Call Dave — (703) 568-5161</a>
+      <a href="#audit" class="btn-ghost">See the Audit →</a>
     </div>
-    <div class="hero-right">
-      <div class="hero-stat-card featured">
-        <div class="stat-label">Typical Findings</div>
-        <div class="stat-value">$75,000+</div>
-        <div class="stat-desc">in recoverable waste per warehouse</div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val">$75K</div>
+        <div class="hero-stat-label">Guarantee or free</div>
       </div>
-      <div class="hero-stat-card">
-        <div class="stat-label">Delivery</div>
-        <div class="stat-value">5–7 Days</div>
-        <div class="stat-desc">Just upload your WMS + payroll data</div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">$2,500</div>
+        <div class="hero-stat-label">Fixed price</div>
       </div>
-    </div>
-  </div>
-</section>
-<!-- PAIN POINTS / CORE AUDIT AREAS -->
-<section class="section section-alt" style="padding:80px 20px;">
-  <div class="container">
-    <div class="section-header">
-      <div class="section-eyebrow">Where The Money Goes</div>
-      <div class="section-title">5 Major Areas We Audit</div>
-    </div>
-    <div class="tools-grid">
-      <div class="tool-card">
-        <div class="tool-icon">🔄</div>
-        <div class="tool-title">Labor Churn</div>
-        <p class="tool-desc">New hire ramp-up losses and hidden turnover costs that destroy productivity.</p>
-      </div>
-      <div class="tool-card">
-        <div class="tool-icon">⏰</div>
-        <div class="tool-title">Overtime Fatigue</div>
-        <p class="tool-desc">The inflection point where overtime stops driving profit and starts eroding margins.</p>
-      </div>
-      <div class="tool-card">
-        <div class="tool-icon">📦</div>
-        <div class="tool-title">VAS & Accessorial Leakage</div>
-        <p class="tool-desc">Value-added services you're performing but not fully billing.</p>
-      </div>
-      <div class="tool-card">
-        <div class="tool-icon">📉</div>
-        <div class="tool-title">Mis-picks & Cycle Gaps</div>
-        <p class="tool-desc">Inventory accuracy and picking efficiency losses.</p>
-      </div>
-      <div class="tool-card">
-        <div class="tool-icon">📏</div>
-        <div class="tool-title">Scope Creep</div>
-        <p class="tool-desc">Untracked extra work eating into your SLA margins.</p>
+      <div class="hero-stat">
+        <div class="hero-stat-val">5–7 days</div>
+        <div class="hero-stat-label">100% remote</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CALL TO ACTION -->
-<section id="get-started" class="section" style="background: var(--navy-deep); color: white; text-align: center; padding: 90px 20px;">
-  <div class="container">
-    <h2 style="font-size: 42px; margin-bottom: 20px;">Ready to Find Your $75,000?</h2>
-    <p style="font-size: 19px; max-width: 700px; margin: 0 auto 40px; opacity: 0.9;">
-      Start with a quick 15-minute call. We'll review your operation and tell you if the remote audit makes sense.
-    </p>
-    <a href="tel:+17035685161" class="btn-primary" style="font-size: 20px; padding: 18px 48px;">Call Dave Now — (703) 568-5161</a>
-    <p style="margin-top: 24px; opacity: 0.8;">Or email: dave@skillededge.io</p>
+<!-- GUARANTEE STRIP -->
+<div class="guarantee">
+  <div class="guarantee-inner">
+    <div class="guarantee-icon">🛡️</div>
+    <div class="guarantee-text">
+      <strong>The $75,000 Identification Guarantee</strong>
+      <p>We identify at least $75,000 in recoverable annual waste across your operation — or the audit is completely free. No invoices, no follow-up. Just results.</p>
+    </div>
+    <div class="guarantee-badge">Zero risk. Zero catch.</div>
+  </div>
+</div>
+
+<!-- PAIN POINTS -->
+<section class="section pain-section">
+  <div class="section-inner">
+    <div class="section-label">Why it's happening</div>
+    <h2 class="section-title">Your WMS and your P&L don't talk to each other.</h2>
+    <p class="section-sub">Mid-market 3PLs run on systems that track operational execution perfectly — and financial reality not at all. That gap is where your margin disappears.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <h4>Revenue Bleed via Accessorial "Favors"</h4>
+        <p>Floor workers perform manual tasks — re-labeling, splitting UOM, custom wrapping — without logging them. You pay W2 labor. The client pays standard flat fees. Margins collapse on high-maintenance accounts.</p>
+      </div>
+      <div class="pain-card">
+        <h4>Contractual Scope Creep</h4>
+        <p>MSAs are signed with specific storage footprints. Over time, clients store oversized, slow-moving items that disrupt floor routing. Managers rarely audit active configurations against the original contract.</p>
+      </div>
+      <div class="pain-card">
+        <h4>Inventory Placement & Cycle Time Gaps</h4>
+        <p>High-velocity SKUs placed deep in racking force pickers to travel further on every order. Excessive travel time lowers LPH, drives up labor costs, and causes missed carrier cutoff windows.</p>
+      </div>
+      <div class="pain-card">
+        <h4>Labor Churn & Onboarding Lag</h4>
+        <p>Floor turnover clears 40%+ annually. Every time an experienced picker leaves, it takes 3–4 weeks for a replacement to hit standard picking speed. This constant retraining cycle destroys throughput.</p>
+      </div>
+    </div>
   </div>
 </section>
-<!-- TOOLS SECTION (kept mostly original but updated context) -->
-<section class="section" id="tools">
-  <div class="section-header">
-    <div class="section-eyebrow">Our Core Service</div>
-    <div class="section-title">Remote Labor Margin & Throughput Audit</div>
-    <p class="section-sub">A data-driven deep dive into your warehouse operations. Delivered in 5–7 days.</p>
-  </div>
-  <div class="tools-grid">
-    <div class="tool-card featured">
-      <div class="tool-badge badge-live">🟢 Now Accepting Clients</div>
-      <div class="tool-icon">📊</div>
-      <div class="tool-title">Warehouse Labor Margin Audit</div>
-      <p class="tool-desc">$2,500 fixed price. We analyze your WMS + payroll data and deliver a clear report showing exactly where you're losing $75k+ in hidden waste.</p>
-      <ul class="tool-features">
-        <li>Labor churn & ramp-up losses</li>
-        <li>Overtime fatigue inflection point</li>
-        <li>VAS & accessorial billing leakage</li>
-        <li>Mis-picks and cycle count gaps</li>
-        <li>Scope creep & SLA penalties</li>
-      </ul>
-      <a href="#get-started" class="tool-btn tool-btn-primary">Start Your Audit →</a>
-    </div>
 
-    <!-- Keep your other tool cards (Card Optimizer, Knowledge Vault, etc.) below if you want them visible during transition -->
+<!-- AUDIT AREAS -->
+<section class="section" id="audit">
+  <div class="section-inner">
+    <div class="section-label">What we audit</div>
+    <h2 class="section-title">Five areas. One comprehensive report.</h2>
+    <p class="section-sub">Every audit systematically evaluates these five core operational disciplines — the exact places where mid-market 3PLs consistently lose margin.</p>
+    <div class="audit-grid">
+
+      <div class="audit-row">
+        <div class="audit-num">01</div>
+        <div class="audit-body">
+          <div class="audit-name">Mis-picks & Return Processing</div>
+          <div class="audit-desc">Analysis of fulfillment accuracy, root causes of order errors, and the efficiency of your reverse logistics pipeline. A minor 0.5% error rate on 50,000 annual shipments generates $12,500+ in reverse logistics costs, restocking labor, and client chargebacks.</div>
+          <div class="audit-metrics">
+            <span class="audit-metric">Error rate</span>
+            <span class="audit-metric">Return cycle time</span>
+            <span class="audit-metric">Cost per return</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-num">02</div>
+        <div class="audit-body">
+          <div class="audit-name">Accessorial Charge Capture</div>
+          <div class="audit-desc">Evaluation of unbilled or under-billed secondary services provided to clients. Two workers performing unlogged custom packaging for just 3 hours per week at a $45/hr billable rate equals $7,020/year in pure uncollected revenue — per account.</div>
+          <div class="audit-metrics">
+            <span class="audit-metric">Uncaptured charges</span>
+            <span class="audit-metric">Billing latency</span>
+            <span class="audit-metric">Margin leakage %</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-num">03</div>
+        <div class="audit-body">
+          <div class="audit-name">Standard Pick & Pack Cycle Gaps</div>
+          <div class="audit-desc">Identification of throughput bottlenecks during core picking and packing workflows. Poor SKU slotting, inefficient pick paths, and suboptimal staging configurations directly suppress your Lines Picked per Hour (LPH) and drive up cost-per-order.</div>
+          <div class="audit-metrics">
+            <span class="audit-metric">Lines picked per hour</span>
+            <span class="audit-metric">Order-to-dock cycle time</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-num">04</div>
+        <div class="audit-body">
+          <div class="audit-name">Warehouse Associate Churn & Ramp</div>
+          <div class="audit-desc">Assessment of labor stability and the operational time-to-productivity for new hires. With 40% annual turnover on a 25-person floor, you're replacing 10 pickers per year — each operating at 50% efficiency for 3 weeks while drawing a full wage. That's $21,600/year in capacity loss before a single overtime dollar is spent.</div>
+          <div class="audit-metrics">
+            <span class="audit-metric">Annual turnover rate</span>
+            <span class="audit-metric">Ramp time to 100% efficiency</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="audit-row">
+        <div class="audit-num">05</div>
+        <div class="audit-body">
+          <div class="audit-name">Billing Capture & Scope Creep</div>
+          <div class="audit-desc">Audit of contract enforcement to ensure all operational activities align precisely with agreed client scopes. Clients who expand storage footprints, change SKU profiles, or add unofficial services outside their MSA are costing you money that your billing system was never configured to capture.</div>
+          <div class="audit-metrics">
+            <span class="audit-metric">Scope creep variance</span>
+            <span class="audit-metric">Contractual compliance rate</span>
+            <span class="audit-metric">Revenue leakage</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
-<!-- FOOTER (your original footer) -->
-<footer>
-  <div class="footer-inner">
-    <div>
-      <div class="footer-brand-name">Skilled Edge Group</div>
-      <div class="footer-brand-tag">Warehouse Labor Audits</div>
-      <p class="footer-brand-desc">Helping 3PL and warehousing operators recover hidden labor margins through fast, remote data audits.</p>
+<!-- LEAK MATH -->
+<section class="section math-section">
+  <div class="section-inner">
+    <div class="section-label">The math on a $5M 3PL</div>
+    <h2 class="section-title">Conservative baseline. Real numbers.</h2>
+    <p class="section-sub">Before we touch your data, here's what the typical $5M founder-operated 3PL leaks annually across just three of the five audit areas.</p>
+    <div class="math-grid">
+      <div class="math-card">
+        <div class="math-card-label">VAS Billing Leakage</div>
+        <div class="math-card-amount">$7,020</div>
+        <div class="math-card-desc">2 workers × 3 hrs/week of unlogged custom work at $45/hr billable rate</div>
+      </div>
+      <div class="math-card">
+        <div class="math-card-label">New Hire Ramp Deficit</div>
+        <div class="math-card-amount">$21,600</div>
+        <div class="math-card-desc">10 new hires/yr × 3-week ramp at 50% efficiency while drawing full wages</div>
+      </div>
+      <div class="math-card">
+        <div class="math-card-label">SLA Penalty Leakage</div>
+        <div class="math-card-amount">$12,500</div>
+        <div class="math-card-desc">250 errors/yr from 0.5% error rate × $50 avg chargeback per incident</div>
+      </div>
     </div>
-    <div class="footer-col">
-      <h4>Services</h4>
-      <ul>
-        <li><a href="#audit">Labor Margin Audit</a></li>
-        <li><a href="#contact">Book a Call</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Contact</h4>
-      <ul>
-        <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
-        <li><a href="tel:+17035685161">(703) 568-5161</a></li>
-      </ul>
+    <div class="math-total">
+      <div>
+        <div class="math-total-label">Conservative baseline leak — 3 of 5 areas</div>
+        <div class="math-total-note">Mis-picks & scope creep not yet included</div>
+      </div>
+      <div>
+        <div class="math-total-amount">$41,120/yr</div>
+      </div>
     </div>
   </div>
-  <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Skilled Edge Group LLC. All rights reserved.</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="section-inner">
+    <div class="section-label">The process</div>
+    <h2 class="section-title">Fully remote. No disruption to your floor.</h2>
+    <p class="section-sub">The entire audit is executed asynchronously. You upload data. We do the work. You get findings in 5–7 days.</p>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Data Intake</div>
+        <div class="step-desc">Secure upload of WMS exports, labor logs, and billing records via our spec sheet</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Discovery Call</div>
+        <div class="step-desc">60-minute Zoom to validate context, baselines, and facility layout</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Analysis</div>
+        <div class="step-desc">Deep-dive processing across all five audit disciplines</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">Report Delivery</div>
+        <div class="step-desc">Full findings, checklists, and DIY toolkit delivered in 5–7 days</div>
+      </div>
+    </div>
   </div>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="section del-section" id="deliverables">
+  <div class="section-inner">
+    <div class="section-label">What you get</div>
+    <h2 class="section-title">Three deliverables. No fluff.</h2>
+    <p class="section-sub">Everything your operations team needs to act on findings immediately — not a deck to file away.</p>
+    <div class="del-grid">
+      <div class="del-card">
+        <div class="del-icon">📊</div>
+        <div class="del-title">Strategic Assessment Report</div>
+        <div class="del-desc">Detailed PDF breakdown of findings, metric baselines, and localized optimization opportunities across all five audit areas. Board-ready formatting.</div>
+      </div>
+      <div class="del-card">
+        <div class="del-icon">✅</div>
+        <div class="del-title">Actionable Execution Checklists</div>
+        <div class="del-desc">Step-by-step, priority-ranked checklists your floor leads can execute the week the report lands. No ambiguity, no consultants required.</div>
+      </div>
+      <div class="del-card">
+        <div class="del-icon">🧮</div>
+        <div class="del-title">DIY Operational Toolkit</div>
+        <div class="del-desc">Templates, calculation frameworks, and profit leak detectors so your management team can maintain operational discipline long after the audit closes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO WE SERVE -->
+<section class="section" id="who">
+  <div class="section-inner">
+    <div class="section-label">Who we serve</div>
+    <h2 class="section-title">Built for founder-operated 3PLs.</h2>
+    <p class="section-sub">We work exclusively with mid-market warehousing and 3PL operations where the owner still feels every labor dollar come out of their own pocket.</p>
+    <div class="icp-grid">
+      <div class="icp-box">
+        <div class="icp-box-title">You're a fit if…</div>
+        <ul class="icp-list">
+          <li>$3M–$30M in annual revenue</li>
+          <li>15–100 floor associates</li>
+          <li>Multi-client or high-volume single-client facility</li>
+          <li>Running 3PL Central, ShipHero, Infoplus, or similar WMS</li>
+          <li>Founder-operated or recently PE-backed</li>
+          <li>Feeling margin pressure without knowing exactly where it's coming from</li>
+        </ul>
+      </div>
+      <div class="icp-box">
+        <div class="icp-box-title">Decision makers we work with</div>
+        <ul class="icp-list">
+          <li>Warehouse Operations Directors & General Managers</li>
+          <li>3PL Owners & CEOs</li>
+          <li>Logistics Billing Administrators</li>
+          <li>VP of Operations or Supply Chain</li>
+          <li>Anyone responsible for labor margin and client billing accuracy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Find out exactly where your warehouse is leaking money.</h2>
+    <p>$2,500 fixed price. $75,000 identified or it's free. Remote delivery in 5–7 days. No disruption to your floor.</p>
+    <div class="cta-btns">
+      <a href="tel:+17035685161" class="btn-primary">Call Dave — (703) 568-5161</a>
+      <a href="mailto:dave@skillededge.io" class="btn-white">Email dave@skillededge.io</a>
+    </div>
+    <div class="cta-note">No long-term contracts · No software to install · No disruption to operations</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">⬡ Skilled Edge Group LLC</div>
+  <ul class="footer-links">
+    <li><a href="https://skillededge.io/cncvault">CNCVault</a></li>
+    <li><a href="https://skillededge.io/tradevault">TradeVault</a></li>
+    <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
+    <li><a href="tel:+17035685161">(703) 568-5161</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Skilled Edge Group LLC · Springfield, VA · All rights reserved.</div>
 </footer>
 
-<script>
-  document.querySelector('.nav-hamburger').addEventListener('click', function() {
-    document.getElementById('navLinks').classList.toggle('open');
-  });
-</script>
 </body>
 </html>
+
