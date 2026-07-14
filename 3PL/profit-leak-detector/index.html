@@ -1,1 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>3PL Profit Leak Calculator — Skilled Edge Group</title>
+<meta name="description" content="Find out exactly how much hidden labor waste your warehouse operation is leaking annually. Free 3-minute diagnostic for 3PL and warehouse operators." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0F1E2E;
+    --navy-mid: #162436;
+    --navy-light: #1E3247;
+    --orange: #E8600A;
+    --orange-light: rgba(232,96,10,0.09);
+    --orange-glow: rgba(232,96,10,0.22);
+    --orange-border: rgba(232,96,10,0.25);
+    --blue: #2A7FD4;
+    --blue-light: #EBF4FF;
+    --white: #FFFFFF;
+    --off-white: #F5F7FA;
+    --border: #D4DAE2;
+    --text: #1A202C;
+    --mute: #4A5568;
+    --faint: #718096;
+    --green: #27834A;
+    --red: #C53030;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--off-white); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--navy);
+    padding: 14px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .topbar-brand {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .topbar-brand-dot { width: 7px; height: 7px; background: var(--orange); border-radius: 50%; flex-shrink: 0; }
+  .topbar-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    border: 1.5px solid var(--orange-border);
+    background: var(--orange-light);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    padding: 52px 5% 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(42,127,212,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42,127,212,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+  .hero h1 {
+    font-family: var(--mono);
+    font-size: clamp(22px, 4.5vw, 40px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+    margin-bottom: 16px;
+  }
+  .hero h1 .hl { color: var(--orange); }
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.62);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-trust {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-trust span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── RUNNING TOTAL ── */
+  .running-total {
+    background: var(--orange);
+    padding: 0 5%;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+  .running-total-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .rt-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.75);
+  }
+  .rt-amount {
+    font-family: var(--mono);
+    font-size: clamp(22px, 5vw, 34px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.02em;
+    transition: all .3s ease;
+  }
+  .rt-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 780px; margin: 0 auto; padding: 32px 5% 80px; }
+
+  /* ── QUESTION CARDS ── */
+  .q-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 26px;
+    margin-bottom: 14px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .q-card:focus-within { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); }
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .q-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--orange);
+    background: var(--orange-light);
+    border: 1px solid var(--orange-border);
+    padding: 3px 9px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    letter-spacing: 0.05em;
+  }
+  .q-content { flex: 1; }
+  .q-title {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .q-sub {
+    font-size: 13px;
+    color: var(--faint);
+    line-height: 1.5;
+  }
+  .q-leak-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--navy);
+    padding: 4px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-top: 1px;
+  }
+
+  /* ── INPUTS ── */
+  .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .input-row.single { grid-template-columns: 1fr; }
+  @media (max-width: 500px) { .input-row { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .field-input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--white);
+    transition: border-color .15s, box-shadow .15s;
+    -moz-appearance: textfield;
+  }
+  .field-input::-webkit-outer-spin-button,
+  .field-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .field-input:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); }
+  .field-input::placeholder { color: var(--faint); font-weight: 400; }
+
+  select.field-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234A5568' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  /* ── SLIDER ── */
+  .slider-wrap { margin-top: 4px; }
+  .slider-row { display: flex; align-items: center; gap: 16px; }
+  input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--orange);
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--orange-glow);
+    border: 2px solid var(--white);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--orange);
+    cursor: pointer;
+    box-shadow: 0 2px 8px var(--orange-glow);
+    border: 2px solid var(--white);
+  }
+  .slider-val {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--orange);
+    min-width: 60px;
+    text-align: right;
+  }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--faint);
+    margin-top: 4px;
+    padding: 0 2px;
+  }
+
+  /* ── RADIO OPTIONS ── */
+  .radio-opts { display: flex; flex-direction: column; gap: 8px; }
+  .radio-opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .radio-opt:hover { border-color: var(--orange); background: var(--orange-light); }
+  .radio-opt.selected { border-color: var(--orange); background: var(--orange-light); }
+  .radio-opt input[type=radio] { accent-color: var(--orange); width: 16px; height: 16px; flex-shrink: 0; }
+  .radio-opt-text { font-size: 13.5px; font-weight: 500; color: var(--text); }
+  .radio-opt-sub { font-size: 12px; color: var(--faint); margin-top: 1px; }
+
+  /* ── LEAK PREVIEW ── */
+  .leak-preview {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 12px 16px;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .leak-preview-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+  }
+  .leak-preview-val {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--orange);
+    transition: all .25s ease;
+  }
+
+  /* ── RESULTS ── */
+  .results {
+    display: none;
+    animation: fadeUp .4s ease both;
+  }
+  .results.show { display: block; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  .results-hero {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 36px 32px;
+    text-align: center;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .results-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(42,127,212,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(42,127,212,0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .results-hero-inner { position: relative; z-index: 1; }
+  .results-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .results-total {
+    font-family: var(--mono);
+    font-size: clamp(44px, 12vw, 72px);
+    font-weight: 700;
+    color: var(--orange);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .results-sub { font-size: 15px; color: rgba(255,255,255,0.60); }
+
+  .breakdown-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 480px) { .breakdown-grid { grid-template-columns: 1fr; } }
+
+  .breakdown-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .breakdown-card-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--faint);
+    margin-bottom: 6px;
+  }
+  .breakdown-card-amount {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 3px;
+  }
+  .breakdown-card-desc { font-size: 12px; color: var(--mute); line-height: 1.5; }
+
+  /* ── CTA BLOCK ── */
+  .cta-block {
+    background: var(--orange);
+    border-radius: 12px;
+    padding: 32px 28px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .cta-block h3 {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+  .cta-block p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 22px;
+    line-height: 1.6;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-white {
+    background: var(--white);
+    color: var(--orange);
+    border: none;
+    border-radius: 7px;
+    padding: 13px 28px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity .15s, transform .12s;
+  }
+  .btn-white:hover { opacity: 0.92; transform: translateY(-1px); }
+  .btn-ghost-white {
+    background: transparent;
+    color: rgba(255,255,255,0.85);
+    border: 1.5px solid rgba(255,255,255,0.40);
+    border-radius: 7px;
+    padding: 13px 24px;
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-ghost-white:hover { border-color: rgba(255,255,255,0.80); color: var(--white); }
+
+  /* ── CALC BUTTON ── */
+  .calc-btn-wrap { text-align: center; margin: 28px 0 0; }
+  .calc-btn {
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 16px 48px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: opacity .15s, transform .12s, box-shadow .15s;
+    box-shadow: 0 4px 20px var(--orange-glow);
+  }
+  .calc-btn:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 32px var(--orange-glow); }
+  .calc-btn-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--navy);
+    padding: 24px 5%;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .footer-text {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.7;
+  }
+  .footer-text a { color: rgba(255,255,255,0.50); text-decoration: none; }
+  .footer-text a:hover { color: var(--orange); }
+
+  @media (max-width: 480px) {
+    .q-card { padding: 18px 16px; }
+    .results-hero { padding: 28px 18px; }
+    .cta-block { padding: 24px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="https://skillededge.io" class="topbar-brand">
+    <div class="topbar-brand-dot"></div>
+    Skilled Edge Group
+  </a>
+  <div class="topbar-pill">3PL Profit Leak Calculator</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Find out exactly how much your warehouse is leaking — <span class="hl">in 3 minutes.</span></h1>
+    <p class="hero-sub">Answer 8 diagnostic questions based on your real operation. We calculate your estimated annual margin leak across labor, billing, and throughput.</p>
+    <div class="hero-trust">
+      <span>📊 Based on your actual numbers</span>
+      <span>⚡ Results update in real time</span>
+      <span>🔒 Nothing stored or shared</span>
+    </div>
+  </div>
+</div>
+
+<!-- RUNNING TOTAL -->
+<div class="running-total">
+  <div class="running-total-inner">
+    <div>
+      <div class="rt-label">Estimated Annual Margin Leak</div>
+      <div class="rt-note">Updates as you answer each question</div>
+    </div>
+    <div class="rt-amount" id="rt-amount">$0</div>
+  </div>
+</div>
+
+<!-- QUESTIONS -->
+<div class="main">
+
+  <!-- Q1: FACILITY PROFILE -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q1</div>
+      <div class="q-content">
+        <div class="q-title">Facility Profile</div>
+        <div class="q-sub">Your baseline — every calculation anchors to these two numbers.</div>
+      </div>
+    </div>
+    <div class="input-row">
+      <div class="field">
+        <div class="field-label">Total Floor Staff Count</div>
+        <input type="number" class="field-input" id="staff" placeholder="e.g. 25" min="1" oninput="recalc()" />
+      </div>
+      <div class="field">
+        <div class="field-label">Avg Loaded W2 Hourly Rate ($)</div>
+        <input type="number" class="field-input" id="wage" placeholder="e.g. 20" min="10" oninput="recalc()" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2: ANNUAL TURNOVER -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q2</div>
+      <div class="q-content">
+        <div class="q-title">Annual Turnover Rate</div>
+        <div class="q-sub">How many floor associates do you replace per year? Industry average is 40–60%.</div>
+      </div>
+      <div class="q-leak-badge" id="badge-turnover">$0/yr</div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <input type="range" id="turnover" min="0" max="30" step="1" value="0" oninput="updateSlider('turnover','turnover-val','');recalc()" />
+        <div class="slider-val" id="turnover-val">0</div>
+      </div>
+      <div class="slider-labels"><span>0 replaced/yr</span><span>30 replaced/yr</span></div>
+    </div>
+    <div class="leak-preview">
+      <div class="leak-preview-label">Turnover cost leak</div>
+      <div class="leak-preview-val" id="preview-turnover">$0</div>
+    </div>
+  </div>
+
+  <!-- Q3: NEW HIRE RAMP -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q3</div>
+      <div class="q-content">
+        <div class="q-title">New Hire Ramp Time</div>
+        <div class="q-sub">How many weeks before a new hire hits 100% picking speed? During ramp, they operate at ~50% efficiency while drawing full wages.</div>
+      </div>
+      <div class="q-leak-badge" id="badge-ramp">$0/yr</div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <input type="range" id="ramp" min="1" max="12" step="1" value="3" oninput="updateSlider('ramp','ramp-val',' wks');recalc()" />
+        <div class="slider-val" id="ramp-val">3 wks</div>
+      </div>
+      <div class="slider-labels"><span>1 week</span><span>12 weeks</span></div>
+    </div>
+    <div class="leak-preview">
+      <div class="leak-preview-label">Ramp deficit leak</div>
+      <div class="leak-preview-val" id="preview-ramp">$0</div>
+    </div>
+  </div>
+
+  <!-- Q4: VAS / ACCESSORIAL BILLING -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q4</div>
+      <div class="q-content">
+        <div class="q-title">Unbilled VAS / Accessorial Hours</div>
+        <div class="q-sub">How many hours per week do your workers spend on custom tasks (kitting, labeling, special packaging) that don't get billed as accessorial charges?</div>
+      </div>
+      <div class="q-leak-badge" id="badge-vas">$0/yr</div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <input type="range" id="vas" min="0" max="40" step="1" value="0" oninput="updateSlider('vas','vas-val',' hrs/wk');recalc()" />
+        <div class="slider-val" id="vas-val">0 hrs/wk</div>
+      </div>
+      <div class="slider-labels"><span>0 hrs/wk</span><span>40 hrs/wk</span></div>
+    </div>
+    <div class="leak-preview">
+      <div class="leak-preview-label">Unbilled labor leak ($45/hr rate)</div>
+      <div class="leak-preview-val" id="preview-vas">$0</div>
+    </div>
+  </div>
+
+  <!-- Q5: MIS-PICK RATE -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q5</div>
+      <div class="q-content">
+        <div class="q-title">Monthly Order Error / Return Rate</div>
+        <div class="q-sub">Estimated number of mis-pick or return events per month. Each error costs approximately $50 in reverse logistics, restocking labor, and client chargebacks.</div>
+      </div>
+      <div class="q-leak-badge" id="badge-mispick">$0/yr</div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <input type="range" id="mispick" min="0" max="200" step="5" value="0" oninput="updateSlider('mispick','mispick-val',' errors/mo');recalc()" />
+        <div class="slider-val" id="mispick-val">0 errors/mo</div>
+      </div>
+      <div class="slider-labels"><span>0/mo</span><span>200/mo</span></div>
+    </div>
+    <div class="leak-preview">
+      <div class="leak-preview-label">Mis-pick chargeback leak</div>
+      <div class="leak-preview-val" id="preview-mispick">$0</div>
+    </div>
+  </div>
+
+  <!-- Q6: OVERTIME -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q6</div>
+      <div class="q-content">
+        <div class="q-title">Weekly Overtime Hours</div>
+        <div class="q-sub">How many total overtime hours does your floor log per week on average? This calculates the premium cost above straight-time wages.</div>
+      </div>
+      <div class="q-leak-badge" id="badge-ot">$0/yr</div>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-row">
+        <input type="range" id="ot" min="0" max="200" step="5" value="0" oninput="updateSlider('ot','ot-val',' hrs/wk');recalc()" />
+        <div class="slider-val" id="ot-val">0 hrs/wk</div>
+      </div>
+      <div class="slider-labels"><span>0 hrs/wk</span><span>200 hrs/wk</span></div>
+    </div>
+    <div class="leak-preview">
+      <div class="leak-preview-label">OT premium waste (0.5x excess)</div>
+      <div class="leak-preview-val" id="preview-ot">$0</div>
+    </div>
+  </div>
+
+  <!-- Q7: SCOPE CREEP -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q7</div>
+      <div class="q-content">
+        <div class="q-title">Contract & Storage Scope Audit</div>
+        <div class="q-sub">When did you last audit active floor storage and client activities against your original MSA contracts?</div>
+      </div>
+      <div class="q-leak-badge" id="badge-scope">$0/yr</div>
+    </div>
+    <div class="radio-opts" id="scope-opts">
+      <label class="radio-opt" onclick="selectRadio('scope',0,this)">
+        <input type="radio" name="scope" value="0" />
+        <div>
+          <div class="radio-opt-text">Within the last 6 months</div>
+          <div class="radio-opt-sub">Active auditing — minimal scope creep risk</div>
+        </div>
+      </label>
+      <label class="radio-opt" onclick="selectRadio('scope',8000,this)">
+        <input type="radio" name="scope" value="8000" />
+        <div>
+          <div class="radio-opt-text">6–18 months ago</div>
+          <div class="radio-opt-sub">Clients likely drifting outside original scope</div>
+        </div>
+      </label>
+      <label class="radio-opt" onclick="selectRadio('scope',18000,this)">
+        <input type="radio" name="scope" value="18000" />
+        <div>
+          <div class="radio-opt-text">Over 18 months ago or never</div>
+          <div class="radio-opt-sub">Significant unbilled scope creep almost certain</div>
+        </div>
+      </label>
+    </div>
+    <div class="leak-preview" style="margin-top:12px">
+      <div class="leak-preview-label">Scope creep revenue leak</div>
+      <div class="leak-preview-val" id="preview-scope">$0</div>
+    </div>
+  </div>
+
+  <!-- Q8: WMS INTEGRATION -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q8</div>
+      <div class="q-content">
+        <div class="q-title">WMS ↔ Payroll Data Integration</div>
+        <div class="q-sub">Do your WMS logs automatically sync to your payroll or accounting system, or is it a manual process?</div>
+      </div>
+      <div class="q-leak-badge" id="badge-wms">$0/yr</div>
+    </div>
+    <div class="radio-opts">
+      <label class="radio-opt" onclick="selectRadio('wms',0,this)">
+        <input type="radio" name="wms" value="0" />
+        <div>
+          <div class="radio-opt-text">Fully automated — WMS syncs directly to payroll</div>
+          <div class="radio-opt-sub">Clean data bridge, minimal admin waste</div>
+        </div>
+      </label>
+      <label class="radio-opt" onclick="selectRadio('wms',5850,this)">
+        <input type="radio" name="wms" value="5850" />
+        <div>
+          <div class="radio-opt-text">Partially automated — some manual steps required</div>
+          <div class="radio-opt-sub">~2.5 hrs/wk of admin reconciliation waste</div>
+        </div>
+      </label>
+      <label class="radio-opt" onclick="selectRadio('wms',11700,this)">
+        <input type="radio" name="wms" value="11700" />
+        <div>
+          <div class="radio-opt-text">Fully manual — spreadsheets or separate entry</div>
+          <div class="radio-opt-sub">~5 hrs/wk of admin waste + high error risk</div>
+        </div>
+      </label>
+    </div>
+    <div class="leak-preview" style="margin-top:12px">
+      <div class="leak-preview-label">Admin reconciliation waste</div>
+      <div class="leak-preview-val" id="preview-wms">$0</div>
+    </div>
+  </div>
+
+  <!-- CALCULATE BUTTON -->
+  <div class="calc-btn-wrap">
+    <button class="calc-btn" onclick="showResults()">Calculate My Total Leak →</button>
+    <div class="calc-btn-note">Scroll down to see your full breakdown</div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results" style="margin-top:32px">
+
+    <div class="results-hero">
+      <div class="results-hero-inner">
+        <div class="results-eyebrow">Your Estimated Annual Margin Leak</div>
+        <div class="results-total" id="results-total">$0</div>
+        <div class="results-sub">across labor, billing, throughput, and administrative waste</div>
+      </div>
+    </div>
+
+    <div class="breakdown-grid" id="breakdown-grid"></div>
+
+    <div class="cta-block">
+      <h3>Ready to find the exact numbers?</h3>
+      <p>This calculator uses industry averages. A $2,500 Margin Audit uses your actual WMS exports, labor logs, and billing records to identify the precise dollar leaks — guaranteed to find $75,000 or it's completely free.</p>
+      <div class="cta-btns">
+        <a href="tel:+17035685161" class="btn-white">Call Dave — (703) 568-5161</a>
+        <a href="mailto:dave@skillededge.io?subject=3PL Margin Audit Inquiry" class="btn-ghost-white">Email dave@skillededge.io</a>
+      </div>
+    </div>
+
+    <div class="q-card" style="text-align:center;padding:20px;">
+      <div style="font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">🛡️ The $75,000 Identification Guarantee</div>
+      <div style="font-size:13px;color:var(--mute);line-height:1.6;">We identify at least $75,000 in recoverable annual waste — or the $2,500 audit fee is completely waived. No invoices. No follow-up pitch. Just results.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-text">
+    © 2026 Skilled Edge Group LLC · Springfield, VA ·
+    <a href="https://skillededge.io">skillededge.io</a> ·
+    <a href="mailto:dave@skillededge.io">dave@skillededge.io</a><br>
+    Estimates are good-faith projections using your inputs and published 2026 logistics industry benchmarks. Not financial advice.
+  </div>
+</div>
+
+<script>
+/* ── STATE ── */
+var state = {
+  staff: 0,
+  wage: 0,
+  turnover: 0,
+  ramp: 3,
+  vas: 0,
+  mispick: 0,
+  ot: 0,
+  scope: 0,
+  wms: 0
+};
+
+/* ── HELPERS ── */
+function money(n) {
+  if (n === 0) return '$0';
+  if (n >= 1000) return '$' + Math.round(n).toLocaleString('en-US');
+  return '$' + Math.round(n).toLocaleString('en-US');
+}
+
+function el(id) { return document.getElementById(id); }
+
+function updateSlider(sliderId, valId, suffix) {
+  var v = el(sliderId).value;
+  el(valId).textContent = v + suffix;
+  state[sliderId] = +v;
+}
+
+function selectRadio(name, val, labelEl) {
+  document.querySelectorAll('input[name=' + name + ']').forEach(function(r) {
+    r.closest('.radio-opt').classList.remove('selected');
+  });
+  labelEl.classList.add('selected');
+  labelEl.querySelector('input').checked = true;
+  state[name] = +val;
+  recalc();
+}
+
+/* ── FORMULAS ── */
+function calcLeaks() {
+  var staff = +el('staff').value || 0;
+  var wage  = +el('wage').value  || 0;
+
+  // Q2 + Q3: Ramp deficit
+  // Replaced workers × ramp weeks × 40 hrs/wk × 50% efficiency gap × wage
+  var rampLeak = state.turnover * state.ramp * 40 * 0.50 * wage;
+
+  // Q4: Unbilled VAS @ $45/hr billable rate
+  var vasLeak = state.vas * 45 * 52;
+
+  // Q5: Mis-pick chargebacks @ $50/error
+  var mispickLeak = state.mispick * 12 * 50;
+
+  // Q6: OT premium waste (0.5x excess above straight time)
+  var otLeak = state.ot * 0.5 * wage * 52;
+
+  // Q7: Scope creep
+  var scopeLeak = state.scope;
+
+  // Q8: Manual WMS admin waste (hrs/wk × admin wage assumption $25/hr × 52)
+  var wmsLeak = state.wms;
+
+  return {
+    ramp: Math.round(rampLeak),
+    vas: Math.round(vasLeak),
+    mispick: Math.round(mispickLeak),
+    ot: Math.round(otLeak),
+    scope: Math.round(scopeLeak),
+    wms: Math.round(wmsLeak),
+    total: Math.round(rampLeak + vasLeak + mispickLeak + otLeak + scopeLeak + wmsLeak)
+  };
+}
+
+/* ── RECALC ── */
+function recalc() {
+  state.turnover = +el('turnover').value || 0;
+  state.ramp     = +el('ramp').value     || 3;
+  state.vas      = +el('vas').value      || 0;
+  state.mispick  = +el('mispick').value  || 0;
+  state.ot       = +el('ot').value       || 0;
+
+  var l = calcLeaks();
+
+  // Running total
+  el('rt-amount').textContent = money(l.total);
+
+  // Per-question leak badges
+  el('badge-turnover').textContent = money(l.ramp) + '/yr';
+  el('badge-ramp').textContent     = money(l.ramp) + '/yr';
+  el('badge-vas').textContent      = money(l.vas)  + '/yr';
+  el('badge-mispick').textContent  = money(l.mispick) + '/yr';
+  el('badge-ot').textContent       = money(l.ot) + '/yr';
+  el('badge-scope').textContent    = money(l.scope) + '/yr';
+  el('badge-wms').textContent      = money(l.wms) + '/yr';
+
+  // Preview lines
+  el('preview-turnover').textContent = money(l.ramp);
+  el('preview-ramp').textContent     = money(l.ramp);
+  el('preview-vas').textContent      = money(l.vas);
+  el('preview-mispick').textContent  = money(l.mispick);
+  el('preview-ot').textContent       = money(l.ot);
+  el('preview-scope').textContent    = money(l.scope);
+  el('preview-wms').textContent      = money(l.wms);
+
+  // Update results if visible
+  if (el('results').classList.contains('show')) {
+    renderResults(l);
+  }
+}
+
+/* ── RESULTS ── */
+function showResults() {
+  var l = calcLeaks();
+  renderResults(l);
+  el('results').classList.add('show');
+  setTimeout(function() {
+    el('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function renderResults(l) {
+  el('results-total').textContent = money(l.total);
+
+  var items = [
+    { label: 'Labor Ramp Deficit', amount: l.ramp, desc: 'New hire efficiency gap during onboarding period' },
+    { label: 'Unbilled VAS Labor', amount: l.vas, desc: 'Custom tasks performed but not billed to clients' },
+    { label: 'Mis-pick Chargebacks', amount: l.mispick, desc: 'Error-driven reverse logistics and penalty costs' },
+    { label: 'Overtime Premium Waste', amount: l.ot, desc: 'Excess 0.5x OT premium above straight-time wages' },
+    { label: 'Scope Creep Revenue Leak', amount: l.scope, desc: 'Unbilled client activities outside original MSA' },
+    { label: 'Admin Reconciliation Waste', amount: l.wms, desc: 'Manual WMS-to-payroll data entry and error cost' }
+  ].filter(function(i) { return i.amount > 0; })
+   .sort(function(a, b) { return b.amount - a.amount; });
+
+  var html = '';
+  items.forEach(function(item) {
+    html += '<div class="breakdown-card">' +
+      '<div class="breakdown-card-label">' + item.label + '</div>' +
+      '<div class="breakdown-card-amount">' + money(item.amount) + '/yr</div>' +
+      '<div class="breakdown-card-desc">' + item.desc + '</div>' +
+    '</div>';
+  });
+  el('breakdown-grid').innerHTML = html || '<div class="breakdown-card" style="grid-column:1/-1;text-align:center;color:var(--faint)">Enter your numbers above to see the breakdown.</div>';
+}
+
+/* ── INIT ── */
+(function() {
+  // Init slider display values
+  el('turnover-val').textContent = el('turnover').value;
+  el('ramp-val').textContent     = el('ramp').value + ' wks';
+  el('vas-val').textContent      = el('vas').value + ' hrs/wk';
+  el('mispick-val').textContent  = el('mispick').value + ' errors/mo';
+  el('ot-val').textContent       = el('ot').value + ' hrs/wk';
+  recalc();
+})();
+</script>
+</body>
+</html>
 
