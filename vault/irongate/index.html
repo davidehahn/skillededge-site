@@ -1,1 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Irongate Logistics — Operator Vault</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:        #0F1E2E;
+      --navy-mid:    #162436;
+      --navy-light:  #1E3247;
+      --orange:      #E8600A;
+      --orange-light:rgba(232,96,10,0.09);
+      --orange-glow: rgba(232,96,10,0.22);
+      --orange-border:rgba(232,96,10,0.25);
+      --blue:        #2A7FD4;
+      --blue-light:  #EBF4FF;
+      --white:       #FFFFFF;
+      --off-white:   #F5F7FA;
+      --border:      #D4DAE2;
+      --text:        #1A202C;
+      --mute:        #4A5568;
+      --faint:       #718096;
+      --green:       #27834A;
+      --green-light: #EAF6EF;
+      --amber:       #D4A017;
+      --red:         #C53030;
+      --red-light:   #FEF0F0;
+      --mono:        'IBM Plex Mono', monospace;
+      --sans:        'Inter', -apple-system, sans-serif;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,0.08);
+      --shadow:      0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg:   0 12px 40px rgba(0,0,0,0.14);
+      --radius:      10px;
+      --radius-sm:   7px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--off-white); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy);
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    #login-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,96,10,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,96,10,0.06) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+    #login-screen::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(232,96,10,0.10) 0%, transparent 70%);
+    }
+    .login-box {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+    .login-logo { text-align: center; margin-bottom: 32px; }
+    .login-logo-mark {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      font-size: 24px;
+      border: 2px solid var(--orange);
+    }
+    .login-shop-name {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .login-powered {
+      font-size: 11px;
+      color: var(--faint);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-family: var(--mono);
+    }
+    .login-powered span { color: var(--orange); font-weight: 600; }
+    .login-divider { height: 1px; background: var(--border); margin: 24px 0; }
+    .login-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--mute);
+      margin-bottom: 8px;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: var(--mono);
+    }
+    .login-input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-family: var(--mono);
+      color: var(--text);
+      background: var(--white);
+      transition: border-color .2s, box-shadow .2s;
+      letter-spacing: 0.1em;
+    }
+    .login-input:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-light); }
+    .login-input::placeholder { letter-spacing: 0.03em; color: var(--faint); font-family: var(--sans); }
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--orange);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--mono);
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all .2s;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .login-btn:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 20px var(--orange-glow); }
+    .login-error { color: var(--red); font-size: 13px; margin-top: 10px; text-align: center; min-height: 20px; }
+    .login-footer { text-align: center; margin-top: 24px; font-size: 12px; color: var(--faint); }
+    .login-footer a { color: var(--orange); font-weight: 500; }
+
+    /* ── VAULT APP ── */
+    #vault-app { display: none; min-height: 100vh; }
+
+    /* HEADER */
+    .vault-header {
+      background: var(--navy);
+      padding: 0 20px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-logo-mark {
+      width: 34px; height: 34px;
+      background: var(--orange);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .header-shop { display: flex; flex-direction: column; line-height: 1.2; }
+    .header-shop-name {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .header-vault-tag {
+      font-size: 10px;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      font-family: var(--mono);
+    }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .header-badge {
+      background: rgba(232,96,10,0.2);
+      color: #F4A96A;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-family: var(--mono);
+      border: 1px solid rgba(232,96,10,0.3);
+    }
+    .header-logout { font-size: 12px; color: rgba(255,255,255,0.45); cursor: pointer; font-family: var(--mono); transition: color .15s; }
+    .header-logout:hover { color: var(--white); }
+
+    /* NAV TABS */
+    .vault-nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      display: flex;
+      gap: 2px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .vault-nav::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      padding: 12px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--faint);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all .2s;
+      white-space: nowrap;
+      font-family: var(--mono);
+    }
+    .nav-tab:hover { color: var(--text); }
+    .nav-tab.active { color: var(--orange); border-bottom-color: var(--orange); font-weight: 700; }
+
+    /* MAIN */
+    .vault-main { max-width: 960px; margin: 0 auto; padding: 28px 20px 120px; }
+
+    /* TAB PANELS */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn .25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    /* WELCOME BANNER */
+    .welcome-banner {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      border-radius: var(--radius);
+      padding: 28px 30px;
+      color: white;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(232,96,10,0.2);
+    }
+    .welcome-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(232,96,10,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232,96,10,0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .welcome-banner::after {
+      content: '';
+      position: absolute;
+      right: -30px; top: -30px;
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, rgba(232,96,10,0.15) 0%, transparent 70%);
+    }
+    .welcome-banner h1 {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      position: relative; z-index: 1;
+    }
+    .welcome-banner p { font-size: 13.5px; opacity: 0.72; line-height: 1.65; position: relative; z-index: 1; max-width: 500px; }
+
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+    @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+    .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow-sm); }
+    .stat-val { font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--orange); line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 11px; color: var(--faint); font-weight: 500; }
+
+    /* QUICK LINKS */
+    .quick-links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    @media (max-width: 400px) { .quick-links { grid-template-columns: 1fr; } }
+    .quick-link {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .quick-link:hover { border-color: var(--orange); transform: translateY(-1px); box-shadow: var(--shadow); }
+    .quick-link-icon { font-size: 20px; flex-shrink: 0; }
+    .quick-link-title { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 1px; font-family: var(--mono); }
+    .quick-link-sub { font-size: 11px; color: var(--faint); }
+
+    /* SECTION HEADERS */
+    .panel-header { margin-bottom: 18px; }
+    .panel-title { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .panel-sub { font-size: 13px; color: var(--faint); }
+
+    /* CLIENT PLAYBOOK CARDS */
+    .client-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .client-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); transition: all .2s; }
+    .client-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--orange); }
+    .client-card-header { background: var(--navy); padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .client-icon { font-size: 18px; }
+    .client-name { font-weight: 700; font-size: 13px; color: var(--white); font-family: var(--mono); }
+    .client-tag { font-size: 10px; color: rgba(255,255,255,0.50); font-weight: 500; }
+    .client-updated { font-size: 10px; color: var(--orange); font-family: var(--mono); margin-top: 2px; }
+    .client-card-body { padding: 16px; }
+    .client-rule { display: flex; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .client-rule:last-child { border-bottom: none; }
+    .client-rule-label { font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--orange); width: 80px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 1px; }
+    .client-rule-val { font-size: 12.5px; color: var(--text); line-height: 1.5; flex: 1; }
+    .billable-badge { display: inline-block; font-family: var(--mono); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; margin-left: 4px; }
+    .billable-badge.yes { background: var(--green-light); color: var(--green); }
+    .billable-badge.no { background: #FEF0F0; color: var(--red); }
+    .coming-soon { background: var(--off-white); border: 2px dashed var(--border); border-radius: var(--radius); padding: 24px; text-align: center; color: var(--faint); font-size: 13px; font-family: var(--mono); }
+
+    /* SOP CARDS */
+    .sop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .sop-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); transition: all .2s; }
+    .sop-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--orange); }
+    .sop-card-header { background: var(--off-white); padding: 14px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+    .sop-icon { font-size: 20px; }
+    .sop-name { font-weight: 700; font-size: 13px; color: var(--text); font-family: var(--mono); }
+    .sop-tag { font-size: 10px; color: var(--faint); }
+    .sop-card-body { padding: 16px; }
+    .sop-steps { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+    .sop-steps li { font-size: 12.5px; color: var(--mute); padding-left: 18px; position: relative; line-height: 1.5; }
+    .sop-steps li::before { content: counter(step); counter-increment: step; position: absolute; left: 0; font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--orange); }
+    .sop-steps { counter-reset: step; }
+    .sop-btn { display: block; width: 100%; padding: 9px 14px; background: var(--orange); color: white; border: none; border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; font-family: var(--mono); cursor: pointer; text-align: center; transition: opacity .15s; }
+    .sop-btn:hover { opacity: 0.9; }
+
+    /* ACCESSORIAL */
+    .accessorial-log { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .accessorial-log-header { background: var(--orange); padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+    .accessorial-log-title { font-family: var(--mono); font-size: 14px; font-weight: 700; color: white; }
+    .accessorial-log-body { padding: 18px; }
+    .log-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    @media (max-width: 500px) { .log-form { grid-template-columns: 1fr; } }
+    .log-field { display: flex; flex-direction: column; gap: 5px; }
+    .log-label { font-family: var(--mono); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); }
+    .log-input { padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: var(--mono); font-size: 13px; color: var(--text); transition: border-color .15s; }
+    .log-input:focus { outline: none; border-color: var(--orange); }
+    select.log-input { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%234A5568' d='M5 6L0 0h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; cursor: pointer; }
+    .log-submit { width: 100%; padding: 11px; background: var(--navy); color: white; border: none; border-radius: var(--radius-sm); font-family: var(--mono); font-weight: 700; font-size: 13px; cursor: pointer; transition: opacity .15s; }
+    .log-submit:hover { opacity: 0.85; }
+    .log-entries { display: flex; flex-direction: column; gap: 8px; }
+    .log-entry { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--off-white); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+    .log-entry-time { font-family: var(--mono); font-size: 11px; color: var(--faint); flex-shrink: 0; }
+    .log-entry-client { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--orange); flex-shrink: 0; }
+    .log-entry-task { font-size: 12.5px; color: var(--text); flex: 1; }
+    .log-entry-hrs { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--navy); flex-shrink: 0; }
+    .log-entry-amount { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--green); flex-shrink: 0; }
+
+    /* RATE CARDS */
+    .rate-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); }
+    .rate-card-header { background: var(--off-white); padding: 12px 16px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--text); }
+    .rate-table { width: 100%; border-collapse: collapse; }
+    .rate-table th { padding: 9px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--faint); text-align: left; font-family: var(--mono); border-bottom: 1px solid var(--border); background: var(--off-white); }
+    .rate-table td { padding: 10px 16px; font-size: 13px; color: var(--text); border-bottom: 1px solid var(--border); }
+    .rate-table tr:last-child td { border-bottom: none; }
+    .rate-table tr:hover td { background: var(--off-white); }
+    .rate-amount { font-family: var(--mono); font-weight: 700; color: var(--orange); }
+
+    /* LABOR ONBOARDING */
+    .week-grid { display: flex; flex-direction: column; gap: 0; }
+    .week-row { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 10px; display: flex; gap: 18px; align-items: flex-start; }
+    .week-num { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--white); background: var(--navy); padding: 4px 10px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+    .week-num.done { background: var(--green); }
+    .week-num.current { background: var(--orange); }
+    .week-body { flex: 1; }
+    .week-title { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .week-items { display: flex; flex-direction: column; gap: 5px; }
+    .week-item { font-size: 12.5px; color: var(--mute); padding-left: 16px; position: relative; line-height: 1.5; }
+    .week-item::before { content: '→'; position: absolute; left: 0; color: var(--orange); font-size: 11px; }
+    .week-target { font-family: var(--mono); font-size: 11px; color: var(--orange); margin-top: 8px; font-weight: 600; }
+
+    /* SCORECARD */
+    .scorecard-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+    .scorecard-header { background: var(--navy); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .scorecard-title { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--white); }
+    .scorecard-period { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.40); }
+    .scorecard-table { width: 100%; border-collapse: collapse; }
+    .scorecard-table th { background: var(--off-white); padding: 9px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--faint); text-align: left; font-family: var(--mono); border-bottom: 1px solid var(--border); }
+    .scorecard-table td { padding: 11px 16px; font-size: 13px; color: var(--text); border-bottom: 1px solid var(--border); }
+    .scorecard-table tr:last-child td { border-bottom: none; }
+    .scorecard-table tr:hover td { background: var(--off-white); }
+    .score-badge { display: inline-flex; align-items: center; justify-content: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; font-family: var(--mono); }
+    .score-badge.green { background: var(--green-light); color: var(--green); }
+    .score-badge.amber { background: rgba(212,160,23,0.12); color: var(--amber); }
+    .score-badge.red { background: var(--red-light); color: var(--red); }
+    .score-num { font-family: var(--mono); font-weight: 700; color: var(--orange); }
+
+    /* EXCEPTION LOG */
+    .exception-form { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .exception-form-header { background: var(--red); padding: 14px 18px; }
+    .exception-form-title { font-family: var(--mono); font-size: 14px; font-weight: 700; color: white; }
+    .exception-form-body { padding: 18px; }
+    .exception-entries { display: flex; flex-direction: column; gap: 10px; }
+    .exception-entry { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; border-left: 3px solid var(--red); }
+    .exception-entry-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 6px; flex-wrap: wrap; }
+    .exception-type { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 0.06em; }
+    .exception-time { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+    .exception-order { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--navy); }
+    .exception-desc { font-size: 12.5px; color: var(--mute); line-height: 1.55; }
+    .exception-cost { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--red); margin-top: 5px; }
+
+    /* AI CHAT WIDGET */
+    .chat-toggle {
+      position: fixed; bottom: 24px; right: 20px;
+      width: 54px; height: 54px;
+      background: var(--orange);
+      border-radius: 50%; border: none;
+      cursor: pointer; z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px var(--orange-glow);
+      transition: all .3s;
+      font-size: 22px;
+    }
+    .chat-toggle:hover { transform: scale(1.08); }
+    .chat-toggle.open { background: var(--red); }
+    .chat-badge-dot {
+      position: absolute; top: -3px; right: -3px;
+      width: 16px; height: 16px;
+      background: var(--green); color: white;
+      border-radius: 50%; font-size: 9px;
+      font-weight: 700; font-family: var(--mono);
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--white);
+    }
+    .chat-window {
+      position: fixed; bottom: 90px; right: 20px;
+      width: 340px; height: 510px;
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      display: none; flex-direction: column;
+      z-index: 100; overflow: hidden;
+    }
+    .chat-window.open { display: flex; animation: slideUp .3s ease; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    .chat-header {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid rgba(232,96,10,0.25);
+    }
+    .chat-header-avatar { width: 34px; height: 34px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+    .chat-header-info { flex: 1; }
+    .chat-header-name { font-weight: 700; font-size: 13px; color: white; font-family: var(--mono); }
+    .chat-header-status { font-size: 11px; color: rgba(255,255,255,0.55); }
+    .chat-header-dot { width: 6px; height: 6px; background: #68D391; border-radius: 50%; display: inline-block; margin-right: 4px; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .msg { display: flex; flex-direction: column; max-width: 85%; }
+    .msg.bot { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+    .msg-bubble { padding: 9px 13px; border-radius: 12px; font-size: 13px; line-height: 1.55; }
+    .msg.bot .msg-bubble { background: var(--off-white); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 3px; }
+    .msg.user .msg-bubble { background: var(--orange); color: white; border-bottom-right-radius: 3px; }
+    .msg-time { font-size: 10px; color: var(--faint); margin-top: 3px; padding: 0 3px; font-family: var(--mono); }
+    .msg.user .msg-time { text-align: right; }
+    .chat-suggestions { padding: 8px 14px; display: flex; gap: 6px; flex-wrap: wrap; border-top: 1px solid var(--border); background: var(--off-white); }
+    .suggestion-chip { font-size: 11px; font-weight: 500; padding: 5px 10px; background: var(--white); border: 1px solid var(--border); border-radius: 20px; color: var(--mute); cursor: pointer; transition: all .15s; white-space: nowrap; font-family: var(--mono); }
+    .suggestion-chip:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-light); }
+    .chat-input-area { padding: 10px 14px; border-top: 1px solid var(--border); display: flex; gap: 8px; align-items: flex-end; }
+    .chat-input { flex: 1; border: 1.5px solid var(--border); border-radius: 18px; padding: 8px 13px; font-size: 13px; font-family: var(--sans); resize: none; max-height: 80px; line-height: 1.4; transition: border-color .2s; color: var(--text); }
+    .chat-input:focus { outline: none; border-color: var(--orange); }
+    .chat-input::placeholder { color: var(--faint); }
+    .chat-send { width: 34px; height: 34px; background: var(--orange); color: white; border: none; border-radius: 50%; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all .2s; }
+    .chat-send:hover { opacity: 0.9; transform: scale(1.05); }
+    .chat-send:disabled { background: var(--border); color: var(--faint); cursor: default; transform: none; }
+    .typing-indicator { display: flex; align-items: center; gap: 4px; padding: 9px 13px; background: var(--off-white); border: 1px solid var(--border); border-radius: 12px; border-bottom-left-radius: 3px; width: fit-content; }
+    .typing-dot { width: 5px; height: 5px; background: var(--faint); border-radius: 50%; animation: typingBounce 1.2s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: .2s; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; }
+    @keyframes typingBounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); background: var(--orange); } }
+
+    @media (max-width: 600px) {
+      .vault-main { padding: 20px 14px 100px; }
+      .client-grid, .sop-grid { grid-template-columns: 1fr; }
+      .chat-window { width: calc(100vw - 28px); right: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-mark">🏭</div>
+      <div class="login-shop-name">Irongate Logistics</div>
+      <div class="login-powered">Operator Vault · Powered by <span>Skilled Edge</span></div>
+    </div>
+    <div class="login-divider"></div>
+    <label class="login-label" for="vault-password">Operator Access Code</label>
+    <input type="password" id="vault-password" class="login-input" placeholder="Enter your access code" autocomplete="current-password" onkeydown="if(event.key==='Enter')attemptLogin()" />
+    <div class="login-error" id="login-error"></div>
+    <button class="login-btn" onclick="attemptLogin()">Access Operator Vault →</button>
+    <div class="login-footer">Need help? Contact <a href="mailto:dave@skillededge.io">dave@skillededge.io</a></div>
+  </div>
+</div>
+
+<!-- VAULT APP -->
+<div id="vault-app">
+
+  <!-- HEADER -->
+  <header class="vault-header">
+    <div class="header-left">
+      <div class="header-logo-mark">🏭</div>
+      <div class="header-shop">
+        <div class="header-shop-name">Irongate Logistics</div>
+        <div class="header-vault-tag">Operator Vault · Skilled Edge</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-badge">✓ Playbooks Active</div>
+      <div class="header-logout" onclick="logout()">Sign Out</div>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="vault-nav">
+    <div class="nav-tab active" onclick="showTab('home',this)">🏠 Home</div>
+    <div class="nav-tab" onclick="showTab('clients',this)">📋 Client Playbooks</div>
+    <div class="nav-tab" onclick="showTab('sops',this)">📄 Floor SOPs</div>
+    <div class="nav-tab" onclick="showTab('accessorial',this)">💰 Accessorial Capture</div>
+    <div class="nav-tab" onclick="showTab('labor',this)">👷 Labor & Onboarding</div>
+    <div class="nav-tab" onclick="showTab('scorecard',this)">📊 Scorecard</div>
+    <div class="nav-tab" onclick="showTab('exceptions',this)">⚠️ Exception Log</div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="vault-main">
+
+    <!-- HOME TAB -->
+    <div class="tab-panel active" id="tab-home">
+      <div class="welcome-banner">
+        <h1>Irongate Logistics — Operator Vault 🏭</h1>
+        <p>Your complete client playbook library, floor SOPs, accessorial capture tool, and AI Warehouse Assistant — all in one place. Ask the AI any question about client rules, billing, or procedures.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-val">6</div><div class="stat-label">Active Client Accounts</div></div>
+        <div class="stat-card"><div class="stat-val">94.2%</div><div class="stat-label">Pick Accuracy This Week</div></div>
+        <div class="stat-card"><div class="stat-val">$1,440</div><div class="stat-label">Accessorial Captured Today</div></div>
+      </div>
+      <div class="quick-links">
+        <div class="quick-link" onclick="showTab('clients',document.querySelectorAll('.nav-tab')[1])">
+          <div class="quick-link-icon">📋</div>
+          <div><div class="quick-link-title">Client Playbooks</div><div class="quick-link-sub">Handling rules, SLA terms, VAS</div></div>
+        </div>
+        <div class="quick-link" onclick="showTab('accessorial',document.querySelectorAll('.nav-tab')[3])">
+          <div class="quick-link-icon">💰</div>
+          <div><div class="quick-link-title">Log Accessorial Work</div><div class="quick-link-sub">Capture billable labor now</div></div>
+        </div>
+        <div class="quick-link" onclick="toggleChat()">
+          <div class="quick-link-icon">🤖</div>
+          <div><div class="quick-link-title">Ask the AI Assistant</div><div class="quick-link-sub">Client rules, billing, procedures</div></div>
+        </div>
+        <div class="quick-link" onclick="showTab('exceptions',document.querySelectorAll('.nav-tab')[6])">
+          <div class="quick-link-icon">⚠️</div>
+          <div><div class="quick-link-title">Log an Exception</div><div class="quick-link-sub">Mis-pick, return, QA flag</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENT PLAYBOOKS TAB -->
+    <div class="tab-panel" id="tab-clients">
+      <div class="panel-header">
+        <div class="panel-title">Client Playbooks</div>
+        <div class="panel-sub">Each account's specific handling rules, SLA requirements, and VAS billing codes. Last Updated timestamps show currency.</div>
+      </div>
+      <div class="client-grid">
+
+        <div class="client-card">
+          <div class="client-card-header">
+            <div class="client-icon">📦</div>
+            <div>
+              <div class="client-name">Apex Home Goods</div>
+              <div class="client-tag">E-commerce · High velocity</div>
+              <div class="client-updated">Updated: July 1, 2026</div>
+            </div>
+          </div>
+          <div class="client-card-body">
+            <div class="client-rule"><div class="client-rule-label">Packaging</div><div class="client-rule-val">Branded poly bag required on all soft goods. No generic bags. <span class="billable-badge no">Non-billable</span></div></div>
+            <div class="client-rule"><div class="client-rule-label">Kitting</div><div class="client-rule-val">Bundle packs of 3 require insert card. Log as accessorial. <span class="billable-badge yes">Billable $8/unit</span></div></div>
+            <div class="client-rule"><div class="client-rule-label">SLA</div><div class="client-rule-val">Same-day ship cutoff 2:00 PM. Carrier: UPS Ground only.</div></div>
+            <div class="client-rule"><div class="client-rule-label">Returns</div><div class="client-rule-val">Inspect and restock if unopened. Destroy if opened. Photo required.</div></div>
+          </div>
+        </div>
+
+        <div class="client-card">
+          <div class="client-card-header">
+            <div class="client-icon">💊</div>
+            <div>
+              <div class="client-name">Vitacore Supplements</div>
+              <div class="client-tag">Health/Wellness · Temperature sensitive</div>
+              <div class="client-updated">Updated: June 28, 2026</div>
+            </div>
+          </div>
+          <div class="client-card-body">
+            <div class="client-rule"><div class="client-rule-label">Storage</div><div class="client-rule-val">Climate-controlled zone only. 60–72°F. Do not store near loading dock.</div></div>
+            <div class="client-rule"><div class="client-rule-label">Re-labeling</div><div class="client-rule-val">Any barcode re-label is billable at $0.35/unit. Log every time. <span class="billable-badge yes">Billable</span></div></div>
+            <div class="client-rule"><div class="client-rule-label">SLA</div><div class="client-rule-val">Orders placed before 12 PM ship same day. 1:00 PM cutoff hard stop.</div></div>
+            <div class="client-rule"><div class="client-rule-label">Returns</div><div class="client-rule-val">No restocking on any opened supplement. Quarantine and notify client within 2 hours.</div></div>
+          </div>
+        </div>
+
+        <div class="client-card">
+          <div class="client-card-header">
+            <div class="client-icon">🔧</div>
+            <div>
+              <div class="client-name">ProTech Hardware</div>
+              <div class="client-tag">B2B · Pallet fulfillment</div>
+              <div class="client-updated">Updated: June 15, 2026</div>
+            </div>
+          </div>
+          <div class="client-card-body">
+            <div class="client-rule"><div class="client-rule-label">Palletizing</div><div class="client-rule-val">Floor-loaded only. No slip sheets. Stretch wrap 4 passes minimum.</div></div>
+            <div class="client-rule"><div class="client-rule-label">Custom wrap</div><div class="client-rule-val">Branded corner boards required on all pallet shipments. <span class="billable-badge yes">Billable $12/pallet</span></div></div>
+            <div class="client-rule"><div class="client-rule-label">SLA</div><div class="client-rule-val">48-hour fulfillment window. LTL pickups Tuesday and Thursday only.</div></div>
+            <div class="client-rule"><div class="client-rule-label">Damages</div><div class="client-rule-val">Photo required before and after palletizing on all HazMat SKUs.</div></div>
+          </div>
+        </div>
+
+        <div class="coming-soon">
+          <div style="font-size:24px;margin-bottom:8px;">⏳</div>
+          <div style="font-weight:700;margin-bottom:4px;">3 More Client Accounts</div>
+          <div style="font-size:12px;">Being added in next playbook session</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FLOOR SOPs TAB -->
+    <div class="tab-panel" id="tab-sops">
+      <div class="panel-header">
+        <div class="panel-title">Floor SOPs</div>
+        <div class="panel-sub">Standardized procedures for all core warehouse workflows. Every operator follows the same steps, every time.</div>
+      </div>
+      <div class="sop-grid">
+
+        <div class="sop-card">
+          <div class="sop-card-header"><div class="sop-icon">📥</div><div><div class="sop-name">Inbound Receiving</div><div class="sop-tag">All shipments</div></div></div>
+          <div class="sop-card-body">
+            <ol class="sop-steps">
+              <li>Count cartons against BOL before driver leaves</li>
+              <li>Photograph any visible damage before signing</li>
+              <li>Scan each carton into WMS receiving queue</li>
+              <li>Assign putaway location — high velocity near dock</li>
+              <li>Update WMS putaway complete within 2 hours of receipt</li>
+            </ol>
+            <button class="sop-btn">Open Full SOP →</button>
+          </div>
+        </div>
+
+        <div class="sop-card">
+          <div class="sop-card-header"><div class="sop-icon">📤</div><div><div class="sop-name">Pick & Pack</div><div class="sop-tag">Standard orders</div></div></div>
+          <div class="sop-card-body">
+            <ol class="sop-steps">
+              <li>Print wave or pull single order from WMS queue</li>
+              <li>Pick to tote — verify SKU scan matches order line</li>
+              <li>Pack per client spec (check Client Playbook first)</li>
+              <li>Apply correct label — verify ship-to address</li>
+              <li>Scan carton closed, place on outbound conveyor</li>
+            </ol>
+            <button class="sop-btn">Open Full SOP →</button>
+          </div>
+        </div>
+
+        <div class="sop-card">
+          <div class="sop-card-header"><div class="sop-icon">↩️</div><div><div class="sop-name">Returns Processing</div><div class="sop-tag">All accounts</div></div></div>
+          <div class="sop-card-body">
+            <ol class="sop-steps">
+              <li>Scan return label — log into WMS returns queue</li>
+              <li>Open and inspect per client protocol</li>
+              <li>Grade: Restock / Quarantine / Destroy</li>
+              <li>Photograph if damaged or opened</li>
+              <li>Log disposition in WMS and notify account manager</li>
+            </ol>
+            <button class="sop-btn">Open Full SOP →</button>
+          </div>
+        </div>
+
+        <div class="sop-card">
+          <div class="sop-card-header"><div class="sop-icon">🔄</div><div><div class="sop-name">End of Shift Checklist</div><div class="sop-tag">All shifts</div></div></div>
+          <div class="sop-card-body">
+            <ol class="sop-steps">
+              <li>Clear all open orders from WMS queue or flag exceptions</li>
+              <li>Restock packing supplies at each station</li>
+              <li>Return all pick carts to charging stations</li>
+              <li>Log any unresolved exceptions in Exception Log</li>
+              <li>Confirm outbound manifests are closed in WMS</li>
+            </ol>
+            <button class="sop-btn">Open Full SOP →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ACCESSORIAL CAPTURE TAB -->
+    <div class="tab-panel" id="tab-accessorial">
+      <div class="panel-header">
+        <div class="panel-title">Accessorial Capture & Reference</div>
+        <div class="panel-sub">Log custom work the moment it happens. Every unlogged hour is revenue that never gets billed.</div>
+      </div>
+
+      <div class="accessorial-log">
+        <div class="accessorial-log-header">
+          <div class="accessorial-log-title">⚡ Log Accessorial Work Now</div>
+        </div>
+        <div class="accessorial-log-body">
+          <div class="log-form">
+            <div class="log-field">
+              <div class="log-label">Client Account</div>
+              <select class="log-input" id="log-client">
+                <option value="">Select client…</option>
+                <option>Apex Home Goods</option>
+                <option>Vitacore Supplements</option>
+                <option>ProTech Hardware</option>
+              </select>
+            </div>
+            <div class="log-field">
+              <div class="log-label">Task Type</div>
+              <select class="log-input" id="log-task">
+                <option value="">Select task…</option>
+                <option>Kitting / Bundle Build</option>
+                <option>Re-labeling</option>
+                <option>Custom Packaging</option>
+                <option>Promotional Insert</option>
+                <option>Pallet Custom Wrap</option>
+                <option>Returns Special Handling</option>
+                <option>Other VAS</option>
+              </select>
+            </div>
+            <div class="log-field">
+              <div class="log-label">Hours Worked</div>
+              <input type="number" class="log-input" id="log-hours" placeholder="e.g. 1.5" step="0.25" min="0.25" />
+            </div>
+            <div class="log-field">
+              <div class="log-label">Units / Quantity</div>
+              <input type="number" class="log-input" id="log-units" placeholder="e.g. 200" min="1" />
+            </div>
+          </div>
+          <button class="log-submit" onclick="addLogEntry()">Log Accessorial Work →</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:12px">
+        <div class="panel-title" style="font-size:15px;margin-bottom:8px;">Today's Logged Entries</div>
+        <div class="log-entries" id="log-entries">
+          <div class="log-entry">
+            <div class="log-entry-time">07:42 AM</div>
+            <div class="log-entry-client">APEX</div>
+            <div class="log-entry-task">Kitting / Bundle Build — 150 units</div>
+            <div class="log-entry-hrs">2.0 hrs</div>
+            <div class="log-entry-amount">$1,200</div>
+          </div>
+          <div class="log-entry">
+            <div class="log-entry-time">09:15 AM</div>
+            <div class="log-entry-client">VITACORE</div>
+            <div class="log-entry-task">Re-labeling — 240 units</div>
+            <div class="log-entry-hrs">1.5 hrs</div>
+            <div class="log-entry-amount">$84</div>
+          </div>
+          <div class="log-entry">
+            <div class="log-entry-time">11:30 AM</div>
+            <div class="log-entry-client">PROTECH</div>
+            <div class="log-entry-task">Pallet Custom Wrap — 8 pallets</div>
+            <div class="log-entry-hrs">0.75 hrs</div>
+            <div class="log-entry-amount">$96</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rate-card">
+        <div class="rate-card-header">📋 Accessorial Rate Reference — All Accounts</div>
+        <table class="rate-table">
+          <thead>
+            <tr><th>Task</th><th>Account</th><th>Rate</th><th>Unit</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Kitting / Bundle Build</td><td>Apex Home Goods</td><td class="rate-amount">$8.00</td><td>per unit</td></tr>
+            <tr><td>Re-labeling</td><td>Vitacore Supplements</td><td class="rate-amount">$0.35</td><td>per unit</td></tr>
+            <tr><td>Custom Corner Boards</td><td>ProTech Hardware</td><td class="rate-amount">$12.00</td><td>per pallet</td></tr>
+            <tr><td>Promotional Insert</td><td>All accounts</td><td class="rate-amount">$45.00</td><td>per hour</td></tr>
+            <tr><td>Returns Special Handling</td><td>All accounts</td><td class="rate-amount">$45.00</td><td>per hour</td></tr>
+            <tr><td>General VAS Labor</td><td>All accounts</td><td class="rate-amount">$45.00</td><td>per hour</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LABOR & ONBOARDING TAB -->
+    <div class="tab-panel" id="tab-labor">
+      <div class="panel-header">
+        <div class="panel-title">Labor & Onboarding</div>
+        <div class="panel-sub">Week-by-week ramp curriculum for new associates. Structured onboarding cuts average time-to-productivity from 4 weeks to under 2.</div>
+      </div>
+      <div class="week-grid">
+        <div class="week-row">
+          <div class="week-num done">WK 1</div>
+          <div class="week-body">
+            <div class="week-title">Orientation & Safety</div>
+            <div class="week-items">
+              <div class="week-item">Facility walkthrough — all zones, emergency exits, forklift lanes</div>
+              <div class="week-item">WMS login setup and basic scan training</div>
+              <div class="week-item">Forklift safety certification review (if applicable)</div>
+              <div class="week-item">Review top 3 client playbooks with shift lead</div>
+              <div class="week-item">Shadow experienced picker for full shift</div>
+            </div>
+            <div class="week-target">Target: 40% of standard LPH by end of week</div>
+          </div>
+        </div>
+        <div class="week-row">
+          <div class="week-num current">WK 2</div>
+          <div class="week-body">
+            <div class="week-title">Supervised Picking</div>
+            <div class="week-items">
+              <div class="week-item">Independent picking with shift lead spot-check</div>
+              <div class="week-item">Pack station training — all client pack specs</div>
+              <div class="week-item">Accessorial capture process — what to log, how to log it</div>
+              <div class="week-item">Returns processing for top 2 accounts</div>
+            </div>
+            <div class="week-target">Target: 65% of standard LPH by end of week</div>
+          </div>
+        </div>
+        <div class="week-row">
+          <div class="week-num">WK 3</div>
+          <div class="week-body">
+            <div class="week-title">Independent Operations</div>
+            <div class="week-items">
+              <div class="week-item">Full independent pick/pack — all client accounts</div>
+              <div class="week-item">Exception logging — mis-picks, damages, short ships</div>
+              <div class="week-item">Wave picking introduction</div>
+              <div class="week-item">End-of-shift checklist ownership</div>
+            </div>
+            <div class="week-target">Target: 85% of standard LPH by end of week</div>
+          </div>
+        </div>
+        <div class="week-row">
+          <div class="week-num">WK 4</div>
+          <div class="week-body">
+            <div class="week-title">Full Productivity</div>
+            <div class="week-items">
+              <div class="week-item">Full standard LPH expected — no shadow required</div>
+              <div class="week-item">Cross-train on receiving if LPH target met</div>
+              <div class="week-item">30-day check-in with shift lead</div>
+            </div>
+            <div class="week-target">Target: 100% of standard LPH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCORECARD TAB -->
+    <div class="tab-panel" id="tab-scorecard">
+      <div class="panel-header">
+        <div class="panel-title">Owner Scorecard</div>
+        <div class="panel-sub">Weekly snapshot of facility performance across the five audit areas. Updated every Monday morning.</div>
+      </div>
+
+      <div class="scorecard-wrap">
+        <div class="scorecard-header">
+          <div class="scorecard-title">Week of July 1, 2026 · Irongate Logistics</div>
+          <div class="scorecard-period">Updated Monday 7:00 AM</div>
+        </div>
+        <table class="scorecard-table">
+          <thead>
+            <tr><th>Metric</th><th>This Week</th><th>Target</th><th>Trend</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Pick Accuracy Rate</strong></td>
+              <td class="score-num">94.2%</td>
+              <td>97%+</td>
+              <td>↑ +0.8%</td>
+              <td><span class="score-badge amber">⚠ Below Target</span></td>
+            </tr>
+            <tr>
+              <td><strong>Lines Picked per Hour (LPH)</strong></td>
+              <td class="score-num">62 LPH</td>
+              <td>65+ LPH</td>
+              <td>→ Flat</td>
+              <td><span class="score-badge amber">⚠ Below Target</span></td>
+            </tr>
+            <tr>
+              <td><strong>Accessorial Captured</strong></td>
+              <td class="score-num">$8,240</td>
+              <td>$6,000+</td>
+              <td>↑ +$1,200</td>
+              <td><span class="score-badge green">✓ On Track</span></td>
+            </tr>
+            <tr>
+              <td><strong>OT Hours vs. Budget</strong></td>
+              <td class="score-num">148 hrs</td>
+              <td>&lt;120 hrs</td>
+              <td>↑ +22 hrs</td>
+              <td><span class="score-badge red">✗ Over Budget</span></td>
+            </tr>
+            <tr>
+              <td><strong>New Hire Ramp (Wk 2)</strong></td>
+              <td class="score-num">68% LPH</td>
+              <td>65%+ Wk 2</td>
+              <td>↑ On track</td>
+              <td><span class="score-badge green">✓ On Track</span></td>
+            </tr>
+            <tr>
+              <td><strong>Mis-pick Chargebacks</strong></td>
+              <td class="score-num">$350</td>
+              <td>&lt;$250/wk</td>
+              <td>↓ -$80</td>
+              <td><span class="score-badge amber">⚠ Monitor</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EXCEPTION LOG TAB -->
+    <div class="tab-panel" id="tab-exceptions">
+      <div class="panel-header">
+        <div class="panel-title">Exception & QA Log</div>
+        <div class="panel-sub">Log mis-picks, returns, and QA flags the moment they happen. Root cause tracking reduces chargebacks over time.</div>
+      </div>
+
+      <div class="exception-form">
+        <div class="exception-form-header">
+          <div class="exception-form-title">⚠️ Log New Exception</div>
+        </div>
+        <div class="exception-form-body">
+          <div class="log-form">
+            <div class="log-field">
+              <div class="log-label">Exception Type</div>
+              <select class="log-input" id="exc-type">
+                <option value="">Select type…</option>
+                <option>Mis-pick — Wrong SKU</option>
+                <option>Mis-pick — Wrong Quantity</option>
+                <option>Mis-pick — Wrong Address</option>
+                <option>Return — Customer Initiated</option>
+                <option>Damage — Inbound</option>
+                <option>Damage — Outbound</option>
+                <option>QA Flag — Pack Error</option>
+                <option>SLA Miss — Late Ship</option>
+              </select>
+            </div>
+            <div class="log-field">
+              <div class="log-label">Client Account</div>
+              <select class="log-input" id="exc-client">
+                <option value="">Select client…</option>
+                <option>Apex Home Goods</option>
+                <option>Vitacore Supplements</option>
+                <option>ProTech Hardware</option>
+              </select>
+            </div>
+            <div class="log-field">
+              <div class="log-label">Order / Tracking #</div>
+              <input type="text" class="log-input" id="exc-order" placeholder="e.g. WMS-00412" />
+            </div>
+            <div class="log-field">
+              <div class="log-label">Root Cause</div>
+              <select class="log-input" id="exc-cause">
+                <option value="">Select cause…</option>
+                <option>Scan error — wrong barcode</option>
+                <option>Label placement error</option>
+                <option>Pick location misread</option>
+                <option>Packing spec not followed</option>
+                <option>System / WMS error</option>
+                <option>Carrier damage</option>
+                <option>Unknown</option>
+              </select>
+            </div>
+          </div>
+          <button class="log-submit" onclick="addException()" style="background:var(--red)">Log Exception →</button>
+        </div>
+      </div>
+
+      <div class="panel-title" style="font-size:15px;margin-bottom:10px;">Recent Exceptions — Last 7 Days</div>
+      <div class="exception-entries" id="exception-entries">
+        <div class="exception-entry">
+          <div class="exception-entry-top">
+            <div><div class="exception-type">Mis-pick — Wrong SKU</div><div class="exception-order">WMS-00389 · Apex Home Goods</div></div>
+            <div class="exception-time">Jul 3 · 2:14 PM</div>
+          </div>
+          <div class="exception-desc">Root cause: Scan error — wrong barcode. Picker scanned SKU-447 instead of SKU-474 at shelf 12B. Similar label placement.</div>
+          <div class="exception-cost">Estimated chargeback: $50</div>
+        </div>
+        <div class="exception-entry">
+          <div class="exception-entry-top">
+            <div><div class="exception-type">SLA Miss — Late Ship</div><div class="exception-order">WMS-00401 · Vitacore Supplements</div></div>
+            <div class="exception-time">Jul 2 · 5:48 PM</div>
+          </div>
+          <div class="exception-desc">Root cause: Packing spec not followed. Kitting order held at pack station past 1:00 PM cutoff. Shipped next day.</div>
+          <div class="exception-cost">Estimated chargeback: $100</div>
+        </div>
+        <div class="exception-entry">
+          <div class="exception-entry-top">
+            <div><div class="exception-type">Damage — Inbound</div><div class="exception-order">WMS-00376 · ProTech Hardware</div></div>
+            <div class="exception-time">Jul 1 · 9:22 AM</div>
+          </div>
+          <div class="exception-desc">Root cause: Carrier damage. 3 cartons crushed on corner. Photographed before signing BOL. Claim filed with carrier.</div>
+          <div class="exception-cost">Estimated impact: $280</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- AI CHAT WIDGET -->
+<button class="chat-toggle" id="chat-toggle" onclick="toggleChat()" title="Ask the AI Warehouse Assistant">
+  <span id="chat-toggle-icon">🤖</span>
+  <div class="chat-badge-dot">AI</div>
+</button>
+
+<div class="chat-window" id="chat-window">
+  <div class="chat-header">
+    <div class="chat-header-avatar">🤖</div>
+    <div class="chat-header-info">
+      <div class="chat-header-name">Irongate AI Warehouse Assistant</div>
+      <div class="chat-header-status"><span class="chat-header-dot"></span>Trained on your playbooks · Always available</div>
+    </div>
+  </div>
+  <div class="chat-messages" id="chat-messages">
+    <div class="msg bot">
+      <div class="msg-bubble">Hi — I'm your AI Warehouse Assistant for Irongate Logistics. I'm trained on your client playbooks, billing rates, and floor SOPs. Ask me anything about client handling rules, what's billable, or how to process an order. What do you need?</div>
+      <div class="msg-time">Now</div>
+    </div>
+  </div>
+  <div class="chat-suggestions" id="chat-suggestions">
+    <div class="suggestion-chip" onclick="sendSuggestion(this)">Does Apex kitting get billed?</div>
+    <div class="suggestion-chip" onclick="sendSuggestion(this)">Vitacore return process?</div>
+    <div class="suggestion-chip" onclick="sendSuggestion(this)">VAS rate for re-labeling?</div>
+  </div>
+  <div class="chat-input-area">
+    <textarea class="chat-input" id="chat-input" placeholder="Ask about any client rule or procedure..." rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="chat-send" id="chat-send" onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+/* ── CONFIG ── */
+const VAULT_PASSWORD = "Iron2026";
+const SHOP_NAME = "Irongate Logistics";
+
+/* ── WAREHOUSE AI CONTEXT ── */
+const WAREHOUSE_CONTEXT = `
+You are the AI Warehouse Assistant for ${SHOP_NAME}, a mid-market third-party logistics (3PL) facility. You are trained exclusively on this facility's documented client playbooks, accessorial billing rates, and floor SOPs. Answer all questions based only on these documents. Be specific, direct, and practical — like a veteran warehouse supervisor talking to a floor associate.
+
+If something is not in your documented playbooks or SOPs, say so clearly: "That's not in my training for this facility. Check with your shift lead before proceeding."
+
+Always cite the source: "Per the [Client Name] Playbook" or "Per the Pick & Pack SOP."
+
+CLIENT PLAYBOOKS:
+
+APEX HOME GOODS (E-commerce, high velocity):
+- Packaging: Branded poly bag required on ALL soft goods. No generic bags. NOT billable.
+- Kitting: Bundle packs of 3 require insert card. Log as accessorial. BILLABLE at $8.00 per unit.
+- SLA: Same-day ship cutoff is 2:00 PM SHARP. Carrier: UPS Ground only. No exceptions.
+- Returns: Inspect on arrival. Restock if unopened. Destroy if opened. Photo required on all returns.
+
+VITACORE SUPPLEMENTS (Health/Wellness, temperature sensitive):
+- Storage: Climate-controlled zone ONLY. Keep between 60-72°F. Do NOT store near loading dock.
+- Re-labeling: Any barcode re-label is BILLABLE at $0.35 per unit. Log every single re-label.
+- SLA: Orders placed before 12:00 PM ship same day. 1:00 PM cutoff is a hard stop — no exceptions.
+- Returns: NO restocking on any opened supplement product. Quarantine immediately and notify account manager within 2 hours.
+
+PROTECH HARDWARE (B2B, pallet fulfillment):
+- Palletizing: Floor-loaded only. No slip sheets. Stretch wrap minimum 4 passes.
+- Custom wrap: Branded corner boards required on ALL pallet shipments. BILLABLE at $12.00 per pallet.
+- SLA: 48-hour fulfillment window. LTL pickups Tuesday and Thursday ONLY.
+- Damages: Photo required before AND after palletizing on all HazMat SKUs.
+
+ACCESSORIAL BILLING RATES (All accounts unless noted):
+- Kitting / Bundle Build (Apex): $8.00 per unit
+- Re-labeling (Vitacore): $0.35 per unit
+- Custom Corner Boards (ProTech): $12.00 per pallet
+- Promotional Insert: $45.00 per hour
+- Returns Special Handling: $45.00 per hour
+- General VAS Labor: $45.00 per hour
+
+FLOOR SOPs:
+INBOUND RECEIVING: Count cartons against BOL before driver leaves. Photograph damage before signing. Scan each carton into WMS. Assign putaway — high velocity near dock. Update WMS within 2 hours.
+PICK & PACK: Verify SKU scan matches order line on every pick. Pack per client spec — always check Client Playbook before packing. Verify ship-to address before sealing.
+RETURNS: Scan return label into WMS. Inspect per client protocol. Grade as Restock / Quarantine / Destroy. Photograph if damaged or opened. Notify account manager.
+END OF SHIFT: Clear all open WMS orders or flag exceptions. Restock packing supplies. Return pick carts to charging stations. Log unresolved exceptions. Confirm outbound manifests closed.
+
+IMPORTANT RULES:
+- Never guess on client-specific requirements. If unsure, tell the operator to check with the shift lead.
+- Always mention when something is billable so it gets logged.
+- Safety always comes first — never advise skipping safety steps to hit a cutoff.
+`;
+
+/* ── AUTH ── */
+function attemptLogin() {
+  const input = document.getElementById('vault-password').value;
+  const error = document.getElementById('login-error');
+  if (input === VAULT_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('vault-app').style.display = 'block';
+    error.textContent = '';
+  } else {
+    error.textContent = 'Incorrect access code. Please try again.';
+    document.getElementById('vault-password').value = '';
+    document.getElementById('vault-password').focus();
+  }
+}
+function logout() {
+  document.getElementById('vault-app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('vault-password').value = '';
+}
+
+/* ── TABS ── */
+function showTab(tabId, tabEl) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+}
+
+/* ── ACCESSORIAL LOG ── */
+function addLogEntry() {
+  const client = document.getElementById('log-client').value;
+  const task = document.getElementById('log-task').value;
+  const hours = document.getElementById('log-hours').value;
+  const units = document.getElementById('log-units').value;
+  if (!client || !task) return;
+  const amount = hours ? Math.round(+hours * 45) : 0;
+  const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  const entry = document.createElement('div');
+  entry.className = 'log-entry';
+  entry.innerHTML = `<div class="log-entry-time">${now}</div><div class="log-entry-client">${client.split(' ')[0].toUpperCase()}</div><div class="log-entry-task">${task}${units ? ' — ' + units + ' units' : ''}</div><div class="log-entry-hrs">${hours || '—'} hrs</div><div class="log-entry-amount">$${amount}</div>`;
+  document.getElementById('log-entries').prepend(entry);
+  ['log-client','log-task','log-hours','log-units'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+}
+
+/* ── EXCEPTION LOG ── */
+function addException() {
+  const type = document.getElementById('exc-type').value;
+  const client = document.getElementById('exc-client').value;
+  const order = document.getElementById('exc-order').value;
+  const cause = document.getElementById('exc-cause').value;
+  if (!type || !client) return;
+  const now = new Date().toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+  const entry = document.createElement('div');
+  entry.className = 'exception-entry';
+  entry.innerHTML = `<div class="exception-entry-top"><div><div class="exception-type">${type}</div><div class="exception-order">${order || 'Order TBD'} · ${client}</div></div><div class="exception-time">${now}</div></div><div class="exception-desc">Root cause: ${cause || 'Under investigation'}.</div><div class="exception-cost">Logged for owner review</div>`;
+  document.getElementById('exception-entries').prepend(entry);
+  ['exc-type','exc-client','exc-order','exc-cause'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+}
+
+/* ── CHAT ── */
+let chatOpen = false;
+let chatHistory = [];
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chat-window');
+  const icon = document.getElementById('chat-toggle-icon');
+  const toggle = document.getElementById('chat-toggle');
+  win.classList.toggle('open', chatOpen);
+  toggle.classList.toggle('open', chatOpen);
+  icon.textContent = chatOpen ? '✕' : '🤖';
+  if (chatOpen) setTimeout(() => document.getElementById('chat-input').focus(), 300);
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+function sendSuggestion(el) {
+  const text = el.textContent;
+  document.getElementById('chat-suggestions').style.display = 'none';
+  addMessage('user', text);
+  callClaude(text);
+}
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = ''; input.style.height = 'auto';
+  document.getElementById('chat-suggestions').style.display = 'none';
+  addMessage('user', text);
+  callClaude(text);
+}
+
+function addMessage(role, content) {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  div.innerHTML = `<div class="msg-bubble">${content}</div><div class="msg-time">${now}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  chatHistory.push({role: role === 'user' ? 'user' : 'assistant', content});
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typing-indicator';
+  div.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing-indicator');
+  if (t) t.remove();
+}
+
+async function callClaude(userMessage) {
+  const sendBtn = document.getElementById('chat-send');
+  sendBtn.disabled = true;
+  showTyping();
+  const messages = chatHistory.slice(-8).map(m => ({role: m.role, content: m.content}));
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({messages, systemPrompt: WAREHOUSE_CONTEXT})
+    });
+    const data = await response.json();
+    removeTyping();
+    if (data.content && data.content[0]) {
+      addMessage('bot', data.content[0].text);
+    } else {
+      addMessage('bot', 'Sorry, I had trouble connecting. Please try again or ask your shift lead directly.');
+    }
+  } catch (err) {
+    removeTyping();
+    addMessage('bot', 'Connection issue. Please check your internet and try again.');
+  } finally {
+    sendBtn.disabled = false;
+    document.getElementById('chat-input').focus();
+  }
+}
+</script>
+</body>
+</html>
 
