@@ -607,9 +607,8 @@
       <div class="q-num">Q2</div>
       <div class="q-content">
         <div class="q-title">Annual Turnover Rate</div>
-        <div class="q-sub">How many floor associates do you replace per year? Industry average is 40–60%.</div>
+        <div class="q-sub">How many floor associates do you replace per year? Industry average is 40–60%. This feeds the ramp deficit cost below.</div>
       </div>
-      <div class="q-leak-badge" id="badge-turnover">$0/yr</div>
     </div>
     <div class="slider-wrap">
       <div class="slider-row">
@@ -617,10 +616,6 @@
         <div class="slider-val" id="turnover-val">0</div>
       </div>
       <div class="slider-labels"><span>0 replaced/yr</span><span>30 replaced/yr</span></div>
-    </div>
-    <div class="leak-preview">
-      <div class="leak-preview-label">Turnover cost leak</div>
-      <div class="leak-preview-val" id="preview-turnover">$0</div>
     </div>
   </div>
 
@@ -727,22 +722,22 @@
       <div class="q-leak-badge" id="badge-scope">$0/yr</div>
     </div>
     <div class="radio-opts" id="scope-opts">
-      <label class="radio-opt" onclick="selectRadio('scope',0,this)">
+      <label class="radio-opt" onclick="selectRadio('scopeRate',0,this)">
         <input type="radio" name="scope" value="0" />
         <div>
           <div class="radio-opt-text">Within the last 6 months</div>
           <div class="radio-opt-sub">Active auditing — minimal scope creep risk</div>
         </div>
       </label>
-      <label class="radio-opt" onclick="selectRadio('scope',8000,this)">
-        <input type="radio" name="scope" value="8000" />
+      <label class="radio-opt" onclick="selectRadio('scopeRate',0.015,this)">
+        <input type="radio" name="scope" value="0.015" />
         <div>
           <div class="radio-opt-text">6–18 months ago</div>
           <div class="radio-opt-sub">Clients likely drifting outside original scope</div>
         </div>
       </label>
-      <label class="radio-opt" onclick="selectRadio('scope',18000,this)">
-        <input type="radio" name="scope" value="18000" />
+      <label class="radio-opt" onclick="selectRadio('scopeRate',0.03,this)">
+        <input type="radio" name="scope" value="0.03" />
         <div>
           <div class="radio-opt-text">Over 18 months ago or never</div>
           <div class="radio-opt-sub">Significant unbilled scope creep almost certain</div>
@@ -791,6 +786,45 @@
     <div class="leak-preview" style="margin-top:12px">
       <div class="leak-preview-label">Admin reconciliation waste</div>
       <div class="leak-preview-val" id="preview-wms">$0</div>
+    </div>
+  </div>
+
+  <!-- Q9: PICK-PATH / SLOTTING EFFICIENCY -->
+  <div class="q-card">
+    <div class="q-header">
+      <div class="q-num">Q9</div>
+      <div class="q-content">
+        <div class="q-title">Pick-Path & Slotting Efficiency</div>
+        <div class="q-sub">When was your last full slotting / pick-path optimization review? Poor slotting forces pickers to travel further on every order — directly inflating your largest labor line.</div>
+      </div>
+      <div class="q-leak-badge" id="badge-cycle">$0/yr</div>
+    </div>
+    <div class="radio-opts" id="cycle-opts">
+      <label class="radio-opt" onclick="selectRadio('cycleRate',0.05,this)">
+        <input type="radio" name="cycle" value="0.05" />
+        <div>
+          <div class="radio-opt-text">Within the last 6 months</div>
+          <div class="radio-opt-sub">Actively slotted — minimal travel-time drag</div>
+        </div>
+      </label>
+      <label class="radio-opt" onclick="selectRadio('cycleRate',0.10,this)">
+        <input type="radio" name="cycle" value="0.10" />
+        <div>
+          <div class="radio-opt-text">6–18 months ago</div>
+          <div class="radio-opt-sub">SKU mix has likely shifted since last slotting pass</div>
+        </div>
+      </label>
+      <label class="radio-opt" onclick="selectRadio('cycleRate',0.15,this)">
+        <input type="radio" name="cycle" value="0.15" />
+        <div>
+          <div class="radio-opt-text">Over 18 months ago or never</div>
+          <div class="radio-opt-sub">Significant pick-path travel waste almost certain</div>
+        </div>
+      </label>
+    </div>
+    <div class="leak-preview" style="margin-top:12px">
+      <div class="leak-preview-label">Pick-path / cycle gap leak</div>
+      <div class="leak-preview-val" id="preview-cycle">$0</div>
     </div>
   </div>
 
@@ -851,7 +885,8 @@ var state = {
   vas: 0,
   mispick: 0,
   ot: 0,
-  scope: 0,
+  scopeRate: 0,
+  cycleRate: 0,
   wms: 0
 };
 
@@ -885,6 +920,9 @@ function calcLeaks() {
   var staff = +el('staff').value || 0;
   var wage  = +el('wage').value  || 0;
 
+  // Total annual fully-loaded labor cost — base for size-scaled leaks
+  var totalLaborCost = staff * wage * 40 * 52;
+
   // Q2 + Q3: Ramp deficit
   // Replaced workers × ramp weeks × 40 hrs/wk × 50% efficiency gap × wage
   var rampLeak = state.turnover * state.ramp * 40 * 0.50 * wage;
@@ -898,11 +936,20 @@ function calcLeaks() {
   // Q6: OT premium waste (0.5x excess above straight time)
   var otLeak = state.ot * 0.5 * wage * 52;
 
-  // Q7: Scope creep
-  var scopeLeak = state.scope;
+  // Q7: Scope creep — 1.5%/3% of total labor cost, conservative low end of
+  // published 3PL/managed-services contract leakage range (3-5% of revenue,
+  // Hyperstart/Logistics Reply benchmarks), scaled to facility size
+  var scopeLeak = totalLaborCost * state.scopeRate;
 
-  // Q8: Manual WMS admin waste (hrs/wk × admin wage assumption $25/hr × 52)
+  // Q8: Manual WMS admin waste (hrs/wk × admin wage assumption $45/hr × 52)
   var wmsLeak = state.wms;
+
+  // Q9: Pick-path / slotting cycle gap — picking is a conservative 50% of
+  // total labor (industry range 50-70%, Lucas Systems/Productiv), travel is
+  // a conservative 50% of picking time (industry range 50%+), and poor
+  // slotting inflates that travel by the selected bracket (5/10/15%,
+  // at or under Lucas Systems' cited 10-20% inefficiency range)
+  var cycleLeak = totalLaborCost * 0.50 * 0.50 * state.cycleRate;
 
   return {
     ramp: Math.round(rampLeak),
@@ -911,7 +958,8 @@ function calcLeaks() {
     ot: Math.round(otLeak),
     scope: Math.round(scopeLeak),
     wms: Math.round(wmsLeak),
-    total: Math.round(rampLeak + vasLeak + mispickLeak + otLeak + scopeLeak + wmsLeak)
+    cycle: Math.round(cycleLeak),
+    total: Math.round(rampLeak + vasLeak + mispickLeak + otLeak + scopeLeak + wmsLeak + cycleLeak)
   };
 }
 
@@ -929,22 +977,22 @@ function recalc() {
   el('rt-amount').textContent = money(l.total);
 
   // Per-question leak badges
-  el('badge-turnover').textContent = money(l.ramp) + '/yr';
   el('badge-ramp').textContent     = money(l.ramp) + '/yr';
   el('badge-vas').textContent      = money(l.vas)  + '/yr';
   el('badge-mispick').textContent  = money(l.mispick) + '/yr';
   el('badge-ot').textContent       = money(l.ot) + '/yr';
   el('badge-scope').textContent    = money(l.scope) + '/yr';
   el('badge-wms').textContent      = money(l.wms) + '/yr';
+  el('badge-cycle').textContent    = money(l.cycle) + '/yr';
 
   // Preview lines
-  el('preview-turnover').textContent = money(l.ramp);
   el('preview-ramp').textContent     = money(l.ramp);
   el('preview-vas').textContent      = money(l.vas);
   el('preview-mispick').textContent  = money(l.mispick);
   el('preview-ot').textContent       = money(l.ot);
   el('preview-scope').textContent    = money(l.scope);
   el('preview-wms').textContent      = money(l.wms);
+  el('preview-cycle').textContent    = money(l.cycle);
 
   // Update results if visible
   if (el('results').classList.contains('show')) {
@@ -971,7 +1019,8 @@ function renderResults(l) {
     { label: 'Mis-pick Chargebacks', amount: l.mispick, desc: 'Error-driven reverse logistics and penalty costs' },
     { label: 'Overtime Premium Waste', amount: l.ot, desc: 'Excess 0.5x OT premium above straight-time wages' },
     { label: 'Scope Creep Revenue Leak', amount: l.scope, desc: 'Unbilled client activities outside original MSA' },
-    { label: 'Admin Reconciliation Waste', amount: l.wms, desc: 'Manual WMS-to-payroll data entry and error cost' }
+    { label: 'Admin Reconciliation Waste', amount: l.wms, desc: 'Manual WMS-to-payroll data entry and error cost' },
+    { label: 'Pick-Path & Slotting Cycle Gap', amount: l.cycle, desc: 'Excess picker travel time from outdated slotting' }
   ].filter(function(i) { return i.amount > 0; })
    .sort(function(a, b) { return b.amount - a.amount; });
 
