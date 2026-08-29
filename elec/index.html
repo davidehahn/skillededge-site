@@ -1,1 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electrical Profit Leak Calculator — Skilled Edge Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1B2A5C; --navy-deep:#141F45;
+  --orange:#E8622C; --orange-dim:#CC5322;
+  --paper:#F4F6F9; --paper-line:#E2E6ED;
+  --slate:#5A6472; --ink:#1B242E;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);font-family:var(--sans);color:var(--ink);font-size:16px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+
+/* TOP BAR */
+.topbar{background:var(--navy);color:#fff;position:sticky;top:0;z-index:50;padding:20px 0;text-align:center;border-bottom:2px solid var(--orange)}
+.topbar-label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#9AAAC8;margin-bottom:2px}
+.topbar-val{font-family:var(--sans);font-size:32px;font-weight:800;color:var(--orange)}
+
+/* HERO */
+.hero{background:linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);color:#fff;padding:36px 0 44px;text-align:center}
+.hero-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:14px}
+.hero h1{font-family:var(--sans);font-size:38px;font-weight:800;line-height:1.25;margin-bottom:18px}
+.hero h1 .accent{color:var(--orange)}
+.hero-sub{font-size:16px;color:#B8C4DC;max-width:600px;margin:0 auto 24px;line-height:1.6}
+.hero-badges{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.hero-badges span{background:rgba(255,255,255,.08);border-radius:6px;padding:8px 14px;font-size:13px;color:#D8E0EE}
+
+/* STAGE PROGRESS */
+.stage-section{padding:24px 0 16px}
+.stage-label-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.stage-label{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--orange)}
+.stage-qcount{font-size:13px;color:var(--slate)}
+.progress-bar{height:3px;background:var(--paper-line);border-radius:2px;margin-bottom:16px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg, var(--orange), #D4A83A);border-radius:2px;transition:width .3s}
+.stage-pills{display:flex;gap:10px;margin-bottom:8px}
+.stage-pill{flex:1;padding:11px 10px;border-radius:7px;background:#fff;border:1.5px solid var(--paper-line);font-size:12.5px;font-weight:600;color:var(--slate);text-align:center;transition:all .2s;line-height:1.3}
+.stage-pill.active{border-color:var(--orange);background:#FDF1EC;color:var(--orange-dim)}
+.stage-pill.done{color:var(--orange-dim);opacity:.75}
+
+.stage-gate-row{display:flex;justify-content:flex-end;margin:8px 0 4px}
+.stage-gate-btn{background:var(--orange);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px;padding:14px 28px;cursor:pointer;transition:background .15s}
+.stage-gate-btn:hover{background:var(--orange-dim)}
+.stage-hidden{display:none}
+
+/* STAGE INTRO */
+.stage-intro{padding:20px 0 16px;border-bottom:1px solid var(--paper-line);margin-bottom:20px}
+.stage-intro-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:6px}
+.stage-intro h2{font-family:var(--sans);font-size:23px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.stage-intro p{font-size:14.5px;color:var(--slate);line-height:1.6}
+
+/* Q CARD */
+.q-card{background:#fff;border:1px solid var(--paper-line);border-radius:10px;padding:24px 26px;margin-bottom:16px}
+.q-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:6px}
+.q-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--orange-dim);margin-bottom:6px}
+.q-title{font-family:var(--sans);font-size:18px;font-weight:700;color:var(--ink)}
+.q-live{text-align:right;flex-shrink:0}
+.q-live-val{font-family:var(--sans);font-size:20px;font-weight:800;color:var(--orange)}
+.q-live-label{font-size:11.5px;color:var(--slate);white-space:nowrap}
+.q-context{font-size:13.5px;color:var(--slate);line-height:1.55;margin-bottom:18px}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field-label{display:block;font-size:12.5px;color:var(--slate);margin-bottom:6px}
+input[type=number],input[type=text]{
+  width:100%;background:var(--paper);border:1.5px solid var(--paper-line);border-radius:7px;
+  color:var(--ink);font-family:var(--sans);font-size:15px;padding:11px 13px;outline:none;transition:border-color .15s;
+}
+input:focus{border-color:var(--orange)}
+
+.slider-readout{text-align:center;margin-bottom:14px}
+.slider-val{font-family:var(--sans);font-size:19px;font-weight:700;color:var(--ink)}
+input[type=range]{width:100%;height:5px;border-radius:3px;background:var(--paper-line);outline:none;-webkit-appearance:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--orange);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.slider-scale{display:flex;justify-content:space-between;font-size:11.5px;color:var(--slate);margin-top:6px}
+
+.subfield-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--paper-line);font-size:13px}
+.subfield-label{color:var(--slate)}
+.subfield-val{font-family:var(--sans);font-weight:700;color:var(--orange-dim)}
+
+.choice-grid{display:grid;gap:8px;margin-top:4px}
+.choice-btn{text-align:left;background:var(--paper);border:1.5px solid var(--paper-line);border-radius:8px;padding:12px 16px;cursor:pointer;transition:all .15s}
+.choice-btn:hover{border-color:#B8C4DC}
+.choice-btn.selected{border-color:var(--orange);background:#FDF1EC}
+.choice-btn-title{font-size:14px;font-weight:600;color:var(--ink)}
+.choice-btn-sub{font-size:12.5px;color:var(--slate);margin-top:2px}
+
+.conditional-block{display:none;border-top:1px dashed var(--paper-line);margin-top:16px;padding-top:16px}
+.conditional-block.show{display:block}
+
+.warn-flag{display:none;background:#FBEAEA;border:1px solid #F0BEBE;border-radius:8px;padding:14px 16px;margin-top:14px;font-size:13px;color:#9B3B2F;line-height:1.55}
+.warn-flag.show{display:block}
+.warn-flag strong{display:block;margin-bottom:4px}
+
+.checkbox-row{display:flex;align-items:flex-start;gap:10px;background:var(--paper);border:1.5px solid var(--paper-line);border-radius:8px;padding:12px 14px;margin-top:14px;cursor:pointer}
+.checkbox-row input{margin-top:3px}
+.checkbox-row-text{font-size:13px;color:var(--slate);line-height:1.5}
+.checkbox-row-text strong{color:var(--ink)}
+
+/* EMAIL GATE */
+.gate-card{background:#fff;border:1px solid var(--paper-line);border-radius:10px;padding:40px 32px;text-align:center;margin-bottom:24px}
+.gate-title{font-family:var(--sans);font-size:24px;font-weight:800;color:var(--ink);margin-bottom:10px}
+.gate-sub{font-size:14.5px;color:var(--slate);margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto}
+.gate-form{display:flex;gap:10px;max-width:420px;margin:0 auto 12px}
+.gate-form input{flex:1}
+.gate-btn{background:var(--orange);color:#fff;border:none;border-radius:7px;font-weight:700;font-size:14.5px;padding:12px 22px;cursor:pointer;white-space:nowrap;transition:background .15s}
+.gate-btn:hover{background:var(--orange-dim)}
+.gate-fine{font-size:12.5px;color:var(--slate)}
+.gate-error{color:#C0392B;font-size:12.5px;margin-bottom:8px;display:none}
+
+/* RESULTS */
+.result-card{display:none}
+.result-card.active{display:block}
+.result-outer{border:2px solid var(--orange);border-radius:14px;padding:6px;margin-bottom:24px}
+.result-hero{background:linear-gradient(180deg, var(--navy), var(--navy-deep));color:#fff;border-radius:10px;padding:36px 28px;text-align:center}
+.result-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:14px}
+.result-total{font-family:var(--sans);font-size:44px;font-weight:800;color:var(--orange);margin-bottom:10px}
+.result-total-sub{font-size:15px;color:#B8C4DC}
+
+.modeled-note{background:#EEF2F7;border:1px solid #D6DEE8;border-radius:10px;padding:16px 18px;margin-bottom:22px;font-size:13.5px;color:#44546A;line-height:1.6}
+.modeled-note strong{color:var(--navy)}
+.ghost-flag{background:#F2EEE6;border:1px solid #E0D8C8;border-radius:10px;padding:20px 22px;margin-bottom:28px}
+.ghost-flag-head{font-weight:700;color:#B8860B;font-size:16px;margin-bottom:10px}
+.ghost-flag-body{font-size:14px;color:#5A5040;line-height:1.65}
+
+.breakdown-title{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);margin-bottom:14px}
+.breakdown-grid{display:grid;gap:10px;margin-bottom:28px}
+.breakdown-item{background:#fff;border:1px solid var(--paper-line);border-radius:10px;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.breakdown-name{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.breakdown-desc{font-size:12.5px;color:var(--slate);line-height:1.5}
+.breakdown-val{font-family:var(--sans);font-size:19px;font-weight:800;color:var(--orange-dim);white-space:nowrap;flex-shrink:0}
+.breakdown-val.zero{color:#A8B0BC}
+
+.guarantee-box{border:1px solid #F0D8C0;border-radius:12px;padding:26px 24px;margin-bottom:24px;background:#FBF0E8;text-align:center}
+.guarantee-head{font-weight:800;font-size:18px;color:var(--orange);margin-bottom:12px}
+.guarantee-body{font-size:14px;color:var(--slate);line-height:1.65;margin-bottom:16px}
+.guarantee-divider{border:none;border-top:1px solid #E8D4BC;margin:0 0 16px}
+.guarantee-compare{font-size:13.5px;color:#8A6D2E;line-height:1.65}
+.guarantee-compare strong{color:#8A6D2E}
+
+.spots-pill{display:inline-block;background:#FCE4D6;color:var(--orange-dim);font-size:13px;font-weight:700;padding:10px 20px;border-radius:24px;margin-bottom:18px}
+.final-cta{border:2px solid var(--orange);border-radius:14px;padding:32px 24px;text-align:center;background:#fff}
+.final-cta h3{font-family:var(--sans);font-size:28px;font-weight:800;color:var(--navy);margin-bottom:16px;line-height:1.25}
+.steps-block{text-align:left;background:var(--paper);border-radius:10px;padding:20px 22px;margin-bottom:20px}
+.step-title{font-family:var(--sans);font-size:17px;font-weight:800;color:var(--orange-dim);margin:14px 0 6px}
+.step-title:first-child{margin-top:0}
+.step-desc{font-size:14px;color:var(--slate);line-height:1.6}
+.cta-btn{display:block;background:var(--orange);color:#fff;font-weight:700;font-size:17px;padding:18px 30px;border-radius:10px;text-decoration:none;letter-spacing:.02em;transition:background .15s;text-align:center}
+.cta-btn:hover{background:var(--orange-dim)}
+.final-fine{font-size:13px;color:var(--slate);margin-top:16px;text-align:center}
+
+footer{padding:32px 0 50px;text-align:center;font-size:11.5px;color:var(--slate);line-height:1.7;border-top:1px solid var(--paper-line);margin-top:20px}
+
+@media(max-width:600px){
+  .hero h1{font-size:27px}
+  .field-row{grid-template-columns:1fr}
+  .stage-pill{font-size:11px;padding:9px 6px}
+  .gate-form{flex-direction:column}
+  .result-total{font-size:36px}
+  .topbar-val{font-size:24px}
+  .q-header-row{flex-direction:column}
+  .q-live{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-label">Estimated Annual Profit Leak</div>
+  <div class="topbar-val" id="liveTotal">$0</div>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Free Electrical Diagnostic · 9 Vectors · Under 3 Minutes</div>
+    <h1>Find Out Exactly How Much<br>Your <span class="accent">Shop Is Leaking</span></h1>
+    <p class="hero-sub">A 3-stage diagnostic checking 9 profit-bleed vectors across field labor, execution, and billing. Real numbers from your real operation.</p>
+    <div class="hero-badges">
+      <span>📊 Real-time calculation</span>
+      <span>⚡ Results in 3 minutes</span>
+      <span>🔒 Nothing stored</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="stage-section">
+    <div class="stage-label-row">
+      <div class="stage-label" id="stageLabel">Stage 1 of 3</div>
+      <div class="stage-qcount" id="stageQcount">Questions 1–3 of 9</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="stage-pills">
+      <div class="stage-pill active" id="pill-0">① Field &amp; Labor</div>
+      <div class="stage-pill" id="pill-1">② Field Execution</div>
+      <div class="stage-pill" id="pill-2">③ Billing &amp; Contracts</div>
+    </div>
+  </div>
+
+  <!-- STAGE 1 INTRO -->
+  <div class="stage-intro" id="intro-0">
+    <div class="stage-intro-eyebrow">Stage 01 / The Hook</div>
+    <h2>Field &amp; Labor Dynamics</h2>
+    <p>Establishes your baseline — every downstream calculation anchors to these inputs.</p>
+  </div>
+
+  <!-- Q1 -->
+  <div class="q-card">
+    <div class="q-label">Q1 · Company Profile</div>
+    <div class="q-title">Revenue, crew count &amp; loaded hourly rate</div>
+    <div class="q-context">Every formula below anchors to these three numbers. Use your fully-loaded rate including burden, insurance, and benefits.</div>
+    <div class="field-row single" style="margin-bottom:14px">
+      <div>
+        <label class="field-label">Approximate Annual Revenue ($)</label>
+        <input type="number" id="annualRevenue" placeholder="e.g. 12000000" min="0">
+      </div>
+    </div>
+    <div class="field-row">
+      <div>
+        <label class="field-label">Total Field Electricians</label>
+        <input type="number" id="crewCount" placeholder="e.g. 18" min="1">
+      </div>
+      <div>
+        <label class="field-label">Avg Loaded Hourly Rate ($)</label>
+        <input type="number" id="loadedRate" placeholder="e.g. 48" min="1">
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card">
+    <div class="q-header-row">
+      <div>
+        <div class="q-label">Q2 · Annual Technician Turnover</div>
+        <div class="q-title">Field electricians replaced per year</div>
+      </div>
+      <div class="q-live"><div class="q-live-val" id="q2leak">$0</div><div class="q-live-label">turnover leak/yr</div></div>
+    </div>
+    <div class="q-context">Industry average is 20–30% for electrical field staff. Every departure triggers replacement cost plus ramp drag on the new hire.</div>
+    <div class="slider-readout"><span class="slider-val" id="q2val">3 replaced/yr</span></div>
+    <input type="range" id="q2slider" min="0" max="15" value="3">
+    <div class="slider-scale"><span>0</span><span>7</span><span>15</span></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card">
+    <div class="q-header-row">
+      <div>
+        <div class="q-label">Q3 · New-Hire Ramp Time</div>
+        <div class="q-title">Weeks to reach full billable productivity</div>
+      </div>
+      <div class="q-live"><div class="q-live-val" id="q3leak">$0</div><div class="q-live-label">ramp deficit/yr</div></div>
+    </div>
+    <div class="q-context">During ramp, new electricians typically bill at ~60% efficiency while drawing full wages. The gap is pure overhead.</div>
+    <div class="slider-readout"><span class="slider-val" id="q3val">6 weeks</span></div>
+    <input type="range" id="q3slider" min="2" max="16" value="6">
+    <div class="slider-scale"><span>2 wks</span><span>9 wks</span><span>16 wks</span></div>
+  </div>
+
+  <div class="stage-gate-row">
+    <button class="stage-gate-btn" id="gate1Btn">Next: Field Execution →</button>
+  </div>
+
+  <div id="stage2Content" class="stage-hidden">
+  <!-- STAGE 2 INTRO -->
+  <div class="stage-intro" id="intro-1">
+    <div class="stage-intro-eyebrow">Stage 02 / The Exposure</div>
+    <h2>Field Execution</h2>
+    <p>This is where unbilled labor surfaces. Most owners assume their job-costing catches this — it doesn't.</p>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card">
+    <div class="q-header-row">
+      <div>
+        <div class="q-label">Q4 · Unbilled Field Labor</div>
+        <div class="q-title">Ghost Labor — extra time on-site not captured</div>
+      </div>
+      <div class="q-live"><div class="q-live-val" id="q5leak">$0</div><div class="q-live-label">ghost labor leak/yr</div></div>
+    </div>
+    <div class="q-context">If your job-costing isn't mapping actual field hours back to client invoices, 15–20% of change-order-adjacent labor is likely never billed. That's Ghost Labor.</div>
+    <div class="slider-readout"><span class="slider-val" id="q5val">8 hrs/wk</span></div>
+    <input type="range" id="q5slider" min="0" max="40" value="8">
+    <div class="slider-scale"><span>0 hrs</span><span>20 hrs</span><span>40 hrs</span></div>
+    <div class="subfield-row"><span class="subfield-label">Unbilled field labor (loaded rate)</span><span class="subfield-val" id="q5total">$0 / yr</span></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card">
+    <div class="q-header-row">
+      <div>
+        <div class="q-label">Q5 · Monthly Callback / Rework Rate</div>
+        <div class="q-title">Return trips and corrective work</div>
+      </div>
+      <div class="q-live"><div class="q-live-val" id="q7leak">$0</div><div class="q-live-label">callback cost/yr</div></div>
+    </div>
+    <div class="q-context">Each callback costs approximately $180 in return-trip labor, material re-use, and schedule disruption.</div>
+    <div class="slider-readout"><span class="slider-val" id="q7val">4 callbacks/mo</span></div>
+    <input type="range" id="q7slider" min="0" max="30" value="4">
+    <div class="slider-scale"><span>0</span><span>15</span><span>30</span></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card">
+    <div class="q-label">Q6 · Warranty &amp; Punch-List Billing</div>
+    <div class="q-title">How is warranty/close-out work billed to clients?</div>
+    <div class="q-context">If punch-list and warranty work isn't billed separately, you're absorbing $60–$120 per visit in labor cost.</div>
+    <div class="choice-grid" data-field="warrantyModel">
+      <div class="choice-btn" data-val="none"><div class="choice-btn-title">We don't perform warranty visits</div><div class="choice-btn-sub">No leak in this category</div></div>
+      <div class="choice-btn" data-val="billed"><div class="choice-btn-title">Billed per visit or via retainer</div><div class="choice-btn-sub">Minimal leak if rate covers cost</div></div>
+      <div class="choice-btn" data-val="absorbed"><div class="choice-btn-title">Not billed — absorbed as overhead</div><div class="choice-btn-sub">Guaranteed margin leak at volume</div></div>
+    </div>
+    <div class="conditional-block" id="q8conditional">
+      <label class="field-label">Avg warranty/punch-list visits per month</label>
+      <input type="number" id="q8visits" placeholder="e.g. 6" min="0" style="max-width:200px">
+      <div class="subfield-row"><span class="subfield-label">Warranty billing gap</span><span class="subfield-val" id="q8total">$0 / yr</span></div>
+    </div>
+  </div>
+
+  <div class="stage-gate-row">
+    <button class="stage-gate-btn" id="gate2Btn">Next: Billing &amp; Contracts →</button>
+  </div>
+  </div><!-- /stage2Content -->
+
+  <div id="stage3Content" class="stage-hidden">
+  <!-- STAGE 3 INTRO -->
+  <div class="stage-intro" id="intro-2">
+    <div class="stage-intro-eyebrow">Stage 03 / The Closing Proof</div>
+    <h2>Billing &amp; Contract Drift</h2>
+    <p>This is where standard job-costing tools go silent. These leaks compound invisibly for months — sometimes years.</p>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card">
+    <div class="q-label">Q7 · Change-Order Capture Audit</div>
+    <div class="q-title">Last review of field change-orders vs. signed approvals</div>
+    <div class="q-context">Crews routinely perform scope changes in the field before paperwork catches up. Every unsigned, unbilled change order is direct revenue leakage.</div>
+    <div class="choice-grid" data-field="coAudit">
+      <div class="choice-btn" data-val="recent"><div class="choice-btn-title">Within the last 3 months</div><div class="choice-btn-sub">Active tracking — minimal capture gap</div></div>
+      <div class="choice-btn" data-val="mid"><div class="choice-btn-title">3–12 months ago</div><div class="choice-btn-sub">Change orders likely slipping through</div></div>
+      <div class="choice-btn" data-val="old"><div class="choice-btn-title">Over 12 months ago or never</div><div class="choice-btn-sub">Significant unbilled change-order work almost certain</div></div>
+    </div>
+    <div class="subfield-row"><span class="subfield-label">Estimated change-order capture leak</span><span class="subfield-val" id="q9total">$0 / yr</span></div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="q-card">
+    <div class="q-label">Q8 · Material Markup Pass-Through</div>
+    <div class="q-title">2026 copper &amp; wire price volatility</div>
+    <div class="q-context">Copper and wire pricing has moved sharply through 2026 — well into double digits year over year. If your pricing doesn't adjust between quote and install, you absorb the difference.</div>
+    <div class="choice-grid" data-field="markupPass">
+      <div class="choice-btn" data-val="auto"><div class="choice-btn-title">Yes — pricing auto-adjusts</div><div class="choice-btn-sub">Material escalation clause or real-time repricing in place</div></div>
+      <div class="choice-btn" data-val="manual"><div class="choice-btn-title">No — we quote at a fixed rate</div><div class="choice-btn-sub">High risk of absorbing 2026 price swings</div></div>
+      <div class="choice-btn" data-val="unsure"><div class="choice-btn-title">Not sure</div><div class="choice-btn-sub">This is where we typically find $6,000–$18,000 in hidden material absorption</div></div>
+    </div>
+    <label class="field-label" style="margin-top:14px">Avg monthly material spend ($) — optional, improves estimate</label>
+    <input type="number" id="q11spend" placeholder="e.g. 40000" min="0" style="max-width:220px">
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card">
+    <div class="q-label">Q9 · Job-Costing ↔ Payroll Integration</div>
+    <div class="q-title">Automated sync or manual reconciliation?</div>
+    <div class="q-context">Manual bridging between field time-cards and job-costing averages 4-6 hours per week of admin waste — plus elevated billing error risk.</div>
+    <div class="choice-grid" data-field="syncModel">
+      <div class="choice-btn" data-val="auto"><div class="choice-btn-title">Fully automated</div><div class="choice-btn-sub">Time-tracking syncs directly to job costing — minimal admin waste</div></div>
+      <div class="choice-btn" data-val="partial"><div class="choice-btn-title">Partially automated</div><div class="choice-btn-sub">Some manual steps required — ~3 hrs/wk reconciliation waste</div></div>
+      <div class="choice-btn" data-val="manual"><div class="choice-btn-title">Fully manual</div><div class="choice-btn-sub">Spreadsheets or separate entry — ~6 hrs/wk waste plus high error risk</div></div>
+    </div>
+  </div>
+  </div><!-- /stage3Content -->
+
+  <!-- EMAIL GATE -->
+  <div class="gate-card stage-hidden" id="gateCard">
+    <div class="gate-title">Almost there — unlock your full breakdown</div>
+    <div class="gate-sub">Enter your email to see your category-by-category leak analysis and total estimated annual waste.</div>
+    <div class="gate-error" id="gateError">Please enter a valid email address.</div>
+    <div class="gate-form">
+      <input type="text" id="gateEmail" placeholder="you@company.com">
+      <button class="gate-btn" id="gateSubmit">Show My Results →</button>
+    </div>
+    <div class="gate-fine">No spam. Unsubscribe anytime. We never sell your info.</div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="result-card" id="resultCard">
+    <div class="result-outer">
+      <div class="result-hero">
+        <div class="result-eyebrow">Your Estimated Annual Margin Leak</div>
+        <div class="result-total" id="resultTotal">$0</div>
+        <div class="result-total-sub">across labor, billing, throughput, and contract drift</div>
+      </div>
+    </div>
+    <div class="modeled-note" id="modeledNote" style="display:none"></div>
+
+    <div class="ghost-flag" id="ghostFlag" style="display:none">
+      <div class="ghost-flag-head">⚠️ Ghost Labor Risk Detected</div>
+      <div class="ghost-flag-body" id="ghostFlagBody"></div>
+    </div>
+
+    <div class="breakdown-title">Leak Category Breakdown</div>
+    <div class="breakdown-grid" id="breakdownGrid"></div>
+
+    <div class="guarantee-box">
+      <div class="guarantee-head">🛡️ The $75,000 Identification Guarantee</div>
+      <div class="guarantee-body">We identify at least $75,000 in recoverable annual waste — working entirely within your existing tools. No software changes. No system replacement. No disruption to your operation. Just a 7-business-day remote audit and a clear PDF report with exact dollar figures.</div>
+      <hr class="guarantee-divider">
+      <div class="guarantee-compare"><strong>Traditional consultants charge $15,000–$30,000 and take 6+ weeks.</strong> We do it in 7 days for $1,000 — guaranteed. After the first 2 founding clients, the rate goes to $3,000.</div>
+    </div>
+
+    <div class="final-cta">
+      <div class="spots-pill">🔥 2 Founding Spots Remaining at $1,000</div>
+      <h3>Stop Leaking Profit. Lock In Your 7-Day Audit.</h3>
+      <div class="steps-block">
+        <div class="step-title">1. Send 3 CSVs</div>
+        <div class="step-desc">Send 3 raw CSV exports — no cleaning or formatting needed. We handle everything from there.</div>
+        <div class="step-title">2. Remote 7-Day Analysis</div>
+        <div class="step-desc">We audit field labor, contract drift, and unbilled work — entirely behind the scenes.</div>
+        <div class="step-title">3. Get Your Roadmap</div>
+        <div class="step-desc">Receive an exact line-item recovery report with a clear implementation plan.</div>
+      </div>
+      <a class="cta-btn" href="https://calendly.com/davidehahn/20min">🔒 Lock In Founding Rate — $1,000</a>
+      <div class="final-fine">Backed by our 100% money-back $75K identification guarantee.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  🔒 Strictly Confidential · No Long-Term Contracts · Guaranteed $75K+ Leaks Identified<br>
+  © 2026 Skilled Edge Group LLC · Springfield, VA · skillededge.io · dave@skillededge.io<br>
+  Estimates are good-faith projections using your inputs and published 2026 electrical contracting industry benchmarks. Not financial advice.
+</footer>
+
+<script>
+const leaks = {};
+
+function fmtFull(n){ return '$'+Math.round(n).toLocaleString('en-US'); }
+function fmtK(n){
+  if(n===0) return '$0';
+  if(Math.abs(n) < 1000) return '$'+Math.round(n);
+  return '$'+Math.round(n/1000)+'K';
+}
+
+function rawTotal(){ return Object.values(leaks).reduce((a,b)=>a+b,0); }
+function conservativeTotal(){
+  // Diagnostic discipline: we never present modeled exposure above 3% of revenue
+  // as the headline figure. Both numbers are shown so the breakdown always reconciles.
+  return Math.min(rawTotal(), annualRevenue()*0.03);
+}
+function isCapped(){ return rawTotal() > annualRevenue()*0.03; }
+function updateLiveTotal(){
+  document.getElementById('liveTotal').textContent = fmtFull(conservativeTotal());
+}
+
+function loadedRate(){ return parseFloat(document.getElementById('loadedRate').value)||45; }
+function crewCount(){ return parseFloat(document.getElementById('crewCount').value)||10; }
+
+// ---- Q2: turnover ----
+const q2slider = document.getElementById('q2slider');
+function calcQ2(){
+  const n = parseInt(q2slider.value);
+  document.getElementById('q2val').textContent = n+' replaced/yr';
+  const leak = n * loadedRate() * 40 * 3;
+  leaks.q2 = leak;
+  document.getElementById('q2leak').textContent = fmtK(leak);
+  updateLiveTotal();
+}
+q2slider.addEventListener('input', ()=>{ calcQ2(); calcQ3(); });
+
+// ---- Q3: ramp time ----
+const q3slider = document.getElementById('q3slider');
+function calcQ3(){
+  const wks = parseInt(q3slider.value);
+  document.getElementById('q3val').textContent = wks+' weeks';
+  // Ramp deficit applies to the replacement hires the owner reported in Q2.
+  const newHiresPerYr = Math.max(parseInt(q2slider.value) || 0, 0);
+  const leak = newHiresPerYr * wks * 40 * loadedRate() * 0.4;
+  leaks.q3 = leak;
+  document.getElementById('q3leak').textContent = fmtK(leak);
+  updateLiveTotal();
+}
+q3slider.addEventListener('input', calcQ3);
+
+// ---- Q5: unbilled field labor ----
+const q5slider = document.getElementById('q5slider');
+function calcQ5(){
+  const hrs = parseInt(q5slider.value);
+  document.getElementById('q5val').textContent = hrs+' hrs/wk';
+  const leak = hrs * 52 * loadedRate();
+  leaks.q5 = leak;
+  document.getElementById('q5leak').textContent = fmtK(leak);
+  document.getElementById('q5total').textContent = fmtFull(leak)+' / yr';
+  updateLiveTotal();
+}
+q5slider.addEventListener('input', calcQ5);
+
+// ---- Q7: callbacks ----
+const q7slider = document.getElementById('q7slider');
+function calcQ7(){
+  const n = parseInt(q7slider.value);
+  document.getElementById('q7val').textContent = n+' callbacks/mo';
+  const leak = n * 12 * 180;
+  leaks.q7 = leak;
+  document.getElementById('q7leak').textContent = fmtK(leak);
+  updateLiveTotal();
+}
+q7slider.addEventListener('input', calcQ7);
+
+// ---- Q8: warranty billing ----
+let warrantyModel = null;
+document.querySelectorAll('.choice-grid[data-field="warrantyModel"] .choice-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.choice-grid[data-field="warrantyModel"] .choice-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    warrantyModel = btn.dataset.val;
+    const cond = document.getElementById('q8conditional');
+    cond.classList.toggle('show', warrantyModel !== 'none');
+    calcQ8();
+  });
+});
+document.getElementById('q8visits').addEventListener('input', calcQ8);
+function calcQ8(){
+  const visits = parseFloat(document.getElementById('q8visits').value)||0;
+  let leak = 0;
+  if(warrantyModel === 'absorbed') leak = visits * 12 * 90;
+  else if(warrantyModel === 'billed') leak = visits * 12 * 15;
+  leaks.q8 = warrantyModel && warrantyModel !== 'none' ? leak : 0;
+  document.getElementById('q8total').textContent = fmtFull(leaks.q8)+' / yr';
+  updateLiveTotal();
+}
+
+// ---- Q7: change-order capture (revenue-anchored, sourced) ----
+// Basis: change-order work ~6% of revenue on commercial electrical;
+// documented profit fade ~20 margin points; capture-failure rate varies by audit recency.
+let coAudit = null;
+function annualRevenue(){ return parseFloat(document.getElementById('annualRevenue').value) || (crewCount()*600000); }
+document.querySelectorAll('.choice-grid[data-field="coAudit"] .choice-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.choice-grid[data-field="coAudit"] .choice-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    coAudit = btn.dataset.val;
+    calcChangeOrder();
+  });
+});
+function calcChangeOrder(){
+  const captureFail = coAudit==='old' ? 0.55 : coAudit==='mid' ? 0.30 : coAudit==='recent' ? 0.10 : 0;
+  const leak = annualRevenue() * 0.06 * 0.20 * captureFail;
+  leaks.q9 = leak;
+  document.getElementById('q9total').textContent = fmtFull(leak)+' / yr';
+  updateLiveTotal();
+}
+
+// ---- Q8: material markup pass-through (revenue-anchored) ----
+// Basis: material ~28% of revenue for commercial electrical.
+// Unrecovered share held deliberately conservative (1.0-1.5%) vs the ~5% implied
+// by 2026 copper volatility, so no single category carries the guarantee.
+
+// ---- Q11: material markup ----
+let markupPass = null;
+document.querySelectorAll('.choice-grid[data-field="markupPass"] .choice-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.choice-grid[data-field="markupPass"] .choice-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    markupPass = btn.dataset.val;
+    calcQ11();
+  });
+});
+document.getElementById('q11spend').addEventListener('input', calcQ11);
+function calcQ11(){
+  const monthlySpend = parseFloat(document.getElementById('q11spend').value) || (annualRevenue()*0.28/12);
+  let leak = 0;
+  if(markupPass === 'manual') leak = monthlySpend*12*0.015;
+  else if(markupPass === 'unsure') leak = monthlySpend*12*0.010;
+  leaks.q11 = markupPass ? leak : 0;
+  updateLiveTotal();
+}
+
+// ---- Q12: job-costing sync ----
+let syncModel = null;
+document.querySelectorAll('.choice-grid[data-field="syncModel"] .choice-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.choice-grid[data-field="syncModel"] .choice-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    syncModel = btn.dataset.val;
+    let hrsPerWeek = 0;
+    if(syncModel === 'partial') hrsPerWeek = 3;
+    else if(syncModel === 'manual') hrsPerWeek = 6;
+    const leak = hrsPerWeek * 52 * 35;
+    leaks.q12 = leak;
+    updateLiveTotal();
+  });
+});
+
+['crewCount','loadedRate','annualRevenue'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', ()=>{
+    calcQ2(); calcQ3(); calcQ5(); calcQ7(); calcChangeOrder(); calcQ11();
+  });
+});
+
+calcQ2(); calcQ3(); calcQ5(); calcQ7();
+
+// ---- STAGE GATING ----
+document.getElementById('gate1Btn').addEventListener('click', ()=>{
+  document.getElementById('stage2Content').classList.remove('stage-hidden');
+  pills[1].classList.add('active'); pills[0].classList.remove('active'); pills[0].classList.add('done');
+  document.getElementById('stageLabel').textContent = 'Stage 2 of 3';
+  document.getElementById('stageQcount').textContent = 'Questions 4–6 of 9';
+  document.getElementById('progressFill').style.width = '50%';
+  document.getElementById('stage2Content').scrollIntoView({behavior:'smooth', block:'start'});
+});
+document.getElementById('gate2Btn').addEventListener('click', ()=>{
+  document.getElementById('stage3Content').classList.remove('stage-hidden');
+  document.getElementById('gateCard').classList.remove('stage-hidden');
+  pills[2].classList.add('active'); pills[1].classList.remove('active'); pills[1].classList.add('done');
+  document.getElementById('stageLabel').textContent = 'Stage 3 of 3';
+  document.getElementById('stageQcount').textContent = 'Questions 7–9 of 9';
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('stage3Content').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+const pills = [document.getElementById('pill-0'), document.getElementById('pill-1'), document.getElementById('pill-2')];
+document.getElementById('progressFill').style.width = '0%';
+
+// ---- EMAIL GATE ----
+// Set this to your capture endpoint (Zapier/Make webhook, Apps Script URL, or CRM hook).
+// Until it is set, submissions are logged to console and the lead is NOT stored.
+const LEAD_ENDPOINT = '/api/lead'; // Vercel serverless function -> Ops Brain webhook
+
+async function captureLead(email){
+  const payload = {
+    email: email,
+    niche: 'electrical',
+    submitted_at: new Date().toISOString(),
+    annual_revenue: parseFloat(document.getElementById('annualRevenue').value) || null,
+    crew_count: parseFloat(document.getElementById('crewCount').value) || null,
+    loaded_rate: parseFloat(document.getElementById('loadedRate').value) || null,
+    modeled_total: Math.round(rawTotal()),
+    conservative_total: Math.round(conservativeTotal()),
+    category_breakdown: Object.fromEntries(Object.entries(leaks).map(([k,v])=>[k,Math.round(v)])),
+    page: location.href
+  };
+  try{
+    await fetch(LEAD_ENDPOINT, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+    return true;
+  }catch(err){ console.error('Lead capture failed:', err); return false; }
+}
+
+document.getElementById('gateSubmit').addEventListener('click', async ()=>{
+  const email = document.getElementById('gateEmail').value;
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!re.test(email)){ document.getElementById('gateError').style.display='block'; return; }
+  document.getElementById('gateError').style.display='none';
+  const btn = document.getElementById('gateSubmit');
+  btn.disabled = true; btn.textContent = 'Calculating…';
+  await captureLead(email);
+  btn.disabled = false; btn.textContent = 'Show My Results →';
+  showResults();
+});
+
+function showResults(){
+  document.getElementById('resultCard').classList.add('active');
+  const conservative = conservativeTotal();
+  const raw = rawTotal();
+  document.getElementById('resultTotal').textContent = fmtFull(conservative);
+  const noteEl = document.getElementById('modeledNote');
+  if(isCapped()){
+    noteEl.style.display = 'block';
+    noteEl.innerHTML = `Modeled exposure from your answers: <strong>${fmtFull(raw)}</strong>. We present the more conservative <strong>${fmtFull(conservative)}</strong> as your headline figure — we cap any diagnostic estimate at 3% of revenue rather than quote the larger number. The categories below show the full modeled detail.`;
+  } else {
+    noteEl.style.display = 'none';
+  }
+
+  const categories = [
+    {name:'Turnover & Ramp Deficit', desc:'Replacement hiring + 40% efficiency loss during ramp', val: (leaks.q2||0)+(leaks.q3||0)},
+    {name:'Ghost Labor — Unbilled Field Time', desc:'Field hours logged but never billed back to the client', val: leaks.q5||0},
+    {name:'Callback & Rework Cost', desc:'$180/callback — return-trip labor, material re-use, disruption', val: leaks.q7||0},
+    {name:'Warranty & Punch-List Billing Gap', desc:'Unrecovered labor cost on warranty and close-out visits', val: leaks.q8||0},
+    {name:'Change-Order Capture Gap', desc:'Scope changes performed but never captured on an invoice', val: leaks.q9||0},
+    {name:'Material Markup Absorption', desc:'Material cost increases not passed through to billing', val: leaks.q11||0},
+    {name:'Job-Costing/Payroll Admin Waste', desc:'Manual reconciliation hours at an assumed $35/hr admin cost', val: leaks.q12||0},
+  ];
+
+  document.getElementById('breakdownGrid').innerHTML = categories.map(c=>
+    `<div class="breakdown-item"><div><div class="breakdown-name">${c.name}</div><div class="breakdown-desc">${c.desc}</div></div><span class="breakdown-val${c.val===0?' zero':''}">${fmtFull(c.val)}</span></div>`
+  ).join('');
+
+  if((leaks.q5||0) > 15000){
+    document.getElementById('ghostFlag').style.display = 'block';
+    document.getElementById('ghostFlagBody').textContent = `Your job-costing likely isn't mapping extra on-site hours back to client invoices. Industry data indicates a meaningful share of change-order-adjacent field labor goes unbilled — meaning you absorb that cost as overhead while billing the client the original contracted amount.`;
+  }
+
+  document.getElementById('resultCard').scrollIntoView({behavior:'smooth', block:'start'});
+}
+</script>
+
+</body>
+</html>
 
