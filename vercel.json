@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.skillededge.io"
+        }
+      ],
+      "destination": "https://skillededge.io/$1",
+      "permanent": true
+    }
+  ]
+}

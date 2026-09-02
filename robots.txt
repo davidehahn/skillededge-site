@@ -6,4 +6,19 @@ Disallow: /vault/
 Disallow: /medvault/vault/
 Disallow: /card-optimizer/report.html
 
-Sitemap: https://www.skillededge.io/sitemap.xml
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+Sitemap: https://skillededge.io/sitemap.xml
