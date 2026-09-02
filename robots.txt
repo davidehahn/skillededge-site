@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /vault/
+Disallow: /medvault/vault/
+Disallow: /card-optimizer/report.html
+
+Sitemap: https://www.skillededge.io/sitemap.xml
