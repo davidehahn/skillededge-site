@@ -52,7 +52,9 @@ export default async function handler(req, res) {
   const { utm_source, utm_campaign } = NICHES[niche];
 
   // Calculator context stored as Beehiiv custom fields, so the demo call can be
-  // prepped straight from the subscriber record.
+  // prepped straight from the subscriber record. Free-plan publications may
+  // reject fields that were never created, so the subscribe call retries
+  // without them rather than dropping the email.
   const customFields = [
     { name: 'Niche', value: String(niche) },
     { name: 'Annual Revenue', value: String(body.annual_revenue ?? '') },
@@ -67,7 +69,7 @@ export default async function handler(req, res) {
     { name: 'Conservative Total', value: String(body.conservative_total ?? '') }
   ].filter(f => f.value !== '' && f.value !== 'null' && f.value !== 'undefined');
 
-  try {
+  async function subscribe(fields) {
     const beehiivRes = await fetch(
       `https://api.beehiiv.com/v2/publications/${pubId}/subscriptions`,
       {
@@ -78,22 +80,33 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           email: email,
-          reactivate_existing: false,
+          reactivate_existing: true,
           send_welcome_email: false,
           utm_source: utm_source,
           utm_medium: 'web',
           utm_campaign: utm_campaign,
-          custom_fields: customFields,
+          custom_fields: fields,
         }),
       }
     );
+    let data = {};
+    try { data = await beehiivRes.json(); } catch (parseErr) { data = {}; }
+    return { ok: beehiivRes.ok, status: beehiivRes.status, data };
+  }
 
-    const data = await beehiivRes.json();
-    if (!beehiivRes.ok) {
-      console.error('Beehiiv error:', data);
+  try {
+    let result = await subscribe(customFields);
+    let fieldsDropped = false;
+    if (!result.ok && customFields.length) {
+      console.error('Beehiiv custom-field attempt failed:', result.data);
+      result = await subscribe([]);
+      fieldsDropped = result.ok;
+    }
+    if (!result.ok) {
+      console.error('Beehiiv error:', result.data);
       console.warn('UNSAVED LEAD:', JSON.stringify(body));
-      return res.status(beehiivRes.status).json({
-        error: data?.errors?.[0]?.message || 'Subscription failed.'
+      return res.status(result.status).json({
+        error: result.data?.errors?.[0]?.message || 'Subscription failed.'
       });
     }
 
@@ -125,7 +138,7 @@ export default async function handler(req, res) {
       }
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, fields_saved: !fieldsDropped });
   } catch (err) {
     console.error('Lead handler error:', err);
     console.warn('UNSAVED LEAD:', JSON.stringify(body));
