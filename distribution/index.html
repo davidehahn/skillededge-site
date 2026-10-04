@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Margin Leakage & AI Workflow Program for Industrial Distributors | Skilled Edge</title>
+<meta name="description" content="A hands-on program for $25M-$250M industrial and trade distributors: fix one costly process with your own files, then find where pricing, freight, rebates and discounts are costing you margin." />
+<link rel="canonical" href="https://skillededge.io/distribution/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Margin Leakage & AI Workflow Program for Industrial Distributors | Skilled Edge" />
+<meta property="og:description" content="Fix one costly process with your own files, then find where margin is leaking. Built for industrial and trade distributors." />
+<meta property="og:url" content="https://skillededge.io/distribution/" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","name":"Distributor Profit + AI Action Lab","provider":{"@type":"Organization","name":"Skilled Edge Group LLC","url":"https://skillededge.io"},"areaServed":"US","audience":{"@type":"BusinessAudience","name":"Industrial and trade distributors"},"description":"A hands-on working session and margin diagnostic for industrial and trade distributors: implement one workflow with your own files, then screen for margin leakage in pricing, freight, rebates and discounts."}
+</script>
+<style>
+:root{--navy:#0F1E2E;--navy-mid:#162436;--orange:#E8600A;--orange-light:rgba(232,96,10,0.10);--white:#FFFFFF;--off-white:#F5F7FA;--border:#D4DAE2;--border-dark:rgba(255,255,255,0.10);--text:#1A202C;--mute:#4A5568;--mono:'IBM Plex Mono',monospace;--sans:'Inter',-apple-system,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.nav{background:var(--navy);padding:0 5%;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border-dark)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--white)}
+.nav-brand-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:22px;list-style:none}
+.nav-links a{font-size:13px;color:rgba(255,255,255,0.60);font-weight:500;font-family:var(--mono)}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{background:var(--orange);color:var(--white)!important;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;font-family:var(--mono);display:inline-block}
+@media(max-width:780px){.nav-links li:not(:last-child){display:none}}
+.hero{background:var(--navy);padding:80px 5% 72px}
+.hero-inner{max-width:960px;margin:0 auto}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--orange);margin-bottom:22px}
+.hero h1{font-family:var(--mono);font-size:clamp(28px,5vw,46px);font-weight:700;color:var(--white);letter-spacing:-0.03em;line-height:1.1;margin-bottom:24px}
+.hero h1 .hl{color:var(--orange)}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.68);max-width:660px;line-height:1.7;margin-bottom:40px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--orange);color:var(--white);border:none;border-radius:8px;padding:15px 32px;font-family:var(--mono);font-weight:700;font-size:14px;display:inline-block;cursor:pointer}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.72);border:1.5px solid rgba(255,255,255,0.22);border-radius:8px;padding:15px 28px;font-family:var(--mono);font-weight:600;font-size:14px;display:inline-block}
+.section{padding:76px 5%}
+.section.alt{background:var(--off-white);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.section-inner{max-width:960px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--orange);margin-bottom:14px}
+.section-title{font-family:var(--mono);font-size:clamp(22px,3.5vw,32px);font-weight:700;letter-spacing:-0.02em;line-height:1.2;margin-bottom:14px}
+.section-sub{font-size:16px;color:var(--mute);line-height:1.7;max-width:660px;margin-bottom:40px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:780px){.grid3,.grid2{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:22px 20px}
+.card h3{font-family:var(--mono);font-size:15px;margin-bottom:8px}
+.card p{font-size:13.5px;color:var(--mute)}
+.num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.08em;margin-bottom:8px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.cat{margin-bottom:22px}
+.cat h3{font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--navy);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--navy);background:var(--white);border:1px solid var(--border);border-radius:20px;padding:6px 12px}
+.list{list-style:none;display:flex;flex-direction:column;gap:9px;max-width:700px}
+.list li{font-size:15px;color:var(--text);padding-left:20px;position:relative}
+.list li::before{content:'→';position:absolute;left:0;color:var(--orange);font-weight:700}
+.note{font-size:13.5px;color:var(--mute);margin-top:18px;max-width:700px}
+.faq details{border:1px solid var(--border);border-radius:8px;padding:16px 18px;margin-bottom:10px;background:var(--white)}
+.faq summary{font-family:var(--mono);font-size:14px;font-weight:600;cursor:pointer}
+.faq details p{font-size:14.5px;color:var(--mute);margin-top:10px}
+.cta-section{background:var(--navy);padding:76px 5%}
+.cta-inner{max-width:640px;margin:0 auto}
+.cta-section h2{font-family:var(--mono);font-size:clamp(22px,4vw,32px);color:var(--white);margin-bottom:12px}
+.cta-section>.cta-inner>p{font-size:15.5px;color:rgba(255,255,255,0.68);margin-bottom:28px}
+.field{margin-bottom:14px}
+.field label{display:block;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:6px}
+.field input,.field select{width:100%;padding:12px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:var(--white);font-family:var(--sans);font-size:15px}
+.field select option{color:#1A202C}
+.field input::placeholder{color:rgba(255,255,255,0.35)}
+.hp{position:absolute;left:-9999px;opacity:0}
+.form-msg{font-family:var(--mono);font-size:13px;margin-top:14px;min-height:20px}
+.form-msg.ok{color:#7FDB9B}
+.form-msg.err{color:#FFB38A}
+.cta-note{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.40);margin-top:18px}
+.footer{background:var(--navy-mid);padding:32px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-brand{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--white)}
+.footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:rgba(255,255,255,0.40);font-family:var(--mono)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.30);font-family:var(--mono);width:100%}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="/"><div class="nav-brand-dot"></div>Skilled Edge Group</a>
+  <ul class="nav-links">
+    <li><a href="#leaks">Where margin leaks</a></li>
+    <li><a href="#path">The path</a></li>
+    <li><a href="#library">Workflow library</a></li>
+    <li><a href="#apply" class="nav-cta">Get started →</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">For industrial &amp; trade distributors · $25M-$250M revenue</div>
+    <h1>Find the margin you are losing.<br><span class="hl">Get the hours back.</span></h1>
+    <p class="hero-sub">A hands-on program for distributors. In one working day, fix a costly recurring process using your own files. Then screen your pricing, freight, rebates and discounts for margin leakage worth a deeper look.</p>
+    <div class="hero-actions">
+      <a href="#apply" class="btn-primary">Request the Margin Exposure Screen</a>
+      <a href="#apply" class="btn-ghost">Apply for the pilot cohort</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="leaks">
+  <div class="section-inner">
+    <div class="section-label">Where distributors lose money</div>
+    <h2 class="section-title">The ERP records the transaction. It does not catch what people do around it.</h2>
+    <p class="section-sub">Margin leaks in the gaps between systems and people. These are the places we look first.</p>
+    <div class="grid3">
+      <div class="card"><h3>Pricing overrides</h3><p>Discounts and manual price changes that drift below target margin with no review.</p></div>
+      <div class="card"><h3>Vendor cost changes</h3><p>Supplier increases that reach your cost file faster than they reach your sell prices.</p></div>
+      <div class="card"><h3>Freight and landed cost</h3><p>Shipping and handling costs that are not fully recovered on the invoice.</p></div>
+      <div class="card"><h3>Rebates and special pricing</h3><p>Vendor program thresholds missed or claims never filed.</p></div>
+      <div class="card"><h3>Customer profitability</h3><p>High-volume accounts that cost more to serve than they return.</p></div>
+      <div class="card"><h3>Repetitive office work</h3><p>Quote follow-up, order status, AR chasing and reporting that consume skilled hours.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="path">
+  <div class="section-inner">
+    <div class="section-label">The path</div>
+    <h2 class="section-title">Start small. Prove it. Go deeper only if the numbers justify it.</h2>
+    <p class="section-sub">Each step stands on its own. You decide after each one whether the next is worth it.</p>
+    <div class="steps">
+      <div class="card"><div class="num">01</div><h3>Action Lab</h3><p>A working day where one costly process is rebuilt and tested on your own files.</p></div>
+      <div class="card"><div class="num">02</div><h3>Margin Exposure Screen</h3><p>A fast screen that flags where pricing, freight, rebates or discounts may be leaking.</p></div>
+      <div class="card"><div class="num">03</div><h3>Margin Leakage Audit</h3><p>A transaction-level review of your ERP data, scoped after the screen shows what is worth investigating.</p></div>
+      <div class="card"><div class="num">04</div><h3>Ongoing monitoring</h3><p>Monthly check-ins so new leaks are caught early and fixed processes stay fixed.</p></div>
+    </div>
+    <p class="note">The Action Lab makes sense on its own, even if you never buy the audit. Results are reported as measured time and capacity recovered. We do not guarantee savings.</p>
+  </div>
+</section>
+
+<section class="section" id="library">
+  <div class="section-inner">
+    <div class="section-label">Workflow library</div>
+    <h2 class="section-title">You choose three. We implement the one with the most impact.</h2>
+    <p class="section-sub">Before the session, you pick your top three workflows from our library. We score each for business impact, feasibility and data readiness, then prepare and test the best one before the day.</p>
+    <div class="cat"><h3>Margin &amp; pricing</h3><div class="chips"><span class="chip">Vendor cost change analyzer</span><span class="chip">Margin exception review</span><span class="chip">Rebate &amp; special pricing tracker</span><span class="chip">Customer profitability review</span></div></div>
+    <div class="cat"><h3>Sales</h3><div class="chips"><span class="chip">RFQ triage &amp; quote drafter</span><span class="chip">Quote follow-up prioritizer</span><span class="chip">Pre-call account brief</span><span class="chip">Dormant customer reactivation list</span></div></div>
+    <div class="cat"><h3>Purchasing &amp; vendors</h3><div class="chips"><span class="chip">Vendor agreement analyzer</span><span class="chip">Vendor acknowledgment vs. PO checker</span><span class="chip">Vendor scorecard</span><span class="chip">Substitute &amp; cross-reference finder</span></div></div>
+    <div class="cat"><h3>Operations &amp; inventory</h3><div class="chips"><span class="chip">Inventory review</span><span class="chip">Reorder-point exception review</span><span class="chip">Order-status inbox triage</span><span class="chip">Freight cost check</span></div></div>
+    <div class="cat"><h3>Finance &amp; admin</h3><div class="chips"><span class="chip">AR prioritization &amp; collection drafts</span><span class="chip">Monthly management reporting</span><span class="chip">New customer / credit application checker</span><span class="chip">SOP &amp; process documentation builder</span></div></div>
+    <p class="note">The library is a defined set, not an open-ended promise. Workflows that need ERP integration, complex APIs or IT approval are scoped as a separate project.</p>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="section-inner">
+    <div class="section-label">Who it is for</div>
+    <h2 class="section-title">Built for owner-led and professionally managed distributors.</h2>
+    <p class="section-sub">Typically 30-500 employees. We start with these segments:</p>
+    <div class="chips" style="margin-bottom:8px">
+      <span class="chip">Electrical</span><span class="chip">HVAC &amp; plumbing</span><span class="chip">MRO &amp; industrial supply</span>
+    </div>
+    <p class="note" style="margin-top:12px">Also working with industrial equipment, automation, metals and safety distributors.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">How the day works</div>
+    <h2 class="section-title">No one pays to watch us experiment.</h2>
+    <p class="section-sub">The work is done before the session. The day is for adapting it to your business and testing it on your real data.</p>
+    <ul class="list">
+      <li>Short intake: the process, who owns it, the systems involved, and how often it runs.</li>
+      <li>You select three workflows. We approve one and build and test it in advance.</li>
+      <li>On the day, we adapt it to your business and run your actual or sanitized files through it, including edge cases.</li>
+      <li>We measure before and after: time per run, frequency, errors and rework.</li>
+      <li>One group follow-up session after the cohort to review results and next steps.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="section-inner">
+    <div class="section-label">Your data</div>
+    <h2 class="section-title">An NDA comes first. Sanitized files are fine.</h2>
+    <p class="section-sub">We sign a mutual NDA before any files are shared, and the workshop works with sanitized samples. The margin audit uses ERP exports under a separate data-handling agreement. Details are on our <a href="/security/" style="color:var(--orange);font-weight:600">Security &amp; Trust</a> page.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Who is behind it</div>
+    <h2 class="section-title">Process analysis first. Tools second.</h2>
+    <p class="section-sub">Skilled Edge is led by an operations and program manager with 18+ years of experience in process improvement, quality assurance and safety, and an ASQ Certified Quality Auditor. We look at how a process works, decide what the outcome should be, and then use ChatGPT, Claude, Microsoft, Google and spreadsheets to build a better way to do it.</p>
+  </div>
+</section>
+
+<section class="section alt faq">
+  <div class="section-inner">
+    <div class="section-label">Questions</div>
+    <h2 class="section-title">Before you ask</h2>
+    <details><summary>Do you need access to our ERP?</summary><p>Not for the Action Lab or the Margin Exposure Screen. The audit uses ERP transaction exports, and only after an NDA and a data-handling agreement.</p></details>
+    <details><summary>Is this AI training?</summary><p>No. The goal is a working, tested workflow on your own files and a measured result, not a class on AI tools.</p></details>
+    <details><summary>Do you guarantee savings?</summary><p>No. We measure and report time and capacity recovered, and flag margin exposure for investigation. Any dollar figures come from your own data.</p></details>
+    <details><summary>Who should attend?</summary><p>The person who owns the process we are fixing, usually an operations, finance, purchasing or sales-operations lead. One attendee per company.</p></details>
+    <details><summary>What does it cost?</summary><p>Pilot and founding-cohort pricing is available for early participants. Apply below and we will send current details.</p></details>
+  </div>
+</section>
+
+<section class="cta-section" id="apply">
+  <div class="cta-inner">
+    <h2>Request the screen or apply for the pilot.</h2>
+    <p>Tell us about your business. We reply within one business day.</p>
+    <div class="field"><label for="name">Name</label><input type="text" id="name" autocomplete="name" placeholder="Your name"></div>
+    <div class="field"><label for="company">Company</label><input type="text" id="company" autocomplete="organization" placeholder="Company name"></div>
+    <div class="field"><label for="email">Work email</label><input type="email" id="email" autocomplete="email" placeholder="you@company.com"></div>
+    <div class="field"><label for="revenue">Annual revenue</label>
+      <select id="revenue"><option value="">Select</option><option>Under $25M</option><option>$25M-$50M</option><option>$50M-$100M</option><option>$100M-$250M</option><option>Over $250M</option></select></div>
+    <div class="field"><label for="vertical">Main product category</label>
+      <select id="vertical"><option value="">Select</option><option>Electrical</option><option>HVAC / plumbing</option><option>MRO / industrial supply</option><option>Industrial equipment / automation</option><option>Metals</option><option>Safety</option><option>Other</option></select></div>
+    <div class="field"><label for="erp">ERP or business system</label><input type="text" id="erp" placeholder="e.g. Epicor, Prophet 21, Eclipse, NetSuite"></div>
+    <div class="field"><label for="interest">I am interested in</label>
+      <select id="interest"><option>Margin Exposure Screen</option><option>Action Lab pilot cohort</option><option>Both</option></select></div>
+    <input type="text" id="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button type="button" class="btn-primary" id="submitBtn">Send</button>
+    <div class="form-msg" id="formMsg" role="status"></div>
+    <div class="cta-note">Skilled Edge Group LLC · Springfield, VA · dave@skillededge.io</div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-brand">⬡ Skilled Edge Group LLC</div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/elec/">Electrical</a></li>
+    <li><a href="/cnc/">CNC</a></li>
+    <li><a href="/workspace/">Workspace</a></li>
+    <li><a href="/3pl/">3PL audit</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
+    <li><a href="/security/">Security</a></li>
+    <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Skilled Edge Group LLC · Springfield, VA · All rights reserved.</div>
+</footer>
+
+<script>
+(function(){
+  var btn=document.getElementById('submitBtn'),msg=document.getElementById('formMsg');
+  function val(id){return (document.getElementById(id).value||'').trim();}
+  btn.addEventListener('click',async function(){
+    msg.className='form-msg';msg.textContent='';
+    if(val('website')){return;}
+    var email=val('email');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.className='form-msg err';msg.textContent='Please enter a valid work email.';return;}
+    if(!val('company')){msg.className='form-msg err';msg.textContent='Please enter your company name.';return;}
+    btn.disabled=true;btn.textContent='Sending...';
+    var payload={
+      email:email,niche:'distribution',name:val('name'),company:val('company'),
+      annual_revenue:val('revenue'),subvertical:val('vertical'),erp:val('erp'),interest:val('interest'),
+      submitted_at:new Date().toISOString(),page:'/distribution/'
+    };
+    try{
+      var r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      if(!r.ok){throw new Error('bad status');}
+      msg.className='form-msg ok';msg.textContent='Thank you. We will reply within one business day.';
+      btn.textContent='Sent';
+    }catch(e){
+      msg.className='form-msg err';msg.textContent='Something went wrong. Please email dave@skillededge.io.';
+      btn.disabled=false;btn.textContent='Send';
+    }
+  });
+})();
+</script>
+</body>
+</html>

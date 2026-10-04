@@ -18,6 +18,10 @@ const NICHES = {
   'cnc-manufacturing': {
     utm_source: 'cnc_calculator',
     utm_campaign: 'cnc_profit_audit_lead_magnet'
+  },
+  'distribution': {
+    utm_source: 'distribution_page',
+    utm_campaign: 'distribution_action_lab_interest'
   }
 };
 
@@ -54,6 +58,11 @@ export default async function handler(req, res) {
     { name: 'Annual Revenue', value: String(body.annual_revenue ?? '') },
     { name: 'Crew or Operator Count', value: String(body.crew_count ?? body.operator_count ?? '') },
     { name: 'Loaded Rate', value: String(body.loaded_rate ?? '') },
+    { name: 'Name', value: String(body.name ?? '') },
+    { name: 'Company', value: String(body.company ?? '') },
+    { name: 'Subvertical', value: String(body.subvertical ?? '') },
+    { name: 'ERP', value: String(body.erp ?? '') },
+    { name: 'Interest', value: String(body.interest ?? '') },
     { name: 'Modeled Total', value: String(body.modeled_total ?? '') },
     { name: 'Conservative Total', value: String(body.conservative_total ?? '') }
   ].filter(f => f.value !== '' && f.value !== 'null' && f.value !== 'undefined');
