@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Margin Loss Mini-Audit: Demo | Skilled Edge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14213d;--text:#1d2433;--muted:#566075;--rule:#d9dde5;--paper:#fff;--wash:#f5f7fa;
+--red:#c62828;--redbg:#fdecec;--amber:#b26a00;--amberdot:#f5b301;--amberbg:#fff4d6;--green:#2e7d32;--greenbg:#e8f5e9;--teal:#0f6b6b;--slate:#3a4a63;
+--head:"Bitter",Georgia,"Times New Roman",serif;--body:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--text);font:400 17px/1.55 var(--body)}
+a{color:var(--ink)}
+:focus-visible{outline:3px solid var(--amberdot);outline-offset:2px}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+.demo{background:var(--amberbg);border-bottom:2px solid var(--amberdot);font-size:15px;padding:10px 0}
+.demo strong{font-weight:700}
+header.top{padding:28px 0 8px}
+.brand{font:700 15px var(--body);color:var(--muted);letter-spacing:.02em}
+h1{font:800 clamp(28px,5vw,40px)/1.15 var(--head);color:var(--ink);margin:6px 0 6px}
+.meta{color:var(--muted);margin:0}
+.hero{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin:24px 0 8px}
+.big{background:var(--ink);color:#fff;border-radius:6px;padding:26px 28px}
+.big .lab{font:600 16px var(--body);opacity:.85}
+.big .fig{font:800 clamp(52px,12vw,84px)/1 var(--head);margin:6px 0 10px;letter-spacing:-.02em}
+.big .sub{font-size:15px;opacity:.85;margin:0}
+.side{display:grid;gap:16px}
+.card{border:1px solid var(--rule);border-radius:6px;padding:16px 18px;background:var(--wash)}
+.card .v{font:700 28px/1.1 var(--head);color:var(--ink)}
+.card .l{color:var(--muted);font-size:15px;margin-top:4px}
+.counts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+section{margin:44px 0 0}
+.band{color:#fff;padding:12px 20px;border-radius:6px 6px 0 0;margin:0}
+.band h2{font:700 24px/1.2 var(--head);margin:0}
+.band p{margin:2px 0 0;font-size:15px;opacity:.92}
+.b1{background:var(--ink)}.b2{background:var(--teal)}.b3{background:var(--slate)}
+.panel{border:1px solid var(--rule);border-top:0;border-radius:0 0 6px 6px;padding:18px 20px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th{text-align:left;font:700 14px var(--body);color:var(--muted);padding:8px 10px;border-bottom:2px solid var(--ink);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+td.num,th.num{text-align:right;white-space:nowrap}
+td.amt{text-align:right;font:700 18px var(--head);white-space:nowrap}
+td.src{color:var(--muted);font-size:14px;white-space:nowrap}
+td.rt{width:1%;white-space:nowrap}
+tr.grp td{background:var(--wash);font:700 14px var(--body);color:var(--ink);padding:8px 10px;border-bottom:1px solid var(--rule)}
+tr.sub td{border-bottom:1px dotted var(--rule);font-size:15px;padding-top:5px;padding-bottom:5px}
+tr.sub td:nth-child(2){padding-left:26px;color:var(--muted)}
+tr.sub td.amt{font-size:15px;font-weight:600}
+tr.r td.amt{color:var(--red)}tr.y td.amt{color:var(--amber)}tr.g td.amt{color:var(--muted);font:600 14px var(--body)}
+.pill{display:inline-block;font:700 13px var(--body);padding:2px 9px;border-radius:99px;white-space:nowrap}
+.pill::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:currentColor}
+.pill.r{background:var(--redbg);color:var(--red)}.pill.y{background:var(--amberbg);color:var(--amber)}.pill.g{background:var(--greenbg);color:var(--green)}
+.tag{display:inline-block;font:600 12px var(--body);padding:1px 8px;border-radius:99px;border:1px solid currentColor;margin-top:3px;white-space:nowrap}
+.tag.f{color:var(--ink)}.tag.e{color:var(--teal)}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:3px solid var(--ink);margin-top:14px;padding-top:12px}
+.total .k{font-weight:700}.total .v{font:800 28px var(--head);color:var(--red)}
+.total.t2 .v{color:var(--teal)}
+.total small{display:block;color:var(--muted);font-weight:400;font-size:14px}
+.bars{margin:6px 0 0}
+.bar{display:grid;grid-template-columns:140px 1fr 90px;gap:10px;align-items:center;margin:8px 0;font-size:15px}
+.bar i{display:block;height:16px;background:var(--red);border-radius:3px}
+.bar i.o{background:#c9ced8}
+.bar b{font-family:var(--head);text-align:right}
+h3{font:700 19px var(--head);color:var(--ink);margin:22px 0 6px}
+.callout{border:2px solid var(--ink);border-radius:6px;padding:16px 20px;background:var(--wash);margin-top:22px}
+.callout h3{margin-top:0}
+ul{margin:8px 0 0;padding-left:22px}li{margin:4px 0}
+.note{color:var(--muted);font-size:15px}
+.estimate{border-left:4px solid var(--teal);padding:4px 0 4px 14px;margin:0 0 14px}
+details{margin-top:14px}summary{cursor:pointer;font-weight:600}
+.cta{background:var(--wash);border:1px solid var(--rule);border-radius:6px;padding:24px;margin-top:44px}
+.cta h2{font:800 26px/1.2 var(--head);color:var(--ink);margin:0 0 8px}
+.btn{display:inline-block;background:var(--ink);color:#fff;text-decoration:none;font-weight:700;padding:12px 22px;border-radius:6px;margin-top:10px}
+.btn:hover{background:#0c1530}
+.files a{margin-right:14px;white-space:nowrap}
+footer{margin:36px 0 48px;color:var(--muted);font-size:14px}
+@media(max-width:700px){.hero{grid-template-columns:1fr}.bar{grid-template-columns:100px 1fr 80px}table{font-size:15px}.panel{padding:14px 12px}}
+@media print{.demo{background:#fff}.btn{display:none}section,tr,.callout{break-inside:avoid}body{font-size:13px}.big{-webkit-print-color-adjust:exact;print-color-adjust:exact}.band,.pill,.bar i{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="demo"><div class="wrap"><strong>Demo.</strong> Larkspur Electrical &amp; HVAC Supply is a fictional distributor, and every figure on this page comes from sample files made for this demo.</div></div>
+<div class="wrap">
+<header class="top">
+<div class="brand">Skilled Edge</div>
+<h1>Margin Loss Mini-Audit</h1>
+<p class="meta">Prepared for Larkspur Electrical &amp; HVAC Supply (fictional) &middot; 90 days, Jun 29 to Sep 26, 2026 &middot; 5,793 invoice lines, 1,500 invoices, 260 credits</p>
+</header>
+
+<div class="hero">
+<div class="big">
+<div class="lab">Likely avoidable margin loss, 90 days</div>
+<div class="fig">$73,015</div>
+<p class="sub">About 1.1% of sales. If the same pattern held all year, roughly $296,000 a year (estimate).</p>
+</div>
+<div class="side">
+<div class="card"><div class="v">$6.59M</div><div class="l">in sales reviewed across the three files</div></div>
+<div class="card"><div class="v">$17,807</div><div class="l">more needs your confirmation. It is not in the headline.</div></div>
+</div>
+</div>
+
+<section id="part1">
+<div class="band b1"><h2>Part 1: Margin Loss</h2><p>Built from three exports. Every finding traces to a row in the files.</p></div>
+<div class="panel">
+<p class="note" style="margin-top:0"><span class="pill r">Red</span> likely avoidable, evidence is in the files. <span class="pill y">Yellow</span> needs your confirmation. <span class="pill g">Green</span> checked, no leak.</p>
+<div class="scroll"><table>
+<thead><tr><th>Rating</th><th>Finding</th><th>File</th><th class="num">Items</th><th class="num">90-day $</th></tr></thead>
+<tbody>
+<tr class="grp"><td colspan="5">Likely avoidable (counted in the headline)</td></tr>
+<tr class="r"><td class="rt"><span class="pill r">Red</span></td><td>Priced below the matrix with no approval on file</td><td class="src">invoice_lines</td><td class="num">286 lines</td><td class="amt">$24,038</td></tr>
+<tr class="r"><td class="rt"><span class="pill r">Red</span></td><td>Freight not billed on orders under the free-freight threshold, including 27 expedited shipments ($4,280)</td><td class="src">freight_billing</td><td class="num">88 orders</td><td class="amt">$9,383</td></tr>
+<tr class="r"><td class="rt"><span class="pill r">Red</span></td><td>Accessorial charges paid to carriers but not billed (liftgate, residential, inside delivery, redelivery)</td><td class="src">freight_billing</td><td class="num">56 shipments</td><td class="amt">$4,131</td></tr>
+<tr class="r"><td class="rt"><span class="pill r">Red</span></td><td>Credits that look avoidable</td><td class="src">credits_adjustments</td><td class="num">96 credits</td><td class="amt">$35,463</td></tr>
+<tr class="r sub"><td class="rt"><span class="pill r">Red</span></td><td>Pricing errors</td><td class="src">credits_adjustments</td><td class="num">39</td><td class="amt">$14,256</td></tr>
+<tr class="r sub"><td class="rt"><span class="pill r">Red</span></td><td>Wrong item picked</td><td class="src">credits_adjustments</td><td class="num">17</td><td class="amt">$10,004</td></tr>
+<tr class="r sub"><td class="rt"><span class="pill r">Red</span></td><td>Duplicate credits on the same invoice</td><td class="src">credits_adjustments</td><td class="num">11</td><td class="amt">$3,077</td></tr>
+<tr class="r sub"><td class="rt"><span class="pill r">Red</span></td><td>Damaged freight with no carrier claim filed</td><td class="src">credits_adjustments</td><td class="num">29</td><td class="amt">$8,125</td></tr>
+<tr class="grp"><td colspan="5">Needs your confirmation (not in the headline)</td></tr>
+<tr class="y"><td class="rt"><span class="pill y">Yellow</span></td><td>Priced below the matrix with verbal approval only</td><td class="src">invoice_lines</td><td class="num">74 lines</td><td class="amt">$5,961</td></tr>
+<tr class="y"><td class="rt"><span class="pill y">Yellow</span></td><td>Freight billed for less than the carrier charged</td><td class="src">freight_billing</td><td class="num">46 orders</td><td class="amt">$2,275</td></tr>
+<tr class="y"><td class="rt"><span class="pill y">Yellow</span></td><td>Detention charges not billed (may be customer-caused or ours)</td><td class="src">freight_billing</td><td class="num">19 shipments</td><td class="amt">$3,747</td></tr>
+<tr class="y"><td class="rt"><span class="pill y">Yellow</span></td><td>Restocking fees waived on returns</td><td class="src">credits_adjustments</td><td class="num">12 returns</td><td class="amt">$471</td></tr>
+<tr class="y"><td class="rt"><span class="pill y">Yellow</span></td><td>Goodwill credits with no approver recorded</td><td class="src">credits_adjustments</td><td class="num">14 credits</td><td class="amt">$5,354</td></tr>
+<tr class="grp"><td colspan="5">Checked, no leak found</td></tr>
+<tr class="g"><td class="rt"><span class="pill g">Green</span></td><td>Lines priced within 2% of the matrix (92.0% of all lines)</td><td class="src">invoice_lines</td><td class="num">5,328 lines</td><td class="amt">not counted</td></tr>
+<tr class="g"><td class="rt"><span class="pill g">Green</span></td><td>Below-matrix lines with manager approval, within policy</td><td class="src">invoice_lines</td><td class="num">105 lines</td><td class="amt">not counted</td></tr>
+<tr class="g"><td class="rt"><span class="pill g">Green</span></td><td>Orders over the free-freight threshold, shipped free per policy</td><td class="src">freight_billing</td><td class="num">757 orders</td><td class="amt">not counted</td></tr>
+<tr class="g"><td class="rt"><span class="pill g">Green</span></td><td>Credits that look normal: customer-ordered returns, rebates, approved goodwill, damage claims filed</td><td class="src">credits_adjustments</td><td class="num">138 credits</td><td class="amt">not counted</td></tr>
+</tbody></table></div>
+<div class="total"><div class="k">Likely avoidable total<small>Red items only. Yellow is shown separately.</small></div><div class="v">$73,015</div></div>
+
+<h3>Where the pricing leak concentrates</h3>
+<p class="note" style="margin-top:0">Two salespeople account for 97% of the unapproved below-matrix dollars, and wire and breakers account for 97%. That points to a discount habit, which can be fixed with a rule.</p>
+<div class="bars">
+<div class="bar"><span>D. Brooks</span><i style="width:100%"></i><b>$12,481</b></div>
+<div class="bar"><span>S. Evans</span><i style="width:87%"></i><b>$10,802</b></div>
+<div class="bar"><span>Other four reps</span><i class="o" style="width:6%"></i><b>$755</b></div>
+</div>
+
+<div class="callout">
+<h3>What three files can't show</h3>
+<ul>
+<li>Supplier cost changes, and how fast you passed them on to customers.</li>
+<li>Vendor rebates and special pricing you earned but may not have claimed.</li>
+<li>Quotes, so we can't tell a discount that won the order from one that didn't.</li>
+<li>Customer contract prices outside the standard matrix.</li>
+<li>Cost to serve each customer, such as delivery frequency and small-order handling.</li>
+<li>Whether the yellow items were justified. Only your team can say.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="part2">
+<div class="band b2"><h2>Part 2: Time Recoverable (estimate)</h2><p>Sized from your own inputs. Shown separately and never added to Part 1.</p></div>
+<div class="panel">
+<p class="estimate">This is an estimate, not a measurement and not a promise of hours saved. Volumes come from the files. Minutes per touch, recoverable share and hourly rate come from the discovery call.</p>
+<div class="scroll"><table>
+<thead><tr><th>Workflow</th><th class="num">Per week<br><span class="tag f">from your files</span></th><th class="num">Minutes each<br><span class="tag e">from your estimate</span></th><th class="num">Recoverable share<br><span class="tag e">from your estimate</span></th><th class="num">Hours a week recoverable</th></tr></thead>
+<tbody>
+<tr><td>Handling credit memos (excluding order errors)</td><td class="num">17.8</td><td class="num">30</td><td class="num">35%</td><td class="num">3.1</td></tr>
+<tr><td>Correcting freight and accessorial billing</td><td class="num">16.1</td><td class="num">20</td><td class="num">50%</td><td class="num">2.7</td></tr>
+<tr><td>Approving and reworking below-matrix prices</td><td class="num">35.8</td><td class="num">8</td><td class="num">40%</td><td class="num">1.9</td></tr>
+<tr><td>Reworking order errors (wrong item, duplicate credits)</td><td class="num">2.2</td><td class="num">60</td><td class="num">70%</td><td class="num">1.5</td></tr>
+</tbody></table></div>
+<div class="total t2"><div class="k">Estimated recoverable time<small>About 21.2 hours a week go to these workflows today. Dollars use a loaded rate of $40 an hour, from your estimate.</small></div><div class="v">9.2 hrs a week &middot; $19,200 a year</div></div>
+<p class="note">This page sizes the time. It does not say how to recover it. That is the full audit.</p>
+</div>
+</section>
+
+<section id="bridge">
+<div class="band b3"><h2>From findings to fixes</h2><p>The mini-audit shows what is leaking. The full audit shows how to stop it.</p></div>
+<div class="panel">
+<div class="scroll"><table>
+<thead><tr><th>Finding</th><th>What the full audit delivers</th></tr></thead>
+<tbody>
+<tr><td>Below-matrix pricing</td><td>Price gaps by salesperson, customer and product line, a discount-approval rule, and a ranked list of accounts to reprice.</td></tr>
+<tr><td>Unbilled freight</td><td>A written billing rule for the free-freight threshold and for expedited shipments, with an owner.</td></tr>
+<tr><td>Unbilled accessorials</td><td>A step that matches carrier invoices to customer billing, and a policy for detention.</td></tr>
+<tr><td>Avoidable credits</td><td>Root cause by credit type, a carrier claim process for damaged freight, and controls for duplicate credits and waived fees.</td></tr>
+<tr><td>Time recoverable</td><td>Each workflow sized with its owner, the fixes in priority order, and implementation support.</td></tr>
+</tbody></table></div>
+</div>
+</section>
+
+<div class="cta">
+<h2>Next step: a 30-minute closeout call</h2>
+<p>We walk through each finding together and decide what is worth acting on. If it makes sense, the Full Margin Audit is $4,000. It is evidence-based and includes a follow-up review. No result is guaranteed, and you are free to say no.</p>
+<a class="btn" href="mailto:dave@skillededge.io?subject=Margin%20Loss%20Mini-Audit%20closeout%20call">Book the closeout call</a>
+</div>
+
+<details class="files">
+<summary>How we read the files, and the sample data</summary>
+<ul>
+<li>The invoice file carries the system matrix price for each line. A line counts as below matrix when it is more than 2% under it.</li>
+<li>Policy used: orders of $2,500 or more ship free. Expedited shipments and accessorials are always billable.</li>
+<li>Credits are rated by type. Pricing errors, wrong items, duplicates and damaged freight with no carrier claim are red.</li>
+<li>The 90-day total is not scaled to a year except where labeled as an estimate.</li>
+</ul>
+<p class="files"><a href="/demo/data/invoice_lines.csv" download>invoice_lines.csv</a><a href="/demo/data/freight_billing.csv" download>freight_billing.csv</a><a href="/demo/data/credits_adjustments.csv" download>credits_adjustments.csv</a></p>
+</details>
+
+<footer>Skilled Edge Group LLC &middot; skillededge.io &middot; All company names, customers and figures on this page are fictional.</footer>
+</div>
+</body>
+</html>
