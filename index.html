@@ -84,6 +84,15 @@ a{text-decoration:none;color:inherit}
 .footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
 .footer-links a{font-size:12px;color:rgba(255,255,255,0.40);font-family:var(--mono)}
 .footer-copy{font-size:12px;color:rgba(255,255,255,0.30);font-family:var(--mono);width:100%}
+.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:640px){.proof-grid{grid-template-columns:1fr}}
+.proof-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:26px 24px;display:flex;flex-direction:column;justify-content:space-between}
+.proof-quote{font-size:15.5px;line-height:1.65;color:var(--text);margin-bottom:20px}
+.proof-quote strong{color:var(--orange)}
+.proof-who{display:flex;align-items:center;gap:12px}
+.proof-av{width:42px;height:42px;border-radius:50%;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:13px;flex-shrink:0}
+.proof-nm{font-weight:700;font-size:14.5px;color:var(--text)}
+.proof-role{font-size:12.5px;color:var(--mute)}
 </style>
 </head>
 <body>
@@ -185,6 +194,23 @@ a{text-decoration:none;color:inherit}
       <div class="how-card"><div class="how-num">01</div><h3>Find the leak or the loop</h3><p>A short diagnostic on profit leakage, or a walkthrough of the office work that still lives in inboxes and spreadsheets.</p></div>
       <div class="how-card"><div class="how-num">02</div><h3>Build inside tools you own</h3><p>Distributors start with the Margin Exposure Screen. Electrical and CNC operators start with the calculators. Office teams stay in the tools they use. Nothing extra to buy on day one.</p></div>
       <div class="how-card"><div class="how-num">03</div><h3>Leave a system, not a PDF</h3><p>You get the workflow, the Sheet, or the checklist your team can run next week — plus a clear next fix if more is warranted.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section" id="proof">
+  <div class="section-inner">
+    <div class="section-label">Prior client work</div>
+    <h2 class="section-title">Hands-on AI and operations work, already delivered.</h2>
+    <p class="section-sub">Skilled Edge has done this work for operators before. Two clients, in their own words.</p>
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-quote">&ldquo;I thought I already had an optimized system. It found <strong>$90,350 in identified annual waste</strong>. This is outstanding.&rdquo;</div>
+        <div class="proof-who"><div class="proof-av">BV</div><div><div class="proof-nm">Brian Vanfleet</div><div class="proof-role">VP Operations, ITEK</div></div></div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-quote">&ldquo;The onboarding ramp reduction alone was worth it. We stopped hemorrhaging productivity on every new hire cycle.&rdquo;</div>
+        <div class="proof-who"><div class="proof-av">MM</div><div><div class="proof-nm">Michelle Mackey</div><div class="proof-role">COO, MerchPro Logistics</div></div></div>
+      </div>
     </div>
   </div>
 </section>
