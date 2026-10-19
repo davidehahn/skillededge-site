@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Website Chat Assistant for Trade Shops | Skilled Edge</title>
+<meta name="description" content="An AI chat assistant for HVAC, plumbing and electrical websites. Answers from info you approve, emails you callback requests. $300 setup + $249/month." />
+<link rel="canonical" href="https://skillededge.io/chatbot/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="AI Website Chat Assistant for Trade Shops | Skilled Edge" />
+<meta property="og:description" content="Answers common questions from info you approve and emails you callback requests. $300 setup + $249/month, month-to-month." />
+<meta property="og:url" content="https://skillededge.io/chatbot/" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/chatbot/chatbot.css" />
+<!--
+  EDITING: every word on this page and every demo-chatbot answer lives in
+  /chatbot/content.json. You should not need to edit this HTML file.
+  See /chatbot/HOW-TO-EDIT.md.
+-->
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="nav" aria-label="Main">
+  <a class="nav-brand" href="/"><span class="nav-brand-dot" aria-hidden="true"></span>Skilled Edge Group</a>
+  <ul class="nav-links">
+    <li><a href="#demo">Live demo</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#pricing" class="nav-cta">Get started →</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+<noscript><p class="noscript">This page needs JavaScript to show its content. Email <a href="mailto:dave@skillededge.io">dave@skillededge.io</a> for details about the chat assistant service.</p></noscript>
+<p id="load-error" class="noscript" hidden>Sorry, this page didn't load correctly. Please refresh, or email <a href="mailto:dave@skillededge.io">dave@skillededge.io</a>.</p>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow" data-c="page.hero.eyebrow"></div>
+    <h1 data-c="page.hero.headline"></h1>
+    <p class="hero-sub" data-c="page.hero.sub"></p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn-primary" data-c="page.hero.primaryButton"></a>
+      <a href="#pricing" class="btn-ghost" data-c="page.hero.secondaryButton"></a>
+    </div>
+    <p class="trust" data-c="page.hero.trustLine"></p>
+  </div>
+</header>
+
+<section class="section" aria-labelledby="problem-title">
+  <div class="section-inner">
+    <div class="section-label" data-c="page.problem.label"></div>
+    <h2 class="section-title" id="problem-title" data-c="page.problem.title"></h2>
+    <p class="section-sub" data-c="page.problem.text"></p>
+  </div>
+</section>
+
+<section class="section alt" id="how" aria-labelledby="how-title">
+  <div class="section-inner">
+    <div class="section-label" data-c="page.steps.label"></div>
+    <h2 class="section-title" id="how-title" data-c="page.steps.title"></h2>
+    <ol class="grid3 steps-list" id="steps"></ol>
+  </div>
+</section>
+
+<section class="section" id="demo" aria-labelledby="demo-title">
+  <div class="section-inner">
+    <div class="section-label" data-c="page.demo.label"></div>
+    <h2 class="section-title" id="demo-title" data-c="page.demo.title"></h2>
+    <p class="section-sub" data-c="page.demo.text"></p>
+
+    <div class="chat" id="chat">
+      <div class="mode" role="group" aria-label="Demo mode">
+        <button type="button" class="mode-btn" id="mode-sales" aria-pressed="true" data-c="bot.modeSalesLabel"></button>
+        <button type="button" class="mode-btn" id="mode-shop" aria-pressed="false" data-c="bot.modeShopLabel"></button>
+      </div>
+      <div class="chat-head">
+        <div><b id="bot-name"></b><small id="bot-tag"></small></div>
+      </div>
+      <p class="chat-notice" id="chat-notice" data-c="bot.notice"></p>
+      <p class="chat-fictional" id="chat-fictional" hidden></p>
+      <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Chat messages"></div>
+      <div class="chips" id="chat-chips" aria-label="Suggested questions"></div>
+      <form class="chat-form" id="chat-form" autocomplete="off">
+        <label for="chat-input" class="sr-only">Type your question</label>
+        <input id="chat-input" type="text" placeholder="Type your question…" />
+        <button type="submit" class="btn-send">Send</button>
+      </form>
+      <p class="chat-count" id="chat-count" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<!--
+  VIDEO (Loom): script written by Claude, recorded and uploaded by Dave.
+  To publish it, paste the Loom share link into "loomUrl" in /chatbot/content.json.
+  The page turns it into this embed automatically (click-to-load, 16:9):
+  <iframe src="https://www.loom.com/embed/VIDEO_ID?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true"
+          title="Walkthrough video" loading="lazy" allowfullscreen></iframe>
+  While loomUrl is empty, a "Video coming soon" card shows instead.
+-->
+<section class="section alt" id="video" aria-labelledby="video-title">
+  <div class="section-inner">
+    <div class="section-label" data-c="page.video.label"></div>
+    <h2 class="section-title" id="video-title" data-c="page.video.title"></h2>
+    <p class="section-sub" data-c="page.video.text"></p>
+    <div id="video-slot"></div>
+  </div>
+</section>
+
+<section class="section" id="included" aria-labelledby="inc-title">
+  <div class="section-inner">
+    <div class="section-label" data-c="page.included.label"></div>
+    <h2 class="section-title" id="inc-title" data-c="page.included.title"></h2>
+    <div class="grid2">
+      <div class="card"><h3 data-c="page.included.includedHeading"></h3><ul class="list yes" id="inc-yes"></ul></div>
+      <div class="card"><h3 data-c="page.included.notIncludedHeading"></h3><ul class="list no" id="inc-no"></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt" id="pricing" aria-labelledby="price-title">
+  <div class="section-inner">
+    <div class="section-label" data-c="page.pricing.label"></div>
+    <h2 class="section-title" id="price-title" data-c="page.pricing.title"></h2>
+    <div class="price-card">
+      <div class="price-row">
+        <div><span class="price" data-c="page.pricing.setupFee"></span> <span class="price-lbl" data-c="page.pricing.setupLabel"></span></div>
+        <div class="plus" aria-hidden="true">+</div>
+        <div><span class="price" data-c="page.pricing.monthlyFee"></span> <span class="price-lbl" data-c="page.pricing.monthlyLabel"></span></div>
+      </div>
+      <ul class="list" id="price-points"></ul>
+      <a class="btn-primary btn-block" id="buy-btn" href="#free-demo"></a>
+      <p class="price-near" data-c="page.pricing.summary"></p>
+      <p class="under" id="buy-under"></p>
+      <a class="text-link" href="#free-demo" data-c="page.pricing.secondaryLink"></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="safety" aria-labelledby="safety-title">
+  <div class="section-inner">
+    <div class="section-label" data-c="page.safety.label"></div>
+    <h2 class="section-title" id="safety-title" data-c="page.safety.title"></h2>
+    <div class="grid3" id="safety-items"></div>
+  </div>
+</section>
+
+<section class="section alt faq" id="faq" aria-labelledby="faq-title">
+  <div class="section-inner">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title" id="faq-title" data-c="page.faqTitle"></h2>
+    <div id="faq-list"></div>
+  </div>
+</section>
+
+<section class="cta-section" id="free-demo" aria-labelledby="fd-title">
+  <div class="cta-inner">
+    <div class="section-label" data-c="page.freeDemo.label"></div>
+    <h2 id="fd-title" data-c="page.freeDemo.title"></h2>
+    <p data-c="page.freeDemo.text"></p>
+    <form id="fd-form" novalidate>
+      <div class="field"><label for="fd-name">Your name</label><input id="fd-name" name="name" required autocomplete="name"></div>
+      <div class="field"><label for="fd-biz">Business name</label><input id="fd-biz" name="business" required autocomplete="organization"></div>
+      <div class="field"><label for="fd-url">Website URL</label><input id="fd-url" name="website" type="url" required placeholder="https://" autocomplete="url"></div>
+      <div class="field"><label for="fd-email">Email</label><input id="fd-email" name="email" type="email" required autocomplete="email"></div>
+      <div class="field"><label for="fd-phone">Phone (optional)</label><input id="fd-phone" name="phone" type="tel" autocomplete="tel"></div>
+      <div class="field"><label for="fd-trade">Trade</label>
+        <select id="fd-trade" name="trade"><option>HVAC</option><option>Plumbing</option><option>Electrical</option><option>Other</option></select></div>
+      <div class="hp" aria-hidden="true"><label for="fd-hp">Leave blank</label><input id="fd-hp" name="company_url" tabindex="-1" autocomplete="off"></div>
+      <button type="submit" class="btn-primary" data-c="page.freeDemo.button"></button>
+      <p class="form-msg" id="fd-msg" role="status" aria-live="polite"></p>
+    </form>
+    <p class="cta-note" data-c="page.freeDemo.note"></p>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="footer-brand">⬡ Skilled Edge Group LLC</div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
+    <li><a href="/security/">Security</a></li>
+    <li><a id="footer-email" href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
+  </ul>
+  <div class="footer-copy" data-c="page.footer"></div>
+</footer>
+
+<div class="sticky-bar" aria-label="Quick actions">
+  <a href="#demo" class="sb-ghost">Try the demo</a>
+  <a href="#pricing" class="sb-primary">Get started</a>
+</div>
+
+<script src="/chatbot/chatbot.js" defer></script>
+</body>
+</html>
