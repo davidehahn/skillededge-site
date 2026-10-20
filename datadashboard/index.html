@@ -1,0 +1,2433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Sample Business Intelligence Snapshot for an HVAC and Electrical Contractor | Skilled Edge</title>
+<meta name="description" content="Sample monthly Business Intelligence Snapshot for a fictional HVAC and electrical contractor: financials, online presence, competition and local market on one page." />
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/datadashboard/dashboard.css" />
+<!--
+  SAMPLE DEMO PAGE (noindex). All business figures are fictional and are stored in the JSON block
+  id="snapshot-data" near the bottom of this file. Every number on the page is computed from it
+  by /datadashboard/dashboard.js, so totals always tie out. Part D items are real, sourced public
+  facts checked on the "asOf" date shown on each card.
+-->
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="nav" aria-label="Main">
+  <a class="nav-brand" href="/"><span class="nav-brand-dot" aria-hidden="true"></span>Skilled Edge Group</a>
+  <a class="nav-cta" href="mailto:dave@skillededge.io?subject=Business%20Intelligence%20Snapshot%3A%2015-minute%20look">Request a 15-minute look</a>
+</nav>
+<div class="sample-bar" role="note">SAMPLE DATA, fictional business</div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Monthly Business Intelligence Snapshot · Sample</div>
+    <h1>Your whole business on one page, every month.</h1>
+    <p>Financials, online presence, competition and the local market and rules for an HVAC and electrical contractor. Rebuilt monthly from the files you drop in a shared folder plus published public sources. Get the headline in 2 minutes, then drill into any section.</p>
+    <p class="client"><b>Example Heating &amp; Electric</b> (fictional) · 9 employees · Fairfax County, Virginia · Report month: <span data-month>September 2026</span></p>
+  </div>
+</header>
+
+<nav class="secnav" aria-label="Report sections">
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#financials">Financials</a></li>
+    <li><a href="#online">Online</a></li>
+    <li><a href="#competition">Competition</a></li>
+    <li><a href="#market">Local Market</a></li>
+  </ul>
+</nav>
+
+<main id="main">
+<noscript><p class="noscript">This sample report needs JavaScript to calculate its figures. Email <a href="mailto:dave@skillededge.io">dave@skillededge.io</a> to see it another way.</p></noscript>
+<p id="load-error" class="noscript" hidden>Sorry, this sample didn't load correctly. Please refresh, or email <a href="mailto:dave@skillededge.io">dave@skillededge.io</a>.</p>
+
+<!-- PART 0: OVERVIEW -->
+<section class="section" id="overview" aria-labelledby="ov-title">
+  <div class="section-inner">
+    <div class="section-label">Overview · <span data-month></span></div>
+    <h2 class="section-title" id="ov-title">The 2-minute headline</h2>
+    <div class="kpis" id="ov-headline"></div>
+    <div class="sub"><h3>Scorecard</h3><div class="scores" id="ov-scores"></div><p class="note">Scores are 0 to 100. How each is calculated is listed under Data confidence.</p></div>
+    <div class="sub"><h3>Top 5 actions this month (ranked by estimated dollar impact)</h3><ol class="actions" id="ov-actions"></ol></div>
+    <div class="sub"><h3>What changed since last month</h3><ul class="changes" id="ov-changes"></ul></div>
+  </div>
+</section>
+
+<!-- PART A: FINANCIALS -->
+<section class="section alt" id="financials" aria-labelledby="fin-title">
+  <div class="section-inner">
+    <div class="section-label">Part A · Financial snapshot</div>
+    <h2 class="section-title" id="fin-title">Money in, money out, what's left</h2>
+    <p class="section-sub">Fictional sample figures for <span data-month></span> vs <span data-prev-month></span>. Tap any section to open it.</p>
+    <details class="drill" open><summary>Bottom line</summary><div class="drill-body" id="fin-bottom"></div></details>
+    <details class="drill"><summary>Revenue by service line (with gross margin)</summary><div class="drill-body" id="fin-service"></div></details>
+    <details class="drill"><summary>Revenue by lead channel</summary><div class="drill-body" id="fin-channel"></div></details>
+    <details class="drill"><summary>Where the money went</summary><div class="drill-body" id="fin-money"></div></details>
+    <details class="drill"><summary>Decisions: ad return, cost per customer, revenue per employee</summary><div class="drill-body" id="fin-decisions"></div></details>
+    <details class="drill"><summary>Top performers</summary><div class="drill-body" id="fin-performers"></div></details>
+    <details class="drill"><summary>Operations health</summary><div class="drill-body" id="fin-ops"></div></details>
+    <details class="drill"><summary>Cash and tax</summary><div class="drill-body" id="fin-tax"></div></details>
+    <details class="drill" open><summary>Biggest leak and one action</summary><div class="drill-body" id="fin-leak"></div></details>
+  </div>
+</section>
+
+<!-- PART B: ONLINE -->
+<section class="section" id="online" aria-labelledby="on-title">
+  <div class="section-inner">
+    <div class="section-label">Part B · Online presence</div>
+    <h2 class="section-title" id="on-title">How customers find you</h2>
+    <p class="section-sub">Fictional sample data, built from public profiles and the owner's own analytics.</p>
+    <details class="drill" open><summary>Google reviews</summary><div class="drill-body" id="online-reviews"></div></details>
+    <details class="drill"><summary>Google Business Profile</summary><div class="drill-body" id="online-gbp"></div></details>
+    <details class="drill"><summary>Local placement (10 keywords × 3 areas)</summary><div class="drill-body" id="online-local"></div></details>
+    <details class="drill"><summary>Website health</summary><div class="drill-body" id="online-web"></div></details>
+    <details class="drill"><summary>Listings consistency</summary><div class="drill-body" id="online-listings"></div></details>
+    <details class="drill"><summary>AI visibility (12 prompts × 4 AI tools)</summary><div class="drill-body" id="online-ai"></div></details>
+  </div>
+</section>
+
+<!-- PART C: COMPETITION -->
+<section class="section alt" id="competition" aria-labelledby="co-title">
+  <div class="section-inner">
+    <div class="section-label">Part C · Competition</div>
+    <h2 class="section-title" id="co-title">You vs Competitors A, B and C</h2>
+    <p class="section-sub">Competitors are fictional with invented figures. In a real report this comes from public sources only (review profiles, map results, public ad libraries, job boards, websites), refreshed monthly.</p>
+    <details class="drill" open><summary>Side-by-side</summary><div class="drill-body" id="comp-table"></div></details>
+    <details class="drill"><summary>Positioning gaps</summary><div class="drill-body" id="comp-gaps"></div></details>
+    <details class="drill"><summary>What changed in the market this month</summary><div class="drill-body" id="comp-moves"></div></details>
+    <p class="note">Method: public sources only, refreshed monthly. No private competitor data is used.</p>
+  </div>
+</section>
+
+<!-- PART D: LOCAL MARKET (real, sourced) -->
+<section class="section" id="market" aria-labelledby="mk-title">
+  <div class="section-inner">
+    <div class="section-label">Part D · Local market and compliance</div>
+    <h2 class="section-title" id="mk-title">Rules, prices and demand that affect you</h2>
+    <p class="section-sub">Unlike the rest of this sample, these items are real. Each was checked against its published source on the "as of" date shown. Headlines are paraphrased. Not legal advice.</p>
+    <div class="tabs" role="tablist" aria-label="Local market report">
+      <button class="tab" role="tab" id="tab-fairfax" aria-controls="panel-fairfax" aria-selected="true">Fairfax County HVAC Activity</button>
+      <button class="tab" role="tab" id="tab-virginia" aria-controls="panel-virginia" aria-selected="false" tabindex="-1">Virginia HVAC</button>
+    </div>
+    <div role="tabpanel" id="panel-fairfax" aria-labelledby="tab-fairfax" tabindex="0"></div>
+    <div role="tabpanel" id="panel-virginia" aria-labelledby="tab-virginia" tabindex="0" hidden></div>
+    <div class="card" id="mk-checklist"></div>
+  </div>
+</section>
+
+<!-- PART E: HOW IT WORKS -->
+<section class="section alt" id="how" aria-labelledby="how-title">
+  <div class="section-inner">
+    <div class="section-label">Part E · How it works</div>
+    <h2 class="section-title" id="how-title">Rebuilt monthly from files you already have</h2>
+    <ol class="steps">
+      <li><b>Drop your files</b>Payroll export, bank statement, jobs and bookings CSV, ad spend exports, lease and vendor invoices into a shared folder. Add a 2-minute voice note on what you care about this month.</li>
+      <li><b>Public data is added</b>Your online presence and competition come from your public profiles and public sources. Local rules, prices and demand come from published government and industry sources.</li>
+      <li><b>Your snapshot is rebuilt</b>Every month you get one page like this, with the headline up top and the detail underneath.</li>
+    </ol>
+    <div class="card"><h3>Honest limits</h3><ul class="list">
+      <li>Figures are only as complete as the files provided.</li>
+      <li>Public data can be incomplete or out of date.</li>
+      <li>Tax lines are estimates to help you set money aside.</li>
+      <li>Nothing here is legal, tax or accounting advice.</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- DATA CONFIDENCE -->
+<section class="section" id="confidence" aria-labelledby="dc-title">
+  <div class="section-inner">
+    <div class="section-label">Data confidence</div>
+    <h2 class="section-title" id="dc-title">What tied out, what's estimated, what's sourced</h2>
+    <div class="grid2">
+      <div class="card"><h3>Tied out (checked automatically on this page)</h3><div id="dc-tied"></div></div>
+      <div class="card"><h3>Estimated</h3><ul class="list">
+        <li>Tax set-aside (flat 24% of positive net profit)</li>
+        <li>Field labor split by service line (by logged hours)</li>
+        <li>Dollar impact of each action, and value of closing the review gap (math and assumptions shown under each action)</li>
+        <li>Callback cost (unbilled labor and parts on return visits)</li>
+      </ul>
+      <h3 style="margin-top:14px">Could not be verified</h3><ul class="list">
+        <li id="dc-unmatched"></li>
+        <li>Rank and AI results are sampled checks and can differ by device and location.</li>
+        <li>Part D: items that could not be confirmed at a working source were left out.</li>
+      </ul></div>
+    </div>
+    <div class="card"><h3>How the scores are calculated</h3><div id="dc-scores"></div></div>
+    <div class="card"><h3>Part D sources</h3><div id="dc-sources"></div></div>
+  </div>
+</section>
+
+<section class="cta-section" aria-labelledby="cta-title">
+  <h2 id="cta-title">Want to see yours?</h2>
+  <p>Send a short email and we'll set up a 15-minute look at what your snapshot would show. No forms, no data needed to start.</p>
+  <a class="btn-primary" href="mailto:dave@skillededge.io?subject=Business%20Intelligence%20Snapshot%3A%2015-minute%20look">Request a 15-minute look</a>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="footer-brand">⬡ Skilled Edge Group LLC</div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
+    <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
+  </ul>
+  <div class="footer-sample">SAMPLE DATA, fictional business</div>
+  <div class="footer-copy">Example Heating &amp; Electric, its staff and Competitors A, B and C are fictional. Part D items are real public facts as of the dates shown. © 2026 Skilled Edge Group LLC.</div>
+</footer>
+
+<script type="application/json" id="snapshot-data">
+{
+ "meta": {
+  "client": "Example Heating & Electric",
+  "sampleLabel": "SAMPLE DATA, fictional business",
+  "location": "Fairfax County, Virginia",
+  "employees": 9,
+  "currentMonth": "2026-09",
+  "previousMonth": "2026-08",
+  "monthLabels": {
+   "2026-09": "September 2026",
+   "2026-08": "August 2026"
+  },
+  "taxRate": 0.24,
+  "reportBuilt": "2026-10-19",
+  "ctaEmail": "dave@skillededge.io"
+ },
+ "staff": [
+  {
+   "id": "owner",
+   "name": "Mark D.",
+   "role": "Owner (estimates and sells)",
+   "type": "owner",
+   "trade": "Sales and estimating",
+   "tenureYrs": 16,
+   "salary": 6500,
+   "burdenRate": 0.1
+  },
+  {
+   "id": "office",
+   "name": "Lena P.",
+   "role": "Office manager / dispatcher",
+   "type": "office",
+   "trade": "Office",
+   "tenureYrs": 7,
+   "rate": 25,
+   "burdenRate": 0.14
+  },
+  {
+   "id": "ray",
+   "name": "Ray K.",
+   "role": "Senior HVAC tech",
+   "type": "tech",
+   "trade": "HVAC",
+   "tenureYrs": 14,
+   "rate": 41,
+   "burdenRate": 0.18
+  },
+  {
+   "id": "luis",
+   "name": "Luis M.",
+   "role": "HVAC and electrical tech",
+   "type": "tech",
+   "trade": "HVAC + electrical",
+   "tenureYrs": 6,
+   "rate": 32,
+   "burdenRate": 0.18
+  },
+  {
+   "id": "dana",
+   "name": "Dana W.",
+   "role": "Electrician",
+   "type": "tech",
+   "trade": "Electrical",
+   "tenureYrs": 9,
+   "rate": 35,
+   "burdenRate": 0.18
+  },
+  {
+   "id": "chris",
+   "name": "Chris B.",
+   "role": "HVAC install tech",
+   "type": "tech",
+   "trade": "HVAC installs",
+   "tenureYrs": 4,
+   "rate": 29,
+   "burdenRate": 0.18
+  },
+  {
+   "id": "jordan",
+   "name": "Jordan T.",
+   "role": "Electrical and HVAC tech",
+   "type": "tech",
+   "trade": "Electrical + HVAC",
+   "tenureYrs": 2,
+   "rate": 26,
+   "burdenRate": 0.18
+  },
+  {
+   "id": "sam",
+   "name": "Sam R.",
+   "role": "Helper",
+   "type": "helper",
+   "trade": "Helper",
+   "tenureYrs": 1,
+   "rate": 19,
+   "burdenRate": 0.16
+  },
+  {
+   "id": "alex",
+   "name": "Alex N.",
+   "role": "Helper",
+   "type": "helper",
+   "trade": "Helper",
+   "tenureYrs": 1,
+   "rate": 18,
+   "burdenRate": 0.16
+  }
+ ],
+ "months": {
+  "2026-09": {
+   "serviceLines": [
+    {
+     "name": "Residential repair",
+     "revenue": 38600,
+     "materials": 7900,
+     "laborHours": 248
+    },
+    {
+     "name": "Replacement / installs",
+     "revenue": 62800,
+     "materials": 28600,
+     "laborHours": 296
+    },
+    {
+     "name": "Maintenance agreements (recurring)",
+     "revenue": 9400,
+     "materials": 1300,
+     "laborHours": 92
+    },
+    {
+     "name": "Electrical service",
+     "revenue": 27900,
+     "materials": 6400,
+     "laborHours": 186
+    },
+    {
+     "name": "Commercial service",
+     "revenue": 16700,
+     "materials": 4500,
+     "laborHours": 104
+    },
+    {
+     "name": "New construction",
+     "revenue": 7000,
+     "materials": 3700,
+     "laborHours": 58
+    }
+   ],
+   "channels": [
+    {
+     "name": "Google Ads",
+     "revenue": 30800,
+     "spend": 3300,
+     "newCustomers": 21,
+     "paid": true
+    },
+    {
+     "name": "Google Local Services",
+     "revenue": 21400,
+     "spend": 1700,
+     "newCustomers": 17,
+     "paid": true
+    },
+    {
+     "name": "Meta",
+     "revenue": 6200,
+     "spend": 900,
+     "newCustomers": 6,
+     "paid": true
+    },
+    {
+     "name": "Marketplace lead service",
+     "revenue": 1900,
+     "spend": 2500,
+     "newCustomers": 4,
+     "paid": true
+    },
+    {
+     "name": "Direct mail",
+     "revenue": 5300,
+     "spend": 700,
+     "newCustomers": 5,
+     "paid": true
+    },
+    {
+     "name": "Referrals",
+     "revenue": 24600,
+     "spend": 0,
+     "newCustomers": 14,
+     "paid": false
+    },
+    {
+     "name": "Repeat customers",
+     "revenue": 46500,
+     "spend": 0,
+     "newCustomers": 0,
+     "paid": false
+    },
+    {
+     "name": "Organic website",
+     "revenue": 25700,
+     "spend": 0,
+     "newCustomers": 15,
+     "paid": false
+    }
+   ],
+   "hours": {
+    "owner": [
+     200,
+     0
+    ],
+    "office": [
+     172,
+     6
+    ],
+    "ray": [
+     172,
+     4
+    ],
+    "luis": [
+     172,
+     22
+    ],
+    "dana": [
+     172,
+     18
+    ],
+    "chris": [
+     172,
+     3
+    ],
+    "jordan": [
+     168,
+     0
+    ],
+    "sam": [
+     172,
+     2
+    ],
+    "alex": [
+     160,
+     0
+    ]
+   },
+   "techs": {
+    "ray": {
+     "revenue": 31000,
+     "materials": 11200,
+     "jobs": 46,
+     "opportunities": 30,
+     "sold": 12,
+     "callbacks": 1,
+     "callbackCost": 200,
+     "agreementsSold": 3,
+     "eligibleVisits": 30,
+     "billableHours": 118
+    },
+    "luis": {
+     "revenue": 41000,
+     "materials": 10900,
+     "jobs": 72,
+     "opportunities": 41,
+     "sold": 25,
+     "callbacks": 0,
+     "callbackCost": 0,
+     "agreementsSold": 13,
+     "eligibleVisits": 44,
+     "billableHours": 162
+    },
+    "dana": {
+     "revenue": 35100,
+     "materials": 9600,
+     "jobs": 63,
+     "opportunities": 33,
+     "sold": 18,
+     "callbacks": 1,
+     "callbackCost": 150,
+     "agreementsSold": 6,
+     "eligibleVisits": 31,
+     "billableHours": 151
+    },
+    "chris": {
+     "revenue": 32000,
+     "materials": 15200,
+     "jobs": 27,
+     "opportunities": 18,
+     "sold": 9,
+     "callbacks": 6,
+     "callbackCost": 2100,
+     "agreementsSold": 4,
+     "eligibleVisits": 20,
+     "billableHours": 128
+    },
+    "jordan": {
+     "revenue": 23300,
+     "materials": 5500,
+     "jobs": 49,
+     "opportunities": 26,
+     "sold": 12,
+     "callbacks": 2,
+     "callbackCost": 250,
+     "agreementsSold": 7,
+     "eligibleVisits": 33,
+     "billableHours": 121
+    }
+   },
+   "vehicles": [
+    {
+     "name": "Fuel",
+     "amount": 2900
+    },
+    {
+     "name": "Truck payments and leases",
+     "amount": 3400
+    },
+    {
+     "name": "Vehicle maintenance",
+     "amount": 900
+    },
+    {
+     "name": "Tools and equipment",
+     "amount": 800
+    }
+   ],
+   "overhead": [
+    {
+     "name": "Insurance (liability, workers comp, auto)",
+     "amount": 5600
+    },
+    {
+     "name": "Rent and utilities",
+     "amount": 6500
+    },
+    {
+     "name": "Permits and licenses",
+     "amount": 1350
+    },
+    {
+     "name": "Card and financing fees",
+     "amount": 4050
+    },
+    {
+     "name": "Uniforms and training",
+     "amount": 700
+    },
+    {
+     "name": "Office, phone and misc",
+     "amount": 1400
+    }
+   ],
+   "software": [
+    {
+     "name": "Field service software",
+     "amount": 389
+    },
+    {
+     "name": "Accounting software",
+     "amount": 90
+    },
+    {
+     "name": "Business phone system",
+     "amount": 180
+    },
+    {
+     "name": "Fleet GPS tracking",
+     "amount": 129
+    },
+    {
+     "name": "Fleet GPS tracking",
+     "amount": 129,
+     "duplicate": true
+    },
+    {
+     "name": "Review request tool",
+     "amount": 199
+    },
+    {
+     "name": "Website hosting",
+     "amount": 79
+    },
+    {
+     "name": "Office suite",
+     "amount": 110
+    },
+    {
+     "name": "Payroll service",
+     "amount": 184
+    }
+   ],
+   "operations": {
+    "leads": 212,
+    "booked": 168,
+    "noShows": 9,
+    "trucks": 6,
+    "truckDaysAvailable": 132,
+    "truckDaysUsed": 104,
+    "agreementsActive": 286,
+    "agreementsRenewalsDue": 31,
+    "agreementsRenewed": 24
+   },
+   "receivables": [
+    {
+     "bucket": "0-30 days",
+     "amount": 18400
+    },
+    {
+     "bucket": "31-60 days",
+     "amount": 7200
+    },
+    {
+     "bucket": "61-90 days",
+     "amount": 5900
+    },
+    {
+     "bucket": "Over 90 days",
+     "amount": 3100
+    }
+   ],
+   "deposits": {
+    "matchedCount": 141,
+    "matchedTotal": 158725,
+    "unmatched": [
+     {
+      "date": "2026-09-18",
+      "amount": 1875,
+      "memo": "Mobile check deposit, no invoice or job number"
+     }
+    ]
+   },
+   "reviews": {
+    "total": 412,
+    "avg": 4.6,
+    "newCount": 14,
+    "responded": 9,
+    "medianResponseHrs": 38,
+    "byService": [
+     {
+      "line": "Residential repair",
+      "rating": 4.7,
+      "count": 6
+     },
+     {
+      "line": "Replacement / installs",
+      "rating": 4.3,
+      "count": 4
+     },
+     {
+      "line": "Electrical service",
+      "rating": 4.8,
+      "count": 3
+     },
+     {
+      "line": "Maintenance agreements",
+      "rating": 5.0,
+      "count": 1
+     }
+    ]
+   },
+   "gbp": {
+    "calls": 236,
+    "directions": 41,
+    "websiteClicks": 318,
+    "messages": 22,
+    "views": 6840,
+    "photos": 64,
+    "newestPhotoDays": 47,
+    "posts": 1,
+    "qaAnswered": 5,
+    "qaUnanswered": 3
+   },
+   "website": {
+    "mobileScore": 58,
+    "lcp": "3.9 s",
+    "lcpPass": false,
+    "inp": "180 ms",
+    "inpPass": true,
+    "cls": "0.04",
+    "clsPass": true,
+    "visits": 2140,
+    "calls": 61,
+    "formSubmits": 29
+   },
+   "aiMentionsPrev": 11
+  },
+  "2026-08": {
+   "serviceLines": [
+    {
+     "name": "Residential repair",
+     "revenue": 37900,
+     "materials": 7800,
+     "laborHours": 252
+    },
+    {
+     "name": "Replacement / installs",
+     "revenue": 58600,
+     "materials": 27400,
+     "laborHours": 282
+    },
+    {
+     "name": "Maintenance agreements (recurring)",
+     "revenue": 9300,
+     "materials": 1300,
+     "laborHours": 90
+    },
+    {
+     "name": "Electrical service",
+     "revenue": 26800,
+     "materials": 6200,
+     "laborHours": 180
+    },
+    {
+     "name": "Commercial service",
+     "revenue": 15400,
+     "materials": 4300,
+     "laborHours": 98
+    },
+    {
+     "name": "New construction",
+     "revenue": 6300,
+     "materials": 3400,
+     "laborHours": 54
+    }
+   ],
+   "channels": [
+    {
+     "name": "Google Ads",
+     "revenue": 29100,
+     "spend": 3200,
+     "newCustomers": 20,
+     "paid": true
+    },
+    {
+     "name": "Google Local Services",
+     "revenue": 19800,
+     "spend": 1600,
+     "newCustomers": 15,
+     "paid": true
+    },
+    {
+     "name": "Meta",
+     "revenue": 5600,
+     "spend": 900,
+     "newCustomers": 5,
+     "paid": true
+    },
+    {
+     "name": "Marketplace lead service",
+     "revenue": 2100,
+     "spend": 2500,
+     "newCustomers": 4,
+     "paid": true
+    },
+    {
+     "name": "Direct mail",
+     "revenue": 4700,
+     "spend": 700,
+     "newCustomers": 4,
+     "paid": true
+    },
+    {
+     "name": "Referrals",
+     "revenue": 23900,
+     "spend": 0,
+     "newCustomers": 13,
+     "paid": false
+    },
+    {
+     "name": "Repeat customers",
+     "revenue": 44800,
+     "spend": 0,
+     "newCustomers": 0,
+     "paid": false
+    },
+    {
+     "name": "Organic website",
+     "revenue": 24300,
+     "spend": 0,
+     "newCustomers": 14,
+     "paid": false
+    }
+   ],
+   "hours": {
+    "owner": [
+     200,
+     0
+    ],
+    "office": [
+     168,
+     2
+    ],
+    "ray": [
+     168,
+     4
+    ],
+    "luis": [
+     168,
+     18
+    ],
+    "dana": [
+     168,
+     14
+    ],
+    "chris": [
+     168,
+     2
+    ],
+    "jordan": [
+     164,
+     0
+    ],
+    "sam": [
+     168,
+     0
+    ],
+    "alex": [
+     160,
+     0
+    ]
+   },
+   "techs": {
+    "ray": {
+     "revenue": 30100,
+     "materials": 11000,
+     "jobs": 45,
+     "opportunities": 29,
+     "sold": 11,
+     "callbacks": 1,
+     "callbackCost": 150,
+     "agreementsSold": 3,
+     "eligibleVisits": 29,
+     "billableHours": 121
+    },
+    "luis": {
+     "revenue": 37800,
+     "materials": 10300,
+     "jobs": 69,
+     "opportunities": 39,
+     "sold": 23,
+     "callbacks": 0,
+     "callbackCost": 0,
+     "agreementsSold": 12,
+     "eligibleVisits": 42,
+     "billableHours": 160
+    },
+    "dana": {
+     "revenue": 33400,
+     "materials": 9200,
+     "jobs": 60,
+     "opportunities": 32,
+     "sold": 17,
+     "callbacks": 1,
+     "callbackCost": 100,
+     "agreementsSold": 5,
+     "eligibleVisits": 30,
+     "billableHours": 149
+    },
+    "chris": {
+     "revenue": 30200,
+     "materials": 14600,
+     "jobs": 26,
+     "opportunities": 17,
+     "sold": 8,
+     "callbacks": 5,
+     "callbackCost": 1850,
+     "agreementsSold": 4,
+     "eligibleVisits": 19,
+     "billableHours": 126
+    },
+    "jordan": {
+     "revenue": 22800,
+     "materials": 5300,
+     "jobs": 47,
+     "opportunities": 25,
+     "sold": 11,
+     "callbacks": 2,
+     "callbackCost": 200,
+     "agreementsSold": 6,
+     "eligibleVisits": 31,
+     "billableHours": 118
+    }
+   },
+   "vehicles": [
+    {
+     "name": "Fuel",
+     "amount": 2800
+    },
+    {
+     "name": "Truck payments and leases",
+     "amount": 3400
+    },
+    {
+     "name": "Vehicle maintenance",
+     "amount": 700
+    },
+    {
+     "name": "Tools and equipment",
+     "amount": 700
+    }
+   ],
+   "overhead": [
+    {
+     "name": "Insurance (liability, workers comp, auto)",
+     "amount": 5600
+    },
+    {
+     "name": "Rent and utilities",
+     "amount": 6500
+    },
+    {
+     "name": "Permits and licenses",
+     "amount": 1150
+    },
+    {
+     "name": "Card and financing fees",
+     "amount": 3700
+    },
+    {
+     "name": "Uniforms and training",
+     "amount": 600
+    },
+    {
+     "name": "Office, phone and misc",
+     "amount": 1100
+    }
+   ],
+   "software": [
+    {
+     "name": "Field service software",
+     "amount": 389
+    },
+    {
+     "name": "Accounting software",
+     "amount": 90
+    },
+    {
+     "name": "Business phone system",
+     "amount": 180
+    },
+    {
+     "name": "Fleet GPS tracking",
+     "amount": 129
+    },
+    {
+     "name": "Fleet GPS tracking",
+     "amount": 129,
+     "duplicate": true
+    },
+    {
+     "name": "Review request tool",
+     "amount": 199
+    },
+    {
+     "name": "Website hosting",
+     "amount": 79
+    },
+    {
+     "name": "Office suite",
+     "amount": 110
+    },
+    {
+     "name": "Payroll service",
+     "amount": 184
+    }
+   ],
+   "operations": {
+    "leads": 204,
+    "booked": 158,
+    "noShows": 11,
+    "trucks": 6,
+    "truckDaysAvailable": 126,
+    "truckDaysUsed": 99,
+    "agreementsActive": 279,
+    "agreementsRenewalsDue": 28,
+    "agreementsRenewed": 22
+   },
+   "receivables": [
+    {
+     "bucket": "0-30 days",
+     "amount": 17600
+    },
+    {
+     "bucket": "31-60 days",
+     "amount": 6900
+    },
+    {
+     "bucket": "61-90 days",
+     "amount": 3800
+    },
+    {
+     "bucket": "Over 90 days",
+     "amount": 2400
+    }
+   ],
+   "deposits": {
+    "matchedCount": 136,
+    "matchedTotal": 151980,
+    "unmatched": []
+   },
+   "reviews": {
+    "total": 398,
+    "avg": 4.6,
+    "newCount": 9,
+    "responded": 7,
+    "medianResponseHrs": 52,
+    "byService": [
+     {
+      "line": "Residential repair",
+      "rating": 4.6,
+      "count": 4
+     },
+     {
+      "line": "Replacement / installs",
+      "rating": 4.5,
+      "count": 2
+     },
+     {
+      "line": "Electrical service",
+      "rating": 4.7,
+      "count": 2
+     },
+     {
+      "line": "Maintenance agreements",
+      "rating": 5.0,
+      "count": 1
+     }
+    ]
+   },
+   "gbp": {
+    "calls": 214,
+    "directions": 38,
+    "websiteClicks": 297,
+    "messages": 18,
+    "views": 6410,
+    "photos": 64,
+    "newestPhotoDays": 17,
+    "posts": 2,
+    "qaAnswered": 5,
+    "qaUnanswered": 2
+   },
+   "website": {
+    "mobileScore": 61,
+    "lcp": "3.6 s",
+    "lcpPass": false,
+    "inp": "170 ms",
+    "inpPass": true,
+    "cls": "0.05",
+    "clsPass": true,
+    "visits": 2010,
+    "calls": 55,
+    "formSubmits": 26
+   },
+   "aiMentionsPrev": 10
+  }
+ },
+ "reviewHistory": [
+  {
+   "m": "Apr",
+   "n": 7
+  },
+  {
+   "m": "May",
+   "n": 10
+  },
+  {
+   "m": "Jun",
+   "n": 12
+  },
+  {
+   "m": "Jul",
+   "n": 8
+  },
+  {
+   "m": "Aug",
+   "n": 9
+  },
+  {
+   "m": "Sep",
+   "n": 14
+  }
+ ],
+ "reviewThemes": {
+  "praise": [
+   "Techs explain the problem clearly before starting work",
+   "Same-day or next-day arrival on no-cool and no-heat calls",
+   "Clean job sites after installs"
+  ],
+  "complaints": [
+   "Install follow-up visits needed for drain and airflow issues",
+   "Arrival window updates come late or not at all",
+   "Hard to reach the office at lunch hour"
+  ],
+  "note": "Themes are invented for this sample and paraphrased. No real review text is shown."
+ },
+ "reviewGap": {
+  "competitor": "Competitor A",
+  "competitorRating": 4.8,
+  "competitorReviews": 655,
+  "monthlyProfileLeads": 120,
+  "upliftPerTenthStar": 0.03,
+  "closeRate": 0.5,
+  "avgTicket": 640,
+  "grossMargin": 0.45
+ },
+ "gbpChecklist": [
+  {
+   "item": "Primary category set (HVAC contractor)",
+   "ok": true
+  },
+  {
+   "item": "Secondary category: Electrician",
+   "ok": true
+  },
+  {
+   "item": "Secondary category: Air duct cleaning",
+   "ok": false
+  },
+  {
+   "item": "Services list filled in (all 6 service lines)",
+   "ok": false
+  },
+  {
+   "item": "Service areas match the 3 target areas",
+   "ok": true
+  },
+  {
+   "item": "Hours include after-hours / emergency note",
+   "ok": false
+  },
+  {
+   "item": "Booking link added",
+   "ok": true
+  }
+ ],
+ "rankAreas": [
+  "Fairfax",
+  "Springfield",
+  "Burke"
+ ],
+ "rankMethod": "Ranks are a sampled check from a fixed point in each area center using a grid-rank tool, run the first week of each month. Map = position in the map pack (1-3 shows on the first screen, 4+ means 'more places'). 21 means not found in the top 20.",
+ "ranks": [
+  {
+   "kw": "ac repair fairfax va",
+   "map": {
+    "Fairfax": [
+     2,
+     3
+    ],
+    "Springfield": [
+     5,
+     5
+    ],
+    "Burke": [
+     4,
+     6
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     4,
+     5
+    ],
+    "Springfield": [
+     9,
+     9
+    ],
+    "Burke": [
+     7,
+     8
+    ]
+   }
+  },
+  {
+   "kw": "furnace repair near me",
+   "map": {
+    "Fairfax": [
+     3,
+     3
+    ],
+    "Springfield": [
+     6,
+     7
+    ],
+    "Burke": [
+     5,
+     5
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     6,
+     6
+    ],
+    "Springfield": [
+     11,
+     12
+    ],
+    "Burke": [
+     8,
+     9
+    ]
+   }
+  },
+  {
+   "kw": "heat pump repair fairfax",
+   "map": {
+    "Fairfax": [
+     2,
+     2
+    ],
+    "Springfield": [
+     4,
+     5
+    ],
+    "Burke": [
+     3,
+     4
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     3,
+     4
+    ],
+    "Springfield": [
+     8,
+     8
+    ],
+    "Burke": [
+     6,
+     7
+    ]
+   }
+  },
+  {
+   "kw": "hvac company near me",
+   "map": {
+    "Fairfax": [
+     4,
+     4
+    ],
+    "Springfield": [
+     8,
+     9
+    ],
+    "Burke": [
+     6,
+     6
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     7,
+     8
+    ],
+    "Springfield": [
+     14,
+     15
+    ],
+    "Burke": [
+     10,
+     10
+    ]
+   }
+  },
+  {
+   "kw": "ac installation fairfax county",
+   "map": {
+    "Fairfax": [
+     3,
+     4
+    ],
+    "Springfield": [
+     7,
+     7
+    ],
+    "Burke": [
+     5,
+     6
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     5,
+     6
+    ],
+    "Springfield": [
+     12,
+     12
+    ],
+    "Burke": [
+     9,
+     10
+    ]
+   }
+  },
+  {
+   "kw": "electrician springfield va",
+   "map": {
+    "Fairfax": [
+     6,
+     6
+    ],
+    "Springfield": [
+     3,
+     4
+    ],
+    "Burke": [
+     5,
+     5
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     9,
+     9
+    ],
+    "Springfield": [
+     5,
+     6
+    ],
+    "Burke": [
+     8,
+     8
+    ]
+   }
+  },
+  {
+   "kw": "electrician near me",
+   "map": {
+    "Fairfax": [
+     5,
+     5
+    ],
+    "Springfield": [
+     4,
+     4
+    ],
+    "Burke": [
+     6,
+     7
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     8,
+     9
+    ],
+    "Springfield": [
+     7,
+     7
+    ],
+    "Burke": [
+     10,
+     11
+    ]
+   }
+  },
+  {
+   "kw": "panel upgrade fairfax va",
+   "map": {
+    "Fairfax": [
+     2,
+     3
+    ],
+    "Springfield": [
+     3,
+     3
+    ],
+    "Burke": [
+     4,
+     4
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     4,
+     4
+    ],
+    "Springfield": [
+     5,
+     6
+    ],
+    "Burke": [
+     6,
+     6
+    ]
+   }
+  },
+  {
+   "kw": "emergency hvac service",
+   "map": {
+    "Fairfax": [
+     5,
+     4
+    ],
+    "Springfield": [
+     9,
+     8
+    ],
+    "Burke": [
+     7,
+     7
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     10,
+     9
+    ],
+    "Springfield": [
+     21,
+     18
+    ],
+    "Burke": [
+     13,
+     12
+    ]
+   }
+  },
+  {
+   "kw": "ev charger installation burke",
+   "map": {
+    "Fairfax": [
+     7,
+     8
+    ],
+    "Springfield": [
+     6,
+     6
+    ],
+    "Burke": [
+     3,
+     5
+    ]
+   },
+   "org": {
+    "Fairfax": [
+     12,
+     13
+    ],
+    "Springfield": [
+     10,
+     11
+    ],
+    "Burke": [
+     5,
+     7
+    ]
+   }
+  }
+ ],
+ "websitePages": [
+  {
+   "path": "/ac-repair/",
+   "leads": 21
+  },
+  {
+   "path": "/ (home)",
+   "leads": 18
+  },
+  {
+   "path": "/heat-pumps/",
+   "leads": 11
+  },
+  {
+   "path": "/electrical/panel-upgrades/",
+   "leads": 9
+  },
+  {
+   "path": "/contact/",
+   "leads": 7
+  }
+ ],
+ "websiteIssues": [
+  "/financing/ returns a not-found error (linked from the home page)",
+  "/burke-hvac/ page missing (no Burke location page)",
+  "Service area page for Springfield has no electrical content"
+ ],
+ "localPages": [
+  {
+   "area": "Fairfax",
+   "pages": 3
+  },
+  {
+   "area": "Springfield",
+   "pages": 1
+  },
+  {
+   "area": "Burke",
+   "pages": 0
+  }
+ ],
+ "listings": [
+  {
+   "dir": "Google Business Profile",
+   "name": true,
+   "address": true,
+   "phone": true
+  },
+  {
+   "dir": "Bing Places",
+   "name": true,
+   "address": false,
+   "phone": true
+  },
+  {
+   "dir": "Apple Maps",
+   "name": true,
+   "address": true,
+   "phone": true
+  },
+  {
+   "dir": "Facebook page",
+   "name": false,
+   "address": true,
+   "phone": true
+  },
+  {
+   "dir": "Yelp",
+   "name": true,
+   "address": false,
+   "phone": false
+  },
+  {
+   "dir": "BBB",
+   "name": true,
+   "address": true,
+   "phone": false
+  },
+  {
+   "dir": "Nextdoor",
+   "name": true,
+   "address": true,
+   "phone": true
+  },
+  {
+   "dir": "Data aggregators (3)",
+   "name": true,
+   "address": false,
+   "phone": true
+  }
+ ],
+ "listingFixes": [
+  "Update the old suite number on Bing, Yelp and the data aggregators (the business moved in 2024)",
+  "Replace the retired second phone line on Yelp and BBB",
+  "Change 'Example Heating' to the full legal name on the Facebook page"
+ ],
+ "aiEngines": [
+  "ChatGPT",
+  "Gemini",
+  "Perplexity",
+  "Google AI Overviews"
+ ],
+ "aiLog": [
+  {
+   "p": "best HVAC company in Fairfax County",
+   "r": [
+    [
+     1,
+     3,
+     null,
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Directory listing"
+    ],
+    [
+     1,
+     2,
+     null,
+     "Google reviews"
+    ],
+    [
+     1,
+     4,
+     null,
+     "Own website"
+    ]
+   ]
+  },
+  {
+   "p": "who fixes a heat pump fast near me",
+   "r": [
+    [
+     0,
+     null,
+     "Competitor A",
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor B",
+     "Directory listing"
+    ],
+    [
+     1,
+     3,
+     null,
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Google reviews"
+    ]
+   ]
+  },
+  {
+   "p": "emergency AC repair Fairfax VA",
+   "r": [
+    [
+     1,
+     4,
+     null,
+     "Own website"
+    ],
+    [
+     0,
+     null,
+     "Competitor C",
+     "Directory listing"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Google reviews"
+    ],
+    [
+     1,
+     3,
+     null,
+     "Google reviews"
+    ]
+   ]
+  },
+  {
+   "p": "licensed electrician Springfield VA",
+   "r": [
+    [
+     1,
+     2,
+     null,
+     "Own website"
+    ],
+    [
+     1,
+     3,
+     null,
+     "Directory listing"
+    ],
+    [
+     1,
+     1,
+     null,
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor B",
+     "Directory listing"
+    ]
+   ]
+  },
+  {
+   "p": "how much does a new heat pump cost in Fairfax",
+   "r": [
+    [
+     0,
+     null,
+     "Competitor A",
+     "Competitor blog"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Competitor blog"
+    ],
+    [
+     0,
+     null,
+     "Competitor C",
+     "Local news article"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Competitor blog"
+    ]
+   ]
+  },
+  {
+   "p": "HVAC maintenance plan Fairfax County",
+   "r": [
+    [
+     1,
+     2,
+     null,
+     "Own website"
+    ],
+    [
+     0,
+     null,
+     "Competitor B",
+     "Own website"
+    ],
+    [
+     1,
+     2,
+     null,
+     "Own website"
+    ],
+    [
+     0,
+     null,
+     "Competitor B",
+     "Directory listing"
+    ]
+   ]
+  },
+  {
+   "p": "panel upgrade electrician near Burke VA",
+   "r": [
+    [
+     0,
+     null,
+     "Competitor C",
+     "Directory listing"
+    ],
+    [
+     0,
+     null,
+     "Competitor C",
+     "Google reviews"
+    ],
+    [
+     1,
+     4,
+     null,
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor C",
+     "Directory listing"
+    ]
+   ]
+  },
+  {
+   "p": "furnace not turning on who to call Fairfax",
+   "r": [
+    [
+     0,
+     null,
+     "Competitor A",
+     "Google reviews"
+    ],
+    [
+     1,
+     4,
+     null,
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Directory listing"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Google reviews"
+    ]
+   ]
+  },
+  {
+   "p": "top rated AC installers Northern Virginia",
+   "r": [
+    [
+     0,
+     null,
+     "Competitor A",
+     "Directory listing"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Directory listing"
+    ],
+    [
+     0,
+     null,
+     "Competitor B",
+     "Forum thread"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Directory listing"
+    ]
+   ]
+  },
+  {
+   "p": "EV charger installer Fairfax County",
+   "r": [
+    [
+     1,
+     3,
+     null,
+     "Own website"
+    ],
+    [
+     0,
+     null,
+     "Competitor C",
+     "Own website"
+    ],
+    [
+     0,
+     null,
+     "Competitor C",
+     "Own website"
+    ],
+    [
+     0,
+     null,
+     "Competitor C",
+     "Own website"
+    ]
+   ]
+  },
+  {
+   "p": "same day HVAC service Springfield",
+   "r": [
+    [
+     0,
+     null,
+     "Competitor B",
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor B",
+     "Directory listing"
+    ],
+    [
+     0,
+     null,
+     "Competitor B",
+     "Google reviews"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Google reviews"
+    ]
+   ]
+  },
+  {
+   "p": "is it worth repairing a 15 year old AC Fairfax",
+   "r": [
+    [
+     0,
+     null,
+     "Competitor A",
+     "Competitor blog"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Competitor blog"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Competitor blog"
+    ],
+    [
+     0,
+     null,
+     "Competitor A",
+     "Competitor blog"
+    ]
+   ]
+  }
+ ],
+ "aiFixes": [
+  "Get 15+ new Google reviews that mention the service and town (AI answers lean on review text)",
+  "Fix every listing mismatch so each directory shows the same name, address and phone",
+  "Publish Burke and Springfield location pages with LocalBusiness structured data and a cost-guide page"
+ ],
+ "aiNote": "Sampled test: 12 prompts run once in the first week of the month on each tool, logged-out, from a Fairfax location. AI answers change often. This is a snapshot, not a guarantee of future results.",
+ "competitors": [
+  {
+   "name": "Example Heating & Electric",
+   "client": true,
+   "reviews": null,
+   "rating": null,
+   "velocity": null,
+   "mapRanks": null,
+   "services": "HVAC repair, installs, maintenance plans, electrical, light commercial",
+   "areas": "Fairfax, Springfield, Burke",
+   "brand": "Mid-tier equipment brand dealer",
+   "financing": "Yes, through a lender partner",
+   "ads": "Google Ads, Local Services, Meta",
+   "hiring": "No open postings",
+   "promo": "Fall tune-up special",
+   "speed": null,
+   "aiRate": null
+  },
+  {
+   "name": "Competitor A",
+   "reviews": 655,
+   "rating": 4.8,
+   "velocity": 24,
+   "mapRanks": [
+    1,
+    1,
+    3,
+    2,
+    1,
+    4,
+    6,
+    3,
+    2,
+    9
+   ],
+   "services": "HVAC, plumbing, maintenance plans",
+   "areas": "All of Fairfax County plus Arlington",
+   "brand": "Premium equipment brand dealer",
+   "financing": "Yes, 0% promo financing",
+   "ads": "Google Ads, Local Services, Meta, streaming TV",
+   "hiring": "4 open tech postings",
+   "promo": "Free second opinion on replacements",
+   "speed": 71,
+   "aiRate": null
+  },
+  {
+   "name": "Competitor B",
+   "reviews": 290,
+   "rating": 4.7,
+   "velocity": 11,
+   "mapRanks": [
+    4,
+    5,
+    5,
+    3,
+    6,
+    8,
+    7,
+    7,
+    4,
+    10
+   ],
+   "services": "HVAC repair and maintenance only",
+   "areas": "Springfield, Lorton, Alexandria",
+   "brand": "Value equipment brand",
+   "financing": "No",
+   "ads": "Local Services only",
+   "hiring": "1 open tech posting",
+   "promo": "Maintenance plan price lock",
+   "speed": 64,
+   "aiRate": null
+  },
+  {
+   "name": "Competitor C",
+   "reviews": 188,
+   "rating": 4.5,
+   "velocity": 6,
+   "mapRanks": [
+    7,
+    8,
+    6,
+    9,
+    8,
+    1,
+    2,
+    4,
+    8,
+    1
+   ],
+   "services": "Electrical, EV chargers, generators, some HVAC",
+   "areas": "Burke, Fairfax Station, Centreville",
+   "brand": "Generator brand dealer",
+   "financing": "Yes",
+   "ads": "Google Ads, Meta",
+   "hiring": "2 open electrician postings",
+   "promo": "EV charger install bundle",
+   "speed": 82,
+   "aiRate": null
+  }
+ ],
+ "clientSpeed": 58,
+ "marketMoves": [
+  {
+   "move": "Competitor A started streaming TV ads in Northern Virginia and doubled Local Services budget (visible in public ad transparency tools).",
+   "response": "Do not match spend. Defend the Fairfax map pack with review velocity and same-day messaging on Local Services."
+  },
+  {
+   "move": "Competitor C launched an EV charger and panel upgrade bundle page with financing.",
+   "response": "Publish a panel upgrade page for Burke and Springfield and have Dana W. (electrician) lead the panel-upgrade push."
+  },
+  {
+   "move": "Competitor B posted 1 new tech opening at a higher advertised wage than last quarter.",
+   "response": "Check retention for Luis M. and Dana W.: they carry most of the overtime, and Luis M. is the top performer. Schedule a pay and workload review."
+  }
+ ],
+ "compliance": [
+  {
+   "item": "Owner's Virginia contractor license (Class A) renewal",
+   "sampleDate": "2027-03-31",
+   "rule": "Virginia contractor licenses expire two years from the last day of the month issued.",
+   "src": "18VAC50-22-110",
+   "url": "https://law.lis.virginia.gov/admincode/title18/agency50/chapter22/section110/"
+  },
+  {
+   "item": "Dana W. electrical tradesman license renewal (3 CE hours needed first)",
+   "sampleDate": "2027-01-31",
+   "rule": "Tradesman licenses expire three years from the last day of the month issued; 3 CE hours per trade designation.",
+   "src": "18VAC50-30-120",
+   "url": "https://law.lis.virginia.gov/admincode/title18/agency50/chapter30/section120/"
+  },
+  {
+   "item": "Ray K. HVAC tradesman license renewal (3 CE hours needed first)",
+   "sampleDate": "2027-06-30",
+   "rule": "Tradesman licenses expire three years from the last day of the month issued; 3 CE hours per trade designation.",
+   "src": "18VAC50-30-120",
+   "url": "https://law.lis.virginia.gov/admincode/title18/agency50/chapter30/section120/"
+  },
+  {
+   "item": "General liability and workers comp policy renewal",
+   "sampleDate": "2027-02-01",
+   "rule": "Business policy date only. Not a regulatory deadline.",
+   "src": null,
+   "url": null
+  },
+  {
+   "item": "EPA Section 608 cards on file for all 5 techs",
+   "sampleDate": null,
+   "rule": "Section 608 certification has no expiration date in the rule; techs must keep a copy at the place of business.",
+   "src": "40 CFR 82.161",
+   "url": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-82/subpart-F/section-82.161"
+  }
+ ],
+ "complianceChecklist": [
+  {
+   "item": "Contractor license current",
+   "ok": true
+  },
+  {
+   "item": "All tradesman licenses current",
+   "ok": true
+  },
+  {
+   "item": "CE hours logged for licenses expiring in 6 months",
+   "ok": false
+  },
+  {
+   "item": "608 certificates on file for every tech",
+   "ok": true
+  },
+  {
+   "item": "Certificates of insurance current",
+   "ok": true
+  },
+  {
+   "item": "Install quotes updated for refrigerant and copper changes",
+   "ok": false
+  },
+  {
+   "item": "Sales script updated for ended federal credit",
+   "ok": false
+  },
+  {
+   "item": "Safety training log current",
+   "ok": true
+  }
+ ],
+ "external": [
+  {
+   "tab": "fairfax",
+   "cat": "Local news",
+   "headline": "County permit system goes fully offline Nov 5 (5 p.m.) to Nov 9 (7 a.m.) for a cloud move",
+   "meaning": "No permits can be applied for, paid or scheduled in PLUS during the outage, and the county says no backup system will be offered.",
+   "impact": "high",
+   "impactWhy": "Install and panel jobs that need a permit that week will slip unless filed before Nov 5.",
+   "date": "2026-11-05",
+   "dateLabel": "Outage starts",
+   "publisher": "Fairfax County Land Development Services",
+   "url": "https://www.fairfaxcounty.gov/landdevelopment/enhancing-plus-services-and-planned-downtime-november-5-9",
+   "published": "2026-10-08",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "fairfax",
+   "cat": "Regulations and licensing",
+   "headline": "Building and site permit fees rose about 5% on July 1, 2026",
+   "meaning": "Permit costs on replacements, panel upgrades and new construction are slightly higher than last year's quotes assume.",
+   "impact": "low",
+   "impactWhy": "A small dollar change per job, but old quote templates may undercharge.",
+   "date": "2026-07-01",
+   "dateLabel": "Effective",
+   "publisher": "Fairfax County Government (Land Development Services bulletin)",
+   "url": "https://content.govdelivery.com/accounts/VAFAIRFAXCOUNTY/bulletins/41955dc",
+   "published": "2026-05-28",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "fairfax",
+   "cat": "Regulations and licensing",
+   "headline": "Residential Fast Track plan review cut from 5 business days to 1",
+   "meaning": "Eligible non-complex residential projects can move from plan to permit faster, which shortens the sold-to-installed gap.",
+   "impact": "low",
+   "impactWhy": "Helps only on jobs that need plan review; most trade permits do not.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Fairfax County Land Development Services",
+   "url": "https://www.fairfaxcounty.gov/landdevelopment/fast-tracked-residential-permit-processing",
+   "published": "2026-04-30",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "fairfax",
+   "cat": "Regulations and licensing",
+   "headline": "Commercial Fast Track review shortened from 13 business days to 2 to 3",
+   "meaning": "Light commercial alterations and tenant build-outs (up to 12,000 sq ft) can start sooner, a chance to bid more commercial HVAC and electrical work.",
+   "impact": "medium",
+   "impactWhy": "Commercial service is a growth line for this business.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Fairfax County Land Development Services",
+   "url": "https://www.fairfaxcounty.gov/landdevelopment/lds-reduces-plan-review-time-commercial-projects",
+   "published": "2026-08-11",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "fairfax",
+   "cat": "Regulations and licensing",
+   "headline": "Next-day inspections must be requested in PLUS before 11:59 p.m.; incomplete work can draw a reinspection fee",
+   "meaning": "Dispatch should book inspections only when work is truly ready, to avoid paying for a second visit.",
+   "impact": "low",
+   "impactWhy": "Avoidable cost on a few jobs a month.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Fairfax County Land Development Services",
+   "url": "https://www.fairfaxcounty.gov/landdevelopment/building-and-trade-inspections",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "fairfax",
+   "cat": "Demand drivers",
+   "headline": "New county Development Tracker map shows active construction sites and recent building permits by address",
+   "meaning": "A free way to spot neighborhoods with new building permits and certificates of occupancy, useful for targeting direct mail and new-construction bids.",
+   "impact": "medium",
+   "impactWhy": "Low-cost lead source for new construction and replacements.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Fairfax County Land Development Services",
+   "url": "https://www.fairfaxcounty.gov/landdevelopment/lds-launches-new-development-tracker-gis-application",
+   "published": "2026-09-15",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "fairfax",
+   "cat": "Local news",
+   "headline": "County warns of fake emails asking permit applicants to pay by wire transfer",
+   "meaning": "Office staff should pay county fees only inside PLUS and ignore emailed invoices that ask for wires.",
+   "impact": "medium",
+   "impactWhy": "One mistaken wire could cost more than a month of profit.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Fairfax County Land Development Services",
+   "url": "https://www.fairfaxcounty.gov/landdevelopment/scam-alert-false-emails-requesting-payment",
+   "published": "2026-01-28",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Regulations and licensing",
+   "headline": "Tradesman licenses (HVAC, electrical) renew every 3 years and need 3 CE hours per trade first",
+   "meaning": "A tech holding both HVAC and electrical needs 6 hours. Missing CE blocks renewal, which can take a tech off permitted work.",
+   "impact": "medium",
+   "impactWhy": "Two techs in this sample renew within 9 months.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Virginia Administrative Code (Board for Contractors), via Virginia Legislative Information System",
+   "url": "https://law.lis.virginia.gov/admincode/title18/agency50/chapter30/section120/",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Regulations and licensing",
+   "headline": "Contractor licenses (Class A, B, C) expire two years after the month they were issued",
+   "meaning": "The company license renewal date belongs on the compliance calendar alongside tech licenses.",
+   "impact": "low",
+   "impactWhy": "Routine, but a lapse stops all contracting.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Virginia Administrative Code (Board for Contractors), via Virginia Legislative Information System",
+   "url": "https://law.lis.virginia.gov/admincode/title18/agency50/chapter22/section110/",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Regulations and licensing",
+   "headline": "2024 statewide building code is tentatively set to start in October 2027, with mandatory use expected October 2028",
+   "meaning": "The 2021 code still applies today. Plan for CE and install-practice updates during 2027.",
+   "impact": "low",
+   "impactWhy": "No change this year; dates are tentative.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Home Builders Association of Virginia",
+   "url": "https://hbav.com/news/update-2024-virginia-building-code-development-cycle/",
+   "published": "2026-08-05",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Refrigerant and equipment rules",
+   "headline": "EPA dropped the install deadline for R-410A split systems built from components made or imported before 2025 (effective July 27, 2026)",
+   "meaning": "Leftover pre-2025 R-410A inventory can still be installed with no federal end date. New systems outside that inventory must use refrigerant under 700 GWP.",
+   "impact": "medium",
+   "impactWhy": "Affects which equipment you quote and how fast to clear old stock.",
+   "date": "2026-07-27",
+   "dateLabel": "Effective",
+   "publisher": "U.S. Environmental Protection Agency final rule, via Federal Register",
+   "url": "https://www.federalregister.gov/documents/2026/05/26/2026-10387/phasedown-of-hydrofluorocarbons-reconsideration-of-certain-regulatory-requirements-promulgated-under",
+   "published": "2026-05-26",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Refrigerant and equipment rules",
+   "headline": "Variable refrigerant flow (VRF) systems at 700 GWP or higher can be installed only until Jan 1, 2027 (components made before 2026)",
+   "meaning": "Any light-commercial VRF bids using older high-GWP equipment need to be installed before the new year.",
+   "impact": "low",
+   "impactWhy": "This business does little VRF work.",
+   "date": "2027-01-01",
+   "dateLabel": "Install cutoff",
+   "publisher": "U.S. Environmental Protection Agency",
+   "url": "https://www.epa.gov/hfcs/technology-transitions-hfc-restrictions-sector",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Refrigerant and equipment rules",
+   "headline": "The federal 25C home-improvement tax credit ended for equipment placed in service after Dec 31, 2025",
+   "meaning": "Homeowners can no longer claim the up-to-$2,000 heat pump credit for 2026 installs. Sales materials that mention it are out of date.",
+   "impact": "high",
+   "impactWhy": "Changes the replacement sales pitch and customer budgets.",
+   "date": "2025-12-31",
+   "dateLabel": "Ended",
+   "publisher": "Internal Revenue Service",
+   "url": "https://www.irs.gov/credits-deductions/energy-efficient-home-improvement-credit",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Refrigerant and equipment rules",
+   "headline": "Virginia's federal home energy rebates (HEAR and HOMES) are still not available and have no launch date",
+   "meaning": "Do not promise these rebates to customers. The state warns against contractors who guarantee eligibility before launch.",
+   "impact": "medium",
+   "impactWhy": "Customers ask about it; a wrong promise creates refund risk.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Virginia Department of Energy",
+   "url": "https://www.energy.virginia.gov/energy-efficiency/HomeEnergyRebatesFrequentlyAskedQuestions.shtml",
+   "published": "2026-10-13",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Refrigerant and equipment rules",
+   "headline": "Utility program offers rebates on heat pump upgrades and tune-ups through participating contractors",
+   "meaning": "Becoming a participating contractor gets the business listed in the utility's contractor search tool and gives customers a rebate that is available now.",
+   "impact": "medium",
+   "impactWhy": "A rebate you can actually offer this season.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Dominion Energy (Home Energy Evaluation program)",
+   "url": "https://domsavings.com/va/rhrp/",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Supply and pricing",
+   "headline": "Section 232 copper tariffs now apply to the full value of most imported copper products at 50% (some at 25%) since April 6, 2026",
+   "meaning": "Copper products covered by the tariff annexes (check your HTS codes) cost more than many 2025 price books assume.",
+   "impact": "high",
+   "impactWhy": "Copper is a large share of install and electrical materials.",
+   "date": "2026-04-06",
+   "dateLabel": "Current rates effective",
+   "publisher": "Federal Register (Proclamation 11021), via GovInfo",
+   "url": "https://www.govinfo.gov/content/pkg/FR-2026-04-09/html/2026-06960.htm",
+   "published": "2026-04-09",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Labor market",
+   "headline": "Virginia minimum wage rises to $13.75 on Jan 1, 2027 and $15.00 on Jan 1, 2028",
+   "meaning": "Helpers in this sample already earn more, but entry-level pay bands and office hires will feel upward pressure.",
+   "impact": "low",
+   "impactWhy": "No one on this payroll is below the new rate.",
+   "date": "2027-01-01",
+   "dateLabel": "Effective",
+   "publisher": "Code of Virginia § 40.1-28.10, via Virginia Legislative Information System",
+   "url": "https://law.lis.virginia.gov/vacodeupdates/title40.1/section40.1-28.10/",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Labor market",
+   "headline": "HVAC tech jobs projected to grow 11% from 2025 to 2035, much faster than average; median pay was $61,010 in May 2025",
+   "meaning": "About 40,600 openings a year nationally keeps hiring tight. Losing a top tech is expensive to replace.",
+   "impact": "medium",
+   "impactWhy": "Retention matters more than recruiting for a 5-tech shop.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "U.S. Bureau of Labor Statistics (Occupational Outlook Handbook)",
+   "url": "https://www.bls.gov/ooh/installation-maintenance-and-repair/heating-air-conditioning-and-refrigeration-mechanics-and-installers.htm",
+   "published": "2026-08-27",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Demand drivers",
+   "headline": "NOAA's Oct 15 outlook favors warmer-than-normal temperatures for the mid-Atlantic in November to January, driven by a very strong El Nino",
+   "meaning": "Fewer extreme cold snaps could mean fewer emergency no-heat calls. Push maintenance agreements and planned replacements instead of counting on cold-weather surges. NOAA updates this outlook on Nov 19.",
+   "impact": "medium",
+   "impactWhy": "Weather drives a large share of repair demand.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "NOAA Climate Prediction Center",
+   "url": "https://www.cpc.ncep.noaa.gov/products/predictions/monthly_climate/fxus05.html",
+   "published": "2026-10-15",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Demand drivers",
+   "headline": "EIA expects households heating with electricity to spend more this winter; regional PJM wholesale power prices are forecast up 41% for 2026",
+   "meaning": "Higher electric bills make heat pump efficiency, tune-ups and duct sealing an easier conversation with homeowners.",
+   "impact": "medium",
+   "impactWhy": "Supports efficiency upgrade sales.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "U.S. Energy Information Administration",
+   "url": "https://www.eia.gov/pressroom/releases/press593.php",
+   "published": "2026-10-06",
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Compliance calendar",
+   "headline": "Fourth-quarter 2026 federal estimated tax payment is due Jan 15, 2027",
+   "meaning": "Set aside the estimate from the Cash and tax section before mid-January. Confirm the amount with your accountant.",
+   "impact": "medium",
+   "impactWhy": "Late payment can trigger an underpayment penalty.",
+   "date": "2027-01-15",
+   "dateLabel": "Due",
+   "publisher": "Internal Revenue Service (Form 1040-ES)",
+   "url": "https://www.irs.gov/pub/irs-pdf/f1040es.pdf",
+   "published": null,
+   "asOf": "2026-10-19"
+  },
+  {
+   "tab": "virginia",
+   "cat": "Compliance calendar",
+   "headline": "EPA Section 608 refrigerant certification has no expiration date in the rule; each tech must keep a copy at the place of business",
+   "meaning": "No renewal date to track, but keep a copy of every tech's card on file (and for three years after a tech leaves) and check new hires before they handle refrigerant.",
+   "impact": "low",
+   "impactWhy": "Simple recordkeeping.",
+   "date": null,
+   "dateLabel": null,
+   "publisher": "Electronic Code of Federal Regulations (40 CFR 82.161)",
+   "url": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-82/subpart-F/section-82.161",
+   "published": null,
+   "asOf": "2026-10-19"
+  }
+ ],
+ "soWhat": {
+  "fairfax": [
+   {
+    "item": "PLUS permit outage Nov 5 to Nov 9",
+    "action": "File every permit for installs scheduled Nov 5 to 13 by Nov 4; tell Lena P. to block those dates in dispatch."
+   },
+   {
+    "item": "Commercial Fast Track now 2 to 3 days",
+    "action": "Bid two light-commercial tenant build-outs this month; faster permits make the timeline easier to promise."
+   },
+   {
+    "item": "Fake county payment emails",
+    "action": "Office rule: county fees are paid only inside PLUS. Never by wire from an emailed invoice."
+   }
+  ],
+  "virginia": [
+   {
+    "item": "Copper tariffs",
+    "action": "Reprice copper materials covered by the tariff annexes in the install and panel price book this week."
+   },
+   {
+    "item": "25C credit ended and state rebates not available yet",
+    "action": "Remove credit and rebate claims from quotes; offer the utility rebate program instead."
+   },
+   {
+    "item": "Tech license renewals with CE",
+    "action": "Book Dana W.'s 3 CE hours before December so her January renewal is not at risk."
+   }
+  ]
+ }
+}
+</script>
+<script src="/datadashboard/dashboard.js" defer></script>
+<script>
+/* open a collapsed section when a link points into it */
+(function(){function openTo(h){if(!h||h.length<2)return;var el=document.getElementById(h.slice(1));if(!el)return;var d=el.closest&&el.closest('details');if(d&&!d.open)d.open=true;}
+window.addEventListener('hashchange',function(){openTo(location.hash);});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#"]');if(a)openTo(a.getAttribute('href'));});
+document.addEventListener('DOMContentLoaded',function(){openTo(location.hash);});})();
+</script>
+</body>
+</html>
