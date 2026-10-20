@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Cash Recovery Sprint for HVAC and Electrical Shops | Skilled Edge</title>
+<meta name="description" content="A done-for-you plan to collect overdue invoices: your 15 biggest overdue accounts ranked, plus collection emails written in your voice for you to send." />
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F1E2E;--orange:#E8600A;--orange-dark:#B84A05;--orange-light:rgba(232,96,10,0.10);--white:#FFFFFF;--off-white:#F5F7FA;--border:#D4DAE2;--text:#1A202C;--mute:#4A5568;--good:#1E7A43;--bad:#9B2C2C;--mono:'IBM Plex Mono',monospace;--sans:'Inter',-apple-system,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{font-family:var(--sans);background:var(--white);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--orange);color:#fff;padding:10px 14px;z-index:100;font-family:var(--mono)}
+.skip:focus{left:8px;top:8px}
+.nav{background:var(--navy);padding:0 5%;height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--white);text-decoration:none}
+.nav-brand-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;flex-shrink:0}
+.nav-cta{background:var(--orange-dark);color:var(--white);border-radius:6px;padding:8px 14px;font-size:12.5px;font-weight:700;font-family:var(--mono);text-decoration:none;white-space:nowrap}
+.hero{background:var(--navy);padding:44px 5% 40px;color:#fff}
+.wrap{max-width:900px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:#FF8A3D;margin-bottom:12px}
+.hero h1{font-family:var(--mono);font-size:clamp(24px,5vw,38px);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px}
+.hero p{color:rgba(255,255,255,.82);max-width:680px;font-size:16px;margin-bottom:10px}
+.btn{display:inline-block;background:var(--orange-dark);color:#fff;border-radius:6px;padding:13px 20px;font-family:var(--mono);font-weight:700;font-size:14px;text-decoration:none;margin-top:14px}
+.btn:hover{background:var(--orange)}
+.section{padding:40px 5%}
+.section.alt{background:var(--off-white);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.label{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--orange-dark);margin-bottom:8px}
+h2{font-family:var(--mono);font-size:clamp(20px,3.6vw,27px);font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-bottom:12px}
+h3{font-family:var(--mono);font-size:15px;margin-bottom:6px}
+p{margin-bottom:10px;color:var(--text)}
+.mute{color:var(--mute);font-size:14.5px}
+.grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+@media(min-width:780px){.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px}
+.card.accent{border-left:4px solid var(--orange)}
+.steps{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.steps li{counter-increment:s;display:flex;gap:12px;background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px}
+.steps li::before{content:counter(s);flex:0 0 28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-family:var(--mono);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px}
+.steps b{display:block;font-size:15px}
+.list{padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.yes li::marker{color:var(--good)}.no li::marker{color:var(--bad)}
+.sample-bar{background:#FFF4E5;color:#7A2E00;border:1px solid #F3C9A6;text-align:center;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.06em;padding:7px 12px;border-radius:6px;margin-bottom:12px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;background:var(--white)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);background:var(--off-white)}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+tr:last-child td{border-bottom:0}
+details{background:var(--white);border:1px solid var(--border);border-radius:8px;margin-top:10px}
+summary{cursor:pointer;padding:14px 16px;font-family:var(--mono);font-weight:700;font-size:14.5px;list-style:none;display:flex;justify-content:space-between;gap:10px;min-height:48px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-size:20px;color:var(--orange-dark)}
+details[open] summary::after{content:'\2013'}
+details .body{padding:0 16px 14px;font-size:15px}
+.cta{background:var(--navy);color:#fff;padding:44px 5%;text-align:center}
+.cta h2{color:#fff}
+.cta p{color:rgba(255,255,255,.82);max-width:600px;margin:0 auto 10px}
+.footer{padding:24px 5%;font-size:13px;color:var(--mute);text-align:center;border-top:1px solid var(--border)}
+.footer a{color:var(--orange-dark)}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="nav" aria-label="Main">
+  <a class="nav-brand" href="/"><span class="nav-brand-dot" aria-hidden="true"></span>Skilled Edge Group</a>
+  <a class="nav-cta" href="#fit">Check if it fits</a>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Cash Recovery Sprint · HVAC and electrical shops</div>
+    <h1>Your 15 biggest overdue invoices, ranked, with the emails ready to send.</h1>
+    <p>Most shop owners know money is sitting in overdue invoices and never get to chasing it. You send me your aging report. In 72 hours you get a ranked list and a set of collection emails written in your voice. You send them from your own email.</p>
+    <p>No calls, no software to install, no logins to share.</p>
+    <a class="btn" href="#fit">Check if it fits your shop</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="section">
+  <div class="wrap">
+    <div class="label">What you get</div>
+    <h2>Four things, delivered in 72 hours</h2>
+    <div class="grid two">
+      <div class="card accent"><h3>1. A ranked list of 15 accounts</h3><p class="mute">Your top 15 overdue accounts by dollars and age, up to 60 invoices, so you know exactly where to start.</p></div>
+      <div class="card accent"><h3>2. A 3-email collection sequence</h3><p class="mute">Friendly, firm and final, written in your voice and filled in with each customer's invoice details. You send them.</p></div>
+      <div class="card accent"><h3>3. A renewal email</h3><p class="mute">For maintenance-agreement customers coming due in the next 60 days, so renewals do not slip.</p></div>
+      <div class="card accent"><h3>4. A one-page Recovery Scorecard</h3><p class="mute">How much is overdue, how old it is, which customers are repeat late payers, and the total you can realistically go after.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="wrap">
+    <div class="label">How it works</div>
+    <h2>Five steps, all by email</h2>
+    <ol class="steps">
+      <li><div><b>Check the fit</b><span class="mute">Answer a few short questions about your reports and customer emails.</span></div></li>
+      <li><div><b>Send two files</b><span class="mute">Reply with your overdue-invoice (aging) report and your maintenance-agreement renewal list as CSV or PDF attachments. Never your login.</span></div></li>
+      <li><div><b>72 hours later</b><span class="mute">You get the ranked list, email sequence, renewal email and scorecard.</span></div></li>
+      <li><div><b>You send the emails</b><span class="mute">From your own email, so customers hear from the shop they know and replies come to you.</span></div></li>
+      <li><div><b>Optional check-ins</b><span class="mute">Send a fresh aging report at about day 14 and day 45 and get an updated scorecard showing what came in and who to chase next.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="label">Sample</div>
+    <h2>What the scorecard looks like</h2>
+    <div class="sample-bar">SAMPLE DATA, fictional shop</div>
+    <div class="tbl-wrap" role="region" aria-label="Sample recovery scorecard" tabindex="0">
+      <table>
+        <thead><tr><th>Customer</th><th class="num">Overdue</th><th class="num">Days late</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Customer A (property manager)</td><td class="num">$3,850</td><td class="num">94</td><td>2 invoices</td></tr>
+          <tr><td>Customer B (homeowner)</td><td class="num">$2,400</td><td class="num">71</td><td>Second late invoice this year</td></tr>
+          <tr><td>Customer C (small office)</td><td class="num">$1,975</td><td class="num">66</td><td>Emailed twice, no reply</td></tr>
+          <tr><td>Customer D (builder)</td><td class="num">$1,620</td><td class="num">48</td><td>Usually pays after a reminder</td></tr>
+          <tr><td>+ 11 more accounts</td><td class="num">$4,355</td><td class="num"></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mute" style="margin-top:10px">Totals in this sample: $14,200 overdue across 15 accounts, with 3 customers making up more than half. All names and figures are made up to show the format.</p>
+  </div>
+</section>
+
+<section class="section alt" id="fit">
+  <div class="wrap">
+    <div class="label">Is it a fit</div>
+    <h2>Who this works for</h2>
+    <div class="grid two">
+      <div class="card"><h3>A good fit</h3>
+        <ul class="list yes">
+          <li>You can export an overdue-invoice (aging) report from your accounting or job software.</li>
+          <li>Most overdue customers have an email address on file.</li>
+          <li>Someone on your team can send the emails and answer replies.</li>
+          <li>Most overdue invoices are not in dispute.</li>
+        </ul>
+      </div>
+      <div class="card"><h3>Not a fit right now</h3>
+        <ul class="list no">
+          <li>Invoices only live on paper or cannot be exported.</li>
+          <li>Most overdue customers have no email on file.</li>
+          <li>You want someone else to contact your customers for you.</li>
+          <li>You want a guaranteed collection amount.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="mute" style="margin-top:14px">To check, email the five questions below. If it is a fit, I will reply with next steps.</p>
+    <a class="btn" id="fit-mailto" href="mailto:dave@skillededge.io?subject=Cash%20Recovery%20Sprint%3A%20fit%20check&amp;body=Hi%20Dave%2C%0A%0AI%27d%20like%20to%20check%20if%20the%20Cash%20Recovery%20Sprint%20fits%20my%20shop.%0A%0A1.%20Business%20name%20and%20type%20(HVAC%2C%20electrical%2C%20other)%3A%0A2.%20Accounting%20or%20job%20software%20we%20use%3A%0A3.%20Can%20we%20export%20an%20overdue-invoice%20(aging)%20report%20to%20CSV%20or%20PDF%3F%20(yes%20%2F%20not%20sure%20%2F%20no)%3A%0A4.%20About%20how%20much%20is%20overdue%20past%2060%20days%2C%20and%20across%20how%20many%20customers%3F%0A5.%20Do%20most%20of%20those%20customers%20have%20an%20email%20on%20file%3F%20Who%20would%20send%20the%20emails%3F%0A%0AThanks">Email the five questions</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="label">Plain terms</div>
+    <h2>What this is, and is not</h2>
+    <div class="grid two">
+      <div class="card"><h3>What it is</h3>
+        <ul class="list">
+          <li>A done-for-you plan and the emails to carry it out.</li>
+          <li>Written in your voice, from your own invoice details.</li>
+          <li>Delivered by email, with no calls.</li>
+        </ul>
+      </div>
+      <div class="card"><h3>What it is not</h3>
+        <ul class="list">
+          <li>Not a collections agency. Skilled Edge never contacts your customers.</li>
+          <li>Not a guarantee that any invoice gets paid.</li>
+          <li>Not legal advice. Emails avoid threats and lien language.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section alt">
+  <div class="wrap">
+    <div class="label">Questions</div>
+    <h2>Common questions</h2>
+    <details><summary>What do you need from me?</summary><div class="body">Two files by email: your overdue-invoice (aging) report and your maintenance-agreement renewal list. CSV or PDF is fine. I never need a login to your software.</div></details>
+    <details><summary>Why not just use the reminders in my accounting software?</summary><div class="body">Built-in reminders are generic, and many shops never turn them on. This gives you a ranked list of who to chase first and messages that mention the job and the amount, so they read like you wrote them.</div></details>
+    <details><summary>What if I have more than 15 overdue accounts?</summary><div class="body">The sprint covers the top 15 by dollars, where most of the money usually sits. You also get a simple reminder template for the rest.</div></details>
+    <details><summary>What happens to my files?</summary><div class="body">They are used only to prepare your deliverables and are deleted 30 days after delivery.</div></details>
+    <details><summary>Do I have to hand over customer information I am not comfortable sharing?</summary><div class="body">You can blank out customer names and send only invoice numbers, amounts and dates. The emails then use placeholders you fill in before sending.</div></details>
+  </div>
+</section>
+</main>
+
+<section class="cta" aria-labelledby="cta-title">
+  <h2 id="cta-title">See if your shop fits</h2>
+  <p>Send the five questions and I will tell you honestly whether the sprint is worth it for your shop.</p>
+  <a class="btn" href="#fit">Check if it fits</a>
+</section>
+
+<footer class="footer">
+  Skilled Edge Group LLC · <a href="mailto:dave@skillededge.io">dave@skillededge.io</a> · <a href="/privacy/">Privacy</a><br>
+  Sample names and figures on this page are fictional.
+</footer>
+</body>
+</html>
