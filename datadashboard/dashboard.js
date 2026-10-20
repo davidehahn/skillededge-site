@@ -145,6 +145,8 @@
     var aiByEngine = D.aiEngines.map(function (e, i) { return { engine: e, mentions: sum(D.aiLog, function (row) { return row.r[i][0]; }), of: D.aiLog.length }; });
     var citedInstead = {};
     D.aiLog.forEach(function (row) { row.r.forEach(function (c) { if (c[2]) citedInstead[c[2]] = (citedInstead[c[2]] || 0) + 1; }); });
+    // every AI mention rate (client and competitors) is counted from the same prompt log
+    function aiRateFor(name) { return (name ? (citedInstead[name] || 0) : aiMentions) / aiTotal; }
 
     // listings
     var listingIssues = sum(D.listings, function (l) { return (l.name ? 0 : 1) + (l.address ? 0 : 1) + (l.phone ? 0 : 1); });
@@ -163,8 +165,10 @@
       var x = JSON.parse(JSON.stringify(c));
       if (x.client) {
         x.reviews = cur.reviews.total; x.rating = cur.reviews.avg; x.velocity = cur.reviews.newCount;
-        x.mapRanks = clientFairfaxRanks; x.speed = D.clientSpeed; x.aiRate = aiMentions / aiTotal;
+        x.mapRanks = clientFairfaxRanks; x.speed = D.clientSpeed;
       }
+      x.aiCount = x.client ? aiMentions : (citedInstead[x.name] || 0);
+      x.aiRate = aiRateFor(x.client ? null : x.name);
       x.avgMap = round2(sum(x.mapRanks) / x.mapRanks.length);
       return x;
     });
@@ -193,16 +197,31 @@
     function clamp(n) { return Math.max(0, Math.min(100, Math.round(n))); }
     var fieldTechs = cur.techs;
     var avgUtil = sum(fieldTechs, function (t) { return t.utilization; }) / fieldTechs.length;
+    function p1(n) { return (n * 100).toFixed(1) + '%'; }
+    function r1(n) { return (Math.round(n * 10) / 10).toFixed(1); }
+    var paidSpend = cur.ads;
+    var repRatingPts = Math.max(0, Math.min(60, (cur.reviews.avg - 3.5) / 1.5 * 60));
+    var repRespPts = cur.reviews.responseRate * 40;
+    var compPts = 100 / D.complianceChecklist.length;
     var scores = [
-      { name: 'Profitability', score: clamp(cur.margin / 0.12 * 100), basis: 'Net margin vs a 12% target', section: 'financials' },
-      { name: 'Marketing efficiency', score: clamp(cur.blendedPerAdDollar / 10 * 100), basis: 'Paid-channel revenue per ad dollar vs 10:1', section: 'financials' },
-      { name: 'Team productivity', score: clamp(avgUtil / 0.85 * 100), basis: 'Average tech utilization vs 85%', section: 'financials' },
-      { name: 'Online reputation', score: clamp((cur.reviews.avg - 3.5) / 1.5 * 60 + cur.reviews.responseRate * 40), basis: 'Rating (60 pts) + review response rate (40 pts)', section: 'online' },
-      { name: 'Local search visibility', score: clamp(top3 / cells * 100), basis: 'Share of keyword and area checks in the map-pack top 3', section: 'online' },
-      { name: 'AI visibility', score: clamp(aiMentions / aiTotal * 100), basis: 'Share of AI prompt checks that mention the business', section: 'online' },
-      { name: 'Competitive position', score: clamp(rankPoints / metrics.length * 100), basis: 'Average placement vs Competitors A to C across 6 metrics', section: 'competition' },
-      { name: 'Compliance readiness', score: clamp(checklistOk / D.complianceChecklist.length * 100), basis: 'Compliance checklist items complete', section: 'market' }
+      { name: 'Profitability', score: clamp(cur.margin / 0.12 * 100), basis: 'Net margin vs a 12% target', section: 'financials',
+        math: (cur.margin * 100).toFixed(2) + '% net margin ÷ 12% target × 100 = ' + r1(cur.margin / 0.12 * 100) },
+      { name: 'Marketing efficiency', score: clamp(cur.blendedPerAdDollar / 10 * 100), basis: 'Paid-channel revenue per ad dollar vs 10:1', section: 'financials',
+        math: money(cur.paidRevenue) + ' paid-channel revenue ÷ ' + money(paidSpend) + ' ad spend = ' + cur.blendedPerAdDollar.toFixed(2) + ' per ad dollar; ÷ 10 × 100 = ' + r1(cur.blendedPerAdDollar / 10 * 100) },
+      { name: 'Team productivity', score: clamp(avgUtil / 0.85 * 100), basis: 'Average tech utilization (billable ÷ paid hours) vs 85%', section: 'financials',
+        math: 'Average of ' + fieldTechs.map(function (t) { return t.name + ' ' + p1(t.utilization); }).join(', ') + ' = ' + p1(avgUtil) + '; ÷ 85% × 100 = ' + r1(avgUtil / 0.85 * 100) },
+      { name: 'Online reputation', score: clamp(repRatingPts + repRespPts), basis: 'Rating (60 pts, scaled so 3.5★ or lower = 0 and 5.0★ = 60) + review response rate (40 pts)', section: 'online',
+        math: 'Rating: (' + cur.reviews.avg.toFixed(1) + ' − 3.5) ÷ 1.5 × 60 = ' + r1(repRatingPts) + ' pts. Response: ' + D.months[D.meta.currentMonth].reviews.responded + ' of ' + cur.reviews.newCount + ' new reviews answered = ' + p1(cur.reviews.responseRate) + ' × 40 = ' + r1(repRespPts) + ' pts. Total ' + r1(repRatingPts + repRespPts) },
+      { name: 'Local search visibility', score: clamp(top3 / cells * 100), basis: 'Share of keyword and area checks in the map-pack top 3', section: 'online',
+        math: top3 + ' of ' + cells + ' checks in the top 3 = ' + r1(top3 / cells * 100) },
+      { name: 'AI visibility', score: clamp(aiMentions / aiTotal * 100), basis: 'Share of AI prompt checks that mention the business', section: 'online',
+        math: aiMentions + ' of ' + aiTotal + ' prompt checks mention the business = ' + r1(aiMentions / aiTotal * 100) },
+      { name: 'Competitive position', score: clamp(rankPoints / metrics.length * 100), basis: 'Average placement vs Competitors A to C across 6 metrics (1st of 4 = 1 pt, 2nd = 0.67, 3rd = 0.33, 4th = 0)', section: 'competition',
+        math: position.map(function (q) { return q.label + ': rank ' + q.rank + ' of ' + comps.length + ' = ' + (comps.length - q.rank) + '/' + (comps.length - 1) + ' pt'; }).join('; ') + '. Total ' + Math.round(rankPoints * (comps.length - 1)) + '/' + (comps.length - 1) + ' = ' + rankPoints.toFixed(2) + ' of ' + metrics.length + ' pts ÷ ' + metrics.length + ' × 100 = ' + r1(rankPoints / metrics.length * 100) },
+      { name: 'Compliance readiness', score: clamp(checklistOk / D.complianceChecklist.length * 100), basis: 'Compliance checklist: ' + D.complianceChecklist.length + ' items, ' + (Math.round(compPts * 10) / 10) + ' pts each', section: 'market',
+        math: checklistOk + ' of ' + D.complianceChecklist.length + ' items complete × ' + (Math.round(compPts * 10) / 10) + ' pts = ' + r1(checklistOk * compPts), extra: ' Missing: ' + D.complianceChecklist.filter(function (c) { return !c.ok; }).map(function (c) { return c.item; }).join('; ') + '.' }
     ];
+    scores.forEach(function (s) { s.math += ', rounded to ' + s.score + '.' + (s.extra || ''); });
     scores.forEach(function (s) { s.grade = s.score >= 90 ? 'A' : s.score >= 80 ? 'B' : s.score >= 70 ? 'C' : s.score >= 60 ? 'D' : 'F'; });
 
     // findings and dollar impacts (monthly)
@@ -217,23 +236,30 @@
     var cbImpact = Math.round(worstCb.callbackCost * 0.6);
     var otNames = cur.ops.otTop2Names;
     var otStaff = cur.staff.filter(function (s) { return otNames.indexOf(s.name) >= 0; });
-    var otImpact = Math.round(sum(otStaff, function (s) { return s.otPay; }) / 3 * (1 + 0.18));
+    var otPremium = sum(otStaff, function (s) { return s.rate * 0.5 * s.otHours; });
+    var otImpact = Math.round(otPremium / 3 * (1 + 0.18));
     var arImpact = cur.arOver60;
     var reviewImpact = gapGP;
 
     var actions = [
       { title: 'Pause the marketplace lead service and move the budget to Google Local Services', impact: mktImpact, kind: 'profit / month', owner: 'Owner', effort: 'Low (1 hour)', section: '#fin-decisions', sectionName: 'Financials > Decisions',
-        why: 'It returned ' + money(mkt.revenue) + ' on ' + money(mkt.spend) + ' of spend (' + mkt.perAdDollar.toFixed(2) + ' per ad dollar) vs ' + google.perAdDollar.toFixed(2) + ' for Google Ads and ' + lsa.perAdDollar.toFixed(2) + ' for Local Services.' },
+        why: 'It returned ' + money(mkt.revenue) + ' on ' + money(mkt.spend) + ' of spend (' + mkt.perAdDollar.toFixed(2) + ' per ad dollar) vs ' + google.perAdDollar.toFixed(2) + ' for Google Ads and ' + lsa.perAdDollar.toFixed(2) + ' for Local Services.',
+        math: 'Ad spend saved ' + money(mkt.spend) + ' − gross profit lost on its ' + money(mkt.revenue) + ' of revenue at the company gross margin of ' + (gmRate * 100).toFixed(1) + '% (' + money(cur.grossProfit) + ' ÷ ' + money(cur.revenue) + ') = ' + money(mkt.spend) + ' − ' + money(mkt.revenue * gmRate) + ' = ' + money(mktImpact) + '. Assumes those jobs are lost, not won through another channel. Counts only the pause: any extra return from moving the budget to Local Services is upside and is not counted.' },
       { title: 'Collect receivables older than 60 days', impact: arImpact, kind: 'cash (one time)', owner: 'Lena P. (office)', effort: 'Medium (calls + statements)', section: '#fin-ops', sectionName: 'Financials > Operations health',
-        why: money(arImpact) + ' of ' + money(cur.arTotal) + ' in receivables is past 60 days.' },
+        why: money(arImpact) + ' of ' + money(cur.arTotal) + ' in receivables is past 60 days.',
+        math: cur.ar[2].bucket + ' ' + money(cur.ar[2].amount) + ' + ' + cur.ar[3].bucket.toLowerCase() + ' ' + money(cur.ar[3].amount) + ' = ' + money(arImpact) + '. Assumes all of it is collected; this is one-time cash, not profit.' },
       { title: 'Install quality check: ride-along and checklist for ' + worstCb.name, impact: cbImpact, kind: 'profit / month', owner: 'Owner + ' + highestPaid.name, effort: 'Medium (2 ride-alongs)', section: '#fin-performers', sectionName: 'Financials > Top performers',
-        why: worstCb.name + ' had ' + worstCb.callbacks + ' callbacks costing ' + money(worstCb.callbackCost) + ' this month; cutting that by 60% saves the amount shown.' },
+        why: worstCb.name + ' had ' + worstCb.callbacks + ' callbacks costing ' + money(worstCb.callbackCost) + ' this month; cutting that by 60% saves the amount shown.',
+        math: money(worstCb.callbackCost) + ' callback cost × 60% assumed reduction after the quality check = ' + money(cbImpact) + '.' },
       { title: 'Rebalance overtime away from ' + otNames.join(' and '), impact: otImpact, kind: 'profit / month', owner: 'Lena P. (dispatch)', effort: 'Low (schedule change)', section: '#fin-ops', sectionName: 'Financials > Operations health',
-        why: otNames.join(' and ') + ' worked ' + cur.ops.otTop2 + ' of ' + cur.ops.otTotal + ' overtime hours. Shifting a third of it to straight time saves the premium plus burden.' },
+        why: otNames.join(' and ') + ' worked ' + cur.ops.otTop2 + ' of ' + cur.ops.otTotal + ' overtime hours. Shifting a third of it to straight time saves the overtime premium plus burden.',
+        math: 'Overtime premium (half the hourly rate): ' + otStaff.map(function (s) { return s.name + ' ' + s.otHours + ' h × $' + s.rate + ' × 0.5 = ' + money(s.rate * 0.5 * s.otHours); }).join('; ') + '. Total ' + money(otPremium) + ' ÷ 3 = ' + money(otPremium / 3) + ' × 1.18 payroll burden = ' + money(otImpact) + '. Assumes the shifted hours go to staff with straight-time hours available.' },
       { title: 'Close part of the review gap to ' + g.competitor, impact: reviewImpact, kind: 'gross profit / month (est.)', owner: 'Techs + review tool', effort: 'Low (ask at every job)', section: '#online-reviews', sectionName: 'Online > Google reviews',
-        why: 'Estimate based on the stated assumptions in the reviews card.' },
+        why: 'Estimate based on the stated assumptions in the reviews card.',
+        math: g.monthlyProfileLeads + ' profile leads a month × ' + (g.upliftPerTenthStar * 100) + '% more leads per 0.1★ × ' + tenths + ' tenths = ' + extraLeads.toFixed(1) + ' leads × ' + (g.closeRate * 100) + '% close = ' + extraJobs.toFixed(1) + ' jobs × ' + money(g.avgTicket) + ' avg ticket = ' + money(gapRevenue) + ' revenue × ' + (g.grossMargin * 100) + '% gross margin = ' + money(gapGP) + '.' },
       { title: 'Cancel the duplicate ' + cur.duplicateCharges[0].name.toLowerCase() + ' charge', impact: cur.duplicateTotal, kind: 'profit / month', owner: 'Owner', effort: 'Low (1 call)', section: '#fin-money', sectionName: 'Financials > Where the money went',
-        why: 'The same subscription is billed twice, in both August and September.' }
+        why: 'The same subscription is billed twice, in both August and September.',
+        math: money(cur.duplicateTotal) + ' a month billed twice; cancelling the second charge saves ' + money(cur.duplicateTotal) + '.' }
     ];
     var ranked = actions.slice().sort(function (a, b) { return b.impact - a.impact; });
 
@@ -250,6 +276,7 @@
       ai: { total: aiTotal, mentions: aiMentions, prev: aiPrev, rate: aiMentions / aiTotal, byEngine: aiByEngine, citedInstead: citedInstead },
       listings: { issues: listingIssues, clean: listingsClean, total: D.listings.length },
       gap: { tenths: tenths, extraLeads: extraLeads, extraJobs: extraJobs, revenue: gapRevenue, gp: gapGP },
+      aiCited: comps.map(function (c) { return { name: c.client ? 'You' : c.name, count: c.aiCount, rate: c.aiRate }; }), otPremium: otPremium,
       comps: comps, position: position, wins: wins, kwWins: kwWins, checklistOk: checklistOk, gbpOk: gbpOk,
       findings: { mkt: mkt, google: google, lsa: lsa, techsByGp: techsByGp, highestPaid: highestPaid, worstCb: worstCb, gmRate: gmRate } };
   }
@@ -310,7 +337,7 @@
     }).join('');
     $('ov-actions').innerHTML = A.actions.slice(0, 5).map(function (a, i) {
       return '<li class="action"><div class="action-n">' + (i + 1) + '</div><div><b>' + esc(a.title) + '</b><div class="action-impact">' + m(a.impact) + ' <small>' + esc(a.kind) + '</small></div>' +
-        '<p>' + esc(a.why) + '</p><div class="meta">Owner: ' + esc(a.owner) + ' · Effort: ' + esc(a.effort) + ' · Proof: <a href="' + a.section + '">' + esc(a.sectionName) + '</a></div></div></li>';
+        '<p>' + esc(a.why) + '</p><p class="note"><b>Math and assumptions:</b> ' + esc(a.math) + '</p><div class="meta">Owner: ' + esc(a.owner) + ' · Effort: ' + esc(a.effort) + ' · Proof: <a href="' + a.section + '">' + esc(a.sectionName) + '</a></div></div></li>';
     }).join('');
     $('ov-changes').innerHTML = A.changes.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('');
 
@@ -383,7 +410,7 @@
       '<p class="callout">This is an estimate to help you set money aside. It does not replace your accountant.</p>';
 
     var leaks = A.actions.filter(function (a) { return a.kind.indexOf('profit') === 0; });
-    $('fin-leak').innerHTML = '<div class="leak"><div class="leak-l">Biggest leak</div><b>' + esc(leaks[0].title) + '</b><div class="action-impact">' + m(leaks[0].impact) + ' <small>' + esc(leaks[0].kind) + '</small></div><p>' + esc(leaks[0].why) + '</p></div>' +
+    $('fin-leak').innerHTML = '<div class="leak"><div class="leak-l">Biggest leak</div><b>' + esc(leaks[0].title) + '</b><div class="action-impact">' + m(leaks[0].impact) + ' <small>' + esc(leaks[0].kind) + '</small></div><p>' + esc(leaks[0].why) + '</p><p class="note"><b>Math and assumptions:</b> ' + esc(leaks[0].math) + '</p></div>' +
       '<h4>Runner-ups</h4><ol class="runner">' + leaks.slice(1, 3).map(function (l) { return '<li><b>' + esc(l.title) + '</b>: ' + m(l.impact) + ' ' + esc(l.kind) + '</li>'; }).join('') + '</ol>';
 
     /* PART B: Online */
@@ -435,6 +462,9 @@
           return c[0] ? '<td class="ai-yes"><b>✓ #' + c[1] + '</b><small>' + esc(c[3]) + '</small></td>' : '<td class="ai-no"><b>✕ ' + esc(c[2]) + '</b><small>' + esc(c[3]) + '</small></td>';
         }).join('') + '</tr>';
       }).join('') + '</tbody></table></div>' +
+      '<h4>Who the AI tools named (all ' + A.ai.total + ' checks, counted from the log above)</h4>' +
+      table(['Business', 'Checks named', 'Mention rate'], A.aiCited.map(function (c) { return [esc(c.name), c.count + ' of ' + A.ai.total, pct(c.rate, 1)]; }), { label: 'AI mentions by business', foot: ['Total', A.aiCited.reduce(function (a, c) { return a + c.count; }, 0) + ' of ' + A.ai.total, ''] }) +
+      (function () { var top = A.aiCited.slice().sort(function (a, b) { return b.count - a.count; })[0]; return top.name === 'You' ? '<p>You are named most often.</p>' : '<p>' + esc(top.name) + ' is named more often than you (' + top.count + ' vs ' + A.ai.mentions + ' of ' + A.ai.total + ' checks).</p>'; })() +
       '<h4>Three fixes most likely to move it</h4><ol class="runner">' + D.aiFixes.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ol><p class="note">' + esc(D.aiNote) + '</p>';
 
     /* PART C: Competition */
@@ -442,7 +472,7 @@
     function cv(c, k) {
       var v = c[k];
       if (k === 'rating') return v.toFixed(1);
-      if (k === 'aiRate') return pct(v);
+      if (k === 'aiRate') return pct(v, 1);
       if (k === 'avgMap') return v.toFixed(1);
       return v;
     }
@@ -455,7 +485,7 @@
       D.ranks.map(function (r, i) { var best = Math.min.apply(null, comps.map(function (c) { return c.mapRanks[i]; })); return '<tr><th scope="row">' + esc(r.kw) + '</th>' + comps.map(function (c) { return '<td class="num' + (c.mapRanks[i] === best ? ' best' : '') + '">' + c.mapRanks[i] + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table></div>' +
       '<p>You hold the best Fairfax map rank outright on <b>' + A.kwWins + ' of ' + D.ranks.length + '</b> keywords.</p>';
     var ahead = A.position.filter(function (p) { return p.ahead; }), behind = A.position.filter(function (p) { return !p.ahead; });
-    function pv(p) { return p.k === 'rating' ? p.client.toFixed(1) + ' vs best ' + p.best.toFixed(1) : p.k === 'aiRate' ? pct(p.client) + ' vs best ' + pct(p.best) : p.k === 'avgMap' ? p.client.toFixed(1) + ' vs best ' + p.best.toFixed(1) : p.client + ' vs best ' + p.best; }
+    function pv(p) { return p.k === 'rating' ? p.client.toFixed(1) + ' vs best ' + p.best.toFixed(1) : p.k === 'aiRate' ? pct(p.client, 1) + ' vs best ' + pct(p.best, 1) : p.k === 'avgMap' ? p.client.toFixed(1) + ' vs best ' + p.best.toFixed(1) : p.client + ' vs best ' + p.best; }
     $('comp-gaps').innerHTML = '<div class="grid2">' + card('Where you are ahead', ahead.length ? '<ul class="list yes">' + ahead.map(function (p) { return '<li>' + esc(p.label) + ': ' + esc(pv(p)) + '</li>'; }).join('') + '</ul>' : '<p>Not ahead on any of the six measured metrics yet. Strengths: full HVAC plus electrical range and maintenance plans across 3 areas.</p>') +
       card('Where you are behind', '<ul class="list no">' + behind.map(function (p) { return '<li>' + esc(p.label) + ': ' + esc(pv(p)) + ' (rank ' + p.rank + ' of ' + comps.length + ')</li>'; }).join('') + '</ul>') + '</div>' +
       card('Cheapest three moves to close the gap', '<ol class="runner"><li>Ask for a review at every completed job and reply within 24 hours (no cost; targets review count, velocity and rating).</li><li>Compress home-page images and fix the broken financing link (about a day of web work; mobile speed ' + D.clientSpeed + ' vs ' + Math.max.apply(null, comps.slice(1).map(function (c) { return c.speed; })) + ').</li><li>Fix the ' + A.listings.issues + ' listing mismatches and add Burke and Springfield pages (helps map rank and AI mentions).</li></ol>');
@@ -510,7 +540,10 @@
     $('dc-tied').innerHTML = '<ul class="check">' + tie.map(function (t) { return '<li class="' + (t[1] ? 'ok' : 'no') + '"><span class="sr-only">' + (t[1] ? 'Passes: ' : 'Fails: ') + '</span>' + esc(t[0]) + '</li>'; }).join('') + '</ul>' +
       '<p class="note">In a real report these tie to the payroll export, bank statement, jobs CSV and ad exports you provide. Here they tie to the sample data.</p>';
     $('dc-unmatched').textContent = C.deposits.unmatched.length ? C.deposits.unmatched.length + ' ' + C.label + ' deposit(s) totaling ' + m(C.unmatchedTotal) + ' have no matching invoice and are flagged unreconciled.' : 'All deposits matched to invoices.';
-    $('dc-scores').innerHTML = '<ul class="list">' + A.scores.map(function (s) { return '<li><b>' + esc(s.name) + ' (' + s.score + '):</b> ' + esc(s.basis) + '</li>'; }).join('') + '</ul>';
+    $('dc-scores').innerHTML = '<ul class="list">' + A.scores.map(function (s) { return '<li><b>' + esc(s.name) + ' (' + s.score + ', grade ' + s.grade + '):</b> ' + esc(s.basis) + '.<br><small>' + esc(s.math) + '</small></li>'; }).join('') + '</ul>' +
+      '<p class="note">Grades: A 90 and up, B 80 to 89, C 70 to 79, D 60 to 69, F below 60. Scores are rounded to the nearest whole number.</p>';
+    $('mk-checklist').innerHTML = '<h3>Compliance readiness checklist: ' + A.checklistOk + ' of ' + D.complianceChecklist.length + ' complete (score ' + A.scores.filter(function (s) { return s.name === 'Compliance readiness'; })[0].score + ')</h3><p class="note">Each item is worth ' + (Math.round(1000 / D.complianceChecklist.length) / 10) + ' points. Checklist status is fictional sample data.</p><ul class="check">' +
+      D.complianceChecklist.map(function (c) { return '<li class="' + (c.ok ? 'ok' : 'no') + '"><span class="sr-only">' + (c.ok ? 'Done: ' : 'Missing: ') + '</span>' + esc(c.item) + ' <small>' + (c.ok ? (Math.round(1000 / D.complianceChecklist.length) / 10) : 0) + ' pts</small></li>'; }).join('') + '</ul>';
     $('dc-sources').innerHTML = table(['Item', 'Publisher', 'Source', 'As of'], D.external.map(function (e) { return [esc(e.headline), esc(e.publisher), '<a href="' + esc(e.url) + '" target="_blank" rel="noopener">Link</a>', fmtDate(e.asOf)]; }), { label: 'Part D sources', cls: 'src-tbl' });
 
     document.body.classList.add('ready');

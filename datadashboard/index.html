@@ -119,6 +119,7 @@
     </div>
     <div role="tabpanel" id="panel-fairfax" aria-labelledby="tab-fairfax" tabindex="0"></div>
     <div role="tabpanel" id="panel-virginia" aria-labelledby="tab-virginia" tabindex="0" hidden></div>
+    <div class="card" id="mk-checklist"></div>
   </div>
 </section>
 
@@ -151,7 +152,7 @@
       <div class="card"><h3>Estimated</h3><ul class="list">
         <li>Tax set-aside (flat 24% of positive net profit)</li>
         <li>Field labor split by service line (by logged hours)</li>
-        <li>Dollar impact of each action, and value of closing the review gap (assumptions shown)</li>
+        <li>Dollar impact of each action, and value of closing the review gap (math and assumptions shown under each action)</li>
         <li>Callback cost (unbilled labor and parts on return visits)</li>
       </ul>
       <h3 style="margin-top:14px">Could not be verified</h3><ul class="list">
@@ -1936,7 +1937,7 @@
    "hiring": "4 open tech postings",
    "promo": "Free second opinion on replacements",
    "speed": 71,
-   "aiRate": 0.27
+   "aiRate": null
   },
   {
    "name": "Competitor B",
@@ -1963,7 +1964,7 @@
    "hiring": "1 open tech posting",
    "promo": "Maintenance plan price lock",
    "speed": 64,
-   "aiRate": 0.17
+   "aiRate": null
   },
   {
    "name": "Competitor C",
@@ -1990,7 +1991,7 @@
    "hiring": "2 open electrician postings",
    "promo": "EV charger install bundle",
    "speed": 82,
-   "aiRate": 0.19
+   "aiRate": null
   }
  ],
  "clientSpeed": 58,
@@ -2040,7 +2041,7 @@
   {
    "item": "EPA Section 608 cards on file for all 5 techs",
    "sampleDate": null,
-   "rule": "Section 608 certification has no expiration date; techs must keep a copy at the place of business.",
+   "rule": "Section 608 certification has no expiration date in the rule; techs must keep a copy at the place of business.",
    "src": "40 CFR 82.161",
    "url": "https://www.ecfr.gov/current/title-40/chapter-I/subchapter-C/part-82/subpart-F/section-82.161"
   }
@@ -2229,9 +2230,9 @@
    "impactWhy": "Affects which equipment you quote and how fast to clear old stock.",
    "date": "2026-07-27",
    "dateLabel": "Effective",
-   "publisher": "U.S. Environmental Protection Agency",
-   "url": "https://www.epa.gov/hfcs/technology-transitions-hfc-restrictions-sector",
-   "published": null,
+   "publisher": "U.S. Environmental Protection Agency final rule, via Federal Register",
+   "url": "https://www.federalregister.gov/documents/2026/05/26/2026-10387/phasedown-of-hydrofluorocarbons-reconsideration-of-certain-regulatory-requirements-promulgated-under",
+   "published": "2026-05-26",
    "asOf": "2026-10-19"
   },
   {
@@ -2294,7 +2295,7 @@
    "tab": "virginia",
    "cat": "Supply and pricing",
    "headline": "Section 232 copper tariffs now apply to the full value of most imported copper products at 50% (some at 25%) since April 6, 2026",
-   "meaning": "Copper tube, line sets, wire and fittings cost more than many 2025 price books assume. Install and panel quotes need current material costs.",
+   "meaning": "Copper tube, line sets, wire and fittings cost more than many 2025 price books assume. Install and panel quotes need current material costs. The covered product lists were adjusted again on June 8, 2026.",
    "impact": "high",
    "impactWhy": "Copper is a large share of install and electrical materials.",
    "date": "2026-04-06",
@@ -2335,8 +2336,8 @@
   {
    "tab": "virginia",
    "cat": "Demand drivers",
-   "headline": "NOAA's outlook favors a warmer-than-normal early winter for the mid-Atlantic under a very strong El Nino",
-   "meaning": "Fewer extreme cold snaps could mean fewer emergency no-heat calls. Push maintenance agreements and planned replacements instead of counting on cold-weather surges.",
+   "headline": "NOAA's Oct 15 outlook favors warmer-than-normal temperatures for the mid-Atlantic in November to January, driven by a very strong El Nino",
+   "meaning": "Fewer extreme cold snaps could mean fewer emergency no-heat calls. Push maintenance agreements and planned replacements instead of counting on cold-weather surges. NOAA updates this outlook on Nov 19.",
    "impact": "medium",
    "impactWhy": "Weather drives a large share of repair demand.",
    "date": null,
@@ -2377,8 +2378,8 @@
   {
    "tab": "virginia",
    "cat": "Compliance calendar",
-   "headline": "EPA Section 608 refrigerant certification does not expire; each tech must keep a copy at the place of business",
-   "meaning": "No renewal date to track, but keep a copy of every tech's card on file and check new hires before they handle refrigerant.",
+   "headline": "EPA Section 608 refrigerant certification has no expiration date in the rule; each tech must keep a copy at the place of business",
+   "meaning": "No renewal date to track, but keep a copy of every tech's card on file (and for three years after a tech leaves) and check new hires before they handle refrigerant.",
    "impact": "low",
    "impactWhy": "Simple recordkeeping.",
    "date": null,
