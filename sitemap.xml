@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://skillededge.io/</loc></url>
+  <url><loc>https://skillededge.io/services/</loc></url>
   <url><loc>https://skillededge.io/distribution/</loc></url>
   <url><loc>https://skillededge.io/brokers/</loc></url>
   <url><loc>https://skillededge.io/workspace/</loc></url>
@@ -12,9 +13,8 @@
   <url><loc>https://skillededge.io/card-optimizer/</loc></url>
   <url><loc>https://skillededge.io/cncvault/</loc></url>
   <url><loc>https://skillededge.io/cncvault/profit-leak-detector/</loc></url>
-  <url><loc>https://skillededge.io/medvault/</loc></url>
-  <url><loc>https://skillededge.io/medvault/botox-template/</loc></url>
-  <url><loc>https://skillededge.io/medvault/profit-calculator/</loc></url>
+  <url><loc>https://skillededge.io/chatbot/</loc></url>
+  <url><loc>https://skillededge.io/datadashboard/</loc></url>
   <url><loc>https://skillededge.io/privacy/</loc></url>
   <url><loc>https://skillededge.io/profit-leak-detector/</loc></url>
   <url><loc>https://skillededge.io/security/</loc></url>

@@ -28,11 +28,29 @@ a{text-decoration:none;color:inherit}
 .nav{background:var(--navy);padding:0 5%;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border-dark)}
 .nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--white)}
 .nav-brand-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;flex-shrink:0}
-.nav-links{display:flex;align-items:center;gap:22px;list-style:none}
+.nav-links{display:flex;align-items:center;gap:20px;list-style:none}
 .nav-links a{font-size:13px;color:rgba(255,255,255,0.60);font-weight:500;font-family:var(--mono)}
-.nav-links a:hover{color:var(--white)}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--white)}
 .nav-cta{background:var(--orange);color:var(--white)!important;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;font-family:var(--mono);display:inline-block}
-@media(max-width:780px){.nav-links li:not(:last-child){display:none}}
+.has-sub{position:relative}
+.has-sub>a::after{content:' \25BE';font-size:10px}
+.sub{display:none;position:absolute;top:100%;left:-14px;min-width:200px;background:var(--navy-mid);border:1px solid var(--border-dark);border-radius:8px;padding:8px 0;list-style:none;z-index:60}
+.sub a{display:block;padding:9px 16px;white-space:nowrap}
+.has-sub:hover .sub,.has-sub:focus-within .sub{display:block}
+.nav-toggle{display:none}
+.nav-burger{display:none;cursor:pointer;color:var(--white);font-family:var(--mono);font-size:13px;font-weight:700;border:1px solid var(--border-dark);border-radius:6px;padding:7px 12px}
+@media(max-width:1020px){
+.nav{flex-wrap:wrap;height:auto;min-height:62px;padding-top:10px;padding-bottom:10px}
+.nav-burger{display:block}
+.nav-links{display:none;width:100%;flex-direction:column;align-items:flex-start;gap:0;padding:8px 0 6px}
+.nav-links li{width:100%}
+.nav-links a{display:block;padding:11px 2px;font-size:14px}
+.nav-toggle:checked~.nav-links{display:flex}
+.has-sub>a::after{content:''}
+.sub{display:block;position:static;border:none;background:transparent;padding:0 0 0 14px}
+.sub a{padding:9px 2px}
+.nav-cta{margin-top:8px;text-align:center}
+}
 .hero{background:var(--navy);padding:80px 5% 72px;position:relative;overflow:hidden}
 .hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:1}
 .hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--orange);margin-bottom:22px}
@@ -79,11 +97,14 @@ a{text-decoration:none;color:inherit}
 .cta-section p{font-size:16px;color:rgba(255,255,255,0.65);margin-bottom:36px}
 .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
 .cta-note{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.40)}
-.footer{background:var(--navy-mid);padding:32px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer{background:var(--navy-mid);padding:40px 5% 28px;display:flex;flex-direction:column;gap:24px}
 .footer-brand{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--white)}
-.footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
-.footer-links a{font-size:12px;color:rgba(255,255,255,0.40);font-family:var(--mono)}
-.footer-copy{font-size:12px;color:rgba(255,255,255,0.30);font-family:var(--mono);width:100%}
+.footer-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:24px;max-width:960px}
+.footer-h{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.footer-links{display:flex;flex-direction:column;gap:8px;list-style:none}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.55);font-family:var(--mono)}
+.footer-links a:hover{color:var(--white)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.30);font-family:var(--mono)}
 .proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 @media(max-width:640px){.proof-grid{grid-template-columns:1fr}}
 .proof-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:26px 24px;display:flex;flex-direction:column;justify-content:space-between}
@@ -98,14 +119,22 @@ a{text-decoration:none;color:inherit}
 <body>
 <nav class="nav">
   <a class="nav-brand" href="/"><div class="nav-brand-dot"></div>Skilled Edge Group</a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+  <label for="nav-toggle" class="nav-burger">Menu</label>
   <ul class="nav-links">
+    <li><a href="/services/">Services</a></li>
     <li><a href="/distribution/">Distributors</a></li>
-    <li><a href="#profit">Profit Audit</a></li>
-    <li><a href="/workspace/">Workspace</a></li>
     <li><a href="/brokers/">Business brokers</a></li>
-    <li><a href="/elec/">Electrical</a></li>
-    <li><a href="/cnc/">CNC</a></li>
-    <li><a href="mailto:dave@skillededge.io" class="nav-cta">Talk to us →</a></li>
+    <li><a href="/workspace/">Workspace</a></li>
+    <li class="has-sub"><a href="/services/#trades">Trades &amp; shops</a>
+      <ul class="sub">
+        <li><a href="/elec/">Electrical diagnostic</a></li>
+        <li><a href="/cnc/">CNC diagnostic</a></li>
+        <li><a href="/chatbot/">Website chatbot</a></li>
+        <li><a href="/datadashboard/">Business snapshot</a></li>
+      </ul>
+    </li>
+    <li><a href="mailto:dave@skillededge.io" class="nav-cta">Talk to us &rarr;</a></li>
   </ul>
 </nav>
 <section class="hero">
@@ -115,6 +144,7 @@ a{text-decoration:none;color:inherit}
     <p class="hero-sub">Skilled Edge helps established businesses keep more of what they already earn — and get more work done without adding headcount or another software subscription.</p>
     <div class="hero-actions">
       <a href="/distribution/" class="btn-primary">For Distributors</a>
+      <a href="/services/" class="btn-ghost">All services</a>
       <a href="#profit" class="btn-ghost">See Where Profit Is Leaking</a>
     </div>
     <div class="hero-stats">
@@ -222,24 +252,37 @@ a{text-decoration:none;color:inherit}
       <a href="/distribution/" class="btn-primary">Distributor program</a>
       <a href="/elec/" class="btn-ghost">Electrical diagnostic</a>
       <a href="/workspace/" class="btn-ghost">Workspace automation</a>
+      <a href="/services/" class="btn-ghost">All services</a>
     </div>
     <div class="cta-note">Skilled Edge Group LLC · Springfield, VA · dave@skillededge.io</div>
   </div>
 </section>
 <footer class="footer">
-  <div class="footer-brand">⬡ Skilled Edge Group LLC</div>
-  <ul class="footer-links">
-    <li><a href="/distribution/">Distribution</a></li>
-    <li><a href="/brokers/">Business brokers</a></li>
-    <li><a href="/elec/">Electrical</a></li>
-    <li><a href="/cnc/">CNC</a></li>
-    <li><a href="/workspace/">Workspace</a></li>
-    <li><a href="/3pl/">3PL audit</a></li>
-    <li><a href="/privacy/">Privacy</a></li>
-    <li><a href="/security/">Security</a></li>
-    <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
-  </ul>
-  <div class="footer-copy">© 2026 Skilled Edge Group LLC · Springfield, VA · All rights reserved.</div>
+  <div class="footer-brand">&#x2B21; Skilled Edge Group LLC</div>
+  <div class="footer-cols">
+    <div><div class="footer-h">Services</div>
+      <ul class="footer-links">
+        <li><a href="/services/">All services</a></li>
+        <li><a href="/distribution/">Distributor program</a></li>
+        <li><a href="/brokers/">Business brokers</a></li>
+        <li><a href="/workspace/">Workspace automation</a></li>
+      </ul></div>
+    <div><div class="footer-h">Trades &amp; shops</div>
+      <ul class="footer-links">
+        <li><a href="/elec/">Electrical diagnostic</a></li>
+        <li><a href="/cnc/">CNC diagnostic</a></li>
+        <li><a href="/chatbot/">Website chatbot</a></li>
+        <li><a href="/datadashboard/">Business snapshot</a></li>
+      </ul></div>
+    <div><div class="footer-h">Company</div>
+      <ul class="footer-links">
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
+        <li><a href="tel:+17035685161">703-568-5161</a></li>
+      </ul></div>
+  </div>
+  <div class="footer-copy">&copy; 2026 Skilled Edge Group LLC &middot; Springfield, VA &middot; All rights reserved.</div>
 </footer>
 </body>
 </html>

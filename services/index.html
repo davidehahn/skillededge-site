@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Services | Skilled Edge</title>
+<meta name="description" content="Everything Skilled Edge offers: the distributor margin program, pre-sale reviews for business brokers, Google Workspace automation, profit diagnostics, a website chat assistant and a monthly business snapshot." />
+<link rel="canonical" href="https://skillededge.io/services/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Services | Skilled Edge" />
+<meta property="og:description" content="Find hidden profit and eliminate repetitive work. See every Skilled Edge service and what you get from each." />
+<meta property="og:url" content="https://skillededge.io/services/" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F1E2E;--navy-mid:#162436;--orange:#E8600A;--orange-light:rgba(232,96,10,0.10);--orange-glow:rgba(232,96,10,0.20);--white:#FFFFFF;--off-white:#F5F7FA;--border:#D4DAE2;--border-dark:rgba(255,255,255,0.10);--text:#1A202C;--mute:#4A5568;--mono:'IBM Plex Mono',monospace;--sans:'Inter',-apple-system,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.nav{background:var(--navy);padding:0 5%;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border-dark)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--white)}
+.nav-brand-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:20px;list-style:none}
+.nav-links a{font-size:13px;color:rgba(255,255,255,0.60);font-weight:500;font-family:var(--mono)}
+.nav-links a:hover,.nav-links a:focus-visible{color:var(--white)}
+.nav-cta{background:var(--orange);color:var(--white)!important;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;font-family:var(--mono);display:inline-block}
+.has-sub{position:relative}
+.has-sub>a::after{content:' \25BE';font-size:10px}
+.sub{display:none;position:absolute;top:100%;left:-14px;min-width:200px;background:var(--navy-mid);border:1px solid var(--border-dark);border-radius:8px;padding:8px 0;list-style:none;z-index:60}
+.sub a{display:block;padding:9px 16px;white-space:nowrap}
+.has-sub:hover .sub,.has-sub:focus-within .sub{display:block}
+.nav-toggle{display:none}
+.nav-burger{display:none;cursor:pointer;color:var(--white);font-family:var(--mono);font-size:13px;font-weight:700;border:1px solid var(--border-dark);border-radius:6px;padding:7px 12px}
+@media(max-width:1020px){
+.nav{flex-wrap:wrap;height:auto;min-height:62px;padding-top:10px;padding-bottom:10px}
+.nav-burger{display:block}
+.nav-links{display:none;width:100%;flex-direction:column;align-items:flex-start;gap:0;padding:8px 0 6px}
+.nav-links li{width:100%}
+.nav-links a{display:block;padding:11px 2px;font-size:14px}
+.nav-toggle:checked~.nav-links{display:flex}
+.has-sub>a::after{content:''}
+.sub{display:block;position:static;border:none;background:transparent;padding:0 0 0 14px}
+.sub a{padding:9px 2px}
+.nav-cta{margin-top:8px;text-align:center}
+}
+.hero{background:var(--navy);padding:80px 5% 72px;position:relative;overflow:hidden}
+.hero-inner{max-width:960px;margin:0 auto;position:relative;z-index:1}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--orange);margin-bottom:22px}
+.hero h1{font-family:var(--mono);font-size:clamp(28px,5vw,48px);font-weight:700;color:var(--white);letter-spacing:-0.03em;line-height:1.08;margin-bottom:24px}
+.hero h1 .hl{color:var(--orange)}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.65);max-width:620px;line-height:1.7;margin-bottom:40px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:56px}
+.btn-primary{background:var(--orange);color:var(--white);border:none;border-radius:8px;padding:15px 32px;font-family:var(--mono);font-weight:700;font-size:14px;display:inline-block}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.72);border:1.5px solid rgba(255,255,255,0.22);border-radius:8px;padding:15px 28px;font-family:var(--mono);font-weight:600;font-size:14px;display:inline-block}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-dark);border:1px solid var(--border-dark);border-radius:10px;overflow:hidden;max-width:680px}
+.hero-stat{background:rgba(255,255,255,0.04);padding:18px 20px}
+.hero-stat-val{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--orange);margin-bottom:4px}
+.hero-stat-label{font-size:11px;color:rgba(255,255,255,0.45);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.06em}
+@media(max-width:500px){.hero-stats{grid-template-columns:1fr}}
+.section{padding:80px 5%}
+.section-inner{max-width:960px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--orange);margin-bottom:14px}
+.section-title{font-family:var(--mono);font-size:clamp(22px,3.5vw,34px);font-weight:700;letter-spacing:-0.02em;color:var(--text);line-height:1.2;margin-bottom:14px}
+.section-sub{font-size:16px;color:var(--mute);line-height:1.7;max-width:640px;margin-bottom:48px}
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:780px){.paths{grid-template-columns:1fr}}
+.path-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:28px 26px;display:flex;flex-direction:column}
+.path-kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.path-card h3{font-family:var(--mono);font-size:22px;font-weight:700;line-height:1.25;margin-bottom:14px}
+.path-card p{font-size:14.5px;color:var(--mute);line-height:1.65;margin-bottom:18px}
+.path-list{list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:22px;flex:1}
+.path-list li{font-size:13.5px;color:var(--text);padding-left:18px;position:relative}
+.path-list li::before{content:'→';position:absolute;left:0;color:var(--orange);font-size:12px;font-weight:700}
+.path-links{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.chip{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--navy);background:var(--off-white);border:1px solid var(--border);border-radius:20px;padding:5px 11px}
+.path-cta{display:inline-block;background:var(--navy);color:var(--white);font-family:var(--mono);font-size:13px;font-weight:700;border-radius:8px;padding:12px 18px}
+.path-cta.alt{background:var(--orange)}
+.quote-strip{background:var(--off-white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:36px 5%;text-align:center}
+.quote-strip p{font-family:var(--mono);font-size:clamp(16px,2.4vw,22px);font-weight:600;color:var(--navy);max-width:820px;margin:0 auto}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:700px){.how-grid{grid-template-columns:1fr}}
+.how-card{border:1px solid var(--border);border-radius:8px;padding:22px 20px}
+.how-num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.08em;margin-bottom:8px}
+.how-card h3{font-family:var(--mono);font-size:15px;margin-bottom:8px}
+.how-card p{font-size:13.5px;color:var(--mute)}
+.cta-section{background:var(--navy);padding:80px 5%;text-align:center}
+.cta-inner{max-width:640px;margin:0 auto}
+.cta-section h2{font-family:var(--mono);font-size:clamp(22px,4vw,34px);font-weight:700;color:var(--white);margin-bottom:14px}
+.cta-section p{font-size:16px;color:rgba(255,255,255,0.65);margin-bottom:36px}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.cta-note{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.40)}
+.footer{background:var(--navy-mid);padding:40px 5% 28px;display:flex;flex-direction:column;gap:24px}
+.footer-brand{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--white)}
+.footer-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:24px;max-width:960px}
+.footer-h{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:10px}
+.footer-links{display:flex;flex-direction:column;gap:8px;list-style:none}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.55);font-family:var(--mono)}
+.footer-links a:hover{color:var(--white)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.30);font-family:var(--mono)}
+.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:640px){.proof-grid{grid-template-columns:1fr}}
+.proof-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:26px 24px;display:flex;flex-direction:column;justify-content:space-between}
+.proof-quote{font-size:15.5px;line-height:1.65;color:var(--text);margin-bottom:20px}
+.proof-quote strong{color:var(--orange)}
+.proof-who{display:flex;align-items:center;gap:12px}
+.proof-av{width:42px;height:42px;border-radius:50%;background:var(--navy);color:var(--white);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:13px;flex-shrink:0}
+.proof-nm{font-weight:700;font-size:14.5px;color:var(--text)}
+.proof-role{font-size:12.5px;color:var(--mute)}
+
+.page-hero{background:var(--navy);padding:64px 5% 56px}
+.page-hero h1{font-family:var(--mono);font-size:clamp(26px,4.4vw,42px);font-weight:700;color:var(--white);letter-spacing:-0.03em;line-height:1.12;margin-bottom:18px;max-width:760px}
+.page-hero p{font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.65);max-width:640px;line-height:1.7}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.wide{max-width:1160px}
+@media(max-width:1020px){.tiles{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.tiles{grid-template-columns:1fr}}
+.tile{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .15s,transform .15s}
+.tile:hover,.tile:focus-visible{border-color:var(--orange);transform:translateY(-2px)}
+.tile-img{aspect-ratio:1/1;background:var(--navy);overflow:hidden;border-bottom:1px solid var(--border)}
+.tile-img img{display:block;width:100%;height:100%;object-fit:cover;object-position:top left}
+.tile-body{padding:20px 20px 22px;display:flex;flex-direction:column;flex:1}
+.tile h3{font-family:var(--mono);font-size:16px;line-height:1.3;margin-bottom:10px}
+.tile p{font-size:14px;color:var(--mute);line-height:1.6;margin-bottom:10px}
+.tile .tile-get{color:var(--text);font-weight:500}
+.tile-link{margin-top:auto;font-family:var(--mono);font-size:13px;font-weight:700;color:var(--orange)}
+.tile-help{background:var(--off-white);justify-content:center;padding:26px 22px}
+.tile-help h3{margin-bottom:12px}
+.group-title{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin:0 0 16px}
+.group{margin-bottom:48px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nav-brand" href="/"><div class="nav-brand-dot"></div>Skilled Edge Group</a>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Toggle menu">
+  <label for="nav-toggle" class="nav-burger">Menu</label>
+  <ul class="nav-links">
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/distribution/">Distributors</a></li>
+    <li><a href="/brokers/">Business brokers</a></li>
+    <li><a href="/workspace/">Workspace</a></li>
+    <li class="has-sub"><a href="/services/#trades">Trades &amp; shops</a>
+      <ul class="sub">
+        <li><a href="/elec/">Electrical diagnostic</a></li>
+        <li><a href="/cnc/">CNC diagnostic</a></li>
+        <li><a href="/chatbot/">Website chatbot</a></li>
+        <li><a href="/datadashboard/">Business snapshot</a></li>
+      </ul>
+    </li>
+    <li><a href="mailto:dave@skillededge.io" class="nav-cta">Talk to us &rarr;</a></li>
+  </ul>
+</nav>
+<header class="page-hero">
+  <div class="section-inner">
+    <div class="hero-eyebrow">Services</div>
+    <h1>What we do, and what you get.</h1>
+    <p>Every service ends with something your team can use: a fixed process, a dollar estimate, a working workflow. Pick the one that matches the problem in front of you.</p>
+  </div>
+</header>
+<main class="section">
+  <div class="section-inner wide">
+    <div class="tiles">
+      <a class="tile" href="/distribution/">
+        <div class="tile-img"><img src="/services/img/distribution.jpg" alt="Preview of the Distributor program page" width="800" height="800"></div>
+        <div class="tile-body">
+          <div class="path-kicker">For industrial &amp; trade distributors</div>
+          <h3>Distributor program</h3>
+          <p>Fix one costly recurring process using your own files, then screen pricing, freight, rebates and discounts for margin leakage.</p>
+          <p class="tile-get">You get: the fixed process and a Margin Exposure Screen showing where to look next.</p>
+          <span class="tile-link">See details &rarr;</span>
+        </div>
+      </a>
+      <a class="tile" href="/brokers/">
+        <div class="tile-img"><img src="/services/img/brokers.jpg" alt="Preview of the Pre-Sale Profit and Operations Review page" width="800" height="800"></div>
+        <div class="tile-body">
+          <div class="path-kicker">For business brokers and their sellers</div>
+          <h3>Pre-Sale Profit &amp; Operations Review</h3>
+          <p>An evidence-based look at margin leakage, owner dependence and operating risks before a business changes hands.</p>
+          <p class="tile-get">You get: the questions a buyer will ask, answered early, and a prioritized plan for a practical handoff.</p>
+          <span class="tile-link">See details &rarr;</span>
+        </div>
+      </a>
+      <a class="tile" href="/workspace/">
+        <div class="tile-img"><img src="/services/img/workspace.jpg" alt="Preview of the Google Workspace Automation page" width="800" height="800"></div>
+        <div class="tile-body">
+          <div class="path-kicker">For any office team</div>
+          <h3>Google Workspace Automation</h3>
+          <p>Automate repetitive office work inside Gmail, Sheets, Drive, Docs and Calendar, the tools you already pay for.</p>
+          <p class="tile-get">You get: a working workflow your team can run next week, with no new software to buy.</p>
+          <span class="tile-link">See details &rarr;</span>
+        </div>
+      </a>
+      <a class="tile" id="trades" href="/elec/">
+        <div class="tile-img"><img src="/services/img/electrical.jpg" alt="Preview of the Electrical Profit Leak Diagnostic page" width="800" height="800"></div>
+        <div class="tile-body">
+          <div class="path-kicker">For electrical contractors</div>
+          <h3>Electrical Profit Leak Diagnostic</h3>
+          <p>A free three-stage diagnostic that estimates annual profit leaks across nine areas of field labor, execution and billing.</p>
+          <p class="tile-get">You get: a dollar estimate of where profit is leaking and which fix to make first.</p>
+          <span class="tile-link">See details &rarr;</span>
+        </div>
+      </a>
+      <a class="tile" href="/cnc/">
+        <div class="tile-img"><img src="/services/img/cnc.jpg" alt="Preview of the CNC and Fab Shop Profit Leak Diagnostic page" width="800" height="800"></div>
+        <div class="tile-body">
+          <div class="path-kicker">For CNC and fabrication shops</div>
+          <h3>CNC &amp; Fab Shop Profit Leak Diagnostic</h3>
+          <p>A free three-stage diagnostic that estimates annual profit leaks across machine time, quality and quoting.</p>
+          <p class="tile-get">You get: a dollar estimate of leaks by category, so you know where to start.</p>
+          <span class="tile-link">See details &rarr;</span>
+        </div>
+      </a>
+      <a class="tile" href="/chatbot/">
+        <div class="tile-img"><img src="/services/img/chatbot.jpg" alt="Preview of the Website Chat Assistant page" width="800" height="800"></div>
+        <div class="tile-body">
+          <div class="path-kicker">For HVAC, plumbing &amp; electrical shops</div>
+          <h3>Website Chat Assistant</h3>
+          <p>An AI assistant on your website that answers common questions from information you approve and emails you callback requests.</p>
+          <p class="tile-get">You get: after-hours answers and callback requests in your inbox. $300 setup + $249/month, month-to-month.</p>
+          <span class="tile-link">See details &rarr;</span>
+        </div>
+      </a>
+      <a class="tile" href="/datadashboard/">
+        <div class="tile-img"><img src="/services/img/dashboard.jpg" alt="Preview of the Monthly Business Snapshot page" width="800" height="800"></div>
+        <div class="tile-body">
+          <div class="path-kicker">For HVAC and electrical contractors</div>
+          <h3>Monthly Business Snapshot</h3>
+          <p>Financials, online presence, competition and the local market on one page, rebuilt monthly from files you drop in a shared folder.</p>
+          <p class="tile-get">You get: a two-minute headline and a drill-down for each section. See the sample, built on a fictional business.</p>
+          <span class="tile-link">See details &rarr;</span>
+        </div>
+      </a>
+      <div class="tile tile-help"><h3>Not sure which fits?</h3><p>Tell us the problem you can feel this week and we will point you to the right starting place.</p><a class="path-cta alt" href="mailto:dave@skillededge.io" style="align-self:flex-start">Email Dave &rarr;</a></div>
+    </div>
+  </div>
+</main>
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Start with the problem you can feel this week.</h2>
+    <p>Run a profit diagnostic, or tell us the workflow your team still copies by hand.</p>
+    <div class="cta-btns">
+      <a href="/distribution/" class="btn-primary">Distributor program</a>
+      <a href="/elec/" class="btn-ghost">Electrical diagnostic</a>
+      <a href="/workspace/" class="btn-ghost">Workspace automation</a>
+      <a href="/services/" class="btn-ghost">All services</a>
+    </div>
+    <div class="cta-note">Skilled Edge Group LLC · Springfield, VA · dave@skillededge.io</div>
+  </div>
+</section>
+<footer class="footer">
+  <div class="footer-brand">&#x2B21; Skilled Edge Group LLC</div>
+  <div class="footer-cols">
+    <div><div class="footer-h">Services</div>
+      <ul class="footer-links">
+        <li><a href="/services/">All services</a></li>
+        <li><a href="/distribution/">Distributor program</a></li>
+        <li><a href="/brokers/">Business brokers</a></li>
+        <li><a href="/workspace/">Workspace automation</a></li>
+      </ul></div>
+    <div><div class="footer-h">Trades &amp; shops</div>
+      <ul class="footer-links">
+        <li><a href="/elec/">Electrical diagnostic</a></li>
+        <li><a href="/cnc/">CNC diagnostic</a></li>
+        <li><a href="/chatbot/">Website chatbot</a></li>
+        <li><a href="/datadashboard/">Business snapshot</a></li>
+      </ul></div>
+    <div><div class="footer-h">Company</div>
+      <ul class="footer-links">
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/security/">Security</a></li>
+        <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
+        <li><a href="tel:+17035685161">703-568-5161</a></li>
+      </ul></div>
+  </div>
+  <div class="footer-copy">&copy; 2026 Skilled Edge Group LLC &middot; Springfield, VA &middot; All rights reserved.</div>
+</footer>
+</body>
+</html>
