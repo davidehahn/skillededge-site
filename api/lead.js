@@ -22,6 +22,10 @@ const NICHES = {
   'distribution': {
     utm_source: 'distribution_page',
     utm_campaign: 'distribution_action_lab_interest'
+  },
+  'consultants': {
+    utm_source: 'consultants_page',
+    utm_campaign: 'report_engine_fit_call'
   }
 };
 

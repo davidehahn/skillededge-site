@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Report Engine for Safety, Compliance &amp; QA Consultants | Skilled Edge</title>
+<meta name="description" content="A custom AI drafting and QA system built from your own past reports. Safety audits, certification, QA/QC, hazard analysis and inspection reports drafted in a day, not three." />
+<link rel="canonical" href="https://skillededge.io/consultants/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Report Engine for Independent Consultants | Skilled Edge" />
+<meta property="og:description" content="Your next report in a day, not three. Built from your own reports, in your format and your voice, with a QA layer that catches what you'd miss." />
+<meta property="og:url" content="https://skillededge.io/consultants/" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","name":"Report Engine","provider":{"@type":"Organization","name":"Skilled Edge Group LLC","url":"https://skillededge.io","email":"dave@skillededge.io","telephone":"+1-703-568-5161"},"areaServed":"US","audience":{"@type":"BusinessAudience","name":"Independent safety, compliance, engineering and quality assurance consultants"},"description":"A custom AI report drafting and quality-assurance system built from a consultant's own past reports, covering safety audits, safety certification, QA/QC audits, hazard analyses and site inspections."}
+</script>
+<style>
+:root{--navy:#0F1E2E;--navy-mid:#162436;--navy-2:#1B2D44;--orange:#E8600A;--orange-soft:#F29A5C;--orange-light:rgba(232,96,10,0.10);--white:#FFFFFF;--off-white:#F5F7FA;--border:#D4DAE2;--border-dark:rgba(255,255,255,0.10);--text:#1A202C;--mute:#4A5568;--good:#1F8A5B;--red:#D9473A;--mono:'IBM Plex Mono',monospace;--sans:'Inter',-apple-system,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--white);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+strong{font-weight:700}
+
+/* Nav */
+.nav{background:var(--navy);padding:0 5%;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border-dark)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--white)}
+.nav-brand-dot{width:8px;height:8px;background:var(--orange);border-radius:50%;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:22px;list-style:none}
+.nav-links a{font-size:13px;color:rgba(255,255,255,0.60);font-weight:500;font-family:var(--mono)}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{background:var(--orange);color:var(--white)!important;border-radius:6px;padding:8px 16px;font-size:13px;font-weight:700;font-family:var(--mono);display:inline-block}
+@media(max-width:820px){.nav-links li:not(:last-child){display:none}}
+
+/* Hero */
+.hero{background:radial-gradient(1200px 500px at 85% -10%,rgba(232,96,10,0.22),transparent 60%),var(--navy);padding:84px 5% 76px;position:relative;overflow:hidden}
+.hero-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1.15fr 0.85fr;gap:48px;align-items:center}
+@media(max-width:900px){.hero-inner{grid-template-columns:1fr}}
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--orange);margin-bottom:22px}
+.hero h1{font-family:var(--mono);font-size:clamp(30px,5.2vw,50px);font-weight:700;color:var(--white);letter-spacing:-0.035em;line-height:1.08;margin-bottom:24px}
+.hero h1 .hl{color:var(--orange)}
+.hero-sub{font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.72);max-width:600px;line-height:1.7;margin-bottom:36px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--orange);color:var(--white);border:none;border-radius:8px;padding:15px 30px;font-family:var(--mono);font-weight:700;font-size:14px;display:inline-block;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(232,96,10,0.35)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.80);border:1.5px solid rgba(255,255,255,0.22);border-radius:8px;padding:15px 26px;font-family:var(--mono);font-weight:600;font-size:14px;display:inline-block}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.5);color:#fff}
+.hero-proof{display:flex;gap:28px;margin-top:40px;flex-wrap:wrap}
+.hero-proof div{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.5)}
+.hero-proof b{display:block;font-size:22px;color:#fff;letter-spacing:-0.02em}
+
+/* Hero mock summary card */
+.mock{background:linear-gradient(160deg,var(--navy-2),var(--navy-mid));border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:22px;box-shadow:0 30px 60px rgba(0,0,0,0.35);color:#fff}
+.mock-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.mock-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-soft);font-weight:700}
+.mock-title{font-family:var(--mono);font-size:15px;font-weight:700;margin-top:3px}
+.pill{background:var(--orange);color:#fff;font-family:var(--mono);font-weight:700;font-size:12px;padding:5px 10px;border-radius:999px;white-space:nowrap}
+.mock-big{font-family:var(--mono);font-size:48px;font-weight:700;letter-spacing:-0.04em;line-height:1}
+.mock-big small{font-size:14px;color:rgba(255,255,255,0.6);letter-spacing:0;font-weight:500;margin-left:8px}
+.mock-bars{margin:18px 0 14px}
+.mbar{display:grid;grid-template-columns:96px 1fr 52px;gap:10px;align-items:center;font-family:var(--mono);font-size:12px;margin-bottom:9px;color:rgba(255,255,255,0.75)}
+.mbar .tr{height:10px;background:rgba(255,255,255,0.08);border-radius:6px;overflow:hidden}
+.mbar .fl{height:100%;border-radius:6px}
+.mbar b{text-align:right;color:#fff}
+.mock-flags{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mf{background:rgba(255,255,255,0.06);border-radius:10px;padding:10px 6px;text-align:center}
+.mf b{display:block;font-family:var(--mono);font-size:20px}
+.mf span{font-size:10.5px;color:rgba(255,255,255,0.6);line-height:1.3;display:block}
+.mf.red b{color:#FF8A7A}
+.mock-foot{font-family:var(--mono);font-size:10.5px;color:rgba(255,255,255,0.4);margin-top:12px}
+
+/* Sections */
+.section{padding:84px 5%}
+.section.alt{background:var(--off-white);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.section.dark{background:var(--navy);color:#fff}
+.section-inner{max-width:1080px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--orange);margin-bottom:14px}
+.section-title{font-family:var(--mono);font-size:clamp(23px,3.6vw,34px);font-weight:700;letter-spacing:-0.025em;line-height:1.18;margin-bottom:14px}
+.section-sub{font-size:16.5px;color:var(--mute);line-height:1.7;max-width:680px;margin-bottom:44px}
+.dark .section-sub{color:rgba(255,255,255,0.68)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:900px){.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:780px){.grid3,.grid2{grid-template-columns:1fr}}
+@media(max-width:520px){.grid4{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:24px 22px;transition:border-color .2s ease,transform .2s ease}
+.card:hover{border-color:var(--orange);transform:translateY(-2px)}
+.card h3{font-family:var(--mono);font-size:15px;margin-bottom:8px;letter-spacing:-0.01em}
+.card p{font-size:14px;color:var(--mute)}
+.num{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.08em;margin-bottom:10px}
+
+/* Pain */
+.pain{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+@media(max-width:900px){.pain{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.pain{grid-template-columns:1fr}}
+.pain div{padding:24px 22px;border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+.pain b{display:block;font-family:var(--mono);font-size:19px;margin-bottom:6px;color:var(--navy);letter-spacing:-0.03em}
+.pain span{font-size:14px;color:var(--mute)}
+
+/* QA layer */
+.qa-wrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+@media(max-width:900px){.qa-wrap{grid-template-columns:1fr}}
+.qa-list{list-style:none;display:flex;flex-direction:column;gap:18px}
+.qa-list li{display:grid;grid-template-columns:36px 1fr;gap:14px}
+.qa-ico{width:36px;height:36px;border-radius:8px;background:rgba(232,96,10,0.16);color:var(--orange-soft);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:13px}
+.qa-list h3{font-family:var(--mono);font-size:15px;margin-bottom:4px;color:#fff}
+.qa-list p{font-size:14px;color:rgba(255,255,255,0.66)}
+.flagpanel{background:#fff;color:var(--text);border-radius:14px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,0.35)}
+.fp-head{background:var(--navy-2);color:#fff;padding:14px 18px;font-family:var(--mono);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.fp-head span{color:rgba(255,255,255,0.55)}
+.fp-recon{padding:14px 18px;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:12.5px;display:flex;justify-content:space-between;background:#FFF7F0}
+.fp-recon b{color:var(--red)}
+.fp-row{padding:13px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:70px 1fr auto;gap:12px;align-items:start;font-size:13.5px}
+.fp-row:last-child{border-bottom:0}
+.fp-id{font-family:var(--mono);font-weight:700;color:var(--navy);font-size:12.5px}
+.tag{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.tag.open{background:#FDECEA;color:var(--red)}
+.tag.ev{background:#FFF4E5;color:#B7791F}
+.tag.miss{background:#EAF0F8;color:#2C5282}
+.fp-note{font-family:var(--mono);font-size:10.5px;color:var(--mute);padding:10px 18px;background:var(--off-white);border-top:1px solid var(--border)}
+
+/* Calculator */
+.calc{display:grid;grid-template-columns:0.95fr 1.05fr;gap:22px;align-items:start}
+@media(max-width:900px){.calc{grid-template-columns:1fr}}
+.calc-in{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px}
+.cf{margin-bottom:18px}
+.cf label{display:flex;justify-content:space-between;font-family:var(--mono);font-weight:600;font-size:13px;margin-bottom:8px}
+.cf label span{color:var(--orange)}
+.cf small{display:block;color:var(--mute);font-size:12px;margin-top:5px}
+.cf input[type=range]{width:100%;accent-color:var(--orange)}
+.cf select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;font-size:14.5px;background:#fff}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.row3 input{width:100%;padding:9px;border:1px solid var(--border);border-radius:8px;font-family:var(--mono);font-size:14px;text-align:center}
+.row3 em{font-style:normal;font-size:11.5px;color:var(--mute);text-align:center;display:block;margin-top:4px}
+.receipt{background:linear-gradient(160deg,var(--navy-2),var(--navy));color:#fff;border-radius:16px;padding:26px;position:relative;overflow:hidden}
+.receipt:after{content:"";position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;background:rgba(232,96,10,0.18)}
+.receipt>*{position:relative;z-index:1}
+.r-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.r-big{display:flex;align-items:baseline;gap:12px;margin:18px 0 6px}
+.r-big .n{font-family:var(--mono);font-size:60px;font-weight:700;letter-spacing:-0.04em;line-height:1;font-variant-numeric:tabular-nums}
+.r-big .t{font-size:14.5px;color:rgba(255,255,255,0.7);line-height:1.35}
+.fill{transition:width .35s ease}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px}
+.kpi .v{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--navy);letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
+.kpi .k{font-size:12.5px;color:var(--mute)}
+.kpi.hl{border-color:var(--orange);background:#FFF7F0}
+.kpi.hl .v{color:var(--orange)}
+.payback{margin-top:12px;padding:13px 16px;border-radius:10px;background:#EAF6F0;color:var(--good);font-family:var(--mono);font-weight:600;font-size:13.5px}
+.calc-note{font-size:12.5px;color:var(--mute);margin-top:16px}
+
+/* Reports */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--navy);background:#fff;border:1px solid var(--border);border-radius:24px;padding:9px 16px}
+.chip.on{border-color:var(--orange);background:var(--orange-light)}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;counter-reset:s}
+@media(max-width:980px){.steps{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+.step{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px 18px}
+.step .when{font-family:var(--mono);font-size:11px;color:var(--orange);font-weight:700;letter-spacing:.06em;margin-bottom:8px}
+.step h3{font-family:var(--mono);font-size:14.5px;margin-bottom:6px}
+.step p{font-size:13.5px;color:var(--mute)}
+
+/* Founder */
+.founder{display:grid;grid-template-columns:1fr 1.3fr;gap:40px;align-items:center}
+@media(max-width:860px){.founder{grid-template-columns:1fr}}
+.creds{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.cred{font-family:var(--mono);font-size:11.5px;font-weight:600;color:#fff;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:6px 10px}
+.quote{font-family:var(--mono);font-size:clamp(18px,2.4vw,22px);line-height:1.45;color:#fff;letter-spacing:-0.01em}
+.quote .hl{color:var(--orange)}
+
+/* Pricing */
+.price-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:880px}
+@media(max-width:780px){.price-grid{grid-template-columns:1fr}}
+.plan{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px 26px;position:relative}
+.plan.feat{border:2px solid var(--orange);box-shadow:0 18px 40px rgba(232,96,10,0.12)}
+.plan .ribbon{position:absolute;top:-12px;left:24px;background:var(--orange);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:.04em}
+.plan h3{font-family:var(--mono);font-size:15px;margin-bottom:6px}
+.plan .amt{font-family:var(--mono);font-size:44px;font-weight:700;letter-spacing:-0.04em;color:var(--navy);line-height:1.1}
+.plan .amt s{font-size:20px;color:var(--mute);margin-left:8px;font-weight:500}
+.plan .per{font-size:13px;color:var(--mute);margin-bottom:18px}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.plan li{font-size:14px;padding-left:22px;position:relative}
+.plan li::before{content:'✓';position:absolute;left:0;color:var(--orange);font-weight:700}
+.btn-dark{background:var(--navy);color:#fff;border-radius:8px;padding:13px 22px;font-family:var(--mono);font-weight:700;font-size:13.5px;display:inline-block;width:100%;text-align:center}
+.guarantee{display:grid;grid-template-columns:56px 1fr;gap:18px;align-items:center;max-width:880px;margin-top:22px;background:var(--off-white);border:1px solid var(--border);border-left:4px solid var(--good);border-radius:10px;padding:20px 22px}
+.guarantee .seal{width:56px;height:56px;border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:20px}
+.guarantee h3{font-family:var(--mono);font-size:15px;margin-bottom:4px}
+.guarantee p{font-size:14px;color:var(--mute)}
+
+/* FAQ */
+.faq details{border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:10px;background:var(--white)}
+.faq summary{font-family:var(--mono);font-size:14.5px;font-weight:600;cursor:pointer}
+.faq details p{font-size:14.5px;color:var(--mute);margin-top:10px;max-width:760px}
+
+/* CTA + form */
+.cta-section{background:radial-gradient(900px 400px at 10% 0%,rgba(232,96,10,0.18),transparent 60%),var(--navy);padding:84px 5%}
+.cta-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+@media(max-width:860px){.cta-inner{grid-template-columns:1fr}}
+.cta-section h2{font-family:var(--mono);font-size:clamp(24px,4vw,36px);color:var(--white);margin-bottom:14px;letter-spacing:-0.025em;line-height:1.15}
+.cta-section .lead{font-size:16px;color:rgba(255,255,255,0.7);margin-bottom:22px}
+.field{margin-bottom:14px}
+.field label{display:block;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:6px}
+.field input,.field select{width:100%;padding:12px 14px;border-radius:6px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.06);color:var(--white);font-family:var(--sans);font-size:15px}
+.field select option{color:#1A202C}
+.field input::placeholder{color:rgba(255,255,255,0.35)}
+.form-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:26px}
+.hp{position:absolute;left:-9999px;opacity:0}
+.form-msg{font-family:var(--mono);font-size:13px;margin-top:14px;min-height:20px}
+.form-msg.ok{color:#7FDB9B}
+.form-msg.err{color:#FFB38A}
+.cta-note{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.42);margin-top:16px}
+.contact-lines{font-family:var(--mono);font-size:14px;color:rgba(255,255,255,0.80);line-height:1.9;margin-top:22px}
+.contact-lines a{color:var(--white);text-decoration:underline}
+.cta-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.cta-list li{font-size:15px;color:rgba(255,255,255,0.8);padding-left:22px;position:relative}
+.cta-list li::before{content:'→';position:absolute;left:0;color:var(--orange);font-weight:700}
+
+/* Footer */
+.footer{background:var(--navy-mid);padding:32px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-brand{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--white)}
+.footer-links{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:rgba(255,255,255,0.40);font-family:var(--mono)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.30);font-family:var(--mono);width:100%}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/"><div class="nav-brand-dot"></div>Skilled Edge Group</a>
+  <ul class="nav-links">
+    <li><a href="#qa">QA Layer</a></li>
+    <li><a href="#calculator">Calculator</a></li>
+    <li><a href="#process">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact" class="nav-cta">Book a fit call →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">For independent safety, compliance &amp; QA consultants</div>
+      <h1>Your next report in <span class="hl">a day,</span> not three.</h1>
+      <p class="hero-sub"><strong style="color:#fff">Report Engine</strong> is a custom AI drafting and QA system built from your own past reports. It writes in your format and your voice, checks the data, reads the 30-page attachments, and flags the open hazard you'd have missed. You review, sign and send.</p>
+      <div class="hero-actions">
+        <a href="#calculator" class="btn-primary">Calculate your time back</a>
+        <a href="#contact" class="btn-ghost">Book a 15-minute fit call</a>
+      </div>
+      <div class="hero-proof">
+        <div><b>5</b>report types</div>
+        <div><b>2</b>live sessions</div>
+        <div><b>30</b>days of support</div>
+      </div>
+    </div>
+
+    <div class="mock" aria-label="Sample report summary">
+      <div class="mock-top">
+        <div>
+          <div class="mock-tag">Report Summary · Sample</div>
+          <div class="mock-title">Safety Audit Report</div>
+        </div>
+        <div class="pill">67% faster</div>
+      </div>
+      <div class="mock-big">16 hrs<small>saved on this report</small></div>
+      <div class="mock-bars">
+        <div class="mbar"><span>Normal</span><div class="tr"><div class="fl" style="width:100%;background:#7E8BA0"></div></div><b>24 hrs</b></div>
+        <div class="mbar"><span>Report Engine</span><div class="tr"><div class="fl" style="width:33%;background:var(--orange)"></div></div><b>8 hrs</b></div>
+      </div>
+      <div class="mock-flags">
+        <div class="mf red"><b>2</b><span>Open hazards flagged</span></div>
+        <div class="mf"><b>3</b><span>Data mismatches</span></div>
+        <div class="mf"><b>4</b><span>Citations to confirm</span></div>
+      </div>
+      <div class="mock-foot">Illustrative sample · not a client result</div>
+    </div>
+  </div>
+</header>
+
+<!-- PAIN -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Where the days go</div>
+    <h2 class="section-title">You're not paid to format. You're paid for judgment.</h2>
+    <p class="section-sub">The fieldwork is done. Then come the days of turning notes into a report, rewriting findings you've written a hundred times, and paging through attachments line by line. That's the part we take off your desk.</p>
+    <div class="pain">
+      <div><b>Notes → draft</b><span>Turning field notes, checklists and interviews into a structured first draft.</span></div>
+      <div><b>Same findings</b><span>Rewriting the same condition, criteria and recommendation language every job.</span></div>
+      <div><b>30-page attachments</b><span>Cross-checking hazard logs, test records and matrices against what the report says.</span></div>
+      <div><b>Final QA</b><span>Making sure the counts, dates, citations and summary all agree before it goes out.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="section alt" id="included">
+  <div class="section-inner">
+    <div class="section-label">What you get</div>
+    <h2 class="section-title">A working system, not a training session.</h2>
+    <p class="section-sub">You leave with an engine that drafts and checks your reports, set up in the AI tool you already use, and proof of how much time it saves on a real job.</p>
+    <div class="grid3">
+      <div class="card"><div class="num">01</div><h3>Custom drafting engine</h3><p>Built from three to five of your past reports. It knows your structure, section order, terminology and the standards you cite.</p></div>
+      <div class="card"><div class="num">02</div><h3>Field-notes intake template</h3><p>Drop in site notes, checklist results and observations. The engine writes a complete first draft in your format.</p></div>
+      <div class="card"><div class="num">03</div><h3>Your findings library</h3><p>Your best findings and recommendations saved as reusable language, so you stop rewriting the same paragraph every job.</p></div>
+      <div class="card"><div class="num">04</div><h3>The QA Layer</h3><p>Data checks, voice checks and attachment review that run before every report goes out. The part most people never think to ask AI for.</p></div>
+      <div class="card"><div class="num">05</div><h3>Timed live test</h3><p>We run it on a real job together, start to finish, and fix whatever breaks while you watch.</p></div>
+      <div class="card"><div class="num">06</div><h3>Time Savings Report + 30 days</h3><p>Hours before and after, the value per year, and 30 days of support with a tune-up once you've used it on live work.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- QA LAYER -->
+<section class="section dark" id="qa">
+  <div class="section-inner">
+    <div class="qa-wrap">
+      <div>
+        <div class="section-label">The QA Layer</div>
+        <h2 class="section-title">The checks you'd never think to ask AI for.</h2>
+        <p class="section-sub">Anyone can paste notes into a chatbot. What they get back sounds generic, invents citations and skims the attachments. The QA Layer is what makes the output safe to sign.</p>
+        <ul class="qa-list">
+          <li><div class="qa-ico">01</div><div><h3>Data QA</h3><p>Every count, date and number checked against your notes. Twelve findings in the summary means twelve in the body. Summary, findings and corrective actions all agree.</p></div></li>
+          <li><div class="qa-ico">02</div><div><h3>Voice check</h3><p>Reads like you, not like a consultant template or a chatbot. Built from your own writing, with filler and AI phrasing stripped out.</p></div></li>
+          <li><div class="qa-ico">03</div><div><h3>Attachment QA</h3><p>Every hazard or item pulled into a table and counted. Open items, closures without evidence and anything the report never mentions get flagged.</p></div></li>
+          <li><div class="qa-ico">04</div><div><h3>Citation &amp; revision check</h3><p>Every cited standard flagged for you to confirm. Referenced documents checked for current revision and dates in the right order.</p></div></li>
+          <li><div class="qa-ico">05</div><div><h3>Open-items rollup</h3><p>Every open item across the report and its attachments in one list, so nothing falls between sections.</p></div></li>
+        </ul>
+      </div>
+
+      <div class="flagpanel" aria-label="Example attachment QA flags">
+        <div class="fp-head">Attachment QA · O&amp;SHA (32 pp.)<span>Illustrative example</span></div>
+        <div class="fp-recon"><span>Hazards stated in document: 47 · Extracted: 45</span><b>2 unaccounted</b></div>
+        <div class="fp-row"><div class="fp-id">HZ-014</div><div>Platform edge gap during single-tracking. Status open, no owner or due date.</div><div class="tag open">OPEN</div></div>
+        <div class="fp-row"><div class="fp-id">HZ-031</div><div>Traction power isolation. Mitigation listed but residual risk still rated high.</div><div class="tag open">OPEN</div></div>
+        <div class="fp-row"><div class="fp-id">HZ-022</div><div>Marked closed. No verification evidence referenced.</div><div class="tag ev">NO EVIDENCE</div></div>
+        <div class="fp-row"><div class="fp-id">HZ-040</div><div>In the attachment, but not mentioned anywhere in the report.</div><div class="tag miss">NOT IN REPORT</div></div>
+        <div class="fp-note">Flags are for the consultant to review and resolve. The engine never marks a report "no issues found."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="section alt" id="calculator">
+  <div class="section-inner">
+    <div class="section-label">Time-back calculator</div>
+    <h2 class="section-title">What are your reports costing you?</h2>
+    <p class="section-sub">Put in your own numbers. The summary on the right is the same card you'll get after every report the engine produces.</p>
+
+    <div class="calc">
+      <div class="calc-in">
+        <div class="cf">
+          <label for="cType">Report type</label>
+          <select id="cType">
+            <option>Safety Audit Report</option>
+            <option>Safety Certification Report</option>
+            <option>QA/QC Audit Report</option>
+            <option>Hazard Analysis Report</option>
+            <option>Site Inspection Report</option>
+          </select>
+        </div>
+        <div class="cf">
+          <label for="hNow">Hours per report today <span id="hNowV"></span></label>
+          <input type="range" id="hNow" min="2" max="80" step="1" value="24">
+          <small>Start to finish: drafting, formatting, cross-checking, attachments.</small>
+        </div>
+        <div class="cf">
+          <label for="hNew">Hours with Report Engine <span id="hNewV"></span></label>
+          <input type="range" id="hNew" min="1" max="40" step="1" value="8">
+          <small>An estimate. We measure the real number on your timed test run.</small>
+        </div>
+        <div class="cf">
+          <label for="perMo">Reports per month <span id="perMoV"></span></label>
+          <input type="range" id="perMo" min="1" max="20" step="1" value="2">
+        </div>
+        <div class="cf">
+          <label for="rate">Value of your hour <span id="rateV"></span></label>
+          <input type="range" id="rate" min="50" max="400" step="5" value="150">
+          <small>Your billing rate, or what an hour of your time is worth.</small>
+        </div>
+        <div class="cf" style="margin-bottom:0">
+          <label>QA flags on a typical report</label>
+          <div class="row3">
+            <div><input type="number" id="fOpen" min="0" value="2" aria-label="Open hazards"><em>Open hazards</em></div>
+            <div><input type="number" id="fData" min="0" value="3" aria-label="Data mismatches"><em>Data mismatches</em></div>
+            <div><input type="number" id="fCite" min="0" value="4" aria-label="Citations to confirm"><em>Citations</em></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="receipt">
+          <div class="r-top">
+            <div>
+              <div class="mock-tag">Report Summary</div>
+              <div class="mock-title" id="rTitle" style="font-size:18px">Safety Audit Report</div>
+            </div>
+            <div class="pill" id="rPct">67% faster</div>
+          </div>
+          <div class="r-big"><div class="n" id="rSaved">16</div><div class="t">hours saved<br>on this report</div></div>
+          <div class="mock-bars">
+            <div class="mbar"><span>Normal</span><div class="tr"><div class="fl fill" id="bOld" style="width:100%;background:#7E8BA0"></div></div><b id="rOld">24 hrs</b></div>
+            <div class="mbar"><span>Report Engine</span><div class="tr"><div class="fl fill" id="bNew" style="background:var(--orange)"></div></div><b id="rNew">8 hrs</b></div>
+          </div>
+          <div class="mock-flags">
+            <div class="mf red"><b id="rOpen">2</b><span>Open hazards flagged</span></div>
+            <div class="mf"><b id="rData">3</b><span>Data mismatches</span></div>
+            <div class="mf"><b id="rCite">4</b><span>Citations to confirm</span></div>
+          </div>
+          <div class="mock-foot">Every flag reviewed and resolved by the consultant before submission.</div>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="v" id="kMo">32 hrs</div><div class="k">Saved per month</div></div>
+          <div class="kpi"><div class="v" id="kYr">384 hrs</div><div class="k">Saved per year</div></div>
+          <div class="kpi"><div class="v" id="kDays">48 days</div><div class="k">Workdays back per year</div></div>
+          <div class="kpi hl"><div class="v" id="kVal">$57,600</div><div class="k">Value of time back per year</div></div>
+        </div>
+        <div class="payback" id="payback">Pays for itself on your first report.</div>
+      </div>
+    </div>
+    <p class="calc-note">Estimates based on the numbers you enter. Actual savings are measured on your timed test run during setup.</p>
+  </div>
+</section>
+
+<!-- REPORT TYPES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">Report types</div>
+    <h2 class="section-title">Five report shells, tuned to how each one actually works.</h2>
+    <p class="section-sub">An audit report is built on findings. A certification report is built on evidence. A hazard analysis is built on a matrix. Each shell starts from a shared core and is adapted to your format during intake.</p>
+    <div class="chips">
+      <span class="chip on">Safety Audit</span>
+      <span class="chip on">Safety Certification</span>
+      <span class="chip on">QA/QC Audit</span>
+      <span class="chip on">Hazard Analysis</span>
+      <span class="chip on">Site Inspection</span>
+      <span class="chip">Incident Investigation · on request</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section alt" id="process">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">About 2.5 hours of your time. Fully remote.</h2>
+    <p class="section-sub">You bring the reports and the judgment. We do the build between sessions so your time goes into tuning and testing, not watching setup.</p>
+    <div class="steps">
+      <div class="step"><div class="when">30 MIN</div><h3>Intake call</h3><p>Pick the report type, share past examples, and time your current process.</p></div>
+      <div class="step"><div class="when">OFFLINE</div><h3>We build it</h3><p>Your engine, intake template, findings library and QA Layer, from your own reports.</p></div>
+      <div class="step"><div class="when">60 MIN</div><h3>Handover</h3><p>Walk through the engine and tune it to the way you write.</p></div>
+      <div class="step"><div class="when">60 MIN</div><h3>Live test</h3><p>Run it on a real job, start to finish. Timed and measured.</p></div>
+      <div class="step"><div class="when">DAY 30</div><h3>Tune-up</h3><p>Check-in after live use, adjustments, and your Time Savings Report.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="section dark">
+  <div class="section-inner founder">
+    <div>
+      <div class="section-label">Built by a practitioner</div>
+      <h2 class="section-title" style="color:#fff">Built by someone who has written and reviewed these reports.</h2>
+      <p class="section-sub" style="margin-bottom:0">Dave Hahn has spent more than 18 years in transit safety, safety certification and quality assurance. He knows what a defensible finding looks like, where a certification package gets challenged, and exactly where AI gets it wrong.</p>
+      <div class="creds">
+        <span class="cred">WSO-CSSD</span><span class="cred">ASQ-CQA</span><span class="cred">TSSP</span><span class="cred">PTSCTP</span><span class="cred">OSHA</span><span class="cred">Mass Transit 40 Under 40</span>
+      </div>
+    </div>
+    <div class="quote">"AI doesn't replace a consultant's judgment. It replaces the <span class="hl">three days of typing</span> between the fieldwork and the signature, and it catches the item you'd overlook at 11 p.m. the night before it's due."</div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">One fixed fee. Typically pays for itself within the first month.</h2>
+    <p class="section-sub">One report type per engagement. Additional report types can be added at a reduced rate.</p>
+    <div class="price-grid">
+      <div class="plan feat">
+        <div class="ribbon">FOUNDING RATE · 3 SPOTS</div>
+        <h3>Founding Client</h3>
+        <div class="amt">$995<s>$2,500</s></div>
+        <div class="per">Fixed fee · one report type</div>
+        <ul>
+          <li>Everything in the standard engagement</li>
+          <li>Priority scheduling</li>
+          <li>In exchange for an anonymized case study and an honest testimonial</li>
+        </ul>
+        <a href="#contact" class="btn-primary" style="width:100%;text-align:center">Claim a founding spot</a>
+      </div>
+      <div class="plan">
+        <h3>Standard</h3>
+        <div class="amt">$2,500</div>
+        <div class="per">Fixed fee · one report type</div>
+        <ul>
+          <li>Custom drafting engine and intake template</li>
+          <li>Findings library and full QA Layer</li>
+          <li>Intake call, handover and timed live test</li>
+          <li>Time Savings Report</li>
+          <li>30 days of support and a tune-up</li>
+        </ul>
+        <a href="#contact" class="btn-dark">Book a fit call</a>
+      </div>
+    </div>
+    <div class="guarantee">
+      <div class="seal">½</div>
+      <div>
+        <h3>The half-time guarantee</h3>
+        <p>If your first report built with the engine doesn't take at least half the time it does today, we keep tuning it at no extra charge until it does.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section alt faq" id="faq">
+  <div class="section-inner">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-title">Straight answers.</h2>
+    <details><summary>Will the reports sound like AI wrote them?</summary><p>No. The engine is built from your own past reports and tuned to your wording, sentence length and terminology. The voice check strips consultant filler and common AI phrasing. If it doesn't sound like you, we tune it until it does.</p></details>
+    <details><summary>Does this replace my professional judgment?</summary><p>No. The engine drafts and flags. You decide. Every finding, risk rating and certification statement is yours to review and sign. Risk ratings come from your own matrix, never from the AI.</p></details>
+    <details><summary>What about client confidentiality?</summary><p>We sign an NDA before you share anything. Client names and identifying details are removed from example reports before they're used. The engine is set up in your own AI account, so your live client work stays with you. Check your client contracts for any restrictions on AI tools, and we'll build around them.</p></details>
+    <details><summary>Which AI tool does it run on?</summary><p>The one you already use, on a paid plan, such as ChatGPT or Claude. If you don't have one yet, we'll recommend a plan during intake. No new software to learn.</p></details>
+    <details><summary>Do I have to tell my clients I use AI?</summary><p>Some agencies and contracts now require disclosure. We cover this during intake so the way you use the engine fits your client requirements.</p></details>
+    <details><summary>My reports don't follow a standard template. Will this work?</summary><p>Yes. That's why we start from your past reports, not a generic template. The shells give us a head start; your examples set the format.</p></details>
+    <details><summary>Does the attachment check guarantee nothing is missed?</summary><p>No tool can promise that, and we won't. It extracts and counts every item, reconciles against the document's own totals, and flags what needs your attention. It catches what's easy to overlook. You make the final call.</p></details>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <div>
+      <h2>See it on one of your reports.</h2>
+      <p class="lead">Start with a 15-minute fit call. We'll look at the report type that eats the most of your time and whether the engine is a fit.</p>
+      <ul class="cta-list">
+        <li>No sales deck</li>
+        <li>No client documents needed for the first call</li>
+        <li>Three founding spots at $995</li>
+      </ul>
+      <div class="contact-lines">
+        Dave Hahn · Founder, Skilled Edge Group LLC<br>
+        <a href="mailto:dave@skillededge.io?subject=Report%20Engine%20fit%20call">dave@skillededge.io</a> · <a href="tel:+17035685161">703-568-5161</a>
+      </div>
+    </div>
+    <div class="form-box">
+      <form id="leadForm" novalidate>
+        <div class="field"><label for="fName">Name</label><input id="fName" name="name" type="text" placeholder="Your name" autocomplete="name"></div>
+        <div class="field"><label for="fEmail">Email *</label><input id="fEmail" name="email" type="email" placeholder="you@yourfirm.com" autocomplete="email" required></div>
+        <div class="field"><label for="fCompany">Firm</label><input id="fCompany" name="company" type="text" placeholder="Your firm (optional)" autocomplete="organization"></div>
+        <div class="field">
+          <label for="fType">Report that takes the most time</label>
+          <select id="fType" name="interest">
+            <option>Safety Audit Report</option>
+            <option>Safety Certification Report</option>
+            <option>QA/QC Audit Report</option>
+            <option>Hazard Analysis Report</option>
+            <option>Site Inspection Report</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <input class="hp" type="text" id="fWeb" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit" class="btn-primary" id="fBtn" style="width:100%">Request a fit call</button>
+        <div class="form-msg" id="fMsg" role="status"></div>
+        <div class="cta-note">Your calculator numbers are included so the call starts with your figures. Please don't send client documents with this form.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-brand">⬡ Skilled Edge Group LLC</div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/services/">Services</a></li>
+    <li><a href="/privacy/">Privacy</a></li>
+    <li><a href="/security/">Security</a></li>
+    <li><a href="mailto:dave@skillededge.io">dave@skillededge.io</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 Skilled Edge Group LLC · Springfield, VA · All rights reserved.</div>
+</footer>
+
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var fmt = function(n){ return Math.round(n).toLocaleString('en-US'); };
+  var money = function(n){ return '$' + Math.round(n).toLocaleString('en-US'); };
+  var state = {};
+
+  function calc(){
+    var hNow = +$('hNow').value, hNew = +$('hNew').value;
+    if (hNew >= hNow){ hNew = Math.max(1, hNow - 1); $('hNew').value = hNew; }
+    var perMo = +$('perMo').value, rate = +$('rate').value, price = 2500;
+
+    $('hNowV').textContent = hNow + ' hrs';
+    $('hNewV').textContent = hNew + ' hrs';
+    $('perMoV').textContent = perMo;
+    $('rateV').textContent = money(rate) + '/hr';
+
+    var saved = hNow - hNew;
+    var pct = Math.round(saved / hNow * 100);
+    var mo = saved * perMo, yr = mo * 12, val = yr * rate;
+    var perReportVal = saved * rate;
+    var toPay = Math.ceil(price / perReportVal);
+
+    $('rTitle').textContent = $('cType').value;
+    $('rPct').textContent = pct + '% faster';
+    $('rSaved').textContent = fmt(saved);
+    $('rOld').textContent = hNow + ' hrs';
+    $('rNew').textContent = hNew + ' hrs';
+    $('bNew').style.width = Math.max(3, hNew / hNow * 100) + '%';
+    $('rOpen').textContent = Math.max(0, +$('fOpen').value || 0);
+    $('rData').textContent = Math.max(0, +$('fData').value || 0);
+    $('rCite').textContent = Math.max(0, +$('fCite').value || 0);
+
+    $('kMo').textContent = fmt(mo) + ' hrs';
+    $('kYr').textContent = fmt(yr) + ' hrs';
+    $('kDays').textContent = fmt(yr / 8) + ' days';
+    $('kVal').textContent = money(val);
+    $('payback').textContent = toPay <= 1
+      ? 'Pays for itself on your first report (' + money(perReportVal) + ' of time back per report, at the $2,500 standard rate).'
+      : 'Pays for itself after ' + toPay + ' reports (' + money(perReportVal) + ' of time back per report, at the $2,500 standard rate).';
+
+    state = { type: $('cType').value, hNow: hNow, hNew: hNew, perMo: perMo, rate: rate, yrHours: yr, yrValue: Math.round(val) };
+  }
+  ['hNow','hNew','perMo','rate','cType','fOpen','fData','fCite'].forEach(function(id){ $(id).addEventListener('input', calc); });
+  $('cType').addEventListener('change', function(){ $('fType').value = $('cType').value; });
+  calc();
+
+  $('leadForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var msg = $('fMsg'), btn = $('fBtn');
+    if ($('fWeb').value) return;
+    var email = $('fEmail').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.className = 'form-msg err'; msg.textContent = 'Please enter a valid email.'; return; }
+    btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
+    var payload = {
+      email: email,
+      niche: 'consultants',
+      name: $('fName').value.trim(),
+      company: $('fCompany').value.trim(),
+      interest: $('fType').value + ' | ' + state.hNow + 'h now -> ' + state.hNew + 'h engine | ' + state.perMo + '/mo',
+      loaded_rate: state.rate,
+      modeled_total: state.yrValue,
+      conservative_total: state.yrHours,
+      page: '/consultants/',
+      submitted_at: new Date().toISOString()
+    };
+    fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { ok: r.ok, d: d }; }); })
+      .then(function(res){
+        if (res.ok){ msg.className = 'form-msg ok'; msg.textContent = 'Thanks. Dave will reply within one business day to set up a time.'; $('leadForm').reset(); }
+        else { throw new Error((res.d && res.d.error) || 'failed'); }
+      })
+      .catch(function(){ msg.className = 'form-msg err'; msg.textContent = 'That didn\'t go through. Please email dave@skillededge.io directly.'; })
+      .finally(function(){ btn.disabled = false; btn.textContent = 'Request a fit call'; });
+  });
+})();
+</script>
+</body>
+</html>
