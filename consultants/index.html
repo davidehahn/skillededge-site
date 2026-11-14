@@ -132,6 +132,15 @@ strong{font-weight:700}
 .cf small{display:block;color:var(--mute);font-size:12px;margin-top:5px}
 .cf input[type=range]{width:100%;accent-color:var(--orange)}
 .cf select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;font-size:14.5px;background:#fff}
+.cf input[type=text]{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;font-size:14.5px;background:#fff;box-sizing:border-box}
+.custom-wrap{display:none;margin-top:12px;padding:14px;border:1px dashed var(--border);border-radius:10px;background:#FAFBFC}
+.custom-wrap.on{display:block}
+.bench-note{margin-top:12px;padding:10px 12px;border-left:3px solid var(--orange);background:var(--orange-light);font-size:12.5px;line-height:1.5;color:var(--navy);border-radius:0 6px 6px 0}
+.check{display:none;align-items:flex-start;gap:10px;margin:2px 0 16px;font-size:13.5px;color:rgba(255,255,255,0.8);line-height:1.45;cursor:pointer}
+.check.on{display:flex}
+.check input{width:18px;height:18px;margin-top:1px;accent-color:var(--orange);flex-shrink:0}
+.field .err-in{border-color:#FFB38A}
+.custom-wrap textarea{width:100%;min-height:64px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;font-size:14px;background:#fff;box-sizing:border-box;resize:vertical}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .row3 input{width:100%;padding:9px;border:1px solid var(--border);border-radius:8px;font-family:var(--mono);font-size:14px;text-align:center}
 .row3 em{font-style:normal;font-size:11.5px;color:var(--mute);text-align:center;display:block;margin-top:4px}
@@ -363,7 +372,15 @@ strong{font-weight:700}
             <option>Hazard Analysis Report</option>
             <option>Site Inspection Report</option>
             <option>Safety Plan Review</option>
+            <option value="custom">Custom report (name your own)</option>
           </select>
+          <div class="custom-wrap" id="customWrap">
+            <label for="cName" style="display:block;font-family:var(--mono);font-size:13px;font-weight:600;margin-bottom:8px">Report name *</label>
+            <input type="text" id="cName" maxlength="60" placeholder="e.g. Crane Lift Plan Review" autocomplete="off">
+            <label for="cDesc" style="display:block;font-family:var(--mono);font-size:13px;font-weight:600;margin:14px 0 8px">What does it check? <span style="color:var(--mute);font-weight:400">(optional)</span></label>
+            <textarea id="cDesc" maxlength="240" placeholder="e.g. Checks each lift plan against the crane manufacturer's load charts and the site rigging spec."></textarea>
+            <div class="bench-note"><b>Custom reports require one past report you wrote.</b> We use it as the benchmark for sections, format, style and tone. You send it after the fit call, not here. Redacted is fine.</div>
+          </div>
         </div>
         <div class="cf">
           <label for="hNow">Hours per report today <span id="hNowV"></span></label>
@@ -434,7 +451,7 @@ strong{font-weight:700}
   <div class="section-inner">
     <div class="section-label">Report types</div>
     <h2 class="section-title">Six report shells, tuned to how each one actually works.</h2>
-    <p class="section-sub">An audit report is built on findings. A certification report is built on evidence. A hazard analysis is built on a matrix. A safety plan review checks a contractor's plan against every requirement in the owner's manual or contract. Each shell starts from a shared core and is adapted to your format during intake.</p>
+    <p class="section-sub">An audit report is built on findings. A certification report is built on evidence. A hazard analysis is built on a matrix. A safety plan review checks a contractor's plan against every requirement in the owner's manual or contract. Each shell starts from a shared core and is adapted to your format during intake. Write a report that isn't listed? We build a custom shell, using one of your past reports as the benchmark.</p>
     <div class="chips">
       <span class="chip on">Safety Audit</span>
       <span class="chip on">Safety Certification</span>
@@ -442,6 +459,7 @@ strong{font-weight:700}
       <span class="chip on">Hazard Analysis</span>
       <span class="chip on">Site Inspection</span>
       <span class="chip on">Safety Plan Review</span>
+      <span class="chip on">Your own report · built from your past report</span>
       <span class="chip">Incident Investigation · on request</span>
     </div>
   </div>
@@ -532,6 +550,8 @@ strong{font-weight:700}
     <details><summary>Which AI tool does it run on?</summary><p>The one you already use, on a paid plan, such as ChatGPT or Claude. If you don't have one yet, we'll recommend a plan during intake. No new software to learn.</p></details>
     <details><summary>What files can I upload?</summary><p>Text documents: PDF, Word and Excel files, such as hazard analyses, specifications, checklists and test records. Drawings, CAD files, and video are not part of this package. We can scope them separately if you need them later.</p></details>
     <details><summary>Do I have to tell my clients I use AI?</summary><p>Some agencies and contracts now require disclosure. We cover this during intake so the way you use the engine fits your client requirements.</p></details>
+    <details><summary>What do you need for a custom report?</summary><p>One past report of that type that you wrote and own, or have the right to share. Redact client names and identifying details first. We use it as the benchmark for sections, format, style and tone. You send it through a view-only Google Drive share after the NDA is signed, never through this website. Please don't send another organization's internal documents.</p></details>
+    <details><summary>How does the live demo work?</summary><p>On the fit call, you share your screen and run a short starter prompt in your own AI account on a report you choose. The draft appears on your screen, in your account. Your report never comes to us.</p></details>
     <details><summary>My reports don't follow a standard template. Will this work?</summary><p>Yes. That's why we start from your past reports, not a generic template. The shells give us a head start; your examples set the format.</p></details>
     <details><summary>Does the attachment check guarantee nothing is missed?</summary><p>No tool can promise that, and we won't. It extracts and counts every item, reconciles against the document's own totals, and flags what needs your attention. It catches what's easy to overlook. You make the final call.</p></details>
   </div>
@@ -567,9 +587,12 @@ strong{font-weight:700}
             <option>Hazard Analysis Report</option>
             <option>Site Inspection Report</option>
             <option>Safety Plan Review</option>
+            <option value="Custom report">Custom report</option>
             <option>Other</option>
           </select>
         </div>
+        <div class="field" id="fCustomField" style="display:none"><label for="fCustomName">Custom report name *</label><input id="fCustomName" type="text" maxlength="60" placeholder="e.g. Crane Lift Plan Review" autocomplete="off"></div>
+        <label class="check" id="fBenchWrap" for="fBench"><input type="checkbox" id="fBench"><span>I have a past report of this type that I wrote and can share (redacted is fine). *</span></label>
         <input class="hp" type="text" id="fWeb" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button type="submit" class="btn-primary" id="fBtn" style="width:100%">Request a fit call</button>
         <div class="form-msg" id="fMsg" role="status"></div>
@@ -597,6 +620,12 @@ strong{font-weight:700}
   var fmt = function(n){ return Math.round(n).toLocaleString('en-US'); };
   var money = function(n){ return '$' + Math.round(n).toLocaleString('en-US'); };
   var state = {};
+  function isCustom(){ return $('cType').value === 'custom'; }
+  function reportName(){
+    if (!isCustom()) return $('cType').value;
+    var n = $('cName').value.trim();
+    return n || 'Custom report';
+  }
 
   function calc(){
     var hNow = +$('hNow').value, hNew = +$('hNew').value;
@@ -614,7 +643,7 @@ strong{font-weight:700}
     var perReportVal = saved * rate;
     var toPay = Math.ceil(price / perReportVal);
 
-    $('rTitle').textContent = $('cType').value;
+    $('rTitle').textContent = reportName();
     $('rPct').textContent = pct + '% faster';
     $('rSaved').textContent = fmt(saved);
     $('rOld').textContent = hNow + ' hrs';
@@ -632,10 +661,26 @@ strong{font-weight:700}
       ? 'Pays for itself on your first report (' + money(perReportVal) + ' of time back per report, at the $2,500 standard rate).'
       : 'Pays for itself after ' + toPay + ' reports (' + money(perReportVal) + ' of time back per report, at the $2,500 standard rate).';
 
-    state = { type: $('cType').value, hNow: hNow, hNew: hNew, perMo: perMo, rate: rate, yrHours: yr, yrValue: Math.round(val) };
+    state = { type: reportName(), custom: isCustom(), desc: isCustom() ? $('cDesc').value.trim() : '', hNow: hNow, hNew: hNew, perMo: perMo, rate: rate, yrHours: yr, yrValue: Math.round(val) };
   }
-  ['hNow','hNew','perMo','rate','cType','fOpen','fData','fCite'].forEach(function(id){ $(id).addEventListener('input', calc); });
-  $('cType').addEventListener('change', function(){ $('fType').value = $('cType').value; });
+  ['hNow','hNew','perMo','rate','cType','cName','cDesc','fOpen','fData','fCite'].forEach(function(id){ $(id).addEventListener('input', calc); });
+  $('cType').addEventListener('change', function(){
+    var custom = isCustom();
+    $('customWrap').classList.toggle('on', custom);
+    $('fType').value = custom ? 'Custom report' : $('cType').value;
+    syncForm();
+    if (custom) $('cName').focus();
+    calc();
+  });
+  function formCustom(){ return $('fType').value === 'Custom report'; }
+  function syncForm(){
+    var on = formCustom();
+    $('fCustomField').style.display = on ? 'block' : 'none';
+    $('fBenchWrap').classList.toggle('on', on);
+    if (on && isCustom() && $('cName').value.trim()) $('fCustomName').value = $('cName').value.trim();
+  }
+  $('fType').addEventListener('change', syncForm);
+  $('cName').addEventListener('input', function(){ if (formCustom()) $('fCustomName').value = $('cName').value.trim(); });
   calc();
 
   $('leadForm').addEventListener('submit', function(e){
@@ -644,13 +689,17 @@ strong{font-weight:700}
     if ($('fWeb').value) return;
     var email = $('fEmail').value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.className = 'form-msg err'; msg.textContent = 'Please enter a valid email.'; return; }
+    var custom = formCustom(), cname = $('fCustomName').value.trim();
+    $('fCustomName').classList.remove('err-in');
+    if (custom && !cname){ $('fCustomName').classList.add('err-in'); $('fCustomName').focus(); msg.className = 'form-msg err'; msg.textContent = 'Please name your custom report.'; return; }
+    if (custom && !$('fBench').checked){ msg.className = 'form-msg err'; msg.textContent = 'Custom reports require a past report to use as the benchmark. Please confirm you have one.'; return; }
     btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
     var payload = {
       email: email,
       niche: 'consultants',
       name: $('fName').value.trim(),
       company: $('fCompany').value.trim(),
-      interest: $('fType').value + ' | ' + state.hNow + 'h now -> ' + state.hNew + 'h engine | ' + state.perMo + '/mo',
+      interest: (custom ? 'Custom: ' + cname + (state.custom && state.desc ? ' (' + state.desc + ')' : '') + ' | Benchmark report: yes' : $('fType').value) + ' | ' + state.hNow + 'h now -> ' + state.hNew + 'h engine | ' + state.perMo + '/mo',
       loaded_rate: state.rate,
       modeled_total: state.yrValue,
       conservative_total: state.yrHours,
@@ -660,7 +709,7 @@ strong{font-weight:700}
     fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
       .then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ return { ok: r.ok, d: d }; }); })
       .then(function(res){
-        if (res.ok){ msg.className = 'form-msg ok'; msg.textContent = 'Thanks. Dave will reply within one business day to set up a time.'; $('leadForm').reset(); }
+        if (res.ok){ msg.className = 'form-msg ok'; msg.textContent = 'Thanks. Dave will reply within one business day to set up a time.'; $('leadForm').reset(); syncForm(); }
         else { throw new Error((res.d && res.d.error) || 'failed'); }
       })
       .catch(function(){ msg.className = 'form-msg err'; msg.textContent = 'That didn\'t go through. Please email dave@skillededge.io directly.'; })
