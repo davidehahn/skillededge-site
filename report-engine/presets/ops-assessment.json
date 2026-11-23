@@ -1,0 +1,935 @@
+{
+ "id": "ops-assessment",
+ "engineId": "SE-RE-DEMO",
+ "licensedBy": "Skilled Edge Group LLC",
+ "consultant": {
+  "name": "",
+  "credentials": "",
+  "firm": ""
+ },
+ "featured": 3,
+ "blurb": "Operations or management assessment: current state, issues and their impact, prioritized recommendations, and a 30/60/90-day plan.",
+ "reportType": "Operations Assessment",
+ "reportTitle": "Operations Assessment Report",
+ "itemNoun": "issue",
+ "injuryQuestions": false,
+ "jobSheetFields": [
+  {
+   "key": "client",
+   "label": "Client (organization)"
+  },
+  {
+   "key": "unit",
+   "label": "Business unit, site or function assessed"
+  },
+  {
+   "key": "sponsor",
+   "label": "Sponsor (name and title, as given in writing)"
+  },
+  {
+   "key": "objective",
+   "label": "Purpose of the assessment and questions to answer",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "context",
+   "label": "Business context (what the organization does, size, recent changes)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "scope",
+   "label": "In scope; anything excluded",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "approach",
+   "label": "Approach: interviews, observation, data reviewed",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "visitDates",
+   "label": "Assessment period"
+  },
+  {
+   "key": "reportDate",
+   "label": "Report date"
+  },
+  {
+   "key": "reportNo",
+   "label": "Report number / revision"
+  },
+  {
+   "key": "participants",
+   "label": "People interviewed (name or role, as given in writing)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "metrics",
+   "label": "Key figures supplied by the client (with source and period)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "planStart",
+   "label": "Plan start date (day 1 of the 30/60/90-day plan)"
+  }
+ ],
+ "titleField": "client",
+ "columns": [
+  {
+   "key": "id",
+   "label": "#",
+   "readonly": true
+  },
+  {
+   "key": "area",
+   "label": "Area / process"
+  },
+  {
+   "key": "finding",
+   "label": "Issue (current state)"
+  },
+  {
+   "key": "evidence",
+   "label": "Evidence"
+  },
+  {
+   "key": "impact",
+   "label": "Impact"
+  },
+  {
+   "key": "priority",
+   "label": "Priority (yours)",
+   "options": [
+    "[needed]",
+    "High",
+    "Medium",
+    "Low"
+   ],
+   "consultantOnly": true
+  },
+  {
+   "key": "recommendation",
+   "label": "Recommendation"
+  },
+  {
+   "key": "owner",
+   "label": "Owner (job title)"
+  },
+  {
+   "key": "timeframe",
+   "label": "Timeframe",
+   "options": [
+    "[needed]",
+    "30 days",
+    "60 days",
+    "90 days"
+   ]
+  }
+ ],
+ "ratingKey": "priority",
+ "countRatings": [
+  "High",
+  "Medium",
+  "Low"
+ ],
+ "countsLabel": "Priority",
+ "requirementLabels": [],
+ "recommendationSource": "STRENGTH",
+ "idRules": "Issues are numbered I-1, I-2. The 30/60/90-day plan uses the same IDs. Strengths are not numbered.",
+ "findingRules": "2. Evidence: every issue rests on something in the sources: a figure (with its source and period), an observation, a document, or what interviewees said (attributed by role, and marked \"per interviews\"). An opinion with no evidence is a question, not an issue. Strengths go in \"notesNotUsed\" with reason \"strength\".\n3. Impact: describe the effect on cost, time, quality, customers, people or risk using only figures from the sources or the job sheet. Never estimate a dollar figure or percentage yourself; write [needed] if the consultant should supply one. Put the issue ID in the \"id\" field as I-1, I-2.",
+ "projectRules": "You build [REPORT TYPE] reports for [CONSULTANT NAME], an independent management consultant. Engine ID: [CLIENT ID], licensed by Skilled Edge Group LLC for this consultant only. The consultant reviews, prioritizes, approves, signs and sends every report. You draft and flag; they decide.\n\nWorkflow: 1 JOB SHEET. 2 ISSUES BUILDER (pull issues from the interview and observation notes and the data supplied; ask the consultant only about gaps; max 3 questions). 3 DRAFT. 4 QA (15 checks). 5 EDITS.\n\nRules:\n- Every issue states the current state, the evidence, the impact and a recommendation that addresses the cause.\n- Use only figures from the sources or the job sheet, with their source and period. Never estimate savings, costs or percentages.\n- Priorities (High, Medium, Low) and timeframes come from the approved table only. The consultant sets priorities.\n- The 30/60/90-day plan lists every issue once, in the timeframe from the table, with its owner (a job title).\n- Interview comments are attributed by role, never by name, and never judge an individual's performance.\n- No regulatory citations: this report type cites no regulations or standards.\n- Output two separate documents: the client report only, and a Consultant QA Sheet.\n\nNever invent names, dates, figures or facts. Write [needed] instead. Never reuse anything from the Carryover List.",
+ "inputsRule": "Interview notes, observation notes, process maps, data extracts and reports from the client, voice-memo transcripts, and photos of handwritten notes (read as text).",
+ "qaVersion": "Operations Assessment v1.0 (Nov 18, 2026)",
+ "qaChecks": [
+  {
+   "n": 1,
+   "name": "Sources",
+   "rule": "Every interview set, data extract and document the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\""
+  },
+  {
+   "n": 2,
+   "name": "Evidence",
+   "rule": "Every issue rests on evidence from the sources; none rests on opinion alone."
+  },
+  {
+   "n": 3,
+   "name": "Conflicts",
+   "rule": "Every disagreement between sources (two figures, data vs interviews) is in the register."
+  },
+  {
+   "n": 4,
+   "name": "Notes not used",
+   "rule": "Every note is an issue, register row, question, strength, or a listed \"not used\" with reason."
+  },
+  {
+   "n": 5,
+   "name": "Names",
+   "rule": "Interviewees appear by role only. No expanded initials or partial names."
+  },
+  {
+   "n": 6,
+   "name": "Counts",
+   "rule": "Counts by priority are built by the app from the approved table and match the text.",
+   "auto": "counts"
+  },
+  {
+   "n": 7,
+   "name": "Figures",
+   "rule": "Every number names its source and period. No figure is estimated by the draft."
+  },
+  {
+   "n": 8,
+   "name": "Impact grounded",
+   "rule": "Each impact statement follows from the evidence; no invented savings, costs or percentages."
+  },
+  {
+   "n": 9,
+   "name": "Recommendation fits",
+   "rule": "Each recommendation addresses the cause of its issue and is specific enough to assign."
+  },
+  {
+   "n": 10,
+   "name": "Owner and timeframe",
+   "rule": "Every issue has an owner (job title) and a 30, 60 or 90-day timeframe from the approved table."
+  },
+  {
+   "n": 11,
+   "name": "Required sections",
+   "rule": "The report has every required section: executive summary, scope and approach, current state, issues and impact, recommendations, 30/60/90-day plan, and limitations. Every issue appears in the plan.",
+   "auto": "sections"
+  },
+  {
+   "n": 12,
+   "name": "Scope",
+   "rule": "Statements stay within the scope on the job sheet; excluded areas are not assessed."
+  },
+  {
+   "n": 13,
+   "name": "Plan sequence",
+   "rule": "30-day items are quick, low-dependency actions; items that depend on others come later."
+  },
+  {
+   "n": 14,
+   "name": "People",
+   "rule": "No judgment of a named or identifiable individual's performance; HR matters go to the consultant as questions."
+  },
+  {
+   "n": 15,
+   "name": "No carryover",
+   "rule": "No organization or person name from the Carryover List appears unless it is also on this job's job sheet.",
+   "auto": "carryover"
+  }
+ ],
+ "requiredSections": [
+  {
+   "name": "Executive summary",
+   "re": "executive summary"
+  },
+  {
+   "name": "Scope and approach",
+   "re": "scope"
+  },
+  {
+   "name": "Current state",
+   "re": "current state"
+  },
+  {
+   "name": "Issues and impact",
+   "re": "issues"
+  },
+  {
+   "name": "Recommendations",
+   "re": "recommendation"
+  },
+  {
+   "name": "30/60/90-day plan",
+   "re": "30.?60.?90|day plan",
+   "plan": true
+  },
+  {
+   "name": "Limitations",
+   "re": "limitation"
+  }
+ ],
+ "releaseGate": "All 15 pass, every issue has a priority, owner and timeframe, and the consultant signs off on the conflicts register.",
+ "intakeTemplate": "A. Sources: Item | Type | Status | Notes. Interview notes (by role), observation notes, data extracts (with period), documents and process maps.\nB. Conflicts register: # | Item | Source 1 | Source 2 | Resolution owner | Resolution. Two figures that disagree, data vs interviews. Nothing is resolved silently.\nC. Names: full names appear only if the client supplied them in writing. Otherwise \"[name needed]\" or the job title. Initials or partial names are never expanded.\nD. Notes not used: every note line that is not a finding, conflict or question, with a one-line reason.\nF. Figures and sources: every number, date and measurement names its source.\nE. People matters: comments about an individual's performance, conduct or HR status are not issues; list them and ask the consultant.",
+ "blankTemplate": "# Operations Assessment Report\nCover lines: CONFIDENTIAL · Client: [Client] · Area assessed: [Unit] · Sponsor: [as given in writing] · Assessment period: [dates] · Report date: [date] · Report no.: [number].\n## 1. Executive Summary\nPurpose in one sentence. The result in one sentence using the app's counts exactly: \"[n] issues ([h] high, [m] medium, [l] low priority).\" Then three bullets: the most important issues and what fixing them gets the client.\n## 2. Scope and Approach\nWhat was in scope and excluded; interviews (by role), observation and data reviewed, with periods. Then a table: Person interviewed | Role.\n## 3. Current State\nHow the area works today, from the notes and data: process, people, tools and key figures (each with source and period). Strengths as short bullets.\n## 4. Issues and Impact\n-> a {\"type\":\"counts\"} block. Intro line: \"Each issue gives the Current state, Evidence, Impact and Recommendation. Priorities are HIGH, MEDIUM or LOW.\"\nFor each issue: I-[n] [Short title] ([Priority]) with labeled parts: Current state; Evidence; Impact; Recommendation; Owner and timeframe.\n## 5. Recommendations\nShort bullets grouping the recommendations into themes (process, people, tools, measures), each naming the issue IDs it covers.\n## 6. 30/60/90-Day Plan\nTable: Timeframe | # | Action | Owner | Measure of success. Every issue appears once, in the timeframe from the approved table, 30-day items first. Day 1 is the plan start date on the job sheet.\n## 7. Limitations\nBased on the interviews, observation and data available during the assessment period; figures are the client's; the client decides which recommendations to adopt.",
+ "styleRules": "Voice: third person, plain business English. Present tense for the current state; past tense for what was observed. Never \"I\" or \"we.\"\nSentence length: under 25 words. One idea per sentence.\nIssue titles: state the problem, not the fix. Priority in parentheses.\nEvidence: figures with source and period (\"per the dispatch report, September 2026\"); interview comments by role (\"per the dispatch lead\").\nRecommendation: start with a verb; specific enough to assign.\nNumbers: numerals; dates as \"March 4, 2026\"; currency as \"$12,400\".\nWords avoided: \"leverage,\" \"synergy,\" \"best-in-class,\" \"it is recommended that,\" \"please note,\" \"failed to.\"\nTables: counts in Section 4, 30/60/90-day plan in Section 6.",
+ "findingsLibrary": "Scheduling — Title: Jobs are booked without checking technician skills. Recommendation: Add a required skill field to the booking screen and match it before confirming.\nInventory — Title: Truck stock is not replenished on a set schedule. Recommendation: Set a minimum stock list per truck and a weekly restock.\nBilling — Title: Invoices go out days after the job is complete. Recommendation: Invoice from the technician's tablet at job close.\nMeasures — Title: No single report shows first-time fix rate. Recommendation: Track first-time fix weekly from the job system.",
+ "carryover": [
+  "Sample Company",
+  "J. J. Keller",
+  "J.J. Keller",
+  "Valor Man",
+  "Northgate Supply Co.",
+  "Harbor Point Distribution Center",
+  "1200 Example Way",
+  "Anytown, VA",
+  "Pat Rivera",
+  "Ridgeline Builders",
+  "Maple Court Medical Office",
+  "Brightwater Precision Components",
+  "RB-2026-07",
+  "BPC-IA-2026-02",
+  "Cedar Lane Home Services",
+  "CL-OPS-2026-01",
+  "Sampleton"
+ ],
+ "exportNames": {
+  "report": "Operations Assessment Report",
+  "qa": "Consultant QA Sheet"
+ },
+ "photoPlan": {
+  "note": "Photos are optional. Use them to show a process or workspace, never to single out a person.",
+  "sections": [
+   {
+    "key": "cover",
+    "label": "Cover",
+    "anchor": [
+     "cover"
+    ],
+    "count": 1,
+    "min": 0,
+    "shots": [
+     "Facility or operations area"
+    ]
+   },
+   {
+    "key": "current",
+    "label": "3. Current State",
+    "anchor": [
+     "^\\s*3\\.?\\s",
+     "current state"
+    ],
+    "count": 2,
+    "min": 0,
+    "shots": [
+     "Dispatch board or main workspace",
+     "Warehouse or stock area"
+    ]
+   }
+  ]
+ },
+ "sampleJob": {
+  "jobSheet": {
+   "client": "Cedar Lane Home Services LLC (sample)",
+   "unit": "Residential HVAC and plumbing service operations",
+   "sponsor": "Operations Director",
+   "objective": "Find why first-time fix and on-time arrival have slipped this year, and set a 90-day plan to recover them.",
+   "context": "Residential HVAC and plumbing service company with 18 field technicians, 3 dispatchers and a central warehouse. Moved to a new job-management system in March 2026.",
+   "scope": "Call intake, scheduling and dispatch, truck stock, and invoicing. Sales and installation projects excluded.",
+   "approach": "Interviews with 7 staff, two days observing dispatch, ride-alongs with two technicians, and review of job-system reports for July to September 2026.",
+   "visitDates": "October 26 – November 6, 2026",
+   "reportDate": "November 13, 2026",
+   "reportNo": "CL-OPS-2026-01, Rev 0",
+   "participants": "Operations Director; Dispatch Lead; 2 dispatchers; Warehouse Coordinator; 2 senior technicians; Office Manager",
+   "metrics": "First-time fix rate: 71% (Jul–Sep 2026) vs 82% (Jul–Sep 2025), job-system report. On-time arrival: 78% (Jul–Sep 2026), job-system report. Average days from job close to invoice: 6.4 (Sep 2026), accounting report.",
+   "planStart": "December 1, 2026"
+  },
+  "sources": [
+   {
+    "id": "src-1",
+    "name": "Interview and observation notes",
+    "kind": "Field notes",
+    "status": "received and reviewed",
+    "text": "Dispatch: dispatchers book from the call queue into the first open slot. New system has a skills field but it is not used. Dispatch lead: about 1 in 5 return visits are because the wrong tech went (no figure in system).\nObserved 2 days: 9 reschedules, 6 because tech was running late on the prior job. Drive time not in the schedule; system default 2-hr slot regardless of job type.\nTruck stock: no standard stock list. Techs restock when they \"get a chance\". Warehouse coordinator says top 20 parts cover most repairs. Ride-along: tech drove to supply house mid-day for a capacitor.\nInvoicing: techs send photos of paper tickets; office manager keys invoices at end of week. 6.4 days job-close-to-invoice per accounting.\nNo weekly ops meeting since March. No dashboard; ops director pulls reports monthly.\nStrength: techs well trained, customers praise them in reviews. Call answer time good.\nOffice manager mentioned one dispatcher is \"not cut out for it\"."
+   },
+   {
+    "id": "src-2",
+    "name": "Job-system report extract, Jul–Sep 2026",
+    "kind": "Attachment",
+    "status": "received and reviewed",
+    "text": "First-time fix 71% (Jul–Sep 2026); 82% (Jul–Sep 2025). On-time arrival 78%. Return visits 412 of 1,420 jobs."
+   }
+  ],
+  "round": 1,
+  "approved": true,
+  "intake": {
+   "items": [
+    {
+     "id": "I-1",
+     "area": "Scheduling and dispatch",
+     "finding": "Jobs are booked into the first open slot without matching technician skills",
+     "evidence": "Observed for two days; the skills field in the job system is not used; dispatch lead estimates about 1 in 5 return visits come from the wrong technician being sent (per interviews)",
+     "impact": "Contributes to return visits (412 of 1,420 jobs, July to September 2026, job-system report) and the drop in first-time fix from 82% to 71%",
+     "priority": "High",
+     "recommendation": "Fill in the skills field for each technician and require a skill match before confirming a booking",
+     "owner": "Dispatch Lead",
+     "timeframe": "30 days",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "I-2",
+     "area": "Scheduling and dispatch",
+     "finding": "Every job gets a 2-hour slot and drive time is not scheduled",
+     "evidence": "System default slot regardless of job type; 6 of 9 reschedules seen over two days were caused by a technician running late",
+     "impact": "On-time arrival was 78% (July to September 2026, job-system report)",
+     "priority": "High",
+     "recommendation": "Set slot lengths by job type and add drive time between jobs",
+     "owner": "Operations Director",
+     "timeframe": "60 days",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "I-3",
+     "area": "Truck stock",
+     "finding": "Trucks have no standard stock list or restock schedule",
+     "evidence": "No stock list; technicians restock when they can (per interviews); a ride-along technician drove to a supply house mid-day for a capacitor",
+     "impact": "Parts runs take technicians off scheduled jobs and lead to return visits",
+     "priority": "Medium",
+     "recommendation": "Build a standard truck stock list from the top 20 parts and restock weekly from the warehouse",
+     "owner": "Warehouse Coordinator",
+     "timeframe": "60 days",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "I-4",
+     "area": "Invoicing",
+     "finding": "Invoices are keyed from photos of paper tickets at the end of the week",
+     "evidence": "Observed; average 6.4 days from job close to invoice (September 2026, accounting report)",
+     "impact": "Slows cash collection and adds keying work for the office",
+     "priority": "Medium",
+     "recommendation": "Invoice from the technician's tablet at job close using the job system",
+     "owner": "Office Manager",
+     "timeframe": "90 days",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "I-5",
+     "area": "Management routines",
+     "finding": "There is no weekly operations review or shared dashboard",
+     "evidence": "No weekly operations meeting since March 2026; reports pulled monthly (per interviews)",
+     "impact": "Problems such as the drop in first-time fix are seen weeks late",
+     "priority": "Low",
+     "recommendation": "Hold a 30-minute weekly operations review using a one-page dashboard of first-time fix, on-time arrival and invoice lag",
+     "owner": "Operations Director",
+     "timeframe": "30 days",
+     "action": "",
+     "note": ""
+    }
+   ],
+   "packet": [
+    {
+     "item": "Interview and observation notes",
+     "type": "Field notes",
+     "status": "received and reviewed",
+     "notes": ""
+    },
+    {
+     "item": "Job-system report extract, Jul–Sep 2026",
+     "type": "Data",
+     "status": "received and reviewed",
+     "notes": ""
+    }
+   ],
+   "conflicts": [],
+   "names": [],
+   "notesNotUsed": [
+    {
+     "note": "Techs well trained; customers praise them",
+     "reason": "strength"
+    },
+    {
+     "note": "Call answer time good",
+     "reason": "strength"
+    },
+    {
+     "note": "Comment about one dispatcher's suitability",
+     "reason": "Individual performance; referred to the consultant, not reported"
+    }
+   ],
+   "injury": [],
+   "scopeTriggers": [],
+   "done": true
+  },
+  "interview": [
+   {
+    "id": "q-1",
+    "round": 1,
+    "kind": "gap",
+    "section": "Issues and Impact",
+    "question": "The office manager commented on one dispatcher's suitability. Should that appear in the report?",
+    "answer": "No. I'll raise it privately with the sponsor.",
+    "skipped": false
+   }
+  ],
+  "draft": {
+   "title": "Operations Assessment Report",
+   "cover": [
+    {
+     "label": "Status",
+     "value": "CONFIDENTIAL"
+    },
+    {
+     "label": "Client",
+     "value": "Cedar Lane Home Services LLC (sample)"
+    },
+    {
+     "label": "Area assessed",
+     "value": "Residential HVAC and plumbing service operations"
+    },
+    {
+     "label": "Sponsor",
+     "value": "Operations Director"
+    },
+    {
+     "label": "Assessment period",
+     "value": "October 26 – November 6, 2026"
+    },
+    {
+     "label": "Report date",
+     "value": "November 13, 2026"
+    },
+    {
+     "label": "Report no.",
+     "value": "CL-OPS-2026-01, Rev 0"
+    }
+   ],
+   "sections": [
+    {
+     "heading": "1. Executive Summary",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "Cedar Lane Home Services LLC (sample) asked why first-time fix and on-time arrival have slipped this year, and for a 90-day plan to recover them."
+      },
+      {
+       "type": "p",
+       "text": "The assessment found 5 issues (2 high, 2 medium, 1 low priority)."
+      },
+      {
+       "type": "bullets",
+       "items": [
+        "Matching technician skills at booking addresses the main cause of return visits named in interviews.",
+        "Scheduling by job type with drive time addresses most late arrivals observed.",
+        "A weekly operations review keeps both measures in view every week."
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "2. Scope and Approach",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "The assessment covered call intake, scheduling and dispatch, truck stock and invoicing. Sales and installation projects were excluded. It included interviews with 7 staff, two days observing dispatch, ride-alongs with two technicians, and job-system reports for July to September 2026."
+      },
+      {
+       "type": "table",
+       "headers": [
+        "Person interviewed",
+        "Role"
+       ],
+       "rows": [
+        [
+         "Operations Director",
+         "Sponsor"
+        ],
+        [
+         "Dispatch Lead",
+         "Dispatch"
+        ],
+        [
+         "Dispatchers (2)",
+         "Dispatch"
+        ],
+        [
+         "Warehouse Coordinator",
+         "Warehouse"
+        ],
+        [
+         "Senior technicians (2)",
+         "Field service"
+        ],
+        [
+         "Office Manager",
+         "Office and billing"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "3. Current State",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "The company has 18 field technicians, 3 dispatchers and a central warehouse, and moved to a new job-management system in March 2026. Dispatchers book calls into the first open slot. Technicians restock their own trucks, and the office keys invoices weekly from photos of paper tickets."
+      },
+      {
+       "type": "table",
+       "headers": [
+        "Measure",
+        "Value",
+        "Source and period"
+       ],
+       "rows": [
+        [
+         "First-time fix",
+         "71% (82% a year earlier)",
+         "Job-system report, Jul–Sep 2026 vs Jul–Sep 2025"
+        ],
+        [
+         "On-time arrival",
+         "78%",
+         "Job-system report, Jul–Sep 2026"
+        ],
+        [
+         "Return visits",
+         "412 of 1,420 jobs",
+         "Job-system report, Jul–Sep 2026"
+        ],
+        [
+         "Job close to invoice",
+         "6.4 days",
+         "Accounting report, Sep 2026"
+        ]
+       ]
+      },
+      {
+       "type": "bullets",
+       "items": [
+        "Technicians are well trained, and customers praise them in reviews.",
+        "Calls are answered quickly."
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "4. Issues and Impact",
+     "blocks": [
+      {
+       "type": "counts"
+      },
+      {
+       "type": "p",
+       "text": "Each issue gives the Current state, Evidence, Impact and Recommendation. Priorities are HIGH, MEDIUM or LOW."
+      },
+      {
+       "type": "finding",
+       "id": "I-1",
+       "title": "Jobs are booked into the first open slot without matching technician skills",
+       "rating": "High",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Current state",
+         "text": "Jobs are booked into the first open slot without matching technician skills."
+        },
+        {
+         "label": "Evidence",
+         "text": "Observed for two days; the skills field in the job system is not used; dispatch lead estimates about 1 in 5 return visits come from the wrong technician being sent (per interviews)."
+        },
+        {
+         "label": "Impact",
+         "text": "Contributes to return visits (412 of 1,420 jobs, July to September 2026, job-system report) and the drop in first-time fix from 82% to 71%."
+        },
+        {
+         "label": "Recommendation",
+         "text": "Fill in the skills field for each technician and require a skill match before confirming a booking."
+        },
+        {
+         "label": "Owner and timeframe",
+         "text": "Dispatch Lead, 30 days"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "I-2",
+       "title": "Every job gets a 2-hour slot and drive time is not scheduled",
+       "rating": "High",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Current state",
+         "text": "Every job gets a 2-hour slot and drive time is not scheduled."
+        },
+        {
+         "label": "Evidence",
+         "text": "System default slot regardless of job type; 6 of 9 reschedules seen over two days were caused by a technician running late."
+        },
+        {
+         "label": "Impact",
+         "text": "On-time arrival was 78% (July to September 2026, job-system report)."
+        },
+        {
+         "label": "Recommendation",
+         "text": "Set slot lengths by job type and add drive time between jobs."
+        },
+        {
+         "label": "Owner and timeframe",
+         "text": "Operations Director, 60 days"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "I-3",
+       "title": "Trucks have no standard stock list or restock schedule",
+       "rating": "Medium",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Current state",
+         "text": "Trucks have no standard stock list or restock schedule."
+        },
+        {
+         "label": "Evidence",
+         "text": "No stock list; technicians restock when they can (per interviews); a ride-along technician drove to a supply house mid-day for a capacitor."
+        },
+        {
+         "label": "Impact",
+         "text": "Parts runs take technicians off scheduled jobs and lead to return visits."
+        },
+        {
+         "label": "Recommendation",
+         "text": "Build a standard truck stock list from the top 20 parts and restock weekly from the warehouse."
+        },
+        {
+         "label": "Owner and timeframe",
+         "text": "Warehouse Coordinator, 60 days"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "I-4",
+       "title": "Invoices are keyed from photos of paper tickets at the end of the week",
+       "rating": "Medium",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Current state",
+         "text": "Invoices are keyed from photos of paper tickets at the end of the week."
+        },
+        {
+         "label": "Evidence",
+         "text": "Observed; average 6.4 days from job close to invoice (September 2026, accounting report)."
+        },
+        {
+         "label": "Impact",
+         "text": "Slows cash collection and adds keying work for the office."
+        },
+        {
+         "label": "Recommendation",
+         "text": "Invoice from the technician's tablet at job close using the job system."
+        },
+        {
+         "label": "Owner and timeframe",
+         "text": "Office Manager, 90 days"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "I-5",
+       "title": "There is no weekly operations review or shared dashboard",
+       "rating": "Low",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Current state",
+         "text": "There is no weekly operations review or shared dashboard."
+        },
+        {
+         "label": "Evidence",
+         "text": "No weekly operations meeting since March 2026; reports pulled monthly (per interviews)."
+        },
+        {
+         "label": "Impact",
+         "text": "Problems such as the drop in first-time fix are seen weeks late."
+        },
+        {
+         "label": "Recommendation",
+         "text": "Hold a 30-minute weekly operations review using a one-page dashboard of first-time fix, on-time arrival and invoice lag."
+        },
+        {
+         "label": "Owner and timeframe",
+         "text": "Operations Director, 30 days"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "5. Recommendations",
+     "blocks": [
+      {
+       "type": "bullets",
+       "items": [
+        "Process: match skills at booking and schedule by job type with drive time (I-1, I-2).",
+        "Tools: standard truck stock and tablet invoicing (I-3, I-4).",
+        "Measures: a weekly operations review with a one-page dashboard (I-5)."
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "6. 30/60/90-Day Plan",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "Day 1 is December 1, 2026."
+      },
+      {
+       "type": "table",
+       "headers": [
+        "Timeframe",
+        "#",
+        "Action",
+        "Owner",
+        "Measure of success"
+       ],
+       "rows": [
+        [
+         "30 days",
+         "I-1",
+         "Fill in the skills field for each technician and require a skill match before confirming a booking",
+         "Dispatch Lead",
+         "Skill match on 100% of bookings"
+        ],
+        [
+         "30 days",
+         "I-5",
+         "Hold a 30-minute weekly operations review using a one-page dashboard of first-time fix, on-time arrival and invoice lag",
+         "Operations Director",
+         "Review held every week"
+        ],
+        [
+         "60 days",
+         "I-2",
+         "Set slot lengths by job type and add drive time between jobs",
+         "Operations Director",
+         "On-time arrival tracked weekly"
+        ],
+        [
+         "60 days",
+         "I-3",
+         "Build a standard truck stock list from the top 20 parts and restock weekly from the warehouse",
+         "Warehouse Coordinator",
+         "Mid-day parts runs tracked weekly"
+        ],
+        [
+         "90 days",
+         "I-4",
+         "Invoice from the technician's tablet at job close using the job system",
+         "Office Manager",
+         "Job close to invoice under 1 day"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "7. Limitations",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "This assessment is based on the interviews, observation and data available from October 26 to November 6, 2026. Figures are the client's own reports. The client decides which recommendations to adopt and how."
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "checks": [
+    {
+     "n": 1,
+     "status": "pass",
+     "ids": [],
+     "detail": "Both sources are listed and reviewed."
+    },
+    {
+     "n": 2,
+     "status": "pass",
+     "ids": [],
+     "detail": "Each issue rests on observation, data or attributed interview comments."
+    },
+    {
+     "n": 3,
+     "status": "pass",
+     "ids": [],
+     "detail": "No disagreements between sources."
+    },
+    {
+     "n": 4,
+     "status": "pass",
+     "ids": [],
+     "detail": "Every note is an issue, a strength or listed as not used."
+    },
+    {
+     "n": 5,
+     "status": "pass",
+     "ids": [],
+     "detail": "Interviewees appear by role only."
+    },
+    {
+     "n": 7,
+     "status": "pass",
+     "ids": [],
+     "detail": "Every figure names its source and period."
+    },
+    {
+     "n": 8,
+     "status": "pass",
+     "ids": [
+      "I-3"
+     ],
+     "detail": "No estimated figures; I-3's cost per parts run is left for the client to supply."
+    },
+    {
+     "n": 9,
+     "status": "pass",
+     "ids": [],
+     "detail": "No estimated figures in any impact statement."
+    },
+    {
+     "n": 10,
+     "status": "pass",
+     "ids": [],
+     "detail": "Every issue has an owner and timeframe."
+    },
+    {
+     "n": 12,
+     "status": "pass",
+     "ids": [],
+     "detail": "Sales and installation are not assessed."
+    },
+    {
+     "n": 13,
+     "status": "pass",
+     "ids": [],
+     "detail": "30-day items need no new tools; tablet invoicing is last."
+    },
+    {
+     "n": 14,
+     "status": "pass",
+     "ids": [],
+     "detail": "The comment about a dispatcher was left out at the consultant's direction."
+    }
+   ],
+   "summary": {
+    "openHazards": [],
+    "dataMismatches": [],
+    "citationsToConfirm": [],
+    "questions": [
+     "Cost per parts run for I-3 (client to supply)"
+    ],
+    "notesNotUsed": [
+     "Comment on one dispatcher's suitability (raised privately)"
+    ]
+   }
+  }
+ }
+}

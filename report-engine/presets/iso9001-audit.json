@@ -1,0 +1,1785 @@
+{
+ "id": "iso9001-audit",
+ "engineId": "SE-RE-DEMO",
+ "licensedBy": "Skilled Edge Group LLC",
+ "consultant": {
+  "name": "",
+  "credentials": "",
+  "firm": ""
+ },
+ "featured": 2,
+ "blurb": "ISO 9001 internal quality audit: clause-by-clause results, each finding graded Major NC, Minor NC or opportunity for improvement, with objective evidence and corrective action.",
+ "reportType": "ISO 9001 Internal Quality Audit",
+ "reportTitle": "ISO 9001 Internal Audit Report",
+ "itemNoun": "finding",
+ "injuryQuestions": false,
+ "jobSheetFields": [
+  {
+   "key": "client",
+   "label": "Organization audited"
+  },
+  {
+   "key": "site",
+   "label": "Site(s) audited"
+  },
+  {
+   "key": "edition",
+   "label": "Standard and edition audited against (e.g. ISO 9001:2015 incl. Amd 1:2024)"
+  },
+  {
+   "key": "qmsScope",
+   "label": "QMS scope statement and any clauses not applicable",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "auditScope",
+   "label": "This audit's scope: processes, departments and clauses covered",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "criteria",
+   "label": "Audit criteria (standard, QMS manual and procedures, customer requirements)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "visitDates",
+   "label": "Audit date(s)"
+  },
+  {
+   "key": "reportDate",
+   "label": "Report date"
+  },
+  {
+   "key": "reportNo",
+   "label": "Audit number / revision"
+  },
+  {
+   "key": "auditee",
+   "label": "Management representative or audit host (name and title, as given in writing)"
+  },
+  {
+   "key": "participants",
+   "label": "People interviewed (name or role, as given in writing)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "certBody",
+   "label": "Certification status and next external audit (if known)"
+  },
+  {
+   "key": "prior",
+   "label": "Previous internal audit (date, open findings)"
+  }
+ ],
+ "titleField": "client",
+ "columns": [
+  {
+   "key": "id",
+   "label": "#",
+   "readonly": true
+  },
+  {
+   "key": "area",
+   "label": "Process / area"
+  },
+  {
+   "key": "cite",
+   "label": "ISO 9001 clause"
+  },
+  {
+   "key": "finding",
+   "label": "Finding statement"
+  },
+  {
+   "key": "evidence",
+   "label": "Objective evidence"
+  },
+  {
+   "key": "source",
+   "label": "Requirement source",
+   "options": [
+    "ISO 9001",
+    "QMS DOCUMENT",
+    "CUSTOMER REQUIREMENT",
+    "STATUTORY/REGULATORY"
+   ]
+  },
+  {
+   "key": "grade",
+   "label": "Grade (yours)",
+   "options": [
+    "[needed]",
+    "Major NC",
+    "Minor NC",
+    "OFI"
+   ],
+   "consultantOnly": true
+  },
+  {
+   "key": "corrective",
+   "label": "Corrective action requested"
+  },
+  {
+   "key": "owner",
+   "label": "Owner (job title)"
+  },
+  {
+   "key": "due",
+   "label": "Response due"
+  }
+ ],
+ "ratingKey": "grade",
+ "countRatings": [
+  "Major NC",
+  "Minor NC",
+  "OFI"
+ ],
+ "countsLabel": "Grade",
+ "requirementLabels": [
+  "ISO 9001",
+  "QMS DOCUMENT",
+  "CUSTOMER REQUIREMENT",
+  "STATUTORY/REGULATORY"
+ ],
+ "recommendationSource": "POSITIVE OBSERVATION",
+ "idRules": "Nonconformities and opportunities for improvement are numbered F-1, F-2 in clause order. Positive observations are not numbered and go in their own section.",
+ "findingRules": "2. Requirement source: every finding names the requirement it is measured against: ISO 9001 with a clause from the clause list, written \"clause X.Y\", or QMS DOCUMENT (name the procedure), CUSTOMER REQUIREMENT, or STATUTORY/REGULATORY. Paraphrase the requirement in plain words. Never quote the standard's text. A clause not in the list is written with \" (unverified)\".\n3. Objective evidence: every nonconformity rests on specific, verifiable evidence from the notes (record numbers, dates, sample sizes, what was seen). Without evidence it is a question, not a finding. Good practice goes in \"notesNotUsed\" with reason \"positive observation\".",
+ "projectRules": "You build [REPORT TYPE] reports for [CONSULTANT NAME], a quality management consultant acting as internal auditor. Engine ID: [CLIENT ID], licensed by Skilled Edge Group LLC for this consultant only. The consultant reviews, grades, approves, signs and sends every report. You draft and flag; they decide.\n\nWorkflow: 1 JOB SHEET. 2 FINDINGS BUILDER (pull findings from the audit notes and checklists, then interview the consultant only about gaps; max 3 questions). 3 DRAFT. 4 QA (15 checks). 5 EDITS.\n\nRules:\n- ISO 9001 is copyrighted. Cite clause numbers from the clause list and paraphrase in your own words. Never reproduce the standard's text.\n- State which edition the audit used, from the job sheet. If the job sheet is blank, write [needed].\n- Each finding has: the requirement (source label, clause, paraphrase), the finding statement, the objective evidence, and the corrective action requested. Grades (Major NC, Minor NC, OFI) are the consultant's only.\n- A nonconformity statement says what requirement was not met and how, based only on evidence seen. No opinions about people.\n- Corrective action requested asks the auditee for correction, root cause and corrective action; never prescribe a single fix unless the consultant says so.\n- The counts by grade are computed by the app. Quote them exactly.\n- Output two separate documents: the client report only, and a Consultant QA Sheet.\n\nNever invent names, dates, record numbers or facts. Write [needed] instead. Never reuse anything from the Carryover List.",
+ "inputsRule": "Audit notes and checklists, records sampled (logs, certificates, CAR forms), procedures and the QMS manual, interview notes, and photos of handwritten notes (read as text).",
+ "qaVersion": "ISO 9001 Internal Audit v1.0 (Nov 18, 2026)",
+ "qaChecks": [
+  {
+   "n": 1,
+   "name": "Documents sampled",
+   "rule": "Every procedure, record and sample the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\""
+  },
+  {
+   "n": 2,
+   "name": "Objective evidence",
+   "rule": "Every nonconformity cites specific, verifiable evidence (record IDs, dates, sample size). No finding rests on opinion or hearsay."
+  },
+  {
+   "n": 3,
+   "name": "Conflicts",
+   "rule": "Every disagreement between sources (procedure vs practice, two records) is in the register."
+  },
+  {
+   "n": 4,
+   "name": "Notes not used",
+   "rule": "Every note is a finding, register row, question, positive observation, or a listed \"not used\" with reason."
+  },
+  {
+   "n": 5,
+   "name": "Names",
+   "rule": "No expanded initials or partial names. People appear only as given in writing; otherwise by role."
+  },
+  {
+   "n": 6,
+   "name": "Counts",
+   "rule": "Counts by grade are built by the app from the approved table and match the text.",
+   "auto": "counts"
+  },
+  {
+   "n": 7,
+   "name": "Requirement source",
+   "rule": "Every finding is labeled ISO 9001, QMS DOCUMENT, CUSTOMER REQUIREMENT or STATUTORY/REGULATORY.",
+   "auto": "labels"
+  },
+  {
+   "n": 8,
+   "name": "Clause cites",
+   "rule": "Every clause cited is in the clause list. No standard text is quoted. A clause not listed is \"(unverified)\" and blocks release.",
+   "auto": "citations"
+  },
+  {
+   "n": 9,
+   "name": "Grade supported",
+   "rule": "Each grade is the consultant's, and the finding statement supports it: Major NC for a missing process or a breakdown that puts conformity at risk; Minor NC for an isolated lapse; OFI where requirements are met."
+  },
+  {
+   "n": 10,
+   "name": "Statement structure",
+   "rule": "Each nonconformity names the requirement, the evidence and what was not met, in that order."
+  },
+  {
+   "n": 11,
+   "name": "Required sections",
+   "rule": "The report has every required section: audit summary, scope and criteria, clause-by-clause results, findings, corrective action summary, audit conclusion, and limitations. Every finding appears in the corrective action summary.",
+   "auto": "sections"
+  },
+  {
+   "n": 12,
+   "name": "Scope and edition",
+   "rule": "The clauses and processes reported match the audit scope on the job sheet; the edition is stated; clauses marked not applicable in the QMS scope are not reported as nonconformities."
+  },
+  {
+   "n": 13,
+   "name": "Corrective action",
+   "rule": "Every Major and Minor NC asks for correction, root cause and corrective action with an owner and response date. OFIs are optional for the auditee."
+  },
+  {
+   "n": 14,
+   "name": "Clause list freshness",
+   "rule": "The clause list is verified by the consultant against the edition in use and is under 12 months old.",
+   "auto": "freshness"
+  },
+  {
+   "n": 15,
+   "name": "No carryover",
+   "rule": "No organization, site or person name from the Carryover List appears unless it is also on this job's job sheet.",
+   "auto": "carryover"
+  }
+ ],
+ "requiredSections": [
+  {
+   "name": "Audit summary",
+   "re": "audit summary|executive summary"
+  },
+  {
+   "name": "Scope and criteria",
+   "re": "scope"
+  },
+  {
+   "name": "Clause-by-clause results",
+   "re": "clause"
+  },
+  {
+   "name": "Findings",
+   "re": "findings|nonconformit"
+  },
+  {
+   "name": "Corrective action summary",
+   "re": "corrective action",
+   "plan": true
+  },
+  {
+   "name": "Audit conclusion",
+   "re": "conclusion"
+  },
+  {
+   "name": "Limitations",
+   "re": "limitation"
+  }
+ ],
+ "releaseGate": "All 15 pass, every Major and Minor NC has an owner and response date, and the consultant signs off on the conflicts register and scope answers.",
+ "citationLibrary": {
+  "title": "ISO 9001:2015 Clause List v0.1 (DRAFT) – clause numbers with short paraphrases, including Amendment 1:2024",
+  "status": "draft",
+  "checkedOn": "2026-11-18",
+  "checkedBy": "Claude, from the published ISO 9001:2015 clause structure; paraphrases only, no standard text. ISO 9001:2026 has reportedly been published: confirm which edition the client's QMS is certified to before use (consultant verification pending)",
+  "citePattern": "\\b(?:clause|cl\\.)\\s*\\d{1,2}(?:\\.\\d+){0,3}",
+  "rule": "Cite only clause numbers listed here, written as \"clause X.Y\". Never quote the standard's text: paraphrase in plain words. A clause not listed is written \"(unverified)\" and blocks release.",
+  "clientPolicy": [],
+  "entries": [
+   {
+    "topic": "Context of the organization",
+    "cite": "clause 4.1",
+    "aliases": [
+     "cl. 4.1"
+    ],
+    "requires": "Determine the internal and external issues relevant to the organization's purpose and to the results its QMS is meant to achieve (Amd 1:2024 adds: consider whether climate change is a relevant issue)",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Interested parties",
+    "cite": "clause 4.2",
+    "aliases": [
+     "cl. 4.2"
+    ],
+    "requires": "Determine the interested parties and their requirements that are relevant to the QMS, and monitor and review that information",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "QMS scope",
+    "cite": "clause 4.3",
+    "aliases": [
+     "cl. 4.3"
+    ],
+    "requires": "Determine and document the scope of the QMS, with justification for any requirement treated as not applicable",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "QMS and its processes",
+    "cite": "clause 4.4",
+    "aliases": [
+     "cl. 4.4"
+    ],
+    "requires": "Establish, maintain and improve the QMS processes, their inputs and outputs, sequence, criteria, resources, responsibilities, risks and evaluation",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Leadership and commitment",
+    "cite": "clause 5.1",
+    "aliases": [
+     "cl. 5.1"
+    ],
+    "requires": "Top management shows leadership and commitment to the QMS, including accountability for its effectiveness",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Customer focus",
+    "cite": "clause 5.1.2",
+    "aliases": [
+     "cl. 5.1.2"
+    ],
+    "requires": "Top management keeps the focus on customer requirements, risks to conformity and enhancing customer satisfaction",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Quality policy",
+    "cite": "clause 5.2",
+    "aliases": [
+     "cl. 5.2"
+    ],
+    "requires": "Establish, communicate and maintain a quality policy suited to the organization, including commitments to meet requirements and to improve",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Roles, responsibilities and authorities",
+    "cite": "clause 5.3",
+    "aliases": [
+     "cl. 5.3"
+    ],
+    "requires": "Assign, communicate and make understood the responsibilities and authorities for relevant roles",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Risks and opportunities",
+    "cite": "clause 6.1",
+    "aliases": [
+     "cl. 6.1"
+    ],
+    "requires": "Determine risks and opportunities that need to be addressed, plan actions, and evaluate their effectiveness",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Quality objectives",
+    "cite": "clause 6.2",
+    "aliases": [
+     "cl. 6.2"
+    ],
+    "requires": "Set measurable quality objectives at relevant functions and levels, and plan what will be done, by whom, by when and how results will be evaluated",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Planning of changes",
+    "cite": "clause 6.3",
+    "aliases": [
+     "cl. 6.3"
+    ],
+    "requires": "Carry out changes to the QMS in a planned manner",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Infrastructure",
+    "cite": "clause 7.1.3",
+    "aliases": [
+     "cl. 7.1.3"
+    ],
+    "requires": "Determine, provide and maintain the infrastructure needed for processes and conformity",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Environment for operation of processes",
+    "cite": "clause 7.1.4",
+    "aliases": [
+     "cl. 7.1.4"
+    ],
+    "requires": "Determine, provide and maintain the environment needed for processes and conformity",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Monitoring and measuring resources",
+    "cite": "clause 7.1.5",
+    "aliases": [
+     "cl. 7.1.5"
+    ],
+    "requires": "Provide suitable, maintained monitoring and measuring resources and keep evidence of their fitness",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Measurement traceability",
+    "cite": "clause 7.1.5.2",
+    "aliases": [
+     "cl. 7.1.5.2"
+    ],
+    "requires": "Calibrate or verify measuring equipment at intervals against traceable standards, identify its status, safeguard it, and assess the validity of previous results when equipment is found unfit",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Organizational knowledge",
+    "cite": "clause 7.1.6",
+    "aliases": [
+     "cl. 7.1.6"
+    ],
+    "requires": "Determine, maintain and make available the knowledge needed to operate processes",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Competence",
+    "cite": "clause 7.2",
+    "aliases": [
+     "cl. 7.2"
+    ],
+    "requires": "Determine needed competence, ensure people are competent, act to acquire competence where needed, and keep evidence of competence",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Awareness",
+    "cite": "clause 7.3",
+    "aliases": [
+     "cl. 7.3"
+    ],
+    "requires": "People are aware of the quality policy, relevant objectives, their contribution and the implications of not conforming",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Communication",
+    "cite": "clause 7.4",
+    "aliases": [
+     "cl. 7.4"
+    ],
+    "requires": "Determine internal and external communications relevant to the QMS",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Creating and updating documented information",
+    "cite": "clause 7.5.2",
+    "aliases": [
+     "cl. 7.5.2"
+    ],
+    "requires": "Documented information has proper identification, format and review and approval for suitability",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Control of documented information",
+    "cite": "clause 7.5.3",
+    "aliases": [
+     "cl. 7.5.3"
+    ],
+    "requires": "Documented information is available where needed, protected, and controlled for distribution, version, retention and disposition",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Operational planning and control",
+    "cite": "clause 8.1",
+    "aliases": [
+     "cl. 8.1"
+    ],
+    "requires": "Plan, implement and control the processes needed to meet requirements for products and services",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Customer communication",
+    "cite": "clause 8.2.1",
+    "aliases": [
+     "cl. 8.2.1"
+    ],
+    "requires": "Communicate with customers on product information, enquiries, orders, changes, feedback and complaints",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Review of requirements",
+    "cite": "clause 8.2.3",
+    "aliases": [
+     "cl. 8.2.3"
+    ],
+    "requires": "Review the requirements before committing to supply products and services, and keep records of the review",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Changes to requirements",
+    "cite": "clause 8.2.4",
+    "aliases": [
+     "cl. 8.2.4"
+    ],
+    "requires": "Amend documented information and inform relevant people when requirements change",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Design and development",
+    "cite": "clause 8.3",
+    "aliases": [
+     "cl. 8.3"
+    ],
+    "requires": "Establish, implement and maintain a design and development process where design applies",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Control of external providers",
+    "cite": "clause 8.4.1",
+    "aliases": [
+     "cl. 8.4.1"
+    ],
+    "requires": "Determine and apply criteria for the evaluation, selection, monitoring of performance and re-evaluation of external providers, and keep records",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Type and extent of control",
+    "cite": "clause 8.4.2",
+    "aliases": [
+     "cl. 8.4.2"
+    ],
+    "requires": "Ensure externally provided processes, products and services do not adversely affect the ability to deliver conforming products",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Information for external providers",
+    "cite": "clause 8.4.3",
+    "aliases": [
+     "cl. 8.4.3"
+    ],
+    "requires": "Communicate adequate requirements to external providers before communicating them",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Control of production and service provision",
+    "cite": "clause 8.5.1",
+    "aliases": [
+     "cl. 8.5.1"
+    ],
+    "requires": "Carry out production and service provision under controlled conditions",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Identification and traceability",
+    "cite": "clause 8.5.2",
+    "aliases": [
+     "cl. 8.5.2"
+    ],
+    "requires": "Identify outputs and their status, and control unique identification where traceability is a requirement",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Property belonging to customers or external providers",
+    "cite": "clause 8.5.3",
+    "aliases": [
+     "cl. 8.5.3"
+    ],
+    "requires": "Care for, identify, protect and safeguard property belonging to customers or external providers",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Preservation",
+    "cite": "clause 8.5.4",
+    "aliases": [
+     "cl. 8.5.4"
+    ],
+    "requires": "Preserve outputs during production and service provision to ensure conformity",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Post-delivery activities",
+    "cite": "clause 8.5.5",
+    "aliases": [
+     "cl. 8.5.5"
+    ],
+    "requires": "Meet requirements for post-delivery activities",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Control of changes",
+    "cite": "clause 8.5.6",
+    "aliases": [
+     "cl. 8.5.6"
+    ],
+    "requires": "Review and control changes for production or service provision and keep records",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Release of products and services",
+    "cite": "clause 8.6",
+    "aliases": [
+     "cl. 8.6"
+    ],
+    "requires": "Verify that requirements are met before release, and keep records of conformity and of the person authorizing release",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Control of nonconforming outputs",
+    "cite": "clause 8.7",
+    "aliases": [
+     "cl. 8.7"
+    ],
+    "requires": "Identify and control nonconforming outputs to prevent their unintended use or delivery, and keep records",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Customer satisfaction",
+    "cite": "clause 9.1.2",
+    "aliases": [
+     "cl. 9.1.2"
+    ],
+    "requires": "Monitor customers' perceptions of the degree to which their needs and expectations have been met",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Analysis and evaluation",
+    "cite": "clause 9.1.3",
+    "aliases": [
+     "cl. 9.1.3"
+    ],
+    "requires": "Analyse and evaluate appropriate data from monitoring and measurement",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Internal audit",
+    "cite": "clause 9.2",
+    "aliases": [
+     "cl. 9.2"
+    ],
+    "requires": "Conduct internal audits at planned intervals to an audit programme, with defined criteria and scope, objective auditors, reported results and kept evidence",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Management review",
+    "cite": "clause 9.3",
+    "aliases": [
+     "cl. 9.3"
+    ],
+    "requires": "Top management reviews the QMS at planned intervals with the required inputs and outputs, and keeps records",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Nonconformity and corrective action",
+    "cite": "clause 10.2",
+    "aliases": [
+     "cl. 10.2"
+    ],
+    "requires": "React to nonconformities, evaluate the need for action by finding causes, implement action, review its effectiveness, and keep records",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Continual improvement",
+    "cite": "clause 10.3",
+    "aliases": [
+     "cl. 10.3"
+    ],
+    "requires": "Continually improve the suitability, adequacy and effectiveness of the QMS",
+    "type": "Standard",
+    "note": ""
+   },
+   {
+    "topic": "Clause 4 (top level)",
+    "cite": "clause 4",
+    "aliases": [
+     "cl. 4"
+    ],
+    "requires": "Context of the organization",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 5 (top level)",
+    "cite": "clause 5",
+    "aliases": [
+     "cl. 5"
+    ],
+    "requires": "Leadership",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 6 (top level)",
+    "cite": "clause 6",
+    "aliases": [
+     "cl. 6"
+    ],
+    "requires": "Planning",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 7 (top level)",
+    "cite": "clause 7",
+    "aliases": [
+     "cl. 7"
+    ],
+    "requires": "Support",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 8 (top level)",
+    "cite": "clause 8",
+    "aliases": [
+     "cl. 8"
+    ],
+    "requires": "Operation",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9 (top level)",
+    "cite": "clause 9",
+    "aliases": [
+     "cl. 9"
+    ],
+    "requires": "Performance evaluation",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 10 (top level)",
+    "cite": "clause 10",
+    "aliases": [
+     "cl. 10"
+    ],
+    "requires": "Improvement",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 7.1 (top level)",
+    "cite": "clause 7.1",
+    "aliases": [
+     "cl. 7.1"
+    ],
+    "requires": "Resources",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 7.5 (top level)",
+    "cite": "clause 7.5",
+    "aliases": [
+     "cl. 7.5"
+    ],
+    "requires": "Documented information",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 8.2 (top level)",
+    "cite": "clause 8.2",
+    "aliases": [
+     "cl. 8.2"
+    ],
+    "requires": "Requirements for products and services",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 8.4 (top level)",
+    "cite": "clause 8.4",
+    "aliases": [
+     "cl. 8.4"
+    ],
+    "requires": "Control of externally provided processes, products and services",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 8.5 (top level)",
+    "cite": "clause 8.5",
+    "aliases": [
+     "cl. 8.5"
+    ],
+    "requires": "Production and service provision",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9.1 (top level)",
+    "cite": "clause 9.1",
+    "aliases": [
+     "cl. 9.1"
+    ],
+    "requires": "Monitoring, measurement, analysis and evaluation",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 10.1 (top level)",
+    "cite": "clause 10.1",
+    "aliases": [
+     "cl. 10.1"
+    ],
+    "requires": "Improvement: general",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 5.1.1 (top level)",
+    "cite": "clause 5.1.1",
+    "aliases": [
+     "cl. 5.1.1"
+    ],
+    "requires": "Leadership: general",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 7.1.1 (top level)",
+    "cite": "clause 7.1.1",
+    "aliases": [
+     "cl. 7.1.1"
+    ],
+    "requires": "Resources: general",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 7.1.2 (top level)",
+    "cite": "clause 7.1.2",
+    "aliases": [
+     "cl. 7.1.2"
+    ],
+    "requires": "People",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 7.5.1 (top level)",
+    "cite": "clause 7.5.1",
+    "aliases": [
+     "cl. 7.5.1"
+    ],
+    "requires": "Documented information: general",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 8.2.2 (top level)",
+    "cite": "clause 8.2.2",
+    "aliases": [
+     "cl. 8.2.2"
+    ],
+    "requires": "Determining requirements",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9.1.1 (top level)",
+    "cite": "clause 9.1.1",
+    "aliases": [
+     "cl. 9.1.1"
+    ],
+    "requires": "Monitoring and measurement: general",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 10.2.1 (top level)",
+    "cite": "clause 10.2.1",
+    "aliases": [
+     "cl. 10.2.1"
+    ],
+    "requires": "Nonconformity and corrective action: actions",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 10.2.2 (top level)",
+    "cite": "clause 10.2.2",
+    "aliases": [
+     "cl. 10.2.2"
+    ],
+    "requires": "Nonconformity and corrective action: records",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 7.1.5.1 (top level)",
+    "cite": "clause 7.1.5.1",
+    "aliases": [
+     "cl. 7.1.5.1"
+    ],
+    "requires": "Monitoring and measuring resources: general",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 8.7.1 (top level)",
+    "cite": "clause 8.7.1",
+    "aliases": [
+     "cl. 8.7.1"
+    ],
+    "requires": "Nonconforming outputs: control",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 8.7.2 (top level)",
+    "cite": "clause 8.7.2",
+    "aliases": [
+     "cl. 8.7.2"
+    ],
+    "requires": "Nonconforming outputs: records",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 5.2.1 (top level)",
+    "cite": "clause 5.2.1",
+    "aliases": [
+     "cl. 5.2.1"
+    ],
+    "requires": "Establishing the quality policy",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 5.2.2 (top level)",
+    "cite": "clause 5.2.2",
+    "aliases": [
+     "cl. 5.2.2"
+    ],
+    "requires": "Communicating the quality policy",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9.2.1 (top level)",
+    "cite": "clause 9.2.1",
+    "aliases": [
+     "cl. 9.2.1"
+    ],
+    "requires": "Internal audit: purpose",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9.2.2 (top level)",
+    "cite": "clause 9.2.2",
+    "aliases": [
+     "cl. 9.2.2"
+    ],
+    "requires": "Internal audit: programme",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9.3.1 (top level)",
+    "cite": "clause 9.3.1",
+    "aliases": [
+     "cl. 9.3.1"
+    ],
+    "requires": "Management review: general",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9.3.2 (top level)",
+    "cite": "clause 9.3.2",
+    "aliases": [
+     "cl. 9.3.2"
+    ],
+    "requires": "Management review inputs",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   },
+   {
+    "topic": "Clause 9.3.3 (top level)",
+    "cite": "clause 9.3.3",
+    "aliases": [
+     "cl. 9.3.3"
+    ],
+    "requires": "Management review outputs",
+    "type": "Standard",
+    "note": "Section heading; cite a sub-clause in findings"
+   }
+  ]
+ },
+ "intakeTemplate": "A. Documents sampled: Item | Type | Status | Notes. QMS manual, procedures, records sampled (with record IDs and sample sizes), previous audit and management review records.\nB. Conflicts register: # | Item | Source 1 | Source 2 | Resolution owner | Resolution. Procedure vs practice, two records that disagree. Nothing is resolved silently.\nC. Names: full names appear only if the client supplied them in writing. Otherwise \"[name needed]\" or the job title. Initials or partial names are never expanded.\nD. Notes not used: every note line that is not a finding, conflict or question, with a one-line reason.\nF. Figures and sources: every number, date and measurement names its source.\nE. Incidents: safety incidents, injuries or legal claims are not quality findings; list them and ask the consultant.\nG. Requirements: each clause cited is checked against the clause list. Procedures are labeled QMS DOCUMENT.",
+ "blankTemplate": "# ISO 9001 Internal Audit Report\nCover lines: CONFIDENTIAL · Organization: [Organization] · Site: [Site] · Standard: [Edition from the job sheet] · Audit date(s): [dates] · Report date: [date] · Audit no.: [number] · Audit host: [as given in writing]. Last cover line, label \"Note\": \"An audit is a sample. This report reflects the evidence reviewed on the audit date(s) only.\"\n## 1. Audit Summary\nWho audited, for whom and why (internal audit programme), where, when and against which edition. Then the result in one sentence using the app's counts exactly: \"[n] findings: [a] major nonconformities, [b] minor nonconformities and [c] opportunities for improvement.\"\n## 2. Audit Scope, Criteria and Method\nProcesses, departments and clauses in scope; audit criteria; method (interviews, records sampling, observation); clauses not applicable per the QMS scope. Then a table: Person interviewed | Role.\n## 3. Summary of Findings\n-> a {\"type\":\"counts\"} block.\n## 4. Clause-by-Clause Results\nTable: Clause | Topic | Result | Finding IDs. One row per clause in scope. Result is one of: Conforms / Major NC / Minor NC / OFI / Not audited. Topics are short paraphrased names, not standard text.\n## 5. Findings\nIntro line: \"Each finding gives the Requirement, Finding, Objective evidence and Corrective action requested. Grades are MAJOR NC, MINOR NC or OFI.\"\nFor each finding: F-[n] [Short title] ([Grade]) with labeled parts: Requirement (ISO 9001 – clause [X.Y]: [paraphrase]. Or QMS DOCUMENT – [procedure]: [rule]. Or CUSTOMER REQUIREMENT – [document]: [rule].); Finding (what was not met); Objective evidence (records, dates, sample); Corrective action requested; Owner; Response due.\n## 6. Corrective Action Summary\nTable: # | Clause | Grade | Finding | Owner | Response due. One row per finding, same IDs.\n## 7. Positive Observations\nShort bullets, only from the notes.\n## 8. Audit Conclusion\nTwo or three sentences: whether the processes audited conform, are effectively implemented and maintained, based on the sample; the next step (responses to findings by the due dates; follow-up at the next audit).\n## 9. Limitations\nAn audit is a sample of evidence; findings reflect only the records and people available on the audit date(s); this internal audit does not replace certification-body audits.",
+ "styleRules": "Voice: third person, past tense for evidence (\"Three of 12 gauges sampled were…\"). The audit is the subject; never \"I\" or \"we.\"\nSentence length: short and plain, under 25 words. One idea per sentence.\nFinding titles: state what was not met. Grade in parentheses.\nRequirement: label first (ISO 9001, QMS DOCUMENT, CUSTOMER REQUIREMENT or STATUTORY/REGULATORY), then \"clause X.Y\" or the document, then a plain-language paraphrase after a colon. Never quote the standard.\nObjective evidence: record IDs, dates and sample sizes exactly as in the notes.\nCorrective action requested: ask for correction, root cause and corrective action; start with a verb.\nNumbers: numerals; dates as \"March 4, 2026\".\nWords avoided: \"failed to,\" \"negligent,\" \"poor,\" \"it is recommended that,\" \"please note.\"\nTables: counts in Section 3, clause-by-clause results in Section 4, corrective action summary in Section 6.",
+ "findingsLibrary": "Measuring equipment — Title: Measuring equipment past its calibration due date was in use. Requirement: ISO 9001 – clause 7.1.5.2: calibrate or verify measuring equipment at set intervals, show its status, and assess earlier results when it is found unfit. Corrective action requested: Remove the gauges from use, assess product measured since the last good calibration, find the cause and correct the recall system.\nExternal providers — Title: Suppliers not re-evaluated as required. Requirement: ISO 9001 – clause 8.4.1: apply criteria for evaluating, selecting, monitoring and re-evaluating external providers, and keep records.\nNonconforming outputs — Title: Rejected material not identified or segregated. Requirement: ISO 9001 – clause 8.7: identify and control nonconforming outputs to prevent unintended use.\nCorrective action — Title: Corrective actions closed without an effectiveness review. Requirement: ISO 9001 – clause 10.2: review the effectiveness of corrective actions taken.",
+ "carryover": [
+  "Sample Company",
+  "J. J. Keller",
+  "J.J. Keller",
+  "Valor Man",
+  "Northgate Supply Co.",
+  "Harbor Point Distribution Center",
+  "1200 Example Way",
+  "Anytown, VA",
+  "Pat Rivera",
+  "Ridgeline Builders",
+  "Maple Court Medical Office",
+  "Cedar Lane Home Services",
+  "RB-2026-07",
+  "CL-OPS-2026-01",
+  "Brightwater Precision Components",
+  "BPC-IA-2026-02",
+  "Sampleton"
+ ],
+ "exportNames": {
+  "report": "ISO 9001 Internal Audit Report",
+  "qa": "Consultant QA Sheet"
+ },
+ "photoPlan": {
+  "note": "Photos are optional in an internal audit report.",
+  "sections": [
+   {
+    "key": "cover",
+    "label": "Cover",
+    "anchor": [
+     "cover"
+    ],
+    "count": 1,
+    "min": 0,
+    "shots": [
+     "Facility entrance or main work area"
+    ]
+   }
+  ]
+ },
+ "sampleJob": {
+  "jobSheet": {
+   "client": "Brightwater Precision Components LLC (sample)",
+   "site": "Main plant, 22 Example Drive, Sampleton, ST 00000",
+   "edition": "ISO 9001:2015 including Amendment 1:2024",
+   "qmsScope": "Machining and inspection of precision aluminum and steel components. Clause 8.3 (design and development) not applicable: parts are made to customer drawings.",
+   "auditScope": "Purchasing, receiving inspection, calibration, nonconforming product and corrective action. Clauses 7.1.5, 7.2, 8.4, 8.7, 9.2, 10.2 and 6.2.",
+   "criteria": "ISO 9001:2015 incl. Amd 1:2024; Quality Manual Rev F; procedures QP-08 Supplier Control and QP-11 Calibration",
+   "visitDates": "November 10–11, 2026",
+   "reportDate": "November 13, 2026",
+   "reportNo": "BPC-IA-2026-02, Rev 0",
+   "auditee": "Quality Manager",
+   "participants": "Quality Manager; Purchasing Lead; Receiving Inspector; Calibration Technician; Second-shift Machinist",
+   "certBody": "Certified; surveillance audit planned for February 2027",
+   "prior": "May 2026; two minor findings, both closed"
+  },
+  "sources": [
+   {
+    "id": "src-1",
+    "name": "Audit notes, Nov 10–11",
+    "kind": "Field notes",
+    "status": "received and reviewed",
+    "text": "Calibration (QP-11): sampled 12 gauges from the cal log. 3 past due and in use on the floor: micrometer M-114 (due Aug 2026), bore gauge B-07 (due Sep 2026), caliper C-221 (due Oct 2026). No evaluation of parts measured since due date. Cal tech says recall reminders stopped when the old spreadsheet was replaced.\nPurchasing (QP-08): approved supplier list (ASL) last reviewed Jan 2025. QP-08 section 5 requires annual re-evaluation. 4 of 5 suppliers sampled have no 2026 scorecard.\nReceiving: 2 bins of rejected bar stock (heat lot 6614) on the floor next to released stock, no red tag, no NCR. Receiving inspector says NCR forms ran out.\nCorrective action: sampled 6 CARs closed in 2026. 4 closed with root cause and action but no effectiveness check recorded (CAR-26-03, -05, -07, -09).\nQuality objectives: on-time delivery and scrap rate tracked monthly on the board. Good. Objectives sheet has no owner column.\nTraining: second-shift machinist trained on new CMM, training record present and signed. Competence matrix shows CMM skill but no reassessment dates.\nInternal audit programme on schedule for 2026.\nCustomer complaint log well maintained, all complaints answered within 5 days."
+   },
+   {
+    "id": "src-2",
+    "name": "Calibration log extract",
+    "kind": "Attachment",
+    "status": "received and reviewed",
+    "text": "12 gauges sampled. Due dates: M-114 2026-08-15, B-07 2026-09-02, C-221 2026-10-20 (all past due on 2026-11-10). Other 9 in date."
+   }
+  ],
+  "round": 1,
+  "approved": true,
+  "intake": {
+   "items": [
+    {
+     "id": "F-1",
+     "area": "Calibration",
+     "cite": "clause 7.1.5.2",
+     "finding": "Measuring equipment past its calibration due date was in use, and earlier results were not assessed",
+     "evidence": "3 of 12 gauges sampled past due and in use on November 10, 2026: M-114 (due August 15, 2026), B-07 (due September 2, 2026), C-221 (due October 20, 2026); no evaluation of parts measured since",
+     "source": "ISO 9001",
+     "grade": "Major NC",
+     "corrective": "Remove the 3 gauges from use, assess parts measured with them since their due dates, find the cause of the missed recalls and correct the recall system",
+     "owner": "Quality Manager",
+     "due": "November 25, 2026",
+     "action": "Quarantine the 3 gauges now",
+     "note": ""
+    },
+    {
+     "id": "F-2",
+     "area": "Purchasing",
+     "cite": "clause 8.4.1",
+     "finding": "External providers were not re-evaluated as the supplier procedure requires",
+     "evidence": "Approved supplier list last reviewed January 2025; QP-08 section 5 requires annual re-evaluation; 4 of 5 suppliers sampled had no 2026 scorecard",
+     "source": "ISO 9001",
+     "grade": "Minor NC",
+     "corrective": "Re-evaluate the approved suppliers, find why the annual review was missed, and set a review date",
+     "owner": "Purchasing Lead",
+     "due": "December 11, 2026",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "F-3",
+     "area": "Receiving",
+     "cite": "clause 8.7",
+     "finding": "Rejected bar stock was not identified or kept apart from released stock",
+     "evidence": "2 bins of rejected bar stock, heat lot 6614, next to released stock with no red tag and no NCR on November 10, 2026",
+     "source": "ISO 9001",
+     "grade": "Minor NC",
+     "corrective": "Tag and segregate the material, raise an NCR, and correct the cause of the missing NCR forms",
+     "owner": "Quality Manager",
+     "due": "November 18, 2026",
+     "action": "Tag and move the 2 bins now",
+     "note": ""
+    },
+    {
+     "id": "F-4",
+     "area": "Corrective action",
+     "cite": "clause 10.2",
+     "finding": "Corrective actions were closed without a review of their effectiveness",
+     "evidence": "4 of 6 CARs closed in 2026 had no effectiveness check recorded: CAR-26-03, CAR-26-05, CAR-26-07, CAR-26-09",
+     "source": "ISO 9001",
+     "grade": "Minor NC",
+     "corrective": "Review the effectiveness of the 4 CARs and add an effectiveness step before CAR closure",
+     "owner": "Quality Manager",
+     "due": "December 11, 2026",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "F-5",
+     "area": "Quality objectives",
+     "cite": "clause 6.2",
+     "finding": "Quality objectives do not show who is responsible for each one",
+     "evidence": "Objectives sheet has no owner column; objectives are tracked monthly",
+     "source": "ISO 9001",
+     "grade": "OFI",
+     "corrective": "Consider adding an owner for each objective",
+     "owner": "Quality Manager",
+     "due": "Next management review",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "F-6",
+     "area": "Competence",
+     "cite": "clause 7.2",
+     "finding": "The competence matrix does not show when skills are to be reassessed",
+     "evidence": "Matrix lists CMM skill for the second-shift machinist with no reassessment date; training record present and signed",
+     "source": "ISO 9001",
+     "grade": "OFI",
+     "corrective": "Consider adding reassessment dates to the competence matrix",
+     "owner": "Quality Manager",
+     "due": "Next management review",
+     "action": "",
+     "note": ""
+    }
+   ],
+   "packet": [
+    {
+     "item": "Audit notes, Nov 10–11",
+     "type": "Field notes",
+     "status": "received and reviewed",
+     "notes": ""
+    },
+    {
+     "item": "Calibration log extract",
+     "type": "Record",
+     "status": "received and reviewed",
+     "notes": "12 gauges sampled"
+    },
+    {
+     "item": "QP-08 Supplier Control",
+     "type": "Procedure",
+     "status": "received and reviewed",
+     "notes": ""
+    },
+    {
+     "item": "QP-11 Calibration",
+     "type": "Procedure",
+     "status": "received and reviewed",
+     "notes": ""
+    }
+   ],
+   "conflicts": [],
+   "names": [],
+   "notesNotUsed": [
+    {
+     "note": "Customer complaint log well maintained",
+     "reason": "positive observation"
+    },
+    {
+     "note": "Internal audit programme on schedule",
+     "reason": "positive observation"
+    },
+    {
+     "note": "Cal tech says reminders stopped when the spreadsheet was replaced",
+     "reason": "Possible cause; left for the auditee's root cause analysis"
+    }
+   ],
+   "injury": [],
+   "scopeTriggers": [],
+   "done": true
+  },
+  "interview": [],
+  "draft": {
+   "title": "ISO 9001 Internal Audit Report",
+   "cover": [
+    {
+     "label": "Status",
+     "value": "CONFIDENTIAL"
+    },
+    {
+     "label": "Organization",
+     "value": "Brightwater Precision Components LLC (sample)"
+    },
+    {
+     "label": "Site",
+     "value": "Main plant, 22 Example Drive, Sampleton, ST 00000"
+    },
+    {
+     "label": "Standard",
+     "value": "ISO 9001:2015 including Amendment 1:2024"
+    },
+    {
+     "label": "Audit dates",
+     "value": "November 10–11, 2026"
+    },
+    {
+     "label": "Report date",
+     "value": "November 13, 2026"
+    },
+    {
+     "label": "Audit no.",
+     "value": "BPC-IA-2026-02, Rev 0"
+    },
+    {
+     "label": "Audit host",
+     "value": "Quality Manager"
+    },
+    {
+     "label": "Note",
+     "value": "An audit is a sample. This report reflects the evidence reviewed on the audit dates only."
+    }
+   ],
+   "sections": [
+    {
+     "heading": "1. Audit Summary",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "This internal audit of Brightwater Precision Components LLC (sample) was carried out on November 10–11, 2026 at the main plant, as part of the 2026 internal audit programme. It was audited against ISO 9001:2015 including Amendment 1:2024."
+      },
+      {
+       "type": "p",
+       "text": "The audit raised 6 findings: 1 major nonconformity, 3 minor nonconformities and 2 opportunities for improvement."
+      }
+     ]
+    },
+    {
+     "heading": "2. Audit Scope, Criteria and Method",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "The audit covered purchasing, receiving inspection, calibration, nonconforming product and corrective action, against clauses 6.2, 7.1.5, 7.2, 8.4, 8.7, 9.2 and 10.2. Criteria were ISO 9001:2015 incl. Amd 1:2024, Quality Manual Rev F, QP-08 Supplier Control and QP-11 Calibration. Clause 8.3 is not applicable under the QMS scope because parts are made to customer drawings."
+      },
+      {
+       "type": "p",
+       "text": "The method was interviews, sampling of records and observation on the shop floor."
+      },
+      {
+       "type": "table",
+       "headers": [
+        "Person interviewed",
+        "Role"
+       ],
+       "rows": [
+        [
+         "Quality Manager",
+         "Audit host"
+        ],
+        [
+         "Purchasing Lead",
+         "Purchasing"
+        ],
+        [
+         "Receiving Inspector",
+         "Receiving"
+        ],
+        [
+         "Calibration Technician",
+         "Calibration"
+        ],
+        [
+         "Second-shift Machinist",
+         "Production"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "3. Summary of Findings",
+     "blocks": [
+      {
+       "type": "counts"
+      }
+     ]
+    },
+    {
+     "heading": "4. Clause-by-Clause Results",
+     "blocks": [
+      {
+       "type": "table",
+       "headers": [
+        "Clause",
+        "Topic",
+        "Result",
+        "Finding IDs"
+       ],
+       "rows": [
+        [
+         "clause 6.2",
+         "Quality objectives",
+         "OFI",
+         "F-5"
+        ],
+        [
+         "clause 7.1.5.2",
+         "Measurement traceability",
+         "Major NC",
+         "F-1"
+        ],
+        [
+         "clause 7.2",
+         "Competence",
+         "OFI",
+         "F-6"
+        ],
+        [
+         "clause 8.4.1",
+         "Control of external providers",
+         "Minor NC",
+         "F-2"
+        ],
+        [
+         "clause 8.7",
+         "Control of nonconforming outputs",
+         "Minor NC",
+         "F-3"
+        ],
+        [
+         "clause 9.2",
+         "Internal audit",
+         "Conforms",
+         "–"
+        ],
+        [
+         "clause 10.2",
+         "Nonconformity and corrective action",
+         "Minor NC",
+         "F-4"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "5. Findings",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "Each finding gives the Requirement, Finding, Objective evidence and Corrective action requested. Grades are MAJOR NC, MINOR NC or OFI."
+      },
+      {
+       "type": "finding",
+       "id": "F-1",
+       "title": "Measuring equipment past its calibration due date was in use, and earlier results were not assessed",
+       "rating": "Major NC",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Requirement",
+         "text": "ISO 9001 – clause 7.1.5.2: Calibrate or verify measuring equipment at intervals against traceable standards, identify its status, safeguard it, and assess the validity of previous results when equipment is found unfit."
+        },
+        {
+         "label": "Finding",
+         "text": "Measuring equipment past its calibration due date was in use, and earlier results were not assessed."
+        },
+        {
+         "label": "Objective evidence",
+         "text": "3 of 12 gauges sampled past due and in use on November 10, 2026: M-114 (due August 15, 2026), B-07 (due September 2, 2026), C-221 (due October 20, 2026); no evaluation of parts measured since."
+        },
+        {
+         "label": "Corrective action requested",
+         "text": "Remove the 3 gauges from use, assess parts measured with them since their due dates, find the cause of the missed recalls and correct the recall system."
+        },
+        {
+         "label": "Owner",
+         "text": "Quality Manager"
+        },
+        {
+         "label": "Response due",
+         "text": "November 25, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-2",
+       "title": "External providers were not re-evaluated as the supplier procedure requires",
+       "rating": "Minor NC",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Requirement",
+         "text": "ISO 9001 – clause 8.4.1: Determine and apply criteria for the evaluation, selection, monitoring of performance and re-evaluation of external providers, and keep records."
+        },
+        {
+         "label": "Finding",
+         "text": "External providers were not re-evaluated as the supplier procedure requires."
+        },
+        {
+         "label": "Objective evidence",
+         "text": "Approved supplier list last reviewed January 2025; QP-08 section 5 requires annual re-evaluation; 4 of 5 suppliers sampled had no 2026 scorecard."
+        },
+        {
+         "label": "Corrective action requested",
+         "text": "Re-evaluate the approved suppliers, find why the annual review was missed, and set a review date."
+        },
+        {
+         "label": "Owner",
+         "text": "Purchasing Lead"
+        },
+        {
+         "label": "Response due",
+         "text": "December 11, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-3",
+       "title": "Rejected bar stock was not identified or kept apart from released stock",
+       "rating": "Minor NC",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Requirement",
+         "text": "ISO 9001 – clause 8.7: Identify and control nonconforming outputs to prevent their unintended use or delivery, and keep records."
+        },
+        {
+         "label": "Finding",
+         "text": "Rejected bar stock was not identified or kept apart from released stock."
+        },
+        {
+         "label": "Objective evidence",
+         "text": "2 bins of rejected bar stock, heat lot 6614, next to released stock with no red tag and no NCR on November 10, 2026."
+        },
+        {
+         "label": "Corrective action requested",
+         "text": "Tag and segregate the material, raise an NCR, and correct the cause of the missing NCR forms."
+        },
+        {
+         "label": "Owner",
+         "text": "Quality Manager"
+        },
+        {
+         "label": "Response due",
+         "text": "November 18, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-4",
+       "title": "Corrective actions were closed without a review of their effectiveness",
+       "rating": "Minor NC",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Requirement",
+         "text": "ISO 9001 – clause 10.2: React to nonconformities, evaluate the need for action by finding causes, implement action, review its effectiveness, and keep records."
+        },
+        {
+         "label": "Finding",
+         "text": "Corrective actions were closed without a review of their effectiveness."
+        },
+        {
+         "label": "Objective evidence",
+         "text": "4 of 6 CARs closed in 2026 had no effectiveness check recorded: CAR-26-03, CAR-26-05, CAR-26-07, CAR-26-09."
+        },
+        {
+         "label": "Corrective action requested",
+         "text": "Review the effectiveness of the 4 CARs and add an effectiveness step before CAR closure."
+        },
+        {
+         "label": "Owner",
+         "text": "Quality Manager"
+        },
+        {
+         "label": "Response due",
+         "text": "December 11, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-5",
+       "title": "Quality objectives do not show who is responsible for each one",
+       "rating": "OFI",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Requirement",
+         "text": "ISO 9001 – clause 6.2: Set measurable quality objectives at relevant functions and levels, and plan what will be done, by whom, by when and how results will be evaluated."
+        },
+        {
+         "label": "Finding",
+         "text": "Quality objectives do not show who is responsible for each one."
+        },
+        {
+         "label": "Objective evidence",
+         "text": "Objectives sheet has no owner column; objectives are tracked monthly."
+        },
+        {
+         "label": "Corrective action requested",
+         "text": "Consider adding an owner for each objective."
+        },
+        {
+         "label": "Owner",
+         "text": "Quality Manager"
+        },
+        {
+         "label": "Response due",
+         "text": "Next management review"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-6",
+       "title": "The competence matrix does not show when skills are to be reassessed",
+       "rating": "OFI",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Requirement",
+         "text": "ISO 9001 – clause 7.2: Determine needed competence, ensure people are competent, act to acquire competence where needed, and keep evidence of competence."
+        },
+        {
+         "label": "Finding",
+         "text": "The competence matrix does not show when skills are to be reassessed."
+        },
+        {
+         "label": "Objective evidence",
+         "text": "Matrix lists CMM skill for the second-shift machinist with no reassessment date; training record present and signed."
+        },
+        {
+         "label": "Corrective action requested",
+         "text": "Consider adding reassessment dates to the competence matrix."
+        },
+        {
+         "label": "Owner",
+         "text": "Quality Manager"
+        },
+        {
+         "label": "Response due",
+         "text": "Next management review"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "6. Corrective Action Summary",
+     "blocks": [
+      {
+       "type": "table",
+       "headers": [
+        "#",
+        "Clause",
+        "Grade",
+        "Finding",
+        "Owner",
+        "Response due"
+       ],
+       "rows": [
+        [
+         "F-1",
+         "clause 7.1.5.2",
+         "Major NC",
+         "Measuring equipment past its calibration due date was in use, and earlier results were not assessed",
+         "Quality Manager",
+         "November 25, 2026"
+        ],
+        [
+         "F-2",
+         "clause 8.4.1",
+         "Minor NC",
+         "External providers were not re-evaluated as the supplier procedure requires",
+         "Purchasing Lead",
+         "December 11, 2026"
+        ],
+        [
+         "F-3",
+         "clause 8.7",
+         "Minor NC",
+         "Rejected bar stock was not identified or kept apart from released stock",
+         "Quality Manager",
+         "November 18, 2026"
+        ],
+        [
+         "F-4",
+         "clause 10.2",
+         "Minor NC",
+         "Corrective actions were closed without a review of their effectiveness",
+         "Quality Manager",
+         "December 11, 2026"
+        ],
+        [
+         "F-5",
+         "clause 6.2",
+         "OFI",
+         "Quality objectives do not show who is responsible for each one",
+         "Quality Manager",
+         "Next management review"
+        ],
+        [
+         "F-6",
+         "clause 7.2",
+         "OFI",
+         "The competence matrix does not show when skills are to be reassessed",
+         "Quality Manager",
+         "Next management review"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "7. Positive Observations",
+     "blocks": [
+      {
+       "type": "bullets",
+       "items": [
+        "On-time delivery and scrap rate were tracked monthly and displayed on the shop board.",
+        "The customer complaint log was complete, and every complaint was answered within 5 days.",
+        "The 2026 internal audit programme was on schedule."
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "8. Audit Conclusion",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "Based on the sample, purchasing, receiving, calibration and corrective action are in place but not fully effective. The major nonconformity in calibration needs prompt correction and an assessment of parts already measured. Responses to each nonconformity are due on the dates in Section 6; closure will be verified at the next internal audit."
+      }
+     ]
+    },
+    {
+     "heading": "9. Limitations",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "An audit is a sample of evidence. The findings reflect only the records and people available on November 10–11, 2026. This internal audit does not replace audits by the certification body."
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "checks": [
+    {
+     "n": 1,
+     "status": "pass",
+     "ids": [],
+     "detail": "All four documents sampled are listed and reviewed."
+    },
+    {
+     "n": 2,
+     "status": "pass",
+     "ids": [
+      "F-1",
+      "F-2",
+      "F-3",
+      "F-4"
+     ],
+     "detail": "Each nonconformity cites record IDs, dates and sample sizes."
+    },
+    {
+     "n": 3,
+     "status": "pass",
+     "ids": [],
+     "detail": "No disagreements between sources."
+    },
+    {
+     "n": 4,
+     "status": "pass",
+     "ids": [],
+     "detail": "Every note is a finding, a positive observation or listed as not used."
+    },
+    {
+     "n": 5,
+     "status": "pass",
+     "ids": [],
+     "detail": "People appear by role only."
+    },
+    {
+     "n": 9,
+     "status": "pass",
+     "ids": [
+      "F-1"
+     ],
+     "detail": "F-1 is graded Major NC: 3 of 12 gauges overdue with no assessment of earlier results points to a breakdown of the recall system."
+    },
+    {
+     "n": 10,
+     "status": "pass",
+     "ids": [],
+     "detail": "Each nonconformity gives requirement, finding and evidence."
+    },
+    {
+     "n": 12,
+     "status": "pass",
+     "ids": [],
+     "detail": "Findings stay within the clauses in scope; edition stated; clause 8.3 excluded per the QMS scope."
+    },
+    {
+     "n": 13,
+     "status": "pass",
+     "ids": [],
+     "detail": "Each NC asks for correction, cause and action, with an owner and response date."
+    }
+   ],
+   "summary": {
+    "openHazards": [],
+    "dataMismatches": [],
+    "citationsToConfirm": [
+     "Confirm the client is still certified to the 2015 edition (ISO 9001:2026 is reported as published)"
+    ],
+    "questions": [],
+    "notesNotUsed": []
+   }
+  }
+ }
+}

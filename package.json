@@ -1,0 +1,11 @@
+{
+  "name": "skillededge-site",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.10.0",
+    "@upstash/redis": "^1.41.0"
+  }
+}

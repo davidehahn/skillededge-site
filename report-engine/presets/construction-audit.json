@@ -1,0 +1,1666 @@
+{
+ "id": "construction-audit",
+ "engineId": "SE-RE-DEMO",
+ "licensedBy": "Skilled Edge Group LLC",
+ "consultant": {
+  "name": "",
+  "credentials": "",
+  "firm": ""
+ },
+ "featured": 1,
+ "blurb": "OSHA-style audit of a construction site: scope, site description, findings tied to the 29 CFR 1926 standard, risk rating, corrective action, owner, due date and an overall score.",
+ "reportType": "Construction Site Safety Audit",
+ "reportTitle": "Construction Site Safety Audit Report",
+ "itemNoun": "finding",
+ "jobSheetFields": [
+  {
+   "key": "client",
+   "label": "Client (company that hired you)"
+  },
+  {
+   "key": "project",
+   "label": "Project name"
+  },
+  {
+   "key": "siteAddress",
+   "label": "Site address"
+  },
+  {
+   "key": "gc",
+   "label": "General contractor / controlling employer"
+  },
+  {
+   "key": "subs",
+   "label": "Subcontractors on site during the audit",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "phase",
+   "label": "Project phase and work under way (site description)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "workers",
+   "label": "Approximate workers on site"
+  },
+  {
+   "key": "weather",
+   "label": "Weather and site conditions on the audit date"
+  },
+  {
+   "key": "visitDates",
+   "label": "Audit date(s)"
+  },
+  {
+   "key": "reportDate",
+   "label": "Report date"
+  },
+  {
+   "key": "reportNo",
+   "label": "Report number / revision"
+  },
+  {
+   "key": "requestedBy",
+   "label": "Requested by and purpose of the audit"
+  },
+  {
+   "key": "siteContact",
+   "label": "Site contact (name and title, only as given in writing)"
+  },
+  {
+   "key": "participants",
+   "label": "Participants (name and role, only as given in writing)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "scope",
+   "label": "Areas and activities in scope; anything excluded",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "documents",
+   "label": "Site documents reviewed (safety plan, JHAs, inspection logs, training records)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "clientPolicy",
+   "label": "Client or GC site rules that apply (if any)",
+   "multiline": true
+  },
+  {
+   "key": "prior",
+   "label": "Prior audit on this project (yes/no, date)"
+  },
+  {
+   "key": "reaudit",
+   "label": "Follow-up audit interval to recommend"
+  }
+ ],
+ "titleField": "project",
+ "columns": [
+  {
+   "key": "id",
+   "label": "#",
+   "readonly": true
+  },
+  {
+   "key": "finding",
+   "label": "Observation / finding"
+  },
+  {
+   "key": "location",
+   "label": "Area / location"
+  },
+  {
+   "key": "employer",
+   "label": "Exposing employer (GC or trade)"
+  },
+  {
+   "key": "category",
+   "label": "Audit category"
+  },
+  {
+   "key": "evidence",
+   "label": "Evidence"
+  },
+  {
+   "key": "status",
+   "label": "Open / corrected on site",
+   "options": [
+    "open",
+    "corrected on site"
+   ]
+  },
+  {
+   "key": "source",
+   "label": "Source",
+   "options": [
+    "REGULATION",
+    "SITE RULE",
+    "RECOMMENDATION"
+   ]
+  },
+  {
+   "key": "cite",
+   "label": "Cite / site rule"
+  },
+  {
+   "key": "rating",
+   "label": "Risk rating (yours)",
+   "options": [
+    "[needed]",
+    "Serious",
+    "Other-than-serious"
+   ],
+   "consultantOnly": true
+  },
+  {
+   "key": "owner",
+   "label": "Owner (job title)"
+  },
+  {
+   "key": "due",
+   "label": "Correction due date"
+  }
+ ],
+ "ratingKey": "rating",
+ "countRatings": [
+  "Serious",
+  "Other-than-serious"
+ ],
+ "countsLabel": "Risk rating",
+ "requirementLabels": [
+  "REGULATION",
+  "SITE RULE"
+ ],
+ "recommendationSource": "RECOMMENDATION",
+ "idRules": "Findings are numbered F-1, F-2. Best-practice recommendations are numbered Rec-1, Rec-2. The corrective action plan uses the same IDs. Never use an ID that could match equipment, rooms, scorecard categories or people.",
+ "projectRules": "You build [REPORT TYPE] reports (OSHA-style construction site safety audits in the structure of a diagnostic audit report) for [CONSULTANT NAME], an independent safety consultant. Engine ID: [CLIENT ID], licensed by Skilled Edge Group LLC for this consultant only. The consultant reviews, approves, signs and sends every report. You draft and flag; they decide.\n\nWorkflow: 1 JOB SHEET. 2 FINDINGS BUILDER (pull findings from the site-walk notes, then interview the consultant one Blank Template section at a time, only about gaps; max 3 short questions; injury and near-miss questions first; put each finding in an audit category; wait for approval). 3 DRAFT (Blank Template for structure, Style Rules for voice, Findings Library wording; only the job sheet, the approved table and the app's computed numbers). 4 QA (15 checks). 5 EDITS.\n\nRules:\n- Construction work is covered by 29 CFR 1926. Cite a section only when the observed condition breaks what that paragraph requires. A best practice is a recommendation with no citation.\n- Write every requirement line as: REGULATION – 29 CFR [section]: [plain-language paraphrase]. Or SITE RULE – [document]: [rule]. Never present a GC or client rule as a regulation. Never quote regulation text.\n- Name the exposing employer (GC or trade) only as it appears on the job sheet or in the notes; otherwise [needed]. Never assign legal responsibility; describe who controls the condition only if a source says so.\n- A condition that could cause death or serious harm right now gets \"Stop work in the area and correct before work resumes\" as the immediate action.\n- The overall score, risk band and finding counts are computed by the app. Quote them exactly.\n- Owners are job titles. Due dates come only from the approved table; blank is [needed].\n- Risk ratings (Serious or Other-than-serious) are set by the consultant only.\n- Output two separate documents: the client report only, and a Consultant QA Sheet.\n\nNever invent names, dates, measurements or facts. Write [needed] instead. Never reuse anything from the Carryover List.",
+ "inputsRule": "Site-walk notes, voice-memo transcripts, photos of handwritten notes or checklists (read as text), the site safety plan, JHAs, competent-person inspection logs, toolbox talk and training records. Site photos go in the Site photos box and land in the report.",
+ "qaVersion": "Construction Audit v1.0 (Nov 18, 2026)",
+ "qaChecks": [
+  {
+   "n": 1,
+   "name": "Documents",
+   "rule": "Every site document the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A document not provided is a question, not a finding."
+  },
+  {
+   "n": 2,
+   "name": "Evidence rating",
+   "rule": "No finding rated Serious rests only on unreviewed evidence or hearsay. Consultant confirms after review."
+  },
+  {
+   "n": 3,
+   "name": "Conflicts",
+   "rule": "Every disagreement across sources (depths, heights, counts, dates, training status, which trade) is in the register."
+  },
+  {
+   "n": 4,
+   "name": "Notes not used",
+   "rule": "Every site-walk note is a finding, register row, question, or a listed \"not used\" with reason."
+  },
+  {
+   "n": 5,
+   "name": "Names",
+   "rule": "No expanded initials or partial names. People appear only as given in writing; otherwise by job title."
+  },
+  {
+   "n": 6,
+   "name": "Counts and score",
+   "rule": "Finding counts by risk rating and the overall score are built by the app. Any percentage or risk band in the text matches.",
+   "auto": "counts"
+  },
+  {
+   "n": 7,
+   "name": "Requirement source",
+   "rule": "Every finding is labeled REGULATION or SITE RULE.",
+   "auto": "labels"
+  },
+  {
+   "n": 8,
+   "name": "Citation",
+   "rule": "Every cite matches the citation library at the paragraph listed. A cite not in the library is \"(unverified)\" and blocks release.",
+   "auto": "citations"
+  },
+  {
+   "n": 9,
+   "name": "Repeat",
+   "rule": "Repeat findings cite the prior audit, or say \"per client; prior report not reviewed.\""
+  },
+  {
+   "n": 10,
+   "name": "Exposing employer",
+   "rule": "Each finding names the exposing employer (GC or trade) only as given in the job sheet or notes; no finding assigns legal responsibility."
+  },
+  {
+   "n": 11,
+   "name": "Required sections",
+   "rule": "The report has every required section: audit summary, scope and method, site description, overall score, findings with corrective actions, corrective action plan, and limitations. Every finding appears in the corrective action plan with an owner and due date.",
+   "auto": "sections"
+  },
+  {
+   "n": 12,
+   "name": "Scope triggers",
+   "rule": "Conditional standards (trench depth 4 or 5 feet, residential construction, silica Table 1 task, competent person designated) are asked as questions before the cite is used."
+  },
+  {
+   "n": 13,
+   "name": "Action follows rule",
+   "rule": "The corrective action matches the hazard and its urgency: imminent danger means stop work in the area until corrected; Serious findings get the earliest due dates."
+  },
+  {
+   "n": 14,
+   "name": "Library freshness",
+   "rule": "The citation library is verified by the consultant and its check date is under 12 months old.",
+   "auto": "freshness"
+  },
+  {
+   "n": 15,
+   "name": "No carryover",
+   "rule": "No client, project, site or person name from the Carryover List appears unless it is also on this job's job sheet.",
+   "auto": "carryover"
+  }
+ ],
+ "requiredSections": [
+  {
+   "name": "Audit summary",
+   "re": "audit summary|executive summary"
+  },
+  {
+   "name": "Scope and method",
+   "re": "scope"
+  },
+  {
+   "name": "Site description",
+   "re": "site description|project description"
+  },
+  {
+   "name": "Overall score",
+   "re": "overall score|compliance score|scorecard"
+  },
+  {
+   "name": "Findings and corrective actions",
+   "re": "findings"
+  },
+  {
+   "name": "Corrective action plan",
+   "re": "corrective action plan|correction plan",
+   "plan": true
+  },
+  {
+   "name": "Limitations",
+   "re": "limitation"
+  }
+ ],
+ "releaseGate": "All 15 pass, every Serious finding has an owner and due date, and the consultant signs off on the conflicts register and scope answers.",
+ "scorecard": {
+  "title": "Site safety scorecard",
+  "note": "You rate each category. The app computes the score; Claude never rates a category. Mark a category Not Applicable to leave it out.",
+  "levels": [
+   {
+    "label": "Compliant",
+    "value": 100
+   },
+   {
+    "label": "Minor Gap",
+    "value": 67
+   },
+   {
+    "label": "Major Gap",
+    "value": 33
+   },
+   {
+    "label": "Absent",
+    "value": 0
+   },
+   {
+    "label": "Not Applicable",
+    "value": null
+   }
+  ],
+  "bands": [
+   {
+    "label": "Minimal",
+    "min": 90
+   },
+   {
+    "label": "Low",
+    "min": 75
+   },
+   {
+    "label": "Moderate",
+    "min": 50
+   },
+   {
+    "label": "Serious",
+    "min": 35
+   },
+   {
+    "label": "Severe",
+    "min": 15
+   },
+   {
+    "label": "Critical",
+    "min": 0
+   }
+  ],
+  "bandsNote": "",
+  "categories": [
+   "Safety program and site inspections",
+   "Fall protection",
+   "Scaffolds",
+   "Ladders and stairways",
+   "Excavations and trenching",
+   "Electrical",
+   "Cranes, rigging and hoisting",
+   "Struck-by and vehicle traffic",
+   "Housekeeping, fire and flammables",
+   "Health hazards (silica, noise)",
+   "Personal protective equipment",
+   "Training and competent persons",
+   "Recordkeeping and postings",
+   "Sanitation and drinking water"
+  ]
+ },
+ "citationLibrary": {
+  "title": "Construction Citation Library v0.1 (DRAFT) – 29 CFR 1926, 1904 and OSH Act 5(a)(1)",
+  "status": "draft",
+  "checkedOn": "2026-11-18",
+  "checkedBy": "Claude, from the eCFR text as published by Cornell LII and the OSH Act on osha.gov; every cited section checked against the eCFR amendment history on 2026-11-18, no cited paragraph changed (consultant verification pending)",
+  "citePattern": "(?:29\\s?CFR\\s?)?19(?:04|10|26)\\.\\d+(?:\\([a-z0-9]+\\))*|(?:OSH Act,?\\s)?(?:Section|§)\\s?5\\(a\\)\\(1\\)",
+  "rule": "The engine may only cite a regulation listed here, at the paragraph listed. Anything else is written \"(unverified)\" and blocks release. Entries with a scope question apply only when the answer says so. This library covers construction work; a hazard with no entry here is written up with \"(unverified)\" for the consultant to check.",
+  "entries": [
+   {
+    "topic": "Injury and illness forms",
+    "cite": "29 CFR 1904.29(a)",
+    "requires": "Use OSHA 300, 300-A and 301 (or equivalent) forms to record cases",
+    "type": "Regulation",
+    "note": "Ask: is the employer partially exempt (10 or fewer employees, or a low-hazard industry)? If yes, do not cite.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.29",
+    "trigger": true
+   },
+   {
+    "topic": "Recording deadline",
+    "cite": "29 CFR 1904.29(b)(3)",
+    "requires": "Enter each recordable case on the 300 Log and 301 within 7 calendar days of learning of it",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.29"
+   },
+   {
+    "topic": "Year-end log review",
+    "cite": "29 CFR 1904.32(a)(1)",
+    "requires": "Review the 300 Log at year end to verify it is complete and accurate, and correct deficiencies",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32"
+   },
+   {
+    "topic": "Annual summary certification",
+    "cite": "29 CFR 1904.32(a)(3)",
+    "requires": "A company executive certifies the 300-A annual summary",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32"
+   },
+   {
+    "topic": "Annual summary posting",
+    "cite": "29 CFR 1904.32(b)(6)",
+    "requires": "Post the 300-A summary from February 1 to April 30 of the following year",
+    "type": "Regulation",
+    "note": "Only cite during or for that posting period.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32"
+   },
+   {
+    "topic": "General Duty Clause",
+    "cite": "OSH Act Section 5(a)(1)",
+    "requires": "Furnish employment and a place of employment free from recognized hazards causing or likely to cause death or serious physical harm",
+    "type": "Statute",
+    "note": "Use only when no specific standard covers the hazard, and only if you confirm it is a recognized, serious hazard with a feasible fix. Ask before citing.",
+    "source": "https://www.osha.gov/laws-regs/oshact/section5-duties",
+    "trigger": true,
+    "aliases": [
+     "Section 5(a)(1)",
+     "5(a)(1)"
+    ]
+   },
+   {
+    "topic": "Grinder work rest",
+    "cite": "29 CFR 1910.215(a)(4)",
+    "requires": "Work rest on offhand grinders kept adjusted to within 1/8 inch of the wheel",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.215"
+   },
+   {
+    "topic": "Construction safety programs",
+    "cite": "29 CFR 1926.20(b)(1)",
+    "requires": "Initiate and maintain programs needed to comply with Part 1926",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.20"
+   },
+   {
+    "topic": "Construction site inspections",
+    "cite": "29 CFR 1926.20(b)(2)",
+    "requires": "Frequent and regular inspections of job sites, materials and equipment by competent persons",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.20"
+   },
+   {
+    "topic": "Construction hazard training",
+    "cite": "29 CFR 1926.21(b)(2)",
+    "requires": "Instruct each employee to recognize and avoid unsafe conditions and the rules that apply",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.21"
+   },
+   {
+    "topic": "Drinking water (construction)",
+    "cite": "29 CFR 1926.51(a)(1)",
+    "requires": "Adequate supply of potable water at all places of employment",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.51"
+   },
+   {
+    "topic": "Toilets (construction)",
+    "cite": "29 CFR 1926.51(c)(1)",
+    "requires": "Toilets provided per Table D-1 (at least 1 for 20 or fewer workers)",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.51"
+   },
+   {
+    "topic": "Hard hats",
+    "cite": "29 CFR 1926.100(a)",
+    "requires": "Protective helmets where there is a possible danger of head injury",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.100"
+   },
+   {
+    "topic": "Flammable liquid containers",
+    "cite": "29 CFR 1926.152(a)(1)",
+    "requires": "Only approved containers and portable tanks; safety cans or DOT containers for 5 gallons or less",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.152"
+   },
+   {
+    "topic": "Indoor flammable storage",
+    "cite": "29 CFR 1926.152(b)(1)",
+    "requires": "No more than 25 gallons of flammable liquid stored in a room outside an approved storage cabinet",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.152"
+   },
+   {
+    "topic": "Rigging inspection",
+    "cite": "29 CFR 1926.251(a)(1)",
+    "requires": "Rigging inspected before each shift and as needed; defective rigging removed from service",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.251"
+   },
+   {
+    "topic": "Rigging load markings",
+    "cite": "29 CFR 1926.251(a)(2)(i)",
+    "requires": "Rigging has permanent, legible identification markings including the safe working load",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.251"
+   },
+   {
+    "topic": "Unprotected sides and edges (construction)",
+    "cite": "29 CFR 1926.501(b)(1)",
+    "requires": "Guardrails, safety nets or personal fall arrest at unprotected sides and edges 6 feet or more above a lower level",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.501"
+   },
+   {
+    "topic": "Holes (construction)",
+    "cite": "29 CFR 1926.501(b)(4)(i)",
+    "requires": "Protection from falling through holes (including skylights) more than 6 feet above lower levels",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.501"
+   },
+   {
+    "topic": "Residential construction falls",
+    "cite": "29 CFR 1926.501(b)(13)",
+    "requires": "Fall protection for residential construction 6 feet or more above lower levels, or a 1926.502(k) plan where infeasible",
+    "type": "Regulation",
+    "note": "Ask: is this residential construction? If not, use 1926.501(b)(1) or (b)(4).",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.501",
+    "trigger": true
+   },
+   {
+    "topic": "Guardrail height",
+    "cite": "29 CFR 1926.502(b)(1)",
+    "requires": "Top rail 42 inches, plus or minus 3 inches, above the walking-working level",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.502"
+   },
+   {
+    "topic": "Fall arrest inspection",
+    "cite": "29 CFR 1926.502(d)(21)",
+    "requires": "Personal fall arrest systems inspected before each use; defective components removed",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.502"
+   },
+   {
+    "topic": "Forklift training (construction)",
+    "cite": "29 CFR 1926.602(d)",
+    "requires": "Operator training follows 29 CFR 1910.178(l)",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.602"
+   },
+   {
+    "topic": "Trench egress",
+    "cite": "29 CFR 1926.651(c)(2)",
+    "requires": "Stairway, ladder or ramp in trenches 4 feet or deeper, within 25 feet of lateral travel",
+    "type": "Regulation",
+    "note": "Ask: was the trench 4 feet deep or more where workers were?",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.651",
+    "trigger": true
+   },
+   {
+    "topic": "Spoil pile setback",
+    "cite": "29 CFR 1926.651(j)(2)",
+    "requires": "Materials and equipment kept at least 2 feet from the excavation edge, or retained",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.651"
+   },
+   {
+    "topic": "Daily excavation inspection",
+    "cite": "29 CFR 1926.651(k)(1)",
+    "requires": "Daily competent-person inspection of excavations, adjacent areas and protective systems, and after rain or other hazard-increasing events",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.651"
+   },
+   {
+    "topic": "Rebar impalement",
+    "cite": "29 CFR 1926.701(b)",
+    "requires": "Protruding reinforcing steel guarded to eliminate the hazard of impalement",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.701"
+   },
+   {
+    "topic": "Ladder extension above landing",
+    "cite": "29 CFR 1926.1053(b)(1)",
+    "requires": "Portable ladder side rails extend at least 3 feet above the upper landing, or the ladder is secured with a grab rail",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053"
+   },
+   {
+    "topic": "Ladder intended use",
+    "cite": "29 CFR 1926.1053(b)(4)",
+    "requires": "Ladders used only for the purpose for which they were designed",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053"
+   },
+   {
+    "topic": "Defective ladders (construction)",
+    "cite": "29 CFR 1926.1053(b)(16)",
+    "requires": "Portable ladders with structural defects marked defective or tagged \"Do Not Use\" and withdrawn until repaired",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053"
+   },
+   {
+    "topic": "Silica Table 1 controls",
+    "cite": "29 CFR 1926.1153(c)(1)",
+    "requires": "For each Table 1 task, fully and properly implement the listed engineering controls, work practices and respiratory protection",
+    "type": "Regulation",
+    "note": "Ask: is the task listed in Table 1 and is the employer following Table 1? If not, the exposure assessment option in 1926.1153(d) applies instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153",
+    "trigger": true
+   },
+   {
+    "topic": "Silica exposure control plan",
+    "cite": "29 CFR 1926.1153(g)(1)",
+    "requires": "Written exposure control plan (tasks, controls, housekeeping, access restriction)",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153"
+   }
+  ],
+  "clientPolicy": []
+ },
+ "intakeTemplate": "A. Document inventory: Item | Type | Status | Notes. Site-walk notes, site safety plan, JHAs or pre-task plans, competent-person inspection logs (excavation, scaffold, crane), silica exposure control plan, training and certification records, toolbox talk sign-ins, prior audit. Status: received and reviewed / received not reviewed / not received.\nB. Conflicts register: # | Item | Source 1 (value) | Source 2 (value) | Resolution owner | Resolution. Depths, heights, counts, dates, which trade, training status. Nothing is resolved silently.\nC. Names: full names appear only if the client supplied them in writing. Otherwise \"[name needed]\" or the job title. Initials or partial names are never expanded.\nD. Notes not used: every note line that is not a finding, conflict or question, with a one-line reason.\nF. Figures and sources: every number, date and measurement names its source.\nE. Injury and incident prompts: any injury, first aid, near miss or unreported incident goes to the consultant as a question, not a finding.\nG. Requirements: each cite is checked against the citation library. GC or client rules are labeled SITE RULE.\nH. Categories: every finding names its audit category from the scorecard. Category ratings are the consultant's only.",
+ "blankTemplate": "# Construction Site Safety Audit Report\nCover lines: CONFIDENTIAL · Client: [Client] · Project: [Project] · Site: [Site address] · General contractor: [GC] · Audit date(s): [Visit dates] · Report date: [Report date] · Report no.: [Report number] · Prepared for: [Site contact, only as given in writing]. Last cover line, label \"Note\": \"This report reflects conditions observed on the audit date(s) only. It is not legal advice.\"\n## 1. Audit Summary\nParagraph 1: who conducted the audit, at whose request and why, where and when, and the method (site walk, document review, interviews).\nParagraph 2: the result in one sentence using the app's numbers exactly: \"[n] findings ([s] serious, [o] other-than-serious); overall score [x]% ([band] risk).\" Say how many were corrected on site only if a source says so.\n## 2. Scope and Method\nAreas and activities walked, trades observed, documents reviewed, anything excluded. Then a table: Participant | Role (names only as given in writing).\n## 3. Site Description\nProject, phase and work under way, general contractor and trades on site, approximate workforce, weather and conditions. Two to four sentences from the job sheet only.\n## 4. Overall Score\nOne sentence on the scale (each category rated Compliant, Minor Gap, Major Gap or Absent; Not Applicable left out; score is the average). -> a {\"type\":\"scorecard\"} block. Then one short paragraph naming the categories rated Absent or Major Gap.\n## 5. Summary of Findings\n-> a {\"type\":\"counts\"} block. One sentence on how many remain open.\n## 6. Findings and Corrective Actions\nIntro line: \"Each finding gives the Condition, Requirement, Risk, Corrective action, Owner and Due date. Risk ratings are SERIOUS or OTHER-THAN-SERIOUS.\"\nFor each finding: F-[n] [Short title stating the condition] ([Risk rating]) with six labeled parts: Condition (what, where, exposing employer if known, evidence); Requirement (REGULATION – 29 CFR [cite from library]: [paraphrase]. Or SITE RULE – [document]: [rule].); Risk (one sentence); Corrective action (immediate action first, \"(corrected on site)\" only if a source says so, then the lasting fix); Owner (job title); Due date.\nRecommendations (no citation): Rec-[n] [title] with Condition and Recommendation.\n## 7. Corrective Action Plan\nTable: # | Hazard | Location | Risk rating | Corrective action | Owner | Due date. One row per finding, same IDs.\n## 8. Recommendations\nShort bullets: program, training and supervision priorities, and a follow-up audit in [interval from the job sheet].\n## 9. Limitations\nConditions on the audit date(s) only; a site walk may not find every hazard; each employer remains responsible for its employees' safety and for compliance; based on the areas, documents and people available.",
+ "styleRules": "Voice: third person, past tense for observations (\"was blocked,\" \"had been removed\"). The firm is the subject in the summary (\"[Firm] conducted…\"), never \"I\" or \"we.\"\nSentence length: short and plain, usually under 25 words. One idea per sentence.\nFinding titles: state the condition, not the rule. Classification in parentheses. \"– REPEAT\" when the prior report recorded the same condition.\nFinding structure: always six labeled parts, in order: Condition, Requirement, Risk, Corrective action, Owner, Due date.\nCondition: exact item and location, then the evidence (observation, tag, log, document).\nRequirement: label first (REGULATION or CLIENT POLICY), then the cite, then a plain-language paraphrase after a colon. No quoted regulation text.\nRisk: one sentence, consequence-focused, no exaggeration.\nCorrective action: start with a verb (\"Remove,\" \"Install,\" \"Train,\" \"Post\"). Immediate step first; then the lasting fix. Owners are job titles, not names.\nNumbers: numerals for counts and rates (two decimals for rates); dates as \"March 4, 2026\"; percentages as whole numbers unless the app gives a decimal.\nWords avoided: \"egregious,\" \"blatant,\" \"failed to,\" \"it is recommended that,\" \"please note,\" \"ensure compliance.\"\nTables: scorecard in Section 4, counts in Section 5, corrective action plan in Section 7.",
+ "findingsLibrary": "Fall protection — Title: Unprotected edge at [level/area]. Requirement: REGULATION – 29 CFR 1926.501(b)(1): guardrails, safety nets or personal fall arrest at unprotected sides and edges 6 feet or more above a lower level. Risk: A worker could fall to the level below. Corrective action: Stop work at the edge, install guardrails, then add edge checks to the daily inspection.\nLadders — Title: Extension ladder not extended above the landing. Requirement: REGULATION – 29 CFR 1926.1053(b)(1): side rails extend at least 3 feet above the upper landing, or the ladder is secured and a grab device provided. Corrective action: Replace or reposition the ladder and secure it at the top.\nExcavations — Title: No safe way out of the trench. Requirement: REGULATION – 29 CFR 1926.651(c)(2): stairway, ladder or ramp in trenches 4 feet or deeper within 25 feet of lateral travel. Corrective action: Place a ladder in the trench before anyone re-enters.\nSilica — Title: Dry cutting of concrete. Requirement: REGULATION – 29 CFR 1926.1153(c)(1): Table 1 controls fully implemented for each listed task. Corrective action: Stop dry cutting; use a saw with integrated water delivery.\nImpalement — Title: Uncapped rebar. Requirement: REGULATION – 29 CFR 1926.701(b): protruding reinforcing steel guarded against impalement. Corrective action: Cap or cover all exposed rebar ends.",
+ "carryover": [
+  "Sample Company",
+  "J. J. Keller",
+  "J.J. Keller",
+  "Valor Man",
+  "Northgate Supply Co.",
+  "Harbor Point Distribution Center",
+  "1200 Example Way",
+  "Anytown, VA",
+  "Pat Rivera",
+  "Brightwater Precision Components",
+  "Cedar Lane Home Services",
+  "BPC-IA-2026-02",
+  "CL-OPS-2026-01",
+  "Ridgeline Builders",
+  "Maple Court Medical Office",
+  "RB-2026-07",
+  "Sampleton"
+ ],
+ "exportNames": {
+  "report": "Construction Safety Audit Report",
+  "qa": "Consultant QA Sheet"
+ },
+ "photoPlan": {
+  "note": "Photos document the site visit, not individual findings. Counts are a recommendation.",
+  "sections": [
+   {
+    "key": "cover",
+    "label": "Cover",
+    "anchor": [
+     "cover"
+    ],
+    "count": 1,
+    "min": 1,
+    "shots": [
+     "Project sign or site entrance"
+    ]
+   },
+   {
+    "key": "site",
+    "label": "3. Site Description",
+    "anchor": [
+     "^\\s*3\\.?\\s",
+     "site description"
+    ],
+    "count": 2,
+    "min": 0,
+    "shots": [
+     "Overall view of the structure or work area",
+     "Laydown yard or site access"
+    ]
+   },
+   {
+    "key": "walk",
+    "label": "2. Scope and Method",
+    "anchor": [
+     "^\\s*2\\.?\\s",
+     "scope and method"
+    ],
+    "count": 2,
+    "min": 0,
+    "shots": [
+     "Site walk in progress",
+     "Typical work area reviewed"
+    ]
+   }
+  ]
+ },
+ "sampleJob": {
+  "jobSheet": {
+   "client": "Ridgeline Builders Inc.",
+   "project": "Maple Court Medical Office (sample)",
+   "siteAddress": "100 Demo Avenue, Sampleton, ST 00000",
+   "gc": "Ridgeline Builders Inc.",
+   "subs": "Concrete subcontractor, Framing subcontractor, Utilities subcontractor",
+   "phase": "Two-story steel-frame medical office building. Second-floor deck poured; framing of interior walls on level 1; storm drain trench open on the north side.",
+   "workers": "About 30",
+   "weather": "Dry, 58°F, light wind",
+   "visitDates": "November 12, 2026",
+   "reportDate": "November 16, 2026",
+   "reportNo": "RB-2026-07, Rev 0",
+   "requestedBy": "Ridgeline Builders project manager, as a quarterly third-party site audit",
+   "siteContact": "Site Superintendent",
+   "participants": "Site Superintendent (Ridgeline Builders); Concrete foreman; Utilities foreman",
+   "scope": "Whole site, all active trades. Crane work excluded (no crane on site).",
+   "documents": "Site safety plan; daily excavation inspection log (Nov 10–12); toolbox talk sign-ins for October",
+   "clientPolicy": "Ridgeline site rule SR-4: hard hats and safety glasses at all times outside the trailer",
+   "prior": "No",
+   "reaudit": "90 days"
+  },
+  "sources": [
+   {
+    "id": "src-1",
+    "name": "Site walk notes, Nov 12",
+    "kind": "Field notes",
+    "status": "received and reviewed",
+    "text": "L2 deck east side: no guardrail along about 40 ft of open edge, deck about 14 ft above grade. Framing crew working 6-8 ft from edge. Super says rails were removed for a delivery Monday.\nStair tower NW: extension ladder used to reach L2 landing, rails stop at landing level, not tied off.\nNorth storm trench: ~5 ft deep per utilities foreman, ~60 ft long, ladder at east end only. Two workers at west end. Spoil pile right at the edge on the south side.\nTrench box in use at mid-section only.\nConcrete crew cutting control joints on L1 slab with a gas cut-off saw, dry, no water hose hooked up. Visible dust cloud.\nGas can for the cut-off saw is a plastic milk jug, unlabeled.\nRebar dowels along the elevator pit wall uncapped (about 12).\nHard hats and glasses worn by everyone observed.\nPortable toilets: 2 on site, clean. Water cooler at trailer.\nElectrical: GFCI on temp panel tested OK by electrician.\nSuper mentioned a laborer twisted his ankle on the deck last week, went to urgent care."
+   },
+   {
+    "id": "src-2",
+    "name": "Excavation inspection log, Nov 10–12",
+    "kind": "Checklist",
+    "status": "received and reviewed",
+    "text": "Daily excavation inspection log. Nov 10: completed, competent person signed. Nov 11: completed, signed. Nov 12: blank (no entry before start of shift)."
+   },
+   {
+    "id": "src-3",
+    "name": "Toolbox talks, October",
+    "kind": "Attachment",
+    "status": "received and reviewed",
+    "text": "Sign-ins for 4 toolbox talks in October: ladders, heat, housekeeping, silica. Silica talk attended by 9 of the 11 concrete crew listed."
+   }
+  ],
+  "round": 1,
+  "approved": true,
+  "intake": {
+   "items": [
+    {
+     "id": "F-1",
+     "finding": "About 40 ft of the level 2 deck east edge had no guardrail, about 14 ft above grade, with framers working 6 to 8 ft from the edge",
+     "location": "Level 2 deck, east edge",
+     "employer": "Framing subcontractor",
+     "category": "Fall protection",
+     "evidence": "Site walk observation; superintendent said rails were removed for a delivery",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.501(b)(1)",
+     "rating": "Serious",
+     "owner": "Site Superintendent",
+     "due": "November 12, 2026 (before work resumes)",
+     "action": "Stop work within 15 ft of the edge until guardrails are reinstalled",
+     "note": ""
+    },
+    {
+     "id": "F-2",
+     "finding": "Extension ladder to the level 2 landing did not extend above the landing and was not secured",
+     "location": "Northwest stair tower",
+     "employer": "Ridgeline Builders Inc.",
+     "category": "Ladders and stairways",
+     "evidence": "Site walk observation",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.1053(b)(1)",
+     "rating": "Serious",
+     "owner": "Site Superintendent",
+     "due": "November 13, 2026",
+     "action": "Take the ladder out of use until it is replaced or secured",
+     "note": ""
+    },
+    {
+     "id": "F-3",
+     "finding": "Workers at the west end of a 5 ft deep, 60 ft long trench had no ladder within 25 ft",
+     "location": "North storm drain trench, west end",
+     "employer": "Utilities subcontractor",
+     "category": "Excavations and trenching",
+     "evidence": "Site walk observation; depth per utilities foreman",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.651(c)(2)",
+     "rating": "Serious",
+     "owner": "Utilities Foreman",
+     "due": "November 12, 2026 (before re-entry)",
+     "action": "Place a second ladder at the west end before anyone re-enters",
+     "note": ""
+    },
+    {
+     "id": "F-4",
+     "finding": "Spoil pile placed at the trench edge on the south side",
+     "location": "North storm drain trench, south side",
+     "employer": "Utilities subcontractor",
+     "category": "Excavations and trenching",
+     "evidence": "Site walk observation",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.651(j)(2)",
+     "rating": "Serious",
+     "owner": "Utilities Foreman",
+     "due": "November 13, 2026",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "F-5",
+     "finding": "No competent-person inspection of the trench was recorded before the start of the shift on the audit date",
+     "location": "North storm drain trench",
+     "employer": "Utilities subcontractor",
+     "category": "Training and competent persons",
+     "evidence": "Excavation inspection log, Nov 12 entry blank",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.651(k)(1)",
+     "rating": "Other-than-serious",
+     "owner": "Utilities Foreman",
+     "due": "November 13, 2026",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "F-6",
+     "finding": "Control joints were cut dry in the level 1 slab with a gas cut-off saw; no water was connected and a visible dust cloud was present",
+     "location": "Level 1 slab",
+     "employer": "Concrete subcontractor",
+     "category": "Health hazards (silica, noise)",
+     "evidence": "Site walk observation",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.1153(c)(1)",
+     "rating": "Serious",
+     "owner": "Concrete Foreman",
+     "due": "November 12, 2026 (before cutting resumes)",
+     "action": "Stop dry cutting until water delivery is connected",
+     "note": ""
+    },
+    {
+     "id": "F-7",
+     "finding": "Gasoline for the cut-off saw was kept in an unlabeled plastic jug",
+     "location": "Level 1 slab",
+     "employer": "Concrete subcontractor",
+     "category": "Housekeeping, fire and flammables",
+     "evidence": "Site walk observation",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.152(a)(1)",
+     "rating": "Other-than-serious",
+     "owner": "Concrete Foreman",
+     "due": "November 13, 2026",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "F-8",
+     "finding": "About 12 rebar dowels along the elevator pit wall were uncapped",
+     "location": "Elevator pit",
+     "employer": "Concrete subcontractor",
+     "category": "Fall protection",
+     "evidence": "Site walk observation",
+     "status": "open",
+     "source": "REGULATION",
+     "cite": "29 CFR 1926.701(b)",
+     "rating": "Serious",
+     "owner": "Concrete Foreman",
+     "due": "November 13, 2026",
+     "action": "",
+     "note": ""
+    },
+    {
+     "id": "Rec-1",
+     "finding": "Silica toolbox talk reached 9 of 11 listed concrete crew members",
+     "location": "Site-wide",
+     "employer": "Concrete subcontractor",
+     "category": "Training and competent persons",
+     "evidence": "October toolbox talk sign-ins",
+     "status": "open",
+     "source": "RECOMMENDATION",
+     "cite": "",
+     "rating": "",
+     "owner": "Concrete Foreman",
+     "due": "December 1, 2026",
+     "action": "",
+     "note": ""
+    }
+   ],
+   "packet": [
+    {
+     "item": "Site walk notes, Nov 12",
+     "type": "Field notes",
+     "status": "received and reviewed",
+     "notes": ""
+    },
+    {
+     "item": "Daily excavation inspection log",
+     "type": "Inspection log",
+     "status": "received and reviewed",
+     "notes": "Nov 12 blank"
+    },
+    {
+     "item": "October toolbox talk sign-ins",
+     "type": "Training record",
+     "status": "received and reviewed",
+     "notes": ""
+    },
+    {
+     "item": "Site safety plan",
+     "type": "Program",
+     "status": "received and reviewed",
+     "notes": ""
+    }
+   ],
+   "conflicts": [],
+   "names": [],
+   "notesNotUsed": [
+    {
+     "note": "Hard hats and glasses worn by everyone observed.",
+     "reason": "Compliant; reflected in the PPE category rating"
+    },
+    {
+     "note": "Portable toilets and water cooler",
+     "reason": "Compliant; reflected in the sanitation rating"
+    },
+    {
+     "note": "GFCI on temp panel tested OK",
+     "reason": "Compliant; reflected in the electrical rating"
+    },
+    {
+     "note": "Trench box in use at mid-section only",
+     "reason": "Protective system adequacy not assessed; consultant answered that it is outside this audit"
+    }
+   ],
+   "injury": [
+    {
+     "note": "Superintendent mentioned a laborer twisted an ankle on the deck last week and went to urgent care.",
+     "status": "answered"
+    }
+   ],
+   "scopeTriggers": [
+    {
+     "topic": "Trench depth",
+     "question": "Was the trench 4 feet deep or more where workers were?",
+     "answer": "Yes, about 5 ft per the utilities foreman."
+    },
+    {
+     "topic": "Silica Table 1",
+     "question": "Is cutting with a handheld power saw a Table 1 task the employer follows?",
+     "answer": "Yes, the concrete trade follows Table 1."
+    }
+   ],
+   "done": true
+  },
+  "interview": [
+   {
+    "id": "q-1",
+    "round": 1,
+    "kind": "injury",
+    "section": "Findings",
+    "question": "The superintendent mentioned an ankle injury on the deck last week. Is it on the OSHA 300 log, and should the report mention it?",
+    "answer": "Handled by Ridgeline's own recordkeeping; leave it out of this report.",
+    "skipped": false
+   }
+  ],
+  "scorecard": {
+   "rows": [
+    {
+     "cat": "Safety program and site inspections",
+     "level": "Minor Gap"
+    },
+    {
+     "cat": "Fall protection",
+     "level": "Major Gap"
+    },
+    {
+     "cat": "Scaffolds",
+     "level": "Not Applicable"
+    },
+    {
+     "cat": "Ladders and stairways",
+     "level": "Minor Gap"
+    },
+    {
+     "cat": "Excavations and trenching",
+     "level": "Major Gap"
+    },
+    {
+     "cat": "Electrical",
+     "level": "Compliant"
+    },
+    {
+     "cat": "Cranes, rigging and hoisting",
+     "level": "Not Applicable"
+    },
+    {
+     "cat": "Struck-by and vehicle traffic",
+     "level": "Compliant"
+    },
+    {
+     "cat": "Housekeeping, fire and flammables",
+     "level": "Minor Gap"
+    },
+    {
+     "cat": "Health hazards (silica, noise)",
+     "level": "Major Gap"
+    },
+    {
+     "cat": "Personal protective equipment",
+     "level": "Compliant"
+    },
+    {
+     "cat": "Training and competent persons",
+     "level": "Minor Gap"
+    },
+    {
+     "cat": "Recordkeeping and postings",
+     "level": "Compliant"
+    },
+    {
+     "cat": "Sanitation and drinking water",
+     "level": "Compliant"
+    }
+   ]
+  },
+  "draft": {
+   "title": "Construction Site Safety Audit Report",
+   "cover": [
+    {
+     "label": "Status",
+     "value": "CONFIDENTIAL"
+    },
+    {
+     "label": "Client",
+     "value": "Ridgeline Builders Inc."
+    },
+    {
+     "label": "Project",
+     "value": "Maple Court Medical Office (sample)"
+    },
+    {
+     "label": "Site",
+     "value": "100 Demo Avenue, Sampleton, ST 00000"
+    },
+    {
+     "label": "General contractor",
+     "value": "Ridgeline Builders Inc."
+    },
+    {
+     "label": "Audit date",
+     "value": "November 12, 2026"
+    },
+    {
+     "label": "Report date",
+     "value": "November 16, 2026"
+    },
+    {
+     "label": "Report no.",
+     "value": "RB-2026-07, Rev 0"
+    },
+    {
+     "label": "Prepared for",
+     "value": "Site Superintendent, Ridgeline Builders Inc."
+    },
+    {
+     "label": "Note",
+     "value": "This report reflects conditions observed on the audit date only. It is not legal advice."
+    }
+   ],
+   "sections": [
+    {
+     "heading": "1. Audit Summary",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "The consultant conducted a site safety audit of the Maple Court Medical Office (sample) project on November 12, 2026, at the request of the Ridgeline Builders project manager as a quarterly third-party audit. The audit included a walk of the whole site, a review of site documents and interviews with the site superintendent and two trade foremen."
+      },
+      {
+       "type": "p",
+       "text": "The audit identified 8 findings (6 serious, 2 other-than-serious); overall score 72.3% (Moderate risk). Five serious findings called for work to stop in the affected area until corrected."
+      }
+     ]
+    },
+    {
+     "heading": "2. Scope and Method",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "The audit covered the whole site and all active trades. Crane work was excluded because no crane was on site. The consultant reviewed the site safety plan, the daily excavation inspection log for November 10 to 12, and the October toolbox talk sign-ins."
+      },
+      {
+       "type": "table",
+       "headers": [
+        "Participant",
+        "Role"
+       ],
+       "rows": [
+        [
+         "Site Superintendent",
+         "Ridgeline Builders Inc."
+        ],
+        [
+         "Concrete Foreman",
+         "Concrete subcontractor"
+        ],
+        [
+         "Utilities Foreman",
+         "Utilities subcontractor"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "3. Site Description",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "The project is a two-story steel-frame medical office building at 100 Demo Avenue, Sampleton. At the time of the audit the level 2 deck had been poured, interior wall framing was under way on level 1, and a storm drain trench was open on the north side. About 30 workers were on site from the general contractor and three trades. The weather was dry, 58°F, with light wind."
+      }
+     ]
+    },
+    {
+     "heading": "4. Overall Score",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "Each audit category is rated Compliant, Minor Gap, Major Gap or Absent; Not Applicable categories are left out. The overall score is the average across rated categories."
+      },
+      {
+       "type": "scorecard"
+      },
+      {
+       "type": "p",
+       "text": "Fall protection, excavations and trenching, and health hazards (silica) were rated Major Gap. No category was rated Absent."
+      }
+     ]
+    },
+    {
+     "heading": "5. Summary of Findings",
+     "blocks": [
+      {
+       "type": "counts"
+      },
+      {
+       "type": "p",
+       "text": "All 8 findings were open at the end of the audit."
+      }
+     ]
+    },
+    {
+     "heading": "6. Findings and Corrective Actions",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "Each finding gives the Condition, Requirement, Risk, Corrective action, Owner and Due date. Risk ratings are SERIOUS or OTHER-THAN-SERIOUS."
+      },
+      {
+       "type": "finding",
+       "id": "F-1",
+       "title": "About 40 ft of the level 2 deck east edge had no guardrail, about 14 ft above grade, with framers working 6 to 8 ft from the edge",
+       "rating": "Serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "About 40 ft of the level 2 deck east edge had no guardrail, about 14 ft above grade, with framers working 6 to 8 ft from the edge (Level 2 deck, east edge; Framing subcontractor). Evidence: site walk observation; superintendent said rails were removed for a delivery."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.501(b)(1): Guardrails, safety nets or personal fall arrest at unprotected sides and edges 6 feet or more above a lower level."
+        },
+        {
+         "label": "Risk",
+         "text": "A worker could fall about 14 ft to grade."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Stop work within 15 ft of the edge until guardrails are reinstalled. Reinstall the guardrails and add edge protection checks to the daily inspection, including after deliveries."
+        },
+        {
+         "label": "Owner",
+         "text": "Site Superintendent"
+        },
+        {
+         "label": "Due date",
+         "text": "November 12, 2026 (before work resumes)"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-2",
+       "title": "Extension ladder to the level 2 landing did not extend above the landing and was not secured",
+       "rating": "Serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "Extension ladder to the level 2 landing did not extend above the landing and was not secured (Northwest stair tower; Ridgeline Builders Inc.). Evidence: site walk observation."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.1053(b)(1): Portable ladder side rails extend at least 3 feet above the upper landing, or the ladder is secured with a grab rail."
+        },
+        {
+         "label": "Risk",
+         "text": "A worker could fall while stepping on or off the ladder at the landing."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Take the ladder out of use. Replace it with a ladder that extends at least 3 ft above the landing, or secure it at the top and provide a grab rail."
+        },
+        {
+         "label": "Owner",
+         "text": "Site Superintendent"
+        },
+        {
+         "label": "Due date",
+         "text": "November 13, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-3",
+       "title": "Workers at the west end of a 5 ft deep, 60 ft long trench had no ladder within 25 ft",
+       "rating": "Serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "Workers at the west end of a 5 ft deep, 60 ft long trench had no ladder within 25 ft (North storm drain trench, west end; Utilities subcontractor). Evidence: site walk observation; depth per utilities foreman."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.651(c)(2): Stairway, ladder or ramp in trenches 4 feet or deeper, within 25 feet of lateral travel."
+        },
+        {
+         "label": "Risk",
+         "text": "Workers could be trapped without a quick way out if the trench wall collapsed."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Place a ladder at the west end before anyone re-enters, so no worker is more than 25 ft from a way out."
+        },
+        {
+         "label": "Owner",
+         "text": "Utilities Foreman"
+        },
+        {
+         "label": "Due date",
+         "text": "November 12, 2026 (before re-entry)"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-4",
+       "title": "Spoil pile placed at the trench edge on the south side",
+       "rating": "Serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "Spoil pile placed at the trench edge on the south side (North storm drain trench, south side; Utilities subcontractor). Evidence: site walk observation."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.651(j)(2): Materials and equipment kept at least 2 feet from the excavation edge, or retained."
+        },
+        {
+         "label": "Risk",
+         "text": "Spoil could fall back into the trench or load the trench wall."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Move the spoil at least 2 ft back from the edge, or retain it."
+        },
+        {
+         "label": "Owner",
+         "text": "Utilities Foreman"
+        },
+        {
+         "label": "Due date",
+         "text": "November 13, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-5",
+       "title": "No competent-person inspection of the trench was recorded before the start of the shift on the audit date",
+       "rating": "Other-than-serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "No competent-person inspection of the trench was recorded before the start of the shift on the audit date (North storm drain trench; Utilities subcontractor). Evidence: excavation inspection log, nov 12 entry blank."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.651(k)(1): Daily competent-person inspection of excavations, adjacent areas and protective systems, and after rain or other hazard-increasing events."
+        },
+        {
+         "label": "Risk",
+         "text": "Changed trench conditions might not be found before workers enter."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Have the competent person inspect the trench before each shift and after rain, and record each inspection."
+        },
+        {
+         "label": "Owner",
+         "text": "Utilities Foreman"
+        },
+        {
+         "label": "Due date",
+         "text": "November 13, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-6",
+       "title": "Control joints were cut dry in the level 1 slab with a gas cut-off saw",
+       "rating": "Serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "Control joints were cut dry in the level 1 slab with a gas cut-off saw; no water was connected and a visible dust cloud was present (Level 1 slab; Concrete subcontractor). Evidence: site walk observation."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.1153(c)(1): For each Table 1 task, fully and properly implement the listed engineering controls, work practices and respiratory protection."
+        },
+        {
+         "label": "Risk",
+         "text": "Workers and others nearby could breathe respirable crystalline silica."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Stop dry cutting. Use a saw with integrated water delivery, as Table 1 requires."
+        },
+        {
+         "label": "Owner",
+         "text": "Concrete Foreman"
+        },
+        {
+         "label": "Due date",
+         "text": "November 12, 2026 (before cutting resumes)"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-7",
+       "title": "Gasoline for the cut-off saw was kept in an unlabeled plastic jug",
+       "rating": "Other-than-serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "Gasoline for the cut-off saw was kept in an unlabeled plastic jug (Level 1 slab; Concrete subcontractor). Evidence: site walk observation."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.152(a)(1): Only approved containers and portable tanks; safety cans or DOT containers for 5 gallons or less."
+        },
+        {
+         "label": "Risk",
+         "text": "An unapproved container can leak or be mistaken for another liquid and increases fire risk."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Move the fuel to an approved, labeled safety can."
+        },
+        {
+         "label": "Owner",
+         "text": "Concrete Foreman"
+        },
+        {
+         "label": "Due date",
+         "text": "November 13, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "F-8",
+       "title": "About 12 rebar dowels along the elevator pit wall were uncapped",
+       "rating": "Serious",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "About 12 rebar dowels along the elevator pit wall were uncapped (Elevator pit; Concrete subcontractor). Evidence: site walk observation."
+        },
+        {
+         "label": "Requirement",
+         "text": "REGULATION – 29 CFR 1926.701(b): Protruding reinforcing steel guarded to eliminate the hazard of impalement."
+        },
+        {
+         "label": "Risk",
+         "text": "A worker who falls onto an uncapped dowel could be impaled."
+        },
+        {
+         "label": "Corrective action",
+         "text": "Cap or cover all exposed rebar ends at the elevator pit."
+        },
+        {
+         "label": "Owner",
+         "text": "Concrete Foreman"
+        },
+        {
+         "label": "Due date",
+         "text": "November 13, 2026"
+        }
+       ]
+      },
+      {
+       "type": "finding",
+       "id": "Rec-1",
+       "title": "Silica training reached most, but not all, of the concrete crew",
+       "rating": "",
+       "repeat": false,
+       "parts": [
+        {
+         "label": "Condition",
+         "text": "The October silica toolbox talk sign-in lists 9 of the 11 concrete crew members."
+        },
+        {
+         "label": "Recommendation",
+         "text": "Repeat the silica talk for the 2 crew members not on the sign-in by December 1, 2026."
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "7. Corrective Action Plan",
+     "blocks": [
+      {
+       "type": "table",
+       "headers": [
+        "#",
+        "Hazard",
+        "Location",
+        "Risk rating",
+        "Corrective action",
+        "Owner",
+        "Due date"
+       ],
+       "rows": [
+        [
+         "F-1",
+         "About 40 ft of the level 2 deck east edge had no guardrail",
+         "Level 2 deck, east edge",
+         "Serious",
+         "Stop work within 15 ft of the edge until guardrails are reinstalled; reinstall guardrails and add edge checks to daily inspections",
+         "Site Superintendent",
+         "November 12, 2026 (before work resumes)"
+        ],
+        [
+         "F-2",
+         "Extension ladder to the level 2 landing did not extend above the landing and was not secured",
+         "Northwest stair tower",
+         "Serious",
+         "Take the ladder out of use until it is replaced or secured; replace with a ladder long enough or secure it at the top",
+         "Site Superintendent",
+         "November 13, 2026"
+        ],
+        [
+         "F-3",
+         "Workers at the west end of a 5 ft deep",
+         "North storm drain trench, west end",
+         "Serious",
+         "Place a second ladder at the west end before anyone re-enters; add a ladder at the west end",
+         "Utilities Foreman",
+         "November 12, 2026 (before re-entry)"
+        ],
+        [
+         "F-4",
+         "Spoil pile placed at the trench edge on the south side",
+         "North storm drain trench, south side",
+         "Serious",
+         "move spoil at least 2 ft back from the edge",
+         "Utilities Foreman",
+         "November 13, 2026"
+        ],
+        [
+         "F-5",
+         "No competent-person inspection of the trench was recorded before the start of the shift on the audit date",
+         "North storm drain trench",
+         "Other-than-serious",
+         "inspect before each shift and after rain",
+         "Utilities Foreman",
+         "November 13, 2026"
+        ],
+        [
+         "F-6",
+         "Control joints were cut dry in the level 1 slab",
+         "Level 1 slab",
+         "Serious",
+         "Stop dry cutting until water delivery is connected; use a saw with integrated water delivery",
+         "Concrete Foreman",
+         "November 12, 2026 (before cutting resumes)"
+        ],
+        [
+         "F-7",
+         "Gasoline for the cut-off saw was kept in an unlabeled plastic jug",
+         "Level 1 slab",
+         "Other-than-serious",
+         "move fuel to an approved safety can",
+         "Concrete Foreman",
+         "November 13, 2026"
+        ],
+        [
+         "F-8",
+         "About 12 rebar dowels along the elevator pit wall were uncapped",
+         "Elevator pit",
+         "Serious",
+         "cap all exposed rebar ends",
+         "Concrete Foreman",
+         "November 13, 2026"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "8. Recommendations",
+     "blocks": [
+      {
+       "type": "bullets",
+       "items": [
+        "Add edge protection, ladder and trench access checks to the daily superintendent walk.",
+        "Confirm that the utilities trade's competent person inspects the trench before each shift and records it.",
+        "Hold a stand-down with the concrete trade on silica Table 1 controls before the next cutting task.",
+        "Schedule a follow-up audit in 90 days."
+       ]
+      }
+     ]
+    },
+    {
+     "heading": "9. Limitations",
+     "blocks": [
+      {
+       "type": "p",
+       "text": "This report reflects conditions observed on November 12, 2026 only. A site walk may not find every hazard. Each employer on site remains responsible for the safety of its own employees and for compliance with applicable regulations. The findings are based on the areas, documents and people available during the audit."
+      }
+     ]
+    }
+   ]
+  },
+  "qa": {
+   "checks": [
+    {
+     "n": 1,
+     "status": "pass",
+     "ids": [],
+     "detail": "All four site documents are listed and reviewed."
+    },
+    {
+     "n": 2,
+     "status": "pass",
+     "ids": [
+      "F-1",
+      "F-2",
+      "F-3",
+      "F-4",
+      "F-6",
+      "F-8"
+     ],
+     "detail": "Each Serious finding rests on the consultant's own observation."
+    },
+    {
+     "n": 3,
+     "status": "pass",
+     "ids": [],
+     "detail": "No disagreements between sources."
+    },
+    {
+     "n": 4,
+     "status": "pass",
+     "ids": [],
+     "detail": "Every note is a finding, a question or listed as not used."
+    },
+    {
+     "n": 5,
+     "status": "pass",
+     "ids": [],
+     "detail": "People appear by job title only."
+    },
+    {
+     "n": 9,
+     "status": "pass",
+     "ids": [],
+     "detail": "No prior audit; no repeat findings."
+    },
+    {
+     "n": 10,
+     "status": "pass",
+     "ids": [
+      "F-2"
+     ],
+     "detail": "Exposing employers come from the notes and job sheet; no finding assigns legal responsibility."
+    },
+    {
+     "n": 12,
+     "status": "pass",
+     "ids": [
+      "F-3",
+      "F-6"
+     ],
+     "detail": "Trench depth and Table 1 were asked and answered before the cites were used."
+    },
+    {
+     "n": 13,
+     "status": "pass",
+     "ids": [
+      "F-1",
+      "F-3",
+      "F-6"
+     ],
+     "detail": "Imminent hazards carry stop-work actions and same-day due dates."
+    }
+   ],
+   "summary": {
+    "openHazards": [
+     "All 8 findings open at the end of the audit"
+    ],
+    "dataMismatches": [],
+    "citationsToConfirm": [],
+    "questions": [],
+    "notesNotUsed": [
+     "Trench box adequacy not assessed"
+    ]
+   }
+  }
+ }
+}

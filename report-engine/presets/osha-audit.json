@@ -1,0 +1,1333 @@
+{
+ "id": "osha-audit",
+ "engineId": "SE-RE-DEMO",
+ "reportType": "OSHA Safety Audit",
+ "reportTitle": "OSHA Compliance Audit Report",
+ "licensedBy": "Skilled Edge Group LLC",
+ "consultant": {
+  "name": "Sample Consultant",
+  "credentials": "",
+  "firm": ""
+ },
+ "itemNoun": "finding",
+ "jobSheetFields": [
+  {
+   "key": "client",
+   "label": "Client (company name)"
+  },
+  {
+   "key": "locations",
+   "label": "Site address"
+  },
+  {
+   "key": "industry",
+   "label": "Industry and NAICS code"
+  },
+  {
+   "key": "employees",
+   "label": "Employees and shifts"
+  },
+  {
+   "key": "operations",
+   "label": "Operations and buildings (workplace description)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "requestedBy",
+   "label": "Requested by and purpose of the audit"
+  },
+  {
+   "key": "visitDates",
+   "label": "Audit date(s)"
+  },
+  {
+   "key": "conferences",
+   "label": "Opening and closing conferences (dates, or \"not held\")"
+  },
+  {
+   "key": "reportDate",
+   "label": "Report date"
+  },
+  {
+   "key": "reportNo",
+   "label": "Report number / revision"
+  },
+  {
+   "key": "siteContact",
+   "label": "Site contact (name and title, only as given in writing)"
+  },
+  {
+   "key": "participants",
+   "label": "Participants (name and role, only as given in writing)",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "scope",
+   "label": "Areas and operations in scope; anything excluded",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "programs",
+   "label": "Written programs provided for review",
+   "multiline": true,
+   "wide": true
+  },
+  {
+   "key": "injuryYears",
+   "label": "OSHA 300/300-A years reviewed"
+  },
+  {
+   "key": "hoursWorked",
+   "label": "Total hours worked (same period)",
+   "number": true
+  },
+  {
+   "key": "recordables",
+   "label": "Total recordable cases (same period)",
+   "number": true
+  },
+  {
+   "key": "dartCases",
+   "label": "DART cases: days away, restricted or transferred (same period)",
+   "number": true
+  },
+  {
+   "key": "blsRates",
+   "label": "BLS comparison rates for this NAICS and year (supplied by you, or \"none\")"
+  },
+  {
+   "key": "clientPolicy",
+   "label": "Client-policy rules that apply (if any)",
+   "multiline": true
+  },
+  {
+   "key": "prior",
+   "label": "Prior audit report on this site (yes/no, date)"
+  },
+  {
+   "key": "reaudit",
+   "label": "Re-audit interval to recommend (e.g. 6 to 12 months)"
+  }
+ ],
+ "titleField": "client",
+ "columns": [
+  {
+   "key": "id",
+   "label": "#",
+   "readonly": true
+  },
+  {
+   "key": "finding",
+   "label": "Observation / finding"
+  },
+  {
+   "key": "location",
+   "label": "Area / location"
+  },
+  {
+   "key": "category",
+   "label": "Audit category"
+  },
+  {
+   "key": "evidence",
+   "label": "Evidence"
+  },
+  {
+   "key": "status",
+   "label": "Open / closed",
+   "options": [
+    "open",
+    "closed"
+   ]
+  },
+  {
+   "key": "source",
+   "label": "Source",
+   "options": [
+    "REGULATION",
+    "CLIENT POLICY",
+    "RECOMMENDATION"
+   ]
+  },
+  {
+   "key": "cite",
+   "label": "Cite / policy document"
+  },
+  {
+   "key": "rating",
+   "label": "Classification (yours)",
+   "options": [
+    "[needed]",
+    "Serious",
+    "Other-than-serious"
+   ],
+   "consultantOnly": true
+  },
+  {
+   "key": "owner",
+   "label": "Assigned to (job title)"
+  },
+  {
+   "key": "due",
+   "label": "Correction due date"
+  }
+ ],
+ "ratingKey": "rating",
+ "countRatings": [
+  "Serious",
+  "Other-than-serious"
+ ],
+ "countsLabel": "Classification",
+ "requirementLabels": [
+  "REGULATION",
+  "CLIENT POLICY"
+ ],
+ "recommendationSource": "RECOMMENDATION",
+ "idRules": "Findings are numbered F-1, F-2. Best-practice recommendations are numbered Rec-1, Rec-2. The hazard correction plan uses the same IDs. Never use an ID that could match equipment, rooms, scorecard categories or people (e.g. R-1, A-1).",
+ "projectRules": "You build [REPORT TYPE] reports (OSHA compliance audits in the style of a workplace safety diagnostic audit) for [CONSULTANT NAME], an independent safety consultant. Engine ID: [CLIENT ID], licensed by Skilled Edge Group LLC for this consultant only. The consultant reviews, signs and sends every report. You draft and flag; they decide.\n\nWorkflow: 1 JOB SHEET (every job-specific detail comes from the job sheet; write [needed] for anything missing). 2 FINDINGS BUILDER (pull findings from the walk-through notes first, then interview the consultant one Blank Template section at a time, only about gaps; max 3 short questions at a time; ask injury, treatment or near-miss questions before going on; put each finding in an audit category from the scorecard; show the findings table and wait for approval). 3 DRAFT (Blank Template for structure, Style Rules for voice, Findings Library wording where it fits; only the job sheet, the approved table and the app's computed numbers). 4 QA (all 15 checks; a regulation cite not in the Verified Citation Library is \"(unverified)\" and blocks release; never assign a classification or a category rating, use the consultant's only; check 15 against the Carryover List). 5 EDITS.\n\nRules:\n- Cite a regulation only when the observed condition actually breaks what that paragraph requires. If the requirement is met and the issue is a best practice, write it as a recommendation with no citation.\n- Write every requirement line as: REGULATION – 29 CFR [section]: [paraphrase]. Or CLIENT POLICY – [document]: [rule]. Never present a client rule as a regulation.\n- A written program the consultant did not see is a question for the client, never a finding.\n- The compliance score, the risk rating, the finding counts and the injury rates are computed by the app. Quote them exactly as given; never compute or estimate your own.\n- Industry comparison rates (BLS) appear only if the consultant supplied them on the job sheet. Never state a BLS rate from memory.\n- Correction due dates and owners come only from the approved table. A blank due date is [needed]. Owners are job titles.\n- Classifications are SERIOUS or OTHER-THAN-SERIOUS, set by the consultant only.\n- Add no detail the notes or the consultant did not give.\n- Output two separate documents: (1) the client report only, ending at the appendix; (2) a Consultant QA Sheet. Never put QA results inside the client report.\n- In each QA result, quote the finding ID and check it against the report text. Never mark a check Pass on a fact the report does not support.\n\nNever invent names, dates, measurements or facts. Write [needed] instead. Never reuse anything from the Carryover List.",
+ "inputsRule": "Text documents (PDF, Word, Excel), written programs, OSHA logs, inspection logs, voice-memo transcripts and photos of handwritten notes or checklists (read as text only). Site photos go in the Photos tab of the draft; Claude does not read them.",
+ "qaVersion": "OSHA Audit v1.0 (Nov 18, 2026, adapted from QA Rules v1.2 and the Oregon OSHA consultation report sections)",
+ "qaChecks": [
+  {
+   "n": 1,
+   "name": "Packet",
+   "rule": "Every program, log, record and attachment the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A program not provided is a client question, not a finding."
+  },
+  {
+   "n": 2,
+   "name": "Evidence rating",
+   "rule": "No finding classified Serious rests only on unreviewed evidence. Consultant confirms after review."
+  },
+  {
+   "n": 3,
+   "name": "Conflicts",
+   "rule": "Every disagreement across sources (headcount, hours, injury counts, measurements, dates, training status) is in the register."
+  },
+  {
+   "n": 4,
+   "name": "Notes not used",
+   "rule": "Every walk-through note is a finding, register row, question, or a listed \"not used\" with reason."
+  },
+  {
+   "n": 5,
+   "name": "Names",
+   "rule": "No expanded initials or partial names. People appear only as given in writing; otherwise by job title."
+  },
+  {
+   "n": 6,
+   "name": "Counts and score",
+   "rule": "Finding counts by classification and the compliance score are built by the app from the approved table and your category ratings. Any percentage or risk rating in the text matches the app's numbers.",
+   "auto": "counts"
+  },
+  {
+   "n": 7,
+   "name": "Requirement source",
+   "rule": "Every finding is labeled REGULATION or CLIENT POLICY.",
+   "auto": "labels"
+  },
+  {
+   "n": 8,
+   "name": "Citation",
+   "rule": "Every regulation cite must match the verified citation library at the paragraph listed. A cite not in the library is \"(unverified)\" and blocks release. No citations from model memory.",
+   "auto": "citations"
+  },
+  {
+   "n": 9,
+   "name": "Repeat",
+   "rule": "Repeat findings cite the prior report, or say \"per client; prior report not reviewed.\""
+  },
+  {
+   "n": 10,
+   "name": "Injury data and figures",
+   "rule": "Injury or unlogged-incident mentions go to the consultant as questions. Injury rates are the app's computed rates; BLS comparisons appear only if supplied on the job sheet. Every other figure names its source."
+  },
+  {
+   "n": 11,
+   "name": "Required sections",
+   "rule": "The report has every required section: activity summary, workplace description, scope and method with participants, compliance score, injury and illness records review, written programs review, findings with corrective actions, hazard correction plan, and limitations. Every finding appears in the hazard correction plan with a due date.",
+   "auto": "sections"
+  },
+  {
+   "n": 12,
+   "name": "Scope triggers",
+   "rule": "Conditional standards (construction vs general industry, respirator required vs voluntary, 85 dBA noise, permit spaces, bloodborne exposure, corrosives for eyewash, power presses) are asked as questions before the cite is used."
+  },
+  {
+   "n": 13,
+   "name": "Action follows rule",
+   "rule": "After the citation check, re-derive the corrective action and its urgency. Examples: forklift safety defect = out of service now; missing guard = tag out until replaced. Serious findings get the earliest due dates; any due date over 90 days names an interim protection."
+  },
+  {
+   "n": 14,
+   "name": "Library freshness",
+   "rule": "The citation library is verified by the consultant and its check date is under 12 months old.",
+   "auto": "freshness"
+  },
+  {
+   "n": 15,
+   "name": "No carryover",
+   "rule": "No client, site, project or person name from the Carryover List appears in the draft unless it is also on this job's job sheet. Every job-specific detail traces to the job sheet.",
+   "auto": "carryover"
+  }
+ ],
+ "requiredSections": [
+  {
+   "name": "Activity summary",
+   "re": "activity summary"
+  },
+  {
+   "name": "Company and workplace description",
+   "re": "workplace description|company and workplace"
+  },
+  {
+   "name": "Scope and method",
+   "re": "scope"
+  },
+  {
+   "name": "Compliance score",
+   "re": "compliance score|scorecard"
+  },
+  {
+   "name": "Injury and illness records review",
+   "re": "injury and illness|recordkeeping"
+  },
+  {
+   "name": "Written programs review",
+   "re": "written program"
+  },
+  {
+   "name": "Findings and corrective actions",
+   "re": "findings"
+  },
+  {
+   "name": "Hazard correction plan",
+   "re": "correction plan",
+   "plan": true
+  },
+  {
+   "name": "Limitations",
+   "re": "limitation"
+  }
+ ],
+ "releaseGate": "All 15 pass, every Serious finding has a corrective action and due date, and the consultant signs off on the conflicts register and scope-trigger answers. Re-run all 15 on the consultant's hand-edited final before sending.",
+ "rateFields": {
+  "hours": "hoursWorked",
+  "recordables": "recordables",
+  "dart": "dartCases"
+ },
+ "scorecard": {
+  "title": "Compliance scorecard",
+  "note": "You rate each category. The app computes the score; Claude never rates a category. Mark a category Not Applicable to leave it out of the score.",
+  "levels": [
+   {
+    "label": "Compliant",
+    "value": 100
+   },
+   {
+    "label": "Minor Gap",
+    "value": 67
+   },
+   {
+    "label": "Major Gap",
+    "value": 33
+   },
+   {
+    "label": "Absent",
+    "value": 0
+   },
+   {
+    "label": "Not Applicable",
+    "value": null
+   }
+  ],
+  "bands": [
+   {
+    "label": "Minimal",
+    "min": 90
+   },
+   {
+    "label": "Low",
+    "min": 75
+   },
+   {
+    "label": "Moderate",
+    "min": 50
+   },
+   {
+    "label": "Serious",
+    "min": 35
+   },
+   {
+    "label": "Severe",
+    "min": 15
+   },
+   {
+    "label": "Critical",
+    "min": 0
+   }
+  ],
+  "bandsNote": "Proposed cut-offs, pending your decision.",
+  "categories": [
+   "Safety and health program",
+   "Injury and illness recordkeeping",
+   "Emergency action and exit routes",
+   "Fire extinguishers",
+   "Walking-working surfaces and fall protection",
+   "Ladders",
+   "Personal protective equipment",
+   "Hazard communication",
+   "Lockout/tagout",
+   "Machine guarding",
+   "Electrical safety",
+   "Powered industrial trucks",
+   "Materials handling and storage",
+   "First aid, eyewash and bloodborne pathogens",
+   "Hand and portable power tools",
+   "Respiratory protection",
+   "Noise and hearing conservation",
+   "Confined spaces",
+   "Safety training records"
+  ]
+ },
+ "citationLibrary": {
+  "title": "OSHA Citation Library v0.1 (DRAFT) – 29 CFR 1904, 1910, 1926 and OSH Act 5(a)(1)",
+  "status": "draft",
+  "checkedOn": "2026-11-18",
+  "checkedBy": "Claude, from the eCFR text as published by Cornell LII and the OSH Act on osha.gov; every cited section checked against the eCFR amendment history on 2026-11-18, no cited paragraph changed (consultant verification pending)",
+  "citePattern": "(?:29\\s?CFR\\s?)?19(?:04|10|26)\\.\\d+(?:\\([a-z0-9]+\\))*|(?:OSH Act,?\\s)?(?:Section|§)\\s?5\\(a\\)\\(1\\)",
+  "rule": "The engine may only cite a regulation listed here, at the paragraph listed. Anything else is written \"(unverified)\" and blocks release. Entries with a scope question apply only when the answer says so. Construction (1926) entries apply only to construction work.",
+  "entries": [
+   {
+    "topic": "Injury and illness forms",
+    "cite": "29 CFR 1904.29(a)",
+    "requires": "Use OSHA 300, 300-A and 301 (or equivalent) forms to record cases",
+    "type": "Regulation",
+    "note": "Ask: is the employer partially exempt (10 or fewer employees, or a low-hazard industry)? If yes, do not cite.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.29",
+    "trigger": true
+   },
+   {
+    "topic": "Recording deadline",
+    "cite": "29 CFR 1904.29(b)(3)",
+    "requires": "Enter each recordable case on the 300 Log and 301 within 7 calendar days of learning of it",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.29"
+   },
+   {
+    "topic": "Year-end log review",
+    "cite": "29 CFR 1904.32(a)(1)",
+    "requires": "Review the 300 Log at year end to verify it is complete and accurate, and correct deficiencies",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32"
+   },
+   {
+    "topic": "Annual summary certification",
+    "cite": "29 CFR 1904.32(a)(3)",
+    "requires": "A company executive certifies the 300-A annual summary",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32"
+   },
+   {
+    "topic": "Annual summary posting",
+    "cite": "29 CFR 1904.32(b)(6)",
+    "requires": "Post the 300-A summary from February 1 to April 30 of the following year",
+    "type": "Regulation",
+    "note": "Only cite during or for that posting period.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32"
+   },
+   {
+    "topic": "General Duty Clause",
+    "cite": "OSH Act Section 5(a)(1)",
+    "requires": "Furnish employment and a place of employment free from recognized hazards causing or likely to cause death or serious physical harm",
+    "type": "Statute",
+    "note": "Use only when no specific standard covers the hazard, and only if you confirm it is a recognized, serious hazard with a feasible fix. Ask before citing.",
+    "source": "https://www.osha.gov/laws-regs/oshact/section5-duties",
+    "trigger": true,
+    "aliases": [
+     "Section 5(a)(1)",
+     "5(a)(1)"
+    ]
+   },
+   {
+    "topic": "Housekeeping",
+    "cite": "29 CFR 1910.22(a)(1)",
+    "requires": "Workplaces, passageways, storerooms and walking-working surfaces kept clean, orderly and sanitary",
+    "type": "Regulation",
+    "note": "Trip hazards, clutter.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.22"
+   },
+   {
+    "topic": "Surface hazards",
+    "cite": "29 CFR 1910.22(a)(3)",
+    "requires": "Walking-working surfaces free of hazards such as sharp or protruding objects, loose boards, leaks and spills",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.22"
+   },
+   {
+    "topic": "Surface inspection",
+    "cite": "29 CFR 1910.22(d)(1)",
+    "requires": "Walking-working surfaces inspected regularly and as needed, and kept in safe condition",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.22"
+   },
+   {
+    "topic": "Ladder inspection",
+    "cite": "29 CFR 1910.23(b)(9)",
+    "requires": "Ladders inspected before initial use in each work shift, and more often as needed",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.23"
+   },
+   {
+    "topic": "Defective ladders",
+    "cite": "29 CFR 1910.23(b)(10)",
+    "requires": "A ladder with structural or other defects is tagged \"Dangerous: Do Not Use\" (or similar) and removed from service until repaired",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.23"
+   },
+   {
+    "topic": "Unprotected sides and edges (general industry)",
+    "cite": "29 CFR 1910.28(b)(1)(i)",
+    "requires": "Protect workers on surfaces with an unprotected side or edge 4 feet or more above a lower level (guardrail, safety net or personal fall protection)",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.28"
+   },
+   {
+    "topic": "Holes (general industry)",
+    "cite": "29 CFR 1910.28(b)(3)(i)",
+    "requires": "Protect workers from falling through holes (including skylights) 4 feet or more above a lower level (covers, guardrails, travel restraint or personal fall arrest)",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.28"
+   },
+   {
+    "topic": "Fall protection training",
+    "cite": "29 CFR 1910.30(a)(1)",
+    "requires": "Train each worker who uses personal fall protection, or must be trained under Subpart D, before exposure to a fall hazard",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.30"
+   },
+   {
+    "topic": "Exit door opens from inside",
+    "cite": "29 CFR 1910.36(d)(1)",
+    "requires": "Employees can open an exit route door from the inside at all times without keys, tools or special knowledge",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.36"
+   },
+   {
+    "topic": "Exit access width",
+    "cite": "29 CFR 1910.36(g)(2)",
+    "requires": "Exit access at least 28 inches wide at all points",
+    "type": "Regulation",
+    "note": "44 in. is a building-code figure, not OSHA.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.36"
+   },
+   {
+    "topic": "Exit route obstructions",
+    "cite": "29 CFR 1910.37(a)(3)",
+    "requires": "Exit routes kept free of obstructions; no materials or equipment placed in them, even temporarily",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.37"
+   },
+   {
+    "topic": "Exit safeguards",
+    "cite": "29 CFR 1910.37(a)(4)",
+    "requires": "Emergency safeguards (sprinklers, alarms, fire doors, exit lighting) kept in proper working order at all times",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.37"
+   },
+   {
+    "topic": "Exit route lighting",
+    "cite": "29 CFR 1910.37(b)(1)",
+    "requires": "Each exit route adequately lighted",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.37"
+   },
+   {
+    "topic": "Exit signs",
+    "cite": "29 CFR 1910.37(b)(2)",
+    "requires": "Each exit clearly visible and marked by an \"Exit\" sign",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.37"
+   },
+   {
+    "topic": "Hearing conservation program",
+    "cite": "29 CFR 1910.95(c)(1)",
+    "requires": "Administer a continuing, effective hearing conservation program when exposure equals or exceeds an 8-hour TWA of 85 dBA",
+    "type": "Regulation",
+    "note": "Ask: is there noise monitoring data at or above 85 dBA TWA? If unknown, recommend monitoring instead of citing.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.95",
+    "trigger": true
+   },
+   {
+    "topic": "Noise monitoring",
+    "cite": "29 CFR 1910.95(d)(1)",
+    "requires": "Develop and implement a monitoring program when information indicates exposure may equal or exceed an 8-hour TWA of 85 dBA",
+    "type": "Regulation",
+    "note": "Ask: what indicates exposure may reach 85 dBA (complaints, readings, equipment)?",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.95",
+    "trigger": true
+   },
+   {
+    "topic": "Hearing protectors",
+    "cite": "29 CFR 1910.95(i)(1)",
+    "requires": "Hearing protectors available at no cost to employees exposed at or above an 8-hour TWA of 85 dBA",
+    "type": "Regulation",
+    "note": "Same 85 dBA scope question.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.95",
+    "trigger": true
+   },
+   {
+    "topic": "PPE provided and used",
+    "cite": "29 CFR 1910.132(a)",
+    "requires": "Protective equipment provided, used and maintained in sanitary and reliable condition where hazards require it",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.132"
+   },
+   {
+    "topic": "PPE hazard assessment",
+    "cite": "29 CFR 1910.132(d)(1)",
+    "requires": "Assess the workplace for hazards that require PPE and select PPE for them",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.132"
+   },
+   {
+    "topic": "PPE assessment certification",
+    "cite": "29 CFR 1910.132(d)(2)",
+    "requires": "Verify the hazard assessment with a written certification (workplace, person certifying, date)",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.132"
+   },
+   {
+    "topic": "PPE training",
+    "cite": "29 CFR 1910.132(f)(1)",
+    "requires": "Train each employee required to use PPE (when, what, how to wear, limits, care)",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.132"
+   },
+   {
+    "topic": "Eye and face protection",
+    "cite": "29 CFR 1910.133(a)(1)",
+    "requires": "Each affected employee uses appropriate eye or face protection when exposed to eye or face hazards",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.133"
+   },
+   {
+    "topic": "Respiratory protection program",
+    "cite": "29 CFR 1910.134(c)(1)",
+    "requires": "Written, worksite-specific respiratory protection program where respirators are necessary or required by the employer",
+    "type": "Regulation",
+    "note": "Ask: are respirators required (by exposure or by the employer), or only voluntary? Voluntary use goes to (c)(2)(i).",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.134",
+    "trigger": true
+   },
+   {
+    "topic": "Voluntary respirator use",
+    "cite": "29 CFR 1910.134(c)(2)(i)",
+    "requires": "Where respirator use is voluntary, give users the Appendix D information",
+    "type": "Regulation",
+    "note": "Filtering facepieces (dust masks) only need Appendix D.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.134",
+    "trigger": true
+   },
+   {
+    "topic": "Respirator medical evaluation",
+    "cite": "29 CFR 1910.134(e)(1)",
+    "requires": "Medical evaluation before fit testing or required use",
+    "type": "Regulation",
+    "note": "Required-use only.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.134",
+    "trigger": true
+   },
+   {
+    "topic": "Respirator fit testing",
+    "cite": "29 CFR 1910.134(f)(2)",
+    "requires": "Tight-fitting facepieces fit tested before first use, when changed, and at least annually",
+    "type": "Regulation",
+    "note": "Required-use only.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.134",
+    "trigger": true
+   },
+   {
+    "topic": "Permit space evaluation",
+    "cite": "29 CFR 1910.146(c)(1)",
+    "requires": "Evaluate the workplace to determine whether any spaces are permit-required confined spaces",
+    "type": "Regulation",
+    "note": "Ask: are there tanks, pits, vaults or similar spaces? Construction uses 1926 Subpart AA.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.146",
+    "trigger": true
+   },
+   {
+    "topic": "Permit space warning",
+    "cite": "29 CFR 1910.146(c)(2)",
+    "requires": "Inform exposed employees of permit spaces by danger signs or equally effective means",
+    "type": "Regulation",
+    "note": "Only where permit spaces exist.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.146",
+    "trigger": true
+   },
+   {
+    "topic": "Permit space program",
+    "cite": "29 CFR 1910.146(c)(4)",
+    "requires": "Written permit space program where employees will enter permit spaces",
+    "type": "Regulation",
+    "note": "Only where employees enter.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.146",
+    "trigger": true
+   },
+   {
+    "topic": "Energy control program",
+    "cite": "29 CFR 1910.147(c)(1)",
+    "requires": "Program of energy control procedures, employee training and periodic inspections",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.147"
+   },
+   {
+    "topic": "Energy control procedures",
+    "cite": "29 CFR 1910.147(c)(4)(i)",
+    "requires": "Procedures developed, documented and used for controlling hazardous energy",
+    "type": "Regulation",
+    "note": "Not for tag identity.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.147"
+   },
+   {
+    "topic": "Lockout device identity",
+    "cite": "29 CFR 1910.147(c)(5)(ii)(D)",
+    "requires": "Lockout and tagout devices indicate the identity of the employee applying them",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.147"
+   },
+   {
+    "topic": "LOTO periodic inspection",
+    "cite": "29 CFR 1910.147(c)(6)(i)",
+    "requires": "Periodic inspection of each energy control procedure at least annually by an authorized employee not using it",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.147"
+   },
+   {
+    "topic": "LOTO training",
+    "cite": "29 CFR 1910.147(c)(7)(i)",
+    "requires": "Train authorized, affected and other employees on the program and their roles",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.147"
+   },
+   {
+    "topic": "LOTO retraining",
+    "cite": "29 CFR 1910.147(c)(7)(iii)",
+    "requires": "Retrain on job change, new hazard, procedure change, or inspection or other evidence of gaps",
+    "type": "Regulation",
+    "note": "No annual retraining in OSHA. Annual refresher = client policy.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.147"
+   },
+   {
+    "topic": "First aid",
+    "cite": "29 CFR 1910.151(b)",
+    "requires": "Without an infirmary, clinic or hospital in near proximity, a person trained in first aid and first aid supplies readily available",
+    "type": "Regulation",
+    "note": "Ask: is medical care in near proximity (OSHA reads this as about 3 to 4 minutes for serious injury)?",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.151",
+    "trigger": true
+   },
+   {
+    "topic": "Eyewash",
+    "cite": "29 CFR 1910.151(c)",
+    "requires": "Quick-drench or flushing facilities in the work area where eyes or body may be exposed to injurious corrosive materials",
+    "type": "Regulation",
+    "note": "Ask: is the chemical corrosive (check the SDS)? No inspection frequency in OSHA; weekly = ANSI Z358.1 or client policy.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.151",
+    "trigger": true
+   },
+   {
+    "topic": "Extinguishers provided and mounted",
+    "cite": "29 CFR 1910.157(c)(1)",
+    "requires": "Portable extinguishers provided, mounted, located and identified so they are readily accessible",
+    "type": "Regulation",
+    "note": "Applies where the employer provides extinguishers for employee use.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.157"
+   },
+   {
+    "topic": "Extinguishers charged",
+    "cite": "29 CFR 1910.157(c)(4)",
+    "requires": "Portable extinguishers maintained fully charged, operable and in their designated places",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.157"
+   },
+   {
+    "topic": "Extinguisher monthly check",
+    "cite": "29 CFR 1910.157(e)(2)",
+    "requires": "Portable extinguishers visually inspected monthly",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.157"
+   },
+   {
+    "topic": "Extinguisher annual maintenance",
+    "cite": "29 CFR 1910.157(e)(3)",
+    "requires": "Annual maintenance check, with the date recorded",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.157"
+   },
+   {
+    "topic": "Extinguisher training",
+    "cite": "29 CFR 1910.157(g)(1)",
+    "requires": "Educational program for employees on extinguisher use and incipient-stage fire hazards",
+    "type": "Regulation",
+    "note": "Ask: are employees expected to use extinguishers, or only to evacuate?",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.157",
+    "trigger": true
+   },
+   {
+    "topic": "Aisles and passageways",
+    "cite": "29 CFR 1910.176(a)",
+    "requires": "Safe clearance where mechanical handling equipment is used; aisles kept clear and in good repair; permanent aisles marked",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.176"
+   },
+   {
+    "topic": "Secure storage",
+    "cite": "29 CFR 1910.176(b)",
+    "requires": "Stored material does not create a hazard; tiered bags, containers and bundles stacked, blocked or limited in height to be stable",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.176"
+   },
+   {
+    "topic": "Forklift operator competence",
+    "cite": "29 CFR 1910.178(l)(1)(i)",
+    "requires": "Each operator is competent, shown by completing the required training and evaluation",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.178"
+   },
+   {
+    "topic": "Forklift evaluation",
+    "cite": "29 CFR 1910.178(l)(4)(iii)",
+    "requires": "Operator performance evaluated at least once every 3 years",
+    "type": "Regulation",
+    "note": "\"Expired\" means more than 3 years unless client policy is stricter.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.178"
+   },
+   {
+    "topic": "Forklift defects",
+    "cite": "29 CFR 1910.178(p)(1)",
+    "requires": "A truck needing repair, defective or unsafe is taken out of service until restored",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.178"
+   },
+   {
+    "topic": "Forklift daily exam",
+    "cite": "29 CFR 1910.178(q)(7)",
+    "requires": "Trucks examined before being placed in service (at least daily; after each shift on round-the-clock use) and not used with a safety-affecting condition",
+    "type": "Regulation",
+    "note": "Action = out of service now.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.178"
+   },
+   {
+    "topic": "Machine guarding, general",
+    "cite": "29 CFR 1910.212(a)(1)",
+    "requires": "One or more guarding methods to protect operators and others from point of operation, nip points, rotating parts, chips and sparks",
+    "type": "Regulation",
+    "note": "General. Use (a)(3)(ii) for point of operation.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.212"
+   },
+   {
+    "topic": "Point of operation",
+    "cite": "29 CFR 1910.212(a)(3)(ii)",
+    "requires": "Point of operation guarded where it exposes an employee to injury",
+    "type": "Regulation",
+    "note": "Ask: is it a mechanical power press? If yes, 1910.217 governs (not in this library).",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.212",
+    "trigger": true
+   },
+   {
+    "topic": "Machine anchoring",
+    "cite": "29 CFR 1910.212(b)",
+    "requires": "Machines designed for a fixed location securely anchored to prevent walking or moving",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.212"
+   },
+   {
+    "topic": "Grinder work rest",
+    "cite": "29 CFR 1910.215(a)(4)",
+    "requires": "Work rest on offhand grinders kept adjusted to within 1/8 inch of the wheel",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.215"
+   },
+   {
+    "topic": "Grinder tongue guard",
+    "cite": "29 CFR 1910.215(b)(9)",
+    "requires": "Gap between the wheel periphery and the adjustable tongue guard no more than 1/4 inch",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.215"
+   },
+   {
+    "topic": "Compressed air for cleaning",
+    "cite": "29 CFR 1910.242(b)",
+    "requires": "Compressed air for cleaning reduced to less than 30 psi, with effective chip guarding and PPE",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.242"
+   },
+   {
+    "topic": "Electrical equipment listing",
+    "cite": "29 CFR 1910.303(b)(2)",
+    "requires": "Listed or labeled equipment installed and used per its listing or labeling instructions",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.303"
+   },
+   {
+    "topic": "Electrical working space",
+    "cite": "29 CFR 1910.303(g)(1)(ii)",
+    "requires": "Working space around electric equipment not used for storage",
+    "type": "Regulation",
+    "note": "Clearance distances are in (g)(1)(i); not cited here.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.303"
+   },
+   {
+    "topic": "Unused openings",
+    "cite": "29 CFR 1910.305(b)(1)(ii)",
+    "requires": "Unused openings in cabinets, boxes and fittings effectively closed",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.305"
+   },
+   {
+    "topic": "Box covers",
+    "cite": "29 CFR 1910.305(b)(2)(i)",
+    "requires": "Pull boxes, junction boxes and fittings have covers",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.305"
+   },
+   {
+    "topic": "Flexible cords as fixed wiring",
+    "cite": "29 CFR 1910.305(g)(1)(iv)",
+    "requires": "Flexible cords not used as a substitute for fixed wiring, run through walls, ceilings or doorways, or attached to building surfaces",
+    "type": "Regulation",
+    "note": "Extension cords used as permanent wiring.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.305"
+   },
+   {
+    "topic": "Cord strain relief",
+    "cite": "29 CFR 1910.305(g)(2)(iii)",
+    "requires": "Flexible cords connected so tension is not transmitted to joints or terminal screws",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.305"
+   },
+   {
+    "topic": "Exposure control plan",
+    "cite": "29 CFR 1910.1030(c)(1)(i)",
+    "requires": "Written exposure control plan where employees have occupational exposure",
+    "type": "Regulation",
+    "note": "Ask: does anyone have occupational exposure (designated first aiders, cleanup duties)? If no, do not cite.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1030",
+    "trigger": true
+   },
+   {
+    "topic": "ECP annual review",
+    "cite": "29 CFR 1910.1030(c)(1)(iv)",
+    "requires": "Exposure control plan reviewed and updated at least annually",
+    "type": "Regulation",
+    "note": "Same exposure question.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1030",
+    "trigger": true
+   },
+   {
+    "topic": "Hepatitis B vaccination",
+    "cite": "29 CFR 1910.1030(f)(1)(i)",
+    "requires": "Hepatitis B vaccine made available to employees with occupational exposure",
+    "type": "Regulation",
+    "note": "Same exposure question.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1030",
+    "trigger": true
+   },
+   {
+    "topic": "Bloodborne pathogens training",
+    "cite": "29 CFR 1910.1030(g)(2)(i)",
+    "requires": "Training at no cost, during working hours, for employees with occupational exposure",
+    "type": "Regulation",
+    "note": "Same exposure question.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1030",
+    "trigger": true
+   },
+   {
+    "topic": "Written hazard communication program",
+    "cite": "29 CFR 1910.1200(e)(1)",
+    "requires": "Written hazard communication program (labels, SDSs, training, chemical list)",
+    "type": "Regulation",
+    "note": "2024 HazCom update: for substances, employers update alternative workplace labels (f)(6), the program and training for newly classified hazards by Nov 20, 2026; for mixtures by May 19, 2028 (paragraph (j), as extended Jan 15, 2026).",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1200"
+   },
+   {
+    "topic": "Workplace container labels",
+    "cite": "29 CFR 1910.1200(f)(6)",
+    "requires": "Workplace containers of hazardous chemicals labeled",
+    "type": "Regulation",
+    "note": "Immediate-use portable containers are an exception (f)(8). 2024 HazCom update: for substances, employers update alternative workplace labels (f)(6), the program and training for newly classified hazards by Nov 20, 2026; for mixtures by May 19, 2028 (paragraph (j), as extended Jan 15, 2026).",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1200"
+   },
+   {
+    "topic": "SDS for each chemical",
+    "cite": "29 CFR 1910.1200(g)(1)",
+    "requires": "A safety data sheet for each hazardous chemical used",
+    "type": "Regulation",
+    "note": "",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1200"
+   },
+   {
+    "topic": "SDS access",
+    "cite": "29 CFR 1910.1200(g)(8)",
+    "requires": "SDSs readily accessible to employees in their work areas during each shift",
+    "type": "Regulation",
+    "note": "Electronic OK only with no barriers to access.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1200"
+   },
+   {
+    "topic": "HazCom training",
+    "cite": "29 CFR 1910.1200(h)(1)",
+    "requires": "Information and training at initial assignment and when a new chemical hazard is introduced",
+    "type": "Regulation",
+    "note": "2024 HazCom update: for substances, employers update alternative workplace labels (f)(6), the program and training for newly classified hazards by Nov 20, 2026; for mixtures by May 19, 2028 (paragraph (j), as extended Jan 15, 2026).",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1910.1200"
+   },
+   {
+    "topic": "Construction safety programs",
+    "cite": "29 CFR 1926.20(b)(1)",
+    "requires": "Initiate and maintain programs needed to comply with Part 1926",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.20",
+    "trigger": true
+   },
+   {
+    "topic": "Construction site inspections",
+    "cite": "29 CFR 1926.20(b)(2)",
+    "requires": "Frequent and regular inspections of job sites, materials and equipment by competent persons",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.20",
+    "trigger": true
+   },
+   {
+    "topic": "Construction hazard training",
+    "cite": "29 CFR 1926.21(b)(2)",
+    "requires": "Instruct each employee to recognize and avoid unsafe conditions and the rules that apply",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.21",
+    "trigger": true
+   },
+   {
+    "topic": "Drinking water (construction)",
+    "cite": "29 CFR 1926.51(a)(1)",
+    "requires": "Adequate supply of potable water at all places of employment",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.51",
+    "trigger": true
+   },
+   {
+    "topic": "Toilets (construction)",
+    "cite": "29 CFR 1926.51(c)(1)",
+    "requires": "Toilets provided per Table D-1 (at least 1 for 20 or fewer workers)",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.51",
+    "trigger": true
+   },
+   {
+    "topic": "Hard hats",
+    "cite": "29 CFR 1926.100(a)",
+    "requires": "Protective helmets where there is a possible danger of head injury",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.100",
+    "trigger": true
+   },
+   {
+    "topic": "Flammable liquid containers",
+    "cite": "29 CFR 1926.152(a)(1)",
+    "requires": "Only approved containers and portable tanks; safety cans or DOT containers for 5 gallons or less",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.152",
+    "trigger": true
+   },
+   {
+    "topic": "Indoor flammable storage",
+    "cite": "29 CFR 1926.152(b)(1)",
+    "requires": "No more than 25 gallons of flammable liquid stored in a room outside an approved storage cabinet",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.152",
+    "trigger": true
+   },
+   {
+    "topic": "Rigging inspection",
+    "cite": "29 CFR 1926.251(a)(1)",
+    "requires": "Rigging inspected before each shift and as needed; defective rigging removed from service",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.251",
+    "trigger": true
+   },
+   {
+    "topic": "Rigging load markings",
+    "cite": "29 CFR 1926.251(a)(2)(i)",
+    "requires": "Rigging has permanent, legible identification markings including the safe working load",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.251",
+    "trigger": true
+   },
+   {
+    "topic": "Unprotected sides and edges (construction)",
+    "cite": "29 CFR 1926.501(b)(1)",
+    "requires": "Guardrails, safety nets or personal fall arrest at unprotected sides and edges 6 feet or more above a lower level",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.501",
+    "trigger": true
+   },
+   {
+    "topic": "Holes (construction)",
+    "cite": "29 CFR 1926.501(b)(4)(i)",
+    "requires": "Protection from falling through holes (including skylights) more than 6 feet above lower levels",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.501",
+    "trigger": true
+   },
+   {
+    "topic": "Residential construction falls",
+    "cite": "29 CFR 1926.501(b)(13)",
+    "requires": "Fall protection for residential construction 6 feet or more above lower levels, or a 1926.502(k) plan where infeasible",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.501",
+    "trigger": true
+   },
+   {
+    "topic": "Guardrail height",
+    "cite": "29 CFR 1926.502(b)(1)",
+    "requires": "Top rail 42 inches, plus or minus 3 inches, above the walking-working level",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.502",
+    "trigger": true
+   },
+   {
+    "topic": "Fall arrest inspection",
+    "cite": "29 CFR 1926.502(d)(21)",
+    "requires": "Personal fall arrest systems inspected before each use; defective components removed",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.502",
+    "trigger": true
+   },
+   {
+    "topic": "Forklift training (construction)",
+    "cite": "29 CFR 1926.602(d)",
+    "requires": "Operator training follows 29 CFR 1910.178(l)",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.602",
+    "trigger": true
+   },
+   {
+    "topic": "Trench egress",
+    "cite": "29 CFR 1926.651(c)(2)",
+    "requires": "Stairway, ladder or ramp in trenches 4 feet or deeper, within 25 feet of lateral travel",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.651",
+    "trigger": true
+   },
+   {
+    "topic": "Spoil pile setback",
+    "cite": "29 CFR 1926.651(j)(2)",
+    "requires": "Materials and equipment kept at least 2 feet from the excavation edge, or retained",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.651",
+    "trigger": true
+   },
+   {
+    "topic": "Daily excavation inspection",
+    "cite": "29 CFR 1926.651(k)(1)",
+    "requires": "Daily competent-person inspection of excavations, adjacent areas and protective systems, and after rain or other hazard-increasing events",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.651",
+    "trigger": true
+   },
+   {
+    "topic": "Rebar impalement",
+    "cite": "29 CFR 1926.701(b)",
+    "requires": "Protruding reinforcing steel guarded to eliminate the hazard of impalement",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.701",
+    "trigger": true
+   },
+   {
+    "topic": "Ladder extension above landing",
+    "cite": "29 CFR 1926.1053(b)(1)",
+    "requires": "Portable ladder side rails extend at least 3 feet above the upper landing, or the ladder is secured with a grab rail",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053",
+    "trigger": true
+   },
+   {
+    "topic": "Ladder intended use",
+    "cite": "29 CFR 1926.1053(b)(4)",
+    "requires": "Ladders used only for the purpose for which they were designed",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053",
+    "trigger": true
+   },
+   {
+    "topic": "Defective ladders (construction)",
+    "cite": "29 CFR 1926.1053(b)(16)",
+    "requires": "Portable ladders with structural defects marked defective or tagged \"Do Not Use\" and withdrawn until repaired",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053",
+    "trigger": true
+   },
+   {
+    "topic": "Silica Table 1 controls",
+    "cite": "29 CFR 1926.1153(c)(1)",
+    "requires": "For each Table 1 task, fully and properly implement the listed engineering controls, work practices and respiratory protection",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead. Ask: which Table 1 task, and was exposure assessed instead under (d)?",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153",
+    "trigger": true
+   },
+   {
+    "topic": "Silica exposure control plan",
+    "cite": "29 CFR 1926.1153(g)(1)",
+    "requires": "Written exposure control plan (tasks, controls, housekeeping, access restriction)",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153",
+    "trigger": true
+   }
+  ],
+  "clientPolicy": []
+ },
+ "intakeTemplate": "A. Packet inventory: Item | Type | Status | Notes. Walk-through notes, written programs (HazCom, LOTO, PPE assessment, emergency action, respiratory, hearing, BBP, confined space, forklift), OSHA 300/300-A/301 for the years reviewed, training records, inspection logs (extinguishers, forklifts, ladders), prior audit report. Status: received and reviewed / received not reviewed / not received. Any finding that cites an item that is not \"received and reviewed\" carries \"(not reviewed)\".\nB. Conflicts register: # | Item | Source 1 (value) | Source 2 (value) | Resolution owner | Resolution. Every disagreement between sources goes here: headcount, hours worked, injury counts, measurements, dates, training status. Nothing is resolved silently.\nC. Names: full names appear only if the client supplied them in writing. Otherwise \"[name needed]\" or the job title. Initials or partial names are never expanded.\nD. Notes not used: every note line that is not a finding, conflict or question, with a one-line reason.\nE. Injury and incident prompts: any injury, treatment, near miss or unlogged incident goes to the consultant as a question, not a finding. The consultant answers before drafting continues.\nF. Figures and sources: every number, date and measurement names its source. Injury rates come from the app's computation only.\nG. Requirements: each regulation cited is checked against the verified citation library before release. Client policy is labeled CLIENT POLICY. A cite not in the library is marked \"(unverified)\".\nH. Categories: every finding names its audit category from the scorecard. Category ratings are the consultant's only.",
+ "blankTemplate": "# OSHA Compliance Audit Report\nCover lines: CONFIDENTIAL · Client: [Client] · Site: [Site address] · Audit date(s): [Visit dates] · Report date: [Report date] · Report no.: [Report number], Rev [revision] · Prepared by: [Consultant name, credentials] – [Consultant firm] · Prepared for: [Site contact, name and title only as given in writing]. Last cover line, label \"Note\": \"This report reflects conditions observed on the audit date(s) only. It is not legal advice.\"\n## 1. Activity Summary\nParagraph 1: who conducted the audit, at whose request and why (from the job sheet), where, when, and the method (walk-through, document review, interviews). Opening and closing conference dates only if given.\nParagraph 2: the overall result in one sentence using the app's numbers exactly: \"[n] findings ([s] serious, [o] other-than-serious); overall compliance score [x]% ([band] risk).\" Say how many were corrected during the visit only if a source says so.\n## 2. Company and Workplace Description\nIndustry and NAICS code, number of employees and shifts, operations and buildings, from the job sheet only. Two to four sentences.\n## 3. Scope and Method\nAreas and operations walked, documents reviewed, interviews (job titles), and anything excluded. Then a table: Participant | Role (names only as given in writing; otherwise job title).\n## 4. Compliance Score\nOne sentence on the scale: each audit category is rated Compliant, Minor Gap, Major Gap or Absent (Not Applicable is left out), and the score is the average across rated categories. -> then a {\"type\":\"scorecard\"} block. Then one short paragraph naming the categories rated Absent or Major Gap, from the app's scorecard only.\n## 5. Summary of Findings\n-> a {\"type\":\"counts\"} block (counts by classification). One sentence on how many remain open.\n## 6. Injury and Illness Records Review\nWhich OSHA 300 and 300-A years were reviewed, recordable and DART case counts and hours from the job sheet, then the app's computed TRC and DART rates per 200,000 hours. Compare to BLS rates only if the job sheet supplies them (name the year and NAICS). Note 300-A posting and certification only if observed.\n## 7. Written Programs Review\nTable: Program | Status | Note. Status is one of: In place / Needs update / Missing / Not applicable / Not provided for review. Only programs on the job sheet or in the notes; Not provided is a question for the client, not a finding.\n## 8. Findings and Corrective Actions\nIntro line: \"Each finding is written as Condition, Requirement, Risk, Corrective action and Due date. Classifications are SERIOUS or OTHER-THAN-SERIOUS.\"\nFor each finding: F-[n] [Short title stating the condition] ([Classification]) [– REPEAT if applicable], with five labeled parts: Condition (what was observed, where, and the evidence); Requirement (REGULATION – [cite from library]: [plain-language paraphrase]. Or CLIENT POLICY – [document]: [rule].); Risk (one sentence on the consequence); Corrective action (immediate action first, \"(corrected on site, [date])\" only if a source says so, then the lasting fix); Due date (from the approved table; [needed] if blank).\nRecommendations (best practice, no citation): Rec-[n] [title] with Condition and Recommendation.\n## 9. Hazard Correction Plan\nTable: # | Hazard | Location | Classification | Corrective action | Assigned to (job title) | Due date. One row per finding, same IDs, from the approved table.\n## 10. Review and Recommendations\nShort bullets: programs to put in place or update, training priorities, and re-audit in [re-audit interval from the job sheet].\n## 11. Limitations\nStandard paragraph: conditions on the audit date(s) only; the consultant may not find every hazard; the employer remains responsible for compliance; based on the areas, documents and people available.\n## Appendix A – Scoring Method\nRating scale (Compliant 100, Minor Gap 67, Major Gap 33, Absent 0, Not Applicable excluded) and the risk-rating bands, written from the app's scorecard settings.",
+ "styleRules": "Voice: third person, past tense for observations (\"was blocked,\" \"had been removed\"). The firm is the subject in the summary (\"[Firm] conducted…\"), never \"I\" or \"we.\"\nSentence length: short and plain, usually under 25 words. One idea per sentence.\nFinding titles: state the condition, not the rule. Classification in parentheses. \"– REPEAT\" when the prior report recorded the same condition.\nFinding structure: always five labeled parts, in order: Condition, Requirement, Risk, Corrective action, Due date.\nCondition: exact item and location, then the evidence (observation, tag, log, document).\nRequirement: label first (REGULATION or CLIENT POLICY), then the cite, then a plain-language paraphrase after a colon. No quoted regulation text.\nRisk: one sentence, consequence-focused, no exaggeration.\nCorrective action: start with a verb (\"Remove,\" \"Install,\" \"Train,\" \"Post\"). Immediate step first; then the lasting fix. Owners are job titles, not names.\nNumbers: numerals for counts and rates (two decimals for rates); dates as \"March 4, 2026\"; percentages as whole numbers unless the app gives a decimal.\nWords avoided: \"egregious,\" \"blatant,\" \"failed to,\" \"it is recommended that,\" \"please note,\" \"ensure compliance.\"\nTables: scorecard in Section 4, counts in Section 5, written programs in Section 7, hazard correction plan in Section 9.",
+ "findingsLibrary": "Hazard communication — Title: Safety Data Sheets missing in [area]. Requirement: REGULATION – 29 CFR 1910.1200(g)(8): SDSs readily accessible to employees in their work areas during each shift. Risk: Employees may not have hazard and first-aid information during a spill or exposure. Corrective action: Add the missing SDSs and reconcile the binder against the area's chemical inventory.\nTitle: Secondary containers not labeled. Requirement: REGULATION – 29 CFR 1910.1200(f)(6): workplace containers of hazardous chemicals are labeled. Corrective action: Label each container with the product identifier and hazards, and add container labeling to the HazCom training.\nExit routes — Title: Exit route blocked at [location]. Requirement: REGULATION – 29 CFR 1910.37(a)(3): exit routes kept free of obstructions. Risk: Delayed evacuation during a fire or other emergency. Corrective action: Clear the route now. Mark a keep-clear zone and add the route to the weekly supervisor walk.\nFire extinguishers — Title: Monthly extinguisher inspections not recorded. Requirement: REGULATION – 29 CFR 1910.157(e)(2): portable extinguishers visually inspected monthly. Corrective action: Inspect all extinguishers now and assign a job title to own the monthly checks.\nTitle: Extinguisher not mounted or blocked at [location]. Requirement: REGULATION – 29 CFR 1910.157(c)(1): extinguishers mounted, located and identified so they are readily accessible.\nElectrical — Title: Junction box missing cover at [location]. Requirement: REGULATION – 29 CFR 1910.305(b)(2)(i): pull and junction boxes have covers. Risk: Contact with energized conductors can cause shock or burns. Corrective action: Install the cover; have a qualified electrician check for other open boxes.\nTitle: Extension cord used as permanent wiring at [location]. Requirement: REGULATION – 29 CFR 1910.305(g)(1)(iv): flexible cords not used as a substitute for fixed wiring. Corrective action: Remove the cord and have a qualified electrician install a permanent outlet.\nTitle: Storage in front of electrical panel [ID]. Requirement: REGULATION – 29 CFR 1910.303(g)(1)(ii): working space around electric equipment not used for storage. Corrective action: Clear the space and mark it with floor striping.\nMachine guarding — Title: [Machine] guard removed. Requirement: REGULATION – 29 CFR 1910.212(a)(1): one or more methods of machine guarding to protect the operator and other employees. Risk: Contact with [hazard] can cause severe lacerations or amputation. Corrective action: Tag the machine out of service until the guard is reinstalled.\nTitle: Bench grinder work rest gap over 1/8 inch. Requirement: REGULATION – 29 CFR 1910.215(a)(4): work rest kept within 1/8 inch of the wheel.\nPowered industrial trucks — Title: Forklift operated with [defect]. Requirement: REGULATION – 29 CFR 1910.178(q)(7): trucks examined before being placed in service and not used if any condition adversely affects safety. Corrective action: Remove [truck ID] from service until repaired.\nTitle: Operator evaluation older than three years. Requirement: REGULATION – 29 CFR 1910.178(l)(4)(iii): operator performance evaluated at least once every three years.\nPPE — Title: PPE hazard assessment not certified in writing. Requirement: REGULATION – 29 CFR 1910.132(d)(2): written certification of the hazard assessment. Corrective action: Complete and sign the assessment for each area; keep it with the PPE program.\nRecordkeeping — Title: 300-A summary not posted. Requirement: REGULATION – 29 CFR 1904.32(b)(6): post the summary from February 1 to April 30. Corrective action: Post the certified 300-A where employee notices are posted.\nLockout/tagout — Title: Lockout locks without employee identification. Requirement: REGULATION – 29 CFR 1910.147(c)(5)(ii)(D): lockout devices indicate the identity of the employee applying them.\nHousekeeping — Title: Trip hazard at [location]. Requirement: REGULATION – 29 CFR 1910.22(a)(1): workplaces kept clean, orderly and sanitary. Corrective action: Remove the hazard and add the area to the daily housekeeping check.\nConstruction — Title: Unprotected edge over 6 feet at [location]. Requirement: REGULATION – 29 CFR 1926.501(b)(1): guardrails, safety nets or personal fall arrest at unprotected sides and edges 6 feet or more above a lower level. Corrective action: Stop work at the edge until protection is in place.\nTitle: Exposed rebar not capped at [location]. Requirement: REGULATION – 29 CFR 1926.701(b): protruding reinforcing steel guarded against impalement.\nLimitations — This audit reflects conditions observed on the audit date(s) and the documents and people available at the time. The consultant may not have identified every hazard. [Client] remains responsible for compliance with all applicable OSHA standards. This report is not legal advice.\nActivity summary — [Firm] conducted an OSHA compliance audit of [Client]'s [site] on [dates] at the request of [requested by]. The audit included a walk-through of [areas], a review of written programs and injury and illness records, and interviews with [job titles].",
+ "carryover": [
+  "Sample Company",
+  "J. J. Keller",
+  "J.J. Keller",
+  "Valor Man",
+  "Northgate Supply Co.",
+  "Harbor Point Distribution Center",
+  "1200 Example Way",
+  "Anytown, VA",
+  "Pat Rivera",
+  "SA-2026-014",
+  "SA-2025-031",
+  "Forklift #3",
+  "Aisle 12",
+  "North dock",
+  "Ridgeline Builders",
+  "Maple Court Medical Office",
+  "Brightwater Precision Components",
+  "Cedar Lane Home Services",
+  "RB-2026-07",
+  "BPC-IA-2026-02",
+  "CL-OPS-2026-01",
+  "Sampleton"
+ ],
+ "exportNames": {
+  "report": "OSHA Audit Report",
+  "qa": "Consultant QA Sheet"
+ },
+ "photoPlan": {
+  "note": "Photos document the site visit and walk-through, not individual findings. Counts are a recommendation; the minimum is what the report needs.",
+  "sections": [
+   {
+    "key": "cover",
+    "label": "Cover",
+    "anchor": [
+     "cover"
+    ],
+    "count": 1,
+    "min": 1,
+    "shots": [
+     "Building exterior or site entrance with the facility name visible"
+    ]
+   },
+   {
+    "key": "workplace",
+    "label": "2. Company and Workplace Description",
+    "anchor": [
+     "^\\s*2\\.?\\s",
+     "workplace description"
+    ],
+    "count": 2,
+    "min": 0,
+    "shots": [
+     "Main production or operations area",
+     "Warehouse, shop or yard area"
+    ]
+   },
+   {
+    "key": "walk",
+    "label": "3. Scope and Method",
+    "anchor": [
+     "^\\s*3\\.?\\s",
+     "scope and method"
+    ],
+    "count": 3,
+    "min": 1,
+    "shots": [
+     "Walk-through in progress with the site contact",
+     "Document review (programs, logs) on site",
+     "Closing conference or a typical area reviewed"
+    ]
+   }
+  ]
+ }
+}

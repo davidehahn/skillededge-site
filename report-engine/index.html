@@ -1,0 +1,1772 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Report Engine</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: navy app bar, six-step stepper, one working panel per step; tables scroll inside their own frames. */
+:root{
+  --bg:#eef1f5; --panel:#ffffff; --panel-2:#f6f8fb; --ink:#152231; --muted:#5a6879; --line:#d9e0e8;
+  --brand:#1c3a5a; --brand-ink:#ffffff; --brand-soft:#e3ebf4; --accent:#c96f0a; --accent-soft:#fbefe0;
+  --ok:#1d7a4c; --ok-soft:#e2f3ea; --warn:#9a6400; --warn-soft:#fbf1dc; --bad:#b42318; --bad-soft:#fbe7e5;
+  --paper:#ffffff; --paper-ink:#1a1f26; --shadow:0 1px 2px rgba(20,34,49,.06),0 4px 16px rgba(20,34,49,.06);
+  --f-display:"Archivo","Segoe UI",system-ui,sans-serif; --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e141b; --panel:#151e28; --panel-2:#1a2531; --ink:#e4ebf2; --muted:#93a2b3; --line:#283647;
+  --brand:#14263a; --brand-ink:#eaf1f8; --brand-soft:#1d3047; --accent:#f0a13c; --accent-soft:#3a2a14;
+  --ok:#52c48c; --ok-soft:#163427; --warn:#e2b04f; --warn-soft:#382c12; --bad:#f2786d; --bad-soft:#3d1c1a;
+  --paper:#1b2430; --paper-ink:#e4ebf2; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e141b; --panel:#151e28; --panel-2:#1a2531; --ink:#e4ebf2; --muted:#93a2b3; --line:#283647;
+  --brand:#14263a; --brand-ink:#eaf1f8; --brand-soft:#1d3047; --accent:#f0a13c; --accent-soft:#3a2a14;
+  --ok:#52c48c; --ok-soft:#163427; --warn:#e2b04f; --warn-soft:#382c12; --bad:#f2786d; --bad-soft:#3d1c1a;
+  --paper:#1b2430; --paper-ink:#e4ebf2; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--brand)}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+/* app bar */
+.bar{background:var(--brand);color:var(--brand-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar .wrap{display:flex;align-items:center;gap:14px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{flex:none}
+.brand b{font-family:var(--f-display);font-size:17px;font-weight:700;letter-spacing:.01em}
+.brand small{display:block;font-size:11.5px;opacity:.78;letter-spacing:.06em;text-transform:uppercase}
+.bar .spacer{flex:1}
+.jobbtn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:var(--brand-ink);border-radius:8px;padding:7px 12px;cursor:pointer;display:flex;gap:8px;align-items:center;max-width:100%}
+.jobbtn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px}
+.jobbtn:hover{background:rgba(255,255,255,.18)}
+.savechip{font-size:12px;opacity:.85;font-family:var(--f-mono)}
+/* stepper */
+.stepper{background:var(--panel);border-bottom:1px solid var(--line)}
+.steps{display:flex;gap:4px;overflow-x:auto;padding-block:10px;scrollbar-width:thin}
+.step{flex:1 0 auto;display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:8px;border:1px solid transparent;background:none;cursor:pointer;text-align:left;min-width:132px}
+.step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-mono);font-size:12.5px;font-weight:500;border:1.5px solid var(--line);color:var(--muted);flex:none}
+.step .t{font-size:13.5px;font-weight:600;line-height:1.2}
+.step .s{font-size:11.5px;color:var(--muted);line-height:1.2}
+.step:hover:not([disabled]){background:var(--panel-2)}
+.step.cur{background:var(--brand-soft);border-color:var(--line)}
+.step.cur .n{border-color:var(--brand);background:var(--brand);color:#fff}
+:root[data-theme="dark"] .step.cur .n{border-color:var(--accent);background:var(--accent);color:#14202e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .step.cur .n{border-color:var(--accent);background:var(--accent);color:#14202e}}
+.step.done .n{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+.step[disabled]{opacity:.5;cursor:not-allowed}
+.progress{height:3px;background:var(--line)}
+.progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+/* main */
+main{padding-block:22px 60px}
+.head{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}
+.head h1{font-size:24px}
+.head p{margin:4px 0 0;color:var(--muted);max-width:68ch}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.panel+.panel{margin-top:14px}
+.panel h2{font-size:16.5px;margin-bottom:10px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+.split{display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:860px){.grid2,.split{grid-template-columns:minmax(0,1fr)}}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.mono{font-family:var(--f-mono);font-size:12.5px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row.end{justify-content:flex-end}
+.stack{display:flex;flex-direction:column;gap:10px}
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:7px}
+.btn:hover:not([disabled]){background:var(--panel-2)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.primary:hover:not([disabled]){filter:brightness(1.12);background:var(--brand)}
+:root[data-theme="dark"] .btn.primary{background:var(--accent);border-color:var(--accent);color:#16202b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{background:var(--accent);border-color:var(--accent);color:#16202b}}
+.btn.ghost{border-color:transparent;background:none}
+.btn.danger{color:var(--bad)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn:focus-visible,.step:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.jobbtn:focus-visible,[contenteditable]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* forms */
+label.f{display:flex;flex-direction:column;gap:5px;min-width:0}
+label.f .lab{font-size:12.5px;font-weight:600;color:var(--muted);display:flex;gap:8px;align-items:center;justify-content:space-between}
+input[type=text],input[type=date],select,textarea{width:100%;border:1px solid var(--line);border-radius:7px;background:var(--panel-2);padding:8px 10px;min-width:0}
+textarea{resize:vertical;min-height:70px;line-height:1.45}
+select{padding:6px 8px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:700px){.fields{grid-template-columns:minmax(0,1fr)}}
+.fields .wide{grid-column:1/-1}
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
+.chip.need{background:var(--warn-soft);color:var(--warn)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.info{background:var(--brand-soft);color:var(--ink)}
+.chip.acc{background:var(--accent-soft);color:var(--accent)}
+.notice{border-radius:8px;padding:10px 12px;font-size:13.5px;display:flex;gap:10px;align-items:flex-start}
+.notice.warn{background:var(--warn-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--warn) 35%,transparent)}
+.notice.bad{background:var(--bad-soft);border:1px solid color-mix(in srgb,var(--bad) 35%,transparent)}
+.notice.ok{background:var(--ok-soft);border:1px solid color-mix(in srgb,var(--ok) 35%,transparent)}
+.notice.info{background:var(--brand-soft);border:1px solid var(--line)}
+/* tables */
+.tframe{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+table.t th{background:var(--panel-2);text-align:left;font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.t td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t tr:last-child td{border-bottom:none}
+table.t td[contenteditable="true"]{background:color-mix(in srgb,var(--panel-2) 60%,transparent);cursor:text}
+table.t td[contenteditable="true"]:hover{box-shadow:inset 0 0 0 1px var(--line)}
+table.t td.edited{box-shadow:inset 3px 0 0 var(--accent)}
+table.t select{min-width:96px}
+.idc{font-family:var(--f-mono);font-size:12.5px;white-space:nowrap}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:12px;overflow-x:auto}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:8px 12px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--muted);white-space:nowrap}
+.tab.on{color:var(--ink);border-bottom-color:var(--accent)}
+.tab .chip{margin-left:4px}
+/* sources */
+.drop{border:1.5px dashed var(--line);border-radius:var(--r);padding:20px;text-align:center;background:var(--panel-2);cursor:pointer}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.src{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 12px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.src .meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.src pre{grid-column:1/-1;margin:0;max-height:180px;overflow:auto;background:var(--panel-2);border-radius:6px;padding:10px;font-family:var(--f-mono);font-size:12px;white-space:pre-wrap;word-break:break-word}
+/* questions */
+.q{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--panel)}
+.q .qh{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.q p{margin:0 0 8px;font-weight:500}
+.qa-log{font-size:13px;border-left:2px solid var(--line);padding-left:10px;display:flex;flex-direction:column;gap:6px}
+/* paper */
+.paper{background:var(--paper);color:var(--paper-ink);border:1px solid var(--line);border-radius:4px;padding:clamp(18px,4vw,48px);max-width:860px;margin:0 auto;box-shadow:var(--shadow);font-size:14.5px;line-height:1.55}
+.paper h1{font-size:24px;margin:0 0 14px}
+.paper h2{font-size:17px;margin:26px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.paper h3{font-size:15px;margin:18px 0 6px}
+.paper p{margin:0 0 9px;max-width:72ch}
+.paper .cover{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:3px 14px;margin-bottom:10px;font-size:14px}
+.paper .cover b{font-weight:600}
+.paper .fpart{margin:0 0 6px}
+.paper .fpart b{font-weight:600}
+.paper ul{margin:0 0 10px;padding-left:20px}
+.ph{margin:10px 0 14px;border:1px solid var(--line);border-radius:6px;padding:8px;background:var(--panel-2);max-width:520px}
+.ph img{display:block;width:100%;height:auto;border-radius:3px}
+.ph figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
+.ph-empty{margin:10px 0 14px;border:1.5px dashed var(--line);border-radius:6px;padding:12px;max-width:520px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.ph-empty.req{border-color:color-mix(in srgb,var(--warn) 60%,transparent);background:var(--warn-soft)}
+.ph-empty b{color:var(--ink);font-weight:600}
+.ph-empty span{flex:1;min-width:180px}
+.pmap{display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.pmap .r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:7px;background:var(--panel)}
+.pmap .dots{display:flex;gap:4px}
+.pmap .dots i{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--line);display:block}
+.pmap .dots i.f{background:var(--ok);border-color:var(--ok)}
+.pmap .dots i.q{border-color:var(--warn)}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:8px}
+.slot{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--panel);display:flex;flex-direction:column;gap:8px;min-width:0}
+.slot .thumb{aspect-ratio:4/3;border-radius:5px;border:1.5px dashed var(--line);display:grid;place-items:center;overflow:hidden;background:var(--panel-2);font-size:12.5px;color:var(--muted);text-align:center;padding:6px}
+.slot .thumb img{width:100%;height:100%;object-fit:cover}
+.slot .shot{font-size:13px}
+.slot input{width:100%}
+.need-txt{background:var(--warn-soft);color:var(--warn);border-radius:3px;padding:0 3px;font-weight:600}
+.unv-txt{background:var(--bad-soft);color:var(--bad);border-radius:3px;padding:0 3px;font-weight:600}
+/* QA */
+.check{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);align-items:start}
+.check:last-child{border-bottom:none}
+.check .num{font-family:var(--f-mono);font-size:13px;color:var(--muted);padding-top:2px}
+.check .name{font-weight:600}
+.check .det{font-size:13px;color:var(--muted);margin-top:2px}
+.gate{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:14px;border-radius:var(--r)}
+.gate.open{background:var(--ok-soft);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent)}
+.gate.shut{background:var(--bad-soft);border:1px solid color-mix(in srgb,var(--bad) 40%,transparent)}
+.gate .big{font-family:var(--f-display);font-weight:700;font-size:19px}
+.kv{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;font-size:13.5px}
+.sumlist{margin:0;padding-left:18px;font-size:13.5px}
+.sumlist li{margin-bottom:4px}
+/* export */
+.exp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.exp{grid-template-columns:minmax(0,1fr)}}
+.doccard{display:flex;gap:14px;align-items:flex-start}
+.doccard .ic{width:44px;height:54px;border-radius:5px;background:var(--brand-soft);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--brand);flex:none}
+:root[data-theme="dark"] .doccard .ic{color:var(--accent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .doccard .ic{color:var(--accent)}}
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(10,18,28,.45);display:grid;place-items:center;z-index:50;padding:max(16px,env(safe-area-inset-left,0px))}
+.dialog{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:20px;width:min(460px,100%)}
+.dialog h3{font-size:17px;margin-bottom:6px}
+.spin{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--accent);animation:sp 0.9s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}.progress i{transition:none}}
+.menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);width:min(340px,calc(100vw - 32px));padding:8px;z-index:20}
+.menu .it{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 10px;border-radius:7px;cursor:pointer;border:none;background:none;width:100%;text-align:left}
+.menu .it:hover{background:var(--panel-2)}
+.menu .it.cur{background:var(--brand-soft)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--panel);padding:9px 16px;border-radius:8px;font-size:13.5px;z-index:60;max-width:calc(100% - 32px)}
+.empty{text-align:center;padding:34px 16px}
+.empty h2{font-size:18px;margin-bottom:6px}
+/* v5: next bar, home, profile, editable draft, pass/fix list */
+.nextbar{position:sticky;bottom:0;z-index:6;background:var(--panel);border-top:1px solid var(--line);box-shadow:0 -2px 14px rgba(20,34,49,.07)}
+.nextbar .wrap{display:flex;gap:12px;align-items:center;padding-block:10px calc(10px + env(safe-area-inset-bottom,0px))}
+.nextbar .info{flex:1;min-width:0;font-size:13px;color:var(--muted);line-height:1.35}
+.nextbar .info b{color:var(--ink)}
+.nextbar .btn.primary{font-size:15px;padding:11px 18px}
+@media (max-width:560px){.nextbar .info{display:none}.nextbar .btn.primary{flex:1;justify-content:center}}
+.home-types{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.home-types .panel+.panel{margin-top:0}
+.tcard{display:flex;flex-direction:column;gap:10px}
+.tcard p{margin:0;color:var(--muted);font-size:13.5px;flex:1}
+.jlist{display:flex;flex-direction:column;gap:8px}
+.jr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);align-items:center}
+.jr b{word-break:break-word}
+@media (max-width:560px){.jr{grid-template-columns:minmax(0,1fr)}}
+.minibar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:7px;max-width:280px}
+.minibar i{display:block;height:100%;background:var(--accent)}
+.step.locked .n{border-style:dashed}
+.step.locked .s{color:var(--warn)}
+.lockview{max-width:580px;margin:28px auto;text-align:center}
+.lockview .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:var(--warn-soft);color:var(--warn)}
+.paper [data-dp]{border-radius:3px;outline:none;cursor:text}
+.paper [data-dp]:hover{box-shadow:0 0 0 1px var(--line)}
+.paper [data-dp]:focus{box-shadow:0 0 0 2px var(--accent);background:color-mix(in srgb,var(--accent-soft) 70%,transparent)}
+.paper .brandhead{display:flex;gap:14px;align-items:center;margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid var(--brand)}
+:root[data-theme="dark"] .paper .brandhead{border-bottom-color:var(--accent)}
+.paper .brandhead img{max-height:56px;max-width:200px;object-fit:contain}
+.paper .brandhead b{font-family:var(--f-display);font-size:18px}
+.paper .signoff{margin-top:30px;padding-top:14px;border-top:1px solid var(--line)}
+.paper .sigline{margin:22px 0 2px;letter-spacing:.02em}
+.paper .assist{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:14px}
+.paper .samplebar{font-size:12.5px;margin:-6px 0 14px}
+.flash{animation:fl 2s ease-out}
+@keyframes fl{0%,40%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:none}}
+.fix{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:12px 14px;border-bottom:1px solid var(--line);align-items:start}
+.fix:last-child{border-bottom:none}
+.fix .name{font-weight:600}
+.fix .det{font-size:13.5px;color:var(--muted);margin-top:2px}
+.passlist{margin:0;padding:0;list-style:none;font-size:13.5px}
+.passlist li{padding:6px 0;border-bottom:1px solid var(--line)}
+.passlist li:last-child{border-bottom:none}
+details.more>summary{cursor:pointer;font-weight:600;font-size:14px;padding:4px 0}
+.logo-prev{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.logo-prev img{max-height:64px;max-width:220px;border:1px solid var(--line);border-radius:6px;padding:6px;background:#fff}
+.sigprev{white-space:pre-wrap;font-size:14px;border-left:3px solid var(--line);padding-left:12px}
+.steps2{display:flex;flex-direction:column;gap:8px;margin:0;padding-left:20px}
+.empty p{color:var(--muted);max-width:52ch;margin:0 auto 14px}
+.lockbox{display:flex;gap:12px;align-items:center;padding:16px;border:1px dashed var(--line);border-radius:var(--r);background:var(--panel-2)}
+footer{color:var(--muted);font-size:12px;text-align:center;padding-block:10px 30px}
+</style>
+
+<div class="bar"><div class="wrap">
+  <div class="brand">
+    <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="currentColor" stroke-opacity=".5"/><path d="M8 22 L16 8 L24 22 Z" fill="none" stroke="#f0a13c" stroke-width="2.4" stroke-linejoin="round"/><path d="M16 14v4" stroke="#f0a13c" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="20.2" r="1.2" fill="#f0a13c"/></svg>
+    <div><b>Report Engine</b><small id="brandSub">Skilled Edge</small></div>
+  </div>
+  <div class="spacer"></div>
+  <span class="savechip" id="saveChip"></span>
+  <div style="position:relative">
+    <button class="jobbtn" id="jobBtn" aria-label="All reports"><svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h12M2 8h12M2 13h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span id="jobName">All reports</span></button>
+  </div>
+</div></div>
+<div class="stepper" id="stepperBar"><div class="wrap"><nav class="steps" id="steps" aria-label="Report steps"></nav></div><div class="progress"><i id="prog" style="width:0"></i></div></div>
+<main><div class="wrap" id="view"></div></main>
+<div class="nextbar" id="nextbar" hidden><div class="wrap" id="nextInner"></div></div>
+<footer><div class="wrap" id="foot"></div></footer>
+<div id="overlay" hidden></div>
+<div class="toast" id="toast" hidden></div>
+<input type="file" id="photoIn" hidden accept="image/png,image/jpeg,image/webp,image/heic,image/heif">
+<input type="file" id="sitePhotoIn" multiple hidden accept="image/png,image/jpeg,image/webp,image/heic,image/heif">
+<input type="file" id="logoIn" hidden accept="image/png,image/jpeg,image/webp">
+<input type="file" id="fileIn" multiple hidden accept=".txt,.md,.csv,.pdf,.docx,.png,.jpg,.jpeg,.webp,.gif">
+
+<script src="hosted-shim.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+/* =====================================================================
+   PER-CLIENT CONFIG  (Skilled Edge edits this block for each client)
+   ---------------------------------------------------------------------
+   Change engineId, consultant and the knowledge content below, then
+   republish the file in the client's own Claude account. Nothing else
+   in the file needs to change. Extra report types can also be loaded
+   from presets/<name>.json files published beside this page.
+   ===================================================================== */
+const ENGINE_CONFIG = {
+  id: "safety-audit",
+  engineId: "SE-RE-DEMO",
+  reportType: "Safety Audit",
+  reportTitle: "Workplace Safety Audit Report",
+  licensedBy: "Skilled Edge Group LLC",
+  consultant: { name: "Sample Consultant", credentials: "", firm: "" },
+  itemNoun: "finding",
+  jobSheetFields: [
+    { key: "client", label: "Client" },
+    { key: "agency", label: "Agency / owner" },
+    { key: "project", label: "Project" },
+    { key: "locations", label: "Location(s)" },
+    { key: "people", label: "Key people (name and role; only as given in writing)", multiline: true, wide: true },
+    { key: "visitDates", label: "Visit / inspection dates" },
+    { key: "reportDate", label: "Report date" },
+    { key: "reportNo", label: "Report number / revision" },
+    { key: "governing", label: "Governing documents (manual, contract, plan, standard)", multiline: true },
+    { key: "clientPolicy", label: "Client-policy rules that apply (if any)", multiline: true },
+    { key: "prior", label: "Prior report on this job (yes/no, date)" },
+    { key: "riskMatrix", label: "Risk matrix used (consultant's own)", multiline: true, wide: true }
+  ],
+  titleField: "client",
+  columns: [
+    { key: "id", label: "#", readonly: true },
+    { key: "finding", label: "Finding" },
+    { key: "location", label: "Location" },
+    { key: "evidence", label: "Evidence" },
+    { key: "status", label: "Open / closed", options: ["open", "closed"] },
+    { key: "topic", label: "Requirement topic" },
+    { key: "source", label: "Source", options: ["REGULATION", "CLIENT POLICY", "RECOMMENDATION"] },
+    { key: "cite", label: "Cite / policy document" },
+    { key: "rating", label: "Rating (yours)", options: ["[needed]", "High", "Medium", "Low"], consultantOnly: true }
+  ],
+  ratingKey: "rating",
+  countRatings: ["High", "Medium", "Low"],
+  requirementLabels: ["REGULATION", "CLIENT POLICY"],
+  recommendationSource: "RECOMMENDATION",
+  idRules: "Findings are numbered F-1, F-2. Best-practice recommendations are numbered Rec-1, Rec-2. Never use an ID that could match equipment, rooms or people (e.g. R-1, R-2).",
+  projectRules: `You build [REPORT TYPE] reports for [CONSULTANT NAME], an independent consultant. Engine ID: [CLIENT ID], licensed by Skilled Edge Group LLC for this consultant only. The consultant reviews, signs and sends every report. You draft and flag; they decide.
+
+Workflow: 1 JOB SHEET (every job-specific detail comes from the job sheet; write [needed] for anything missing). 2 FINDINGS BUILDER (pull findings from the notes first, then interview the consultant one Blank Template section at a time, only about gaps; max 3 short questions at a time; fill the Intake Template; ask injury, treatment or near-miss questions before going on; show a findings table and wait for approval). 3 DRAFT (Blank Template for structure, Style Rules for voice, Findings Library wording where it fits; only the job sheet and approved findings). 4 QA (all 15 checks; cite only Verified Citation Library sections, anything else is "(unverified)" and blocks release; never assign a risk rating, use the consultant's ratings only; check 15 against the Carryover List; end with the Report Summary). 5 EDITS.
+
+Rules added after Test 1 (Nov 16, 2026):
+- Cite a regulation only when the observed condition actually breaks what that regulation requires. If the requirement is met and the issue is a best practice, write it as a recommendation with no citation.
+- A document the consultant does not have is a question for the client, never a finding against the client.
+- Number recommendations Rec-1, Rec-2. Never use an ID that could match equipment, rooms or people (e.g. R-1, R-2).
+- Write every requirement line exactly as the Style Rules say: REGULATION – 29 CFR [section]: [paraphrase]. Or CLIENT POLICY – [document]: [rule].
+- Owners appear only in the Open Items table, as job titles.
+- Add no detail the notes or the consultant did not give (e.g. do not write that a door opened if the notes only say it was unlocked).
+- Output two separate documents: (1) the client report only, ending at the appendix; (2) a Consultant QA Sheet with the 15-check results, release gate, conflicts register, questions and notes not used. Never put QA results inside the client report.
+- In each QA result, quote the finding ID and check it against the report text. Never mark a check Pass on a fact the report does not support.
+
+Never invent names, dates, measurements or facts. Write [needed] instead. Never reuse anything from the Carryover List.`,
+  inputsRule: "Text documents (PDF, Word, Excel), voice-memo transcripts and photos of handwritten notes or checklists (read as text only). Site photos, drawings, CAD and video are out of scope.",
+  qaVersion: "v1.2 (Nov 13, 2026)",
+  qaChecks: [
+    { n: 1, name: "Packet", rule: "Every cited attachment has an inventory row and status. Unreviewed items read \"(not reviewed).\"" },
+    { n: 2, name: "Evidence rating", rule: "No Critical or High rests only on unreviewed evidence. Consultant confirms after review." },
+    { n: 3, name: "Conflicts", rule: "Every disagreement across sources is in the register." },
+    { n: 4, name: "Notes not used", rule: "Every field note is a finding, register row, question, or a listed \"not used\" with reason." },
+    { n: 5, name: "Names", rule: "No expanded initials or partial names." },
+    { n: 6, name: "Counts", rule: "Summary counts recomputed from the findings table.", auto: "counts" },
+    { n: 7, name: "Requirement source", rule: "Every finding is labeled REGULATION or CLIENT POLICY.", auto: "labels" },
+    { n: 8, name: "Citation", rule: "Every regulation cite must match the verified citation library. A cite not in the library is \"(unverified)\" and blocks release. No citations from model memory.", auto: "citations" },
+    { n: 9, name: "Repeat", rule: "Repeat claims cite the prior report, or say \"per client; prior report not reviewed.\"" },
+    { n: 10, name: "Injury", rule: "Injury or unlogged-incident mentions go to the consultant as questions." },
+    { n: 11, name: "Figures", rule: "Every figure names its source." },
+    { n: 12, name: "Scope triggers", rule: "Conditional standards (eyewash = corrosives; 1910.217 = mechanical power press) are asked as questions before the cite is used." },
+    { n: 13, name: "Action follows rule", rule: "After citation check, re-derive the action. Example: forklift safety defect = out of service now." },
+    { n: 14, name: "Library freshness", rule: "The citation library check date is under 12 months old.", auto: "freshness" },
+    { n: 15, name: "No carryover", rule: "No client, agency, project, location or person name from the Carryover List appears in the draft unless it is also on this job's job sheet. Every job-specific detail traces to the job sheet.", auto: "carryover" }
+  ],
+  releaseGate: "All 15 pass and the consultant signs off on the conflicts register and scope-trigger answers. Re-run all 15 on the consultant's hand-edited final before sending.",
+  photoPlan: {
+    note: "Photos document the site visit, not individual findings. Counts are a recommendation; the minimum is what the report needs.",
+    sections: [
+      { key: "cover", label: "Cover", anchor: ["cover"], count: 1, min: 1, shots: ["Site entrance or building exterior with the facility name visible"] },
+      { key: "scope", label: "2. Scope and Method", anchor: ["^\\s*2\\.?\\s", "scope and method"], count: 2, min: 0, shots: ["Main work area during the walk-through", "Second area walked (shop floor, warehouse or yard)"] },
+      { key: "positive", label: "5. Positive Observations", anchor: ["^\\s*5\\.?\\s", "positive observations"], count: 2, min: 0, shots: ["A good practice seen on the walk", "A second good practice"] }
+    ]
+  },
+  citationLibrary: {
+    title: "Verified Citation Library v1 – General Industry (29 CFR 1910)",
+    checkedOn: "2026-11-13",
+    citePattern: "1910\\.\\d+(?:\\([a-z0-9]+\\))*",
+    rule: "The engine may only cite a section in this library. Anything else is written \"(unverified)\" and blocks release.",
+    entries: [
+      { topic: "Machine guarding, general", cite: "1910.212(a)(1)", requires: "One or more guarding methods to protect operators and others from machine hazards", note: "General. Use (a)(3)(ii) for point of operation." },
+      { topic: "Point of operation", cite: "1910.212(a)(3)(ii)", requires: "Point of operation must be guarded where it exposes an employee to injury", note: "Ask: is it a mechanical power press? If yes, 1910.217 governs.", trigger: true },
+      { topic: "Eye protection", cite: "1910.133(a)(1)", requires: "Employer ensures appropriate eye/face protection where exposed to eye or face hazards", note: "" },
+      { topic: "LOTO procedure", cite: "1910.147(c)(4)", requires: "Energy control procedures developed, documented and used", note: "Not for tag identity." },
+      { topic: "LOTO device identity", cite: "1910.147(c)(5)(ii)(D)", requires: "Lockout and tagout devices show identity of the employee applying them", note: "" },
+      { topic: "LOTO periodic inspection", cite: "1910.147(c)(6)(i)", requires: "Inspect energy control procedure at least annually", note: "" },
+      { topic: "LOTO retraining", cite: "1910.147(c)(7)(iii)", requires: "Retraining on job change, new hazard, procedure change, or inspection findings", note: "NO annual retraining in OSHA. Annual refresher = client policy." },
+      { topic: "Forklift evaluation", cite: "1910.178(l)(4)(iii)", requires: "Operator performance evaluated at least once every 3 years", note: "\"Expired\" means more than 3 years unless client policy is stricter." },
+      { topic: "Forklift pre-use exam", cite: "1910.178(q)(7)", requires: "Trucks examined before service; not used if a safety-affecting condition exists", note: "Action = out of service now." },
+      { topic: "Forklift defects", cite: "1910.178(p)(1)", requires: "Defective/unsafe truck taken out of service until restored", note: "" },
+      { topic: "Exit route obstructions", cite: "1910.37(a)(3)", requires: "Exit routes kept free of obstructions", note: "Paragraph number from OSHA eTool and interpretation index; full text not quoted. Re-check.", confirm: true },
+      { topic: "Exit safeguards", cite: "1910.37(a)(4)", requires: "Emergency safeguards, including exit lighting, in working order at all times", note: "" },
+      { topic: "Exit signs", cite: "1910.37(b)", requires: "Lighting and marking adequate and appropriate", note: "Exact sub-paragraph for illumination not yet confirmed.", confirm: true },
+      { topic: "Exit access width", cite: "1910.36(g)(2)", requires: "Exit access at least 28 inches wide at all points", note: "44 in. is a building-code figure, not OSHA." },
+      { topic: "SDS access", cite: "1910.1200(g)(8)", requires: "SDSs readily accessible each shift in the work area", note: "Electronic OK only with no barriers to employee access." },
+      { topic: "Eyewash", cite: "1910.151(c)", requires: "Quick-drench/flush facilities where exposed to injurious corrosive materials", note: "Ask: is the chemical corrosive? No frequency in OSHA. Monthly/weekly = client policy or ANSI Z358.1.", trigger: true },
+      { topic: "Walking-working surfaces", cite: "1910.22(a)(1)", requires: "Workplaces kept clean, orderly and sanitary", note: "Trip hazards." },
+      { topic: "Extinguisher monthly", cite: "1910.157(e)(2)", requires: "Visual inspection monthly", note: "" },
+      { topic: "Extinguisher annual", cite: "1910.157(e)(3)", requires: "Annual maintenance check, date recorded", note: "" }
+    ],
+    clientPolicy: []
+  },
+  intakeTemplate: `A. Packet inventory: Item | Type | Status | Notes. Field notes (text / voice-memo transcript / photo of handwritten notes; received / reviewed). Attachments, each document (received and reviewed / received not reviewed / not received; if not reviewed, no finding may cite it as evidence). Prior report(s) (received / not received; repeat findings require a source). Status rule: any finding that cites an item with status other than "received and reviewed" must carry "(not reviewed)" in the finding.
+B. Conflicts register: # | Item | Source 1 (value) | Source 2 (value) | Resolution owner | Resolution. Every disagreement between sources goes here, including headcount, measurements, dates, names and training status. Nothing is resolved silently.
+C. Names: full names appear only if the client supplied them in writing. Otherwise "[name needed]" or the job title. Initials or partial names ("Luis?") are never expanded.
+D. Notes not used: every item in the field notes that does not become a finding, a conflict or an open question goes here with a one-line reason. Injuries or treatment mentions, near misses, conflicting measurements and unverified observations must appear here if not turned into findings.
+E. Injury and incident prompts: any mention of an injury, treatment, near miss or unlogged incident goes to the consultant as a question, not a finding. The consultant answers before drafting continues.
+F. Figures and sources: every number, date and measurement names its source (document, measurement log, or the consultant's own observation).
+G. Requirements: each regulation cited is checked against the verified citation library before release. Client policy is labeled "client policy," never attributed to a regulation. A cite not in the library is marked "(unverified)."`,
+  blankTemplate: `# Workplace Safety Audit Report
+Cover lines: Client: [Client] · Site: [Location] · Audit date: [Visit date] · Report date: [Report date] · Report no.: [Report number], Rev [revision] · Prepared by: [Consultant name, credentials] – [Consultant firm] · Site contact: [Name, title – only as given in writing]
+## 1. Executive Summary
+Paragraph 1: who conducted the audit, where, when, and which areas were covered.
+Paragraph 2: number of findings by rating; any repeat findings with the prior report number; any conditions corrected or acted on during the audit.
+Table: Rating | Count (High, Medium, Low, Total). Counts are recomputed from Section 3.  -> use a {"type":"counts"} block here.
+## 2. Scope and Method
+Method (walk-through, document review, interviews), documents reviewed, and what was not included.
+## 3. Findings
+Intro line: "Each finding is written as Condition, Requirement, Risk and Recommended Action. Risk ratings use the consultant's risk matrix (Appendix A)."
+For each finding: F-[n] [Short title stating the condition] ([Rating]) [– REPEAT if applicable], with four labeled parts: Condition (what was observed, where, and the evidence); Requirement (REGULATION – [cite from library]: [plain-language paraphrase]. Or CLIENT POLICY – [document]: [rule].); Risk (one sentence on the consequence); Recommended action (immediate action, note if completed on site and the date, then the lasting fix).
+Recommendations (best practice, no citation): Rec-[n] [title] with Condition and Recommended action.
+## 4. Open Items
+Table: # | Item | Owner (job title) | Status.
+## 5. Positive Observations
+Two to four short bullets.
+## 6. Limitations
+Standard paragraph: conditions on the audit date only; not a guarantee that no other hazards exist; based on areas, documents and people available.
+## Appendix A – Risk Matrix
+The consultant's own matrix, unchanged (from the job sheet).`,
+  styleRules: `Voice: third person, past tense for observations ("had been removed," "was blocked"). The firm is the subject in the summary ("[Firm] conducted…"), never "I" or "we."
+Sentence length: short and plain, usually under 25 words. One idea per sentence.
+Finding titles: state the condition, not the rule. Rating in parentheses. "– REPEAT" when the prior report recorded the same condition.
+Finding structure: always four labeled parts, in order: Condition, Requirement, Risk, Recommended action.
+Condition: exact item and location, then the evidence (checklist, tag, document, observation).
+Requirement: label first (REGULATION or CLIENT POLICY), then the cite, then a plain-language paraphrase after a colon. No quoted regulation text.
+Risk: one sentence, consequence-focused, no exaggeration.
+Recommended action: immediate step first, with "(completed on site, [date])" when done; then the lasting fix. Owners are job titles, not names.
+Numbers: numerals for counts; dates written as "March 4, 2026."
+Words avoided: "egregious," "blatant," "failed to," "it is recommended that," "please note," "ensure compliance."
+Tables: summary counts table in Section 1; open items table in Section 4.`,
+  findingsLibrary: `Powered industrial trucks — Title: Forklift operated with [defect]. Condition: [Truck ID] had [defect]. The [period] pre-use checklist recorded [entry] on [n] days, and the truck remained in service. Requirement: REGULATION – 29 CFR 1910.178(q)(7): trucks are examined before being placed in service and are not used if any condition adversely affects safety. Risk: [Consequence for pedestrians or operator.] Recommended action: Remove [truck ID] from service until repaired. Require supervisors to review pre-use checklists daily and tag out any truck with a safety defect.
+Title: Operator evaluation older than three years. Requirement: REGULATION – 29 CFR 1910.178(l)(4)(iii): operator performance evaluated at least once every three years. Recommended action: Evaluate [operator role] before further operation and set a three-year tracking date.
+Exit routes — Title: Exit route blocked at [location]. Requirement: REGULATION – 29 CFR 1910.37(a)(3): exit routes kept free of obstructions. Risk: Delayed evacuation during a fire or other emergency. Recommended action: Clear the route. Paint floor markings for a keep-clear zone and add the route to the weekly supervisor walk.
+Fire extinguishers — Title: Fire extinguisher monthly inspections not recorded. Requirement: REGULATION – 29 CFR 1910.157(e)(2): portable extinguishers visually inspected monthly. Risk: A discharged or damaged extinguisher may go unnoticed. Recommended action: Inspect all extinguishers now and assign a named owner for monthly checks.
+Machine guarding — Title: [Machine] guard removed. Requirement: REGULATION – 29 CFR 1910.212(a)(1): one or more methods of machine guarding to protect the operator and other employees. Risk: Contact with [hazard] can cause severe lacerations or amputation. Recommended action: Reinstall the guard before next use and tag the machine out of service until then.
+Hazard communication — Title: Safety Data Sheets missing in [area]. Requirement: REGULATION – 29 CFR 1910.1200(g)(8): SDSs readily accessible to employees in their work areas during each shift. Risk: Employees may not have hazard and first-aid information during a spill or exposure. Recommended action: Add the missing SDSs and reconcile the binder against the area's chemical inventory.
+Lockout/tagout — Title: Lockout locks without employee identification. Requirement: REGULATION – 29 CFR 1910.147(c)(5)(ii)(D): lockout devices indicate the identity of the employee applying them. Risk: A lock may be removed by the wrong person, or the person who applied it cannot be identified. Recommended action: Label all locks with the assigned employee's name and audit lock assignments quarterly.
+Housekeeping — Title: Trip hazard at [location]. Requirement: REGULATION – 29 CFR 1910.22(a)(1): workplaces kept clean, orderly and sanitary. Recommended action: Remove the hazard and add the area to the daily housekeeping check.`,
+  carryover: ["Northgate Supply Co.", "Harbor Point Distribution Center", "1200 Example Way", "Anytown, VA", "Pat Rivera", "SA-2026-014", "SA-2025-031", "March 4, 2026", "March 9, 2026", "Forklift #3", "Aisle 12", "North dock"],
+  limitationsText: "",
+  exportNames: { report: "Safety Audit Report", qa: "Consultant QA Sheet" }
+};
+/* ======================= END OF PER-CLIENT CONFIG ======================= */
+
+/* Optional presets published beside this page (e.g. presets/sscvr.json). The client copy ships without them. */
+const PRESET_FILES = ["presets/construction-audit.json", "presets/iso9001-audit.json", "presets/ops-assessment.json", "presets/osha-audit.json", "presets/site-brief.json"];
+
+/* ---------------- utilities ---------------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID().replace(/-/g, "").slice(0, 12) : Math.random().toString(36).slice(2, 14));
+const nowISO = () => new Date().toISOString();
+const fmtDate = iso => { try { return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }); } catch { return ""; } };
+const fmtTime = iso => { try { return new Date(iso).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }); } catch { return ""; } };
+const clone = o => JSON.parse(JSON.stringify(o));
+const arr = v => Array.isArray(v) ? v : [];
+const str = v => (v == null ? "" : typeof v === "string" ? v : typeof v === "number" ? String(v) : JSON.stringify(v));
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200); }
+function hl(text) { return esc(text).replace(/\[(?:name )?needed\]/gi, m => `<span class="need-txt">${m}</span>`).replace(/\(unverified\)/gi, m => `<span class="unv-txt">${m}</span>`); }
+function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch { return false; } }
+function lsDel(k) { try { localStorage.removeItem(k); } catch { } }
+
+/* ---------------- state ---------------- */
+const PRESETS = { [ENGINE_CONFIG.id]: ENGINE_CONFIG };
+const S = { jobs: [], job: null, tab: "findings", store: "device", uid: null, db: null, saving: false, dirty: false, presetsLoaded: false, page: "home", profile: {}, savedAt: null, confirmDel: null, confirmRebuild: false, focus: null, libId: null };
+const CFG = () => (S.job && PRESETS[S.job.presetId]) || ENGINE_CONFIG;
+const STEPS = [
+  { n: 1, t: "Job details", s: "Client and visit facts" },
+  { n: 2, t: "Notes & photos", s: "Upload or paste" },
+  { n: 3, t: "Findings", s: "Answer, rate, approve" },
+  { n: 4, t: "Draft", s: "Read and edit" },
+  { n: 5, t: "Quality check", s: "Pass / fix list" },
+  { n: 6, t: "Download", s: "Word files" }
+];
+function newJob(presetId) {
+  return { id: uid(), presetId: presetId || ENGINE_CONFIG.id, created: nowISO(), updated: nowISO(), step: 1, jobSheet: {}, sources: [],
+    intake: null, interview: [], round: 0, approved: false, approvedAt: null, draft: null, draftAt: null, jobSheetAtDraft: null,
+    qa: null, qaAt: null, signoff: { conflicts: false, scope: false, release: false }, finalCheck: null, editedAt: null, extraPhotos: 0 };
+}
+function jobTitle(j) { const c = PRESETS[j.presetId] || ENGINE_CONFIG; const v = (j.jobSheet || {})[c.titleField] || (j.jobSheet || {}).project; return (v && v.trim()) || "Untitled job"; }
+
+/* ---------------- persistence (db per viewer, device fallback) ---------------- */
+async function initStore() {
+  try {
+    if (window.claude && claude.use) {
+      const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+      if (db && user) { const id = await user.id(); if (id) { S.db = db; S.uid = id; S.store = "account"; } }
+    }
+  } catch (e) { S.db = null; }
+}
+function jobsColl() { return S.db.collection("data/users/" + S.uid); }
+async function loadJobs() {
+  let jobs = [];
+  if (S.db) {
+    try {
+      const snap = await Promise.race([jobsColl().get(), new Promise((_, r) => setTimeout(() => r({ code: "timeout" }), 10000))]);
+      snap.docs.forEach(d => { const v = d.data(); if (d.id === "profile" && v) S.profile = v; else if (v && v.id && d.id.startsWith("job-")) jobs.push(v); });
+    } catch (e) { S.store = "device"; S.db = null; }
+  }
+  if (!S.db) { try { jobs = JSON.parse(lsGet("re.jobs") || "[]"); } catch { jobs = []; } }
+  if (!S.profile || !Object.keys(S.profile).length) { try { S.profile = JSON.parse(lsGet("re.profile") || "{}"); } catch { S.profile = {}; } }
+  jobs.sort((a, b) => String(b.updated).localeCompare(String(a.updated)));
+  S.jobs = jobs;
+}
+let saveTimer = null;
+function markDirty() { if (!S.job) return; S.job.updated = nowISO(); S.dirty = true; setSaveChip("Saving…"); clearTimeout(saveTimer); saveTimer = setTimeout(saveJob, 1200); }
+async function saveJob() {
+  if (!S.job || !S.dirty) return;
+  if (S.saving) { clearTimeout(saveTimer); saveTimer = setTimeout(saveJob, 800); return; }
+  S.saving = true; S.dirty = false;
+  const j = clone(S.job);
+  const size = new Blob([JSON.stringify(j)]).size;
+  const i = S.jobs.findIndex(x => x.id === j.id); if (i >= 0) S.jobs[i] = j; else S.jobs.unshift(j);
+  let where = "device";
+  if (S.db && size < 240000) {
+    try { await jobsColl().doc("job-" + j.id).set(j); where = "account"; }
+    catch (e) { where = "device"; }
+  }
+  if (where === "device") { lsSet("re.jobs", JSON.stringify(S.jobs)); }
+  lsSet("re.last", j.id);
+  S.saving = false;
+  S.savedAt = nowISO();
+  setSaveChip((where === "account" ? "Saved " : "Saved on this device ") + new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) + (size >= 240000 && where !== "account" ? " (job too large for account storage)" : ""));
+  renderNext();
+}
+async function deleteJob(id) {
+  S.jobs = S.jobs.filter(j => j.id !== id);
+  if (S.db) { try { await jobsColl().doc("job-" + id).delete(); } catch { } try { const sn = await photosColl(id).get(); await Promise.all(sn.docs.map(dc => photosColl(id).doc(dc.id).delete())); } catch { } }
+  lsSet("re.jobs", JSON.stringify(S.jobs.filter(j => true)));
+  if (S.job && S.job.id === id) { S.job = S.jobs[0] ? clone(S.jobs[0]) : null; }
+}
+function setSaveChip(t) { $("#saveChip").textContent = t; }
+
+/* ---------------- Claude (sample capability) ---------------- */
+let samplePromise = null;
+function getSample() { if (!samplePromise) samplePromise = (window.claude && claude.use) ? claude.use("sample").catch(() => null) : Promise.resolve(null); return samplePromise; }
+const ERR = {
+  not_granted: "Claude isn't allowed for this app yet. Allow it from the app's permissions, then try again.",
+  sampling_disabled: "Claude isn't available on this account.",
+  rate_limited: "Your Claude usage limit or rate limit was reached. Wait a few minutes, then try again.",
+  session_expired: "You're signed out. Sign in to Claude again, then retry.",
+  prompt_too_large: "The notes are too long for one pass. Remove or shorten a source, then retry.",
+  refused: "Claude declined this request. Check the notes for anything off-topic, then retry.",
+  invalid_json: "Claude's answer came back in the wrong shape. Try again.",
+  empty_completion: "Claude returned nothing. Try again.",
+  upstream_error: "The connection to Claude dropped. Try again.",
+  unavailable: "Claude isn't reachable from this view. Open the app in claude.ai.",
+  image_rejected: "That image couldn't be read. Try a clearer photo or a different file type.",
+  images_unavailable: "Photos can't be read in this view. Type or paste the notes instead."
+};
+let activeCtl = null;
+function showBusy(label, sub) {
+  const o = $("#overlay"); o.hidden = false; o.className = "overlay";
+  o.innerHTML = `<div class="dialog" role="dialog" aria-live="polite"><div class="row" style="gap:12px;align-items:flex-start"><div class="spin" style="margin-top:3px"></div><div style="flex:1;min-width:0"><h3>${esc(label)}</h3><div class="muted small" id="busySub">${esc(sub || "Claude is thinking. Long jobs can take a minute or two.")}</div><div class="mono muted" id="busyT" style="margin-top:8px">0 s</div></div></div><div class="row end" style="margin-top:14px"><button class="btn" id="busyStop">Stop</button></div></div>`;
+  const t0 = Date.now(); showBusy._iv = setInterval(() => { const el = $("#busyT"); if (el) el.textContent = Math.round((Date.now() - t0) / 1000) + " s"; }, 1000);
+  $("#busyStop").onclick = () => activeCtl && activeCtl.abort();
+}
+function hideBusy() { clearInterval(showBusy._iv); const o = $("#overlay"); o.hidden = true; o.innerHTML = ""; }
+async function askJSON(label, prompt, opts = {}) {
+  const sample = await getSample();
+  if (!sample) throw { code: "unavailable" };
+  activeCtl = new AbortController();
+  showBusy(label, opts.sub);
+  try {
+    const v = await sample.json(prompt, { modelTier: opts.tier || "default", signal: activeCtl.signal, cache: false,
+      onText: ({ text }) => { const el = $("#busySub"); if (el) el.textContent = "Writing… " + text.length.toLocaleString() + " characters so far"; } });
+    return v;
+  } finally { hideBusy(); activeCtl = null; }
+}
+async function askText(label, prompt, opts = {}) {
+  const sample = await getSample();
+  if (!sample) throw { code: "unavailable" };
+  activeCtl = new AbortController();
+  showBusy(label, opts.sub);
+  try { const r = await sample(prompt, { modelTier: opts.tier || "default", signal: activeCtl.signal, cache: false, images: opts.images }); return r.text; }
+  finally { hideBusy(); activeCtl = null; }
+}
+if (window.RE_HOST) Object.assign(ERR, { unavailable: "Can't reach the server. Check your connection, then try again.", session_expired: "Your sign-in ended. Sign in again with your beta code.", not_granted: "Claude isn't available for this account. Tell the person who invited you." });
+function errMsg(e) { if (e && e.code === "cancelled") return null; if (window.RE_HOST && e && e.message) return e.message; return (e && ERR[e.code]) || (e && e.message) || "Something went wrong. Try again."; }
+
+/* ---------------- consultant profile: set once, used on every report ---------------- */
+const PROFILE_FIELDS = [
+  { key: "company", label: "Company name" },
+  { key: "name", label: "Your name (you sign the reports)" },
+  { key: "credentials", label: "Credentials (e.g. CSP, CHST, Lead Auditor)" },
+  { key: "title", label: "Title (e.g. Principal Consultant)" },
+  { key: "phone", label: "Phone" },
+  { key: "email", label: "Email" },
+  { key: "web", label: "Website or business address", wide: true }
+];
+function profile() { return S.profile || {}; }
+function consultantInfo() {
+  const k = CFG().consultant || {}; const p = profile();
+  const name = p.name || (S.job && S.job.sample ? "Sample Consultant" : "");
+  return { name, credentials: p.credentials || "", firm: p.company || (S.job && S.job.sample ? "Sample Consulting Group" : ""), title: p.title || "", phone: p.phone || "", email: p.email || "", web: p.web || "", logo: p.logo || null, fallbackName: k.name };
+}
+function profileReady() { const p = profile(); return !!((p.company || "").trim() && (p.name || "").trim()); }
+function preparedBy() { const k = consultantInfo(); return (k.name ? k.name + (k.credentials ? ", " + k.credentials : "") : "[needed]") + (k.firm ? " – " + k.firm : ""); }
+function signatureBlock() {
+  const p = profile(); if ((p.signature || "").trim()) return p.signature.trim();
+  const k = consultantInfo();
+  return [k.name ? k.name + (k.credentials ? ", " + k.credentials : "") : "[needed]", k.title, k.firm, [k.phone, k.email].filter(Boolean).join(" · "), k.web].filter(Boolean).join("\n");
+}
+function assistLine() { const k = consultantInfo(); return `This report was drafted with AI assistance and was reviewed, edited and approved by ${k.name || "the consultant"}, who is responsible for its content.`; }
+function assistShort() { const k = consultantInfo(); return `Drafted with AI assistance; reviewed and approved by ${k.name || "the consultant"}.`; }
+let profTimer = null;
+function saveProfileSoon() { clearTimeout(profTimer); setSaveChip("Saving…"); profTimer = setTimeout(saveProfile, 700); }
+async function saveProfile() {
+  const p = clone(profile()); let where = "device";
+  if (S.db) { try { await jobsColl().doc("profile").set(p); where = "account"; } catch { } }
+  lsSet("re.profile", JSON.stringify(p));
+  setSaveChip((where === "account" ? "Saved " : "Saved on this device ") + new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }));
+}
+function libState(c) {
+  const L = c.citationLibrary; if (!L || !arr(L.entries).length) return null;
+  const v = (profile().libVerified || {})[c.id];
+  if (v && v.version === (L.title || "")) return { verified: true, on: v.on, by: v.by };
+  return { verified: L.status !== "draft", on: L.checkedOn, by: L.checkedBy };
+}
+/* cover lines: the app owns "Prepared by" so it always matches Your details */
+function coverLines(d) {
+  const out = []; arr(d && d.cover).forEach((x, i) => { if (!/^prepared by/i.test(String(x.label || "").trim())) out.push({ label: x.label, value: x.value, i }); });
+  out.push({ label: "Prepared by", value: preparedBy(), i: null });
+  return out;
+}
+/* placeholders still in the draft: [needed], (unverified), (pending scope answer) */
+const PH_RE = /\[(?:name )?needed\]|\(unverified\)|\(pending scope answer\)/gi;
+function findPlaceholders(j) {
+  const d = j && j.draft; const out = []; if (!d) return out;
+  const scan = (text, where, anchor) => { const m = String(text || "").match(PH_RE); if (m) out.push({ where, anchor, n: m.length, what: [...new Set(m.map(x => x.toLowerCase()))].join(", ") }); };
+  scan(d.title, "Report title", "rep-top");
+  coverLines(d).forEach(x => scan(x.value, "Cover: " + x.label, x.i == null ? "profile" : "rep-top"));
+  arr(d.sections).forEach((s, si) => {
+    scan(s.heading, s.heading, "sec-" + si);
+    arr(s.blocks).forEach(b => {
+      const a = b.type === "finding" ? "f-" + b.id : "sec-" + si; const w = b.type === "finding" ? `${b.id} ${b.title || ""}` : s.heading;
+      if (b.type === "p") scan(b.text, w, a);
+      else if (b.type === "bullets") scan(arr(b.items).join(" "), w, a);
+      else if (b.type === "table") scan(arr(b.rows).map(r => arr(r).join(" ")).join(" "), w, a);
+      else if (b.type === "finding") scan([b.title, ...arr(b.parts).map(p => p.text)].join(" "), w, a);
+    });
+  });
+  const k = computeScore(CFG(), j); if (k && k.pct == null) out.push({ where: "Compliance score", anchor: "score", n: 1, what: "category ratings" });
+  if (!profileReady()) out.push({ where: "Your details (name and company)", anchor: "profile", n: 1, what: "[needed]" });
+  return out;
+}
+function qaStale(j) { return !!(j.qa && j.qaAt && ((j.editedAt && j.editedAt > j.qaAt) || (j.draftAt && j.draftAt > j.qaAt))); }
+/* ---------------- knowledge text for prompts ---------------- */
+function citeKey(x) { return String(x || "").replace(/§/g, "").replace(/\bpart\b/gi, "").replace(/\bno\.?/gi, "").replace(/\s+/g, "").toUpperCase().replace(/^\d{2}CFR/, ""); }
+function citationTable(c) {
+  const L = c.citationLibrary;
+  if (!L || !arr(L.entries).length) return "This report type cites no regulations or standards. Write requirement lines only where the template asks for them; never cite a regulation or standard.";
+  const st = libState(c);
+  const rows = L.entries.map(e => `- ${e.topic} | ${e.cite}${arr(e.aliases).length ? " (also written " + e.aliases.join(", ") + ")" : ""} | ${e.requires} | ${e.type || "Regulation"} | ${e.note || ""}`).join("\n");
+  const pol = arr(L.clientPolicy).length ? "\nClient-policy entries:\n" + L.clientPolicy.map(p => `- ${p.topic} | ${p.rule} | ${p.source} | ${p.date || ""}`).join("\n") : "\nClient-policy entries: none recorded in the library (use the job sheet's client-policy field).";
+  return `${L.title}. Checked ${(st && st.on) || L.checkedOn || "[not yet]"}.${st && !st.verified ? " Status: DRAFT, not yet verified by the consultant." : ""} Rule: ${L.rule}\nTopic | Cite | What it requires | Type | Scope trigger / note\n${rows || "(no entries)"}${pol}`;
+}
+function jobSheetText(c, j) {
+  const js = j.jobSheet || {};
+  const lines = c.jobSheetFields.map(f => `- ${f.label}: ${(js[f.key] || "").trim() || "[needed]"}`);
+  const k = consultantInfo();
+  lines.push(`- Consultant (prepared by): ${k.name || "[needed]"}${k.credentials ? ", " + k.credentials : ""}`);
+  lines.push(`- Consultant firm: ${k.firm || "[needed]"}`);
+  return lines.join("\n");
+}
+function rulesText(c) {
+  return c.projectRules.replace(/\[REPORT TYPE\]/g, c.reportType).replace(/\[CONSULTANT NAME\]/g, consultantInfo().name || "the consultant").replace(/\[CLIENT ID\]/g, c.engineId);
+}
+function qaText(c) { return c.qaChecks.map(q => `${q.n}. ${q.name}: ${q.rule}`).join("\n") + `\nRelease gate: ${c.releaseGate}`; }
+function sourcesText(j) {
+  return j.sources.map((s, i) => `--- SOURCE ${i + 1}: "${s.name}" | type: ${s.kind} | status: ${s.status} ---\n${s.text}`).join("\n\n");
+}
+function interviewText(j) {
+  const qa = j.interview.filter(q => q.answer && q.answer.trim());
+  if (!qa.length) return "(no answers yet)";
+  return qa.map(q => `[${q.id}] (${q.kind}, round ${q.round}) Q: ${q.question}\nA (consultant): ${q.answer}`).join("\n");
+}
+function columnsSpec(c) { return c.columns.map(col => `"${col.key}"` + (col.options ? ` (one of: ${col.options.join(" | ")})` : "") + ` = ${col.label}`).join("; "); }
+
+/* ---------------- prompts ---------------- */
+function promptFindings(j, answersOnly) {
+  const c = CFG();
+  const prev = j.intake ? JSON.stringify(stripIntake(j.intake)) : "none (first pass)";
+  return `You are the Report Engine, running the FINDINGS BUILDER for one ${c.reportType} job. This is round ${j.round + 1}.
+
+STANDING RULES (follow exactly):
+${rulesText(c)}
+
+INPUTS RULE: ${c.inputsRule}
+
+JOB SHEET (the only source of job facts):
+${jobSheetText(c, j)}
+
+VERIFIED CITATION LIBRARY:
+${citationTable(c)}
+
+QA RULES (the draft will be checked against these):
+${qaText(c)}
+
+INTAKE TEMPLATE:
+${c.intakeTemplate}
+
+BLANK TEMPLATE (interview one section at a time, only about gaps):
+${c.blankTemplate}
+
+ID RULES: ${c.idRules}
+${c.scorecard ? `
+AUDIT CATEGORIES (set each ${c.itemNoun}'s "category" to one of these, exactly as written): ${scoreRows(c, j).map(r => r.cat).join(" | ")}
+` : ""}
+FIELD-NOTE SOURCES:
+${sourcesText(j) || "(none)"}
+
+INTERVIEW SO FAR (consultant answers are facts you may use):
+${interviewText(j)}
+
+PREVIOUS INTAKE STATE (update it; keep IDs stable; keep consultant-edited cell values exactly as they are):
+${prev}
+
+DO THIS:
+1. Pull every ${c.itemNoun} the inputs support, one row per distinct condition. Use only facts in the sources, the job sheet and the consultant's answers. Never invent names, dates, measurements or facts; write [needed].
+${c.findingRules ? c.findingRules : `2. Requirement source: cite a library section only when the observed condition actually breaks what it requires. A rule that comes from the client is ${arr(c.requirementLabels)[1] || "CLIENT POLICY"} (name the document, or [needed]), never a regulation. If the requirement is met and the issue is a best practice, make it a ${c.recommendationSource} with no cite. If no library entry fits, write the cite followed by " (unverified)".
+3. Scope triggers (conditional standards in the library notes): ask them as questions before the cite is used. Until answered, the row's cite ends with " (pending scope answer)".`}
+4. ${c.injuryQuestions === false ? `Safety incidents, injuries or legal claims mentioned in the notes are not ${c.itemNoun}s unless the template says so: list them under "injury" and ask the consultant how to handle them.` : `Injury, treatment, near-miss or unlogged-incident mentions are never ${c.itemNoun}s: list them under "injury" and ask about them. Ask ALL injury questions in the first round, before other gaps.`}
+5. Every disagreement between sources (counts, measurements, dates, names, checklist vs statements, training status) goes in "conflicts". Nothing is resolved silently. A conflict the consultant has resolved in an answer gets that resolution.
+6. Names: never expand initials or partial names. List each name as written and how the report must refer to it (job title or [name needed]).
+7. Every note line that is not a ${c.itemNoun}, conflict or question goes in "notesNotUsed" with a one-line reason.
+8. A document the consultant does not have is a question for the client, never a ${c.itemNoun}.
+9. Repeat claims without the prior report say "per client; prior report not reviewed".
+10. Evidence from a source whose status is not "received and reviewed" carries "(not reviewed)".
+11. Questions: ask only about gaps that change the report, short, at most 3 this round, from one Blank Template section at a time. Never re-ask an answered question. kind is one of "injury", "scope", "gap", "client". Never ask for a rating or risk index: the consultant sets those in the table.${j.round >= 2 ? " This is a late round: ask only about a gap that would leave a wrong statement in the report. Anything that can stay [needed] stays [needed]; do not ask about it." : ""} When nothing that matters is left, return "questions": [] and "done": true.
+12. Never assign a risk rating. Leave "${c.ratingKey}" as "[needed]" unless the PREVIOUS INTAKE STATE already holds the consultant's rating; then keep it.
+13. "action" says the immediate action the rule requires (e.g. out of service now), or "" if none.${c.columns.some(x => x.key === "due" || x.key === "owner") ? `
+14. "owner" and "due" come only from a source or the consultant's answers; otherwise "[needed]". Never pick a due date yourself.` : ""}
+
+Reply with ONLY one JSON object, no prose:
+{"items":[{ ${columnsSpec(c)}, "action": string, "note": string }],
+ "packet":[{"item":string,"type":string,"status":string,"notes":string}],
+ "conflicts":[{"id":"C-1","item":string,"source1":string,"source2":string,"owner":string,"resolution":string}],
+ "names":[{"asWritten":string,"useInReport":string}],
+ "notesNotUsed":[{"note":string,"reason":string}],
+ "injury":[{"note":string,"status":"asked"|"answered"}],
+ "scopeTriggers":[{"topic":string,"question":string,"answer":string}],
+ "questions":[{"kind":"injury"|"scope"|"gap"|"client","section":string,"question":string}],
+ "done": boolean}`;
+}
+function stripIntake(I) { const o = clone(I); arr(o.items).forEach(it => { delete it._edits; }); delete o.questions; return o; }
+
+function promptDraft(j, findings) {
+  const c = CFG(); const I = j.intake || {};
+  const counts = computeCounts(findings);
+  return `You are the Report Engine. Write the CLIENT REPORT draft for one ${c.reportType} job.
+
+STANDING RULES (follow exactly):
+${rulesText(c)}
+
+JOB SHEET (every job-specific detail comes from here; missing = [needed]):
+${jobSheetText(c, j)}
+
+BLANK TEMPLATE (structure; follow its sections and order):
+${c.blankTemplate}
+
+STYLE RULES (voice):
+${c.styleRules}
+
+FINDINGS LIBRARY (reuse wording where it fits):
+${c.findingsLibrary}
+
+VERIFIED CITATION LIBRARY (only these may be cited; anything else "(unverified)"):
+${citationTable(c)}
+
+APPROVED ${c.itemNoun.toUpperCase()}S TABLE (approved by the consultant; ratings are the consultant's own; use exactly these IDs and ratings, write nothing that is not here or in the job sheet):
+${JSON.stringify(findings)}
+
+COUNTS BY RATING (computed by the app from the approved table): ${JSON.stringify(counts)}${scoreText(c, j)}${ratesText(c, j)}
+
+CARRYOVER LIST (values from other jobs; never write any of them unless the job sheet also has it): ${JSON.stringify(c.carryover)}
+
+INTAKE (for names, packet and repeat handling; do NOT put conflicts, questions or notes-not-used into the client report):
+names: ${JSON.stringify(arr(I.names))}
+packet: ${JSON.stringify(arr(I.packet))}
+
+CONSULTANT ANSWERS:
+${interviewText(j)}
+
+OUTPUT: the client report only, ending at the last appendix. No QA results, no conflicts register, no questions. Do not write a "Prepared by" cover line, a signature block or a statement about AI assistance: the app adds those from the consultant's profile. Where the template calls for the rating counts table, put a block {"type":"counts"} and the app will build it.${c.scorecard ? ` Where it calls for the compliance scorecard, put a block {"type":"scorecard"} and the app will build the table and the overall line.` : ""} Each ${c.itemNoun} is one block of type "finding" with its labeled parts in template order. Recommendations use type "finding" with their Rec-n id and rating "". Write [needed] for anything missing. The cover lines come from the job sheet.
+
+Reply with ONLY one JSON object:
+{"title": string,
+ "cover":[{"label":string,"value":string}],
+ "sections":[{"heading":string,"blocks":[
+   {"type":"p","text":string} |
+   {"type":"bullets","items":[string]} |
+   {"type":"table","headers":[string],"rows":[[string]]} |
+   {"type":"counts"} |${c.scorecard ? `
+   {"type":"scorecard"} |` : ""}
+   {"type":"finding","id":string,"title":string,"rating":string,"repeat":boolean,"parts":[{"label":string,"text":string}]}
+ ]}]}`;
+}
+function promptEdit(j, request) {
+  const c = CFG();
+  return `You are the Report Engine. Apply the consultant's requested change to this ${c.reportType} client report draft and return the whole updated draft.
+
+STANDING RULES: ${rulesText(c)}
+STYLE RULES: ${c.styleRules}
+JOB SHEET:
+${jobSheetText(c, j)}
+VERIFIED CITATION LIBRARY:
+${citationTable(c)}
+
+CURRENT DRAFT (JSON):
+${JSON.stringify(j.draft)}
+
+CONSULTANT'S REQUEST:
+${request}
+
+Change only what the request asks, plus anything that must change with it (e.g. a job-sheet value everywhere it appears). Add no facts that are not in the job sheet, the draft or the request. Keep the same JSON shape and block types. Reply with ONLY the JSON object.`;
+}
+function promptQA(j, reportText, auto) {
+  const c = CFG(); const I = j.intake || {};
+  return `You are the Report Engine's QA checker for one ${c.reportType} job. Run all ${c.qaChecks.length} checks on the client report text below.
+
+STANDING RULES: ${rulesText(c)}
+
+QA RULES ${c.qaVersion}:
+${qaText(c)}
+
+JOB SHEET:
+${jobSheetText(c, j)}
+
+VERIFIED CITATION LIBRARY:
+${citationTable(c)}
+
+CARRYOVER LIST: ${JSON.stringify(c.carryover)}
+
+APPROVED ${c.itemNoun.toUpperCase()}S TABLE: ${JSON.stringify(approvedItems(j))}${scoreText(c, j)}${ratesText(c, j)}
+INTAKE: packet ${JSON.stringify(arr(I.packet))}; conflicts ${JSON.stringify(arr(I.conflicts))}; names ${JSON.stringify(arr(I.names))}; notesNotUsed ${JSON.stringify(arr(I.notesNotUsed))}; injury ${JSON.stringify(arr(I.injury))}; scopeTriggers ${JSON.stringify(arr(I.scopeTriggers))}
+CONSULTANT ANSWERS:
+${interviewText(j)}
+OPEN QUESTIONS NOT YET ANSWERED: ${JSON.stringify(j.interview.filter(q => !(q.answer || "").trim()).map(q => q.question))}
+
+ORIGINAL FIELD NOTES (for check 4 and 10):
+${sourcesText(j)}
+
+CHECKS ALREADY COMPUTED BY THE APP (report these exactly as given): ${JSON.stringify(auto)}
+
+CLIENT REPORT TEXT:
+<<<
+${reportText}
+>>>
+
+For each check: quote the ${c.itemNoun} IDs it concerns and check them against the report text. Never mark a check pass on a fact the report does not support. status is "pass" or "flag". For a flag, "detail" says in one plain sentence what to fix, and "where" names the ${c.itemNoun} ID or the exact section heading where the fix goes ("" if it is not in one place). Then write the Report Summary.
+
+Reply with ONLY one JSON object:
+{"checks":[{"n":number,"status":"pass"|"flag","ids":[string],"detail":string,"where":string}],
+ "summary":{"openHazards":[string],"dataMismatches":[string],"citationsToConfirm":[string],"questions":[string],"notesNotUsed":[string]}}`;
+}
+function promptPhoto(name) {
+  return `This image ("${name}") should be a photo of handwritten or printed field notes or a checklist. Transcribe only the words, numbers and checkbox marks written on it, line by line, exactly as written. Keep uncertain words as written with [?] after them. Do not describe the scene, equipment, people or conditions in the photo, and do not analyze anything. If the image is a site photo, drawing or anything other than notes or a checklist, reply with exactly: NOT_NOTES`;
+}
+
+/* ---------------- domain logic ---------------- */
+function approvedItems(j) { return arr(j.intake && j.intake.items).map(it => { const o = { ...it }; delete o._edits; return o; }); }
+function isRec(it) { const c = CFG(); return (it.source || "").toUpperCase() === (c.recommendationSource || "").toUpperCase() || /^rec-/i.test(it.id || ""); }
+function computeCounts(items) {
+  const c = CFG(); const counts = {}; c.countRatings.forEach(r => counts[r] = 0); let total = 0, needed = 0;
+  const grp = c.ratingGroups || null;
+  items.filter(it => !isRec(it)).forEach(it => { const v = it[c.ratingKey]; const r = grp ? Object.keys(grp).find(g => grp[g].includes(v)) : v; if (r && r in counts) { counts[r]++; total++; } else needed++; });
+  counts.Total = total; if (needed) counts["Not rated yet"] = needed; return counts;
+}
+function mergeIntake(prev, next) {
+  const c = CFG();
+  const out = { items: [], packet: arr(next.packet), conflicts: arr(next.conflicts), names: arr(next.names), notesNotUsed: arr(next.notesNotUsed), injury: arr(next.injury), scopeTriggers: arr(next.scopeTriggers), done: !!next.done };
+  const prevById = {}; arr(prev && prev.items).forEach(it => prevById[it.id] = it);
+  arr(next.items).forEach((raw, i) => {
+    const it = {}; c.columns.forEach(col => it[col.key] = str(raw[col.key]).trim());
+    it.action = str(raw.action); it.note = str(raw.note);
+    if (!it.id) it.id = "F-" + (i + 1);
+    const p = prevById[it.id];
+    if (p) { arr(p._edits).forEach(k => it[k] = p[k]); it._edits = arr(p._edits).slice(); if (p[c.ratingKey] && p[c.ratingKey] !== "[needed]") it[c.ratingKey] = p[c.ratingKey]; }
+    const rcol = c.columns.find(x => x.key === c.ratingKey);
+    if (!p || !p[c.ratingKey] || p[c.ratingKey] === "[needed]") { if (!rcol.options.includes(it[c.ratingKey]) || !(p && arr(p._edits).includes(c.ratingKey))) it[c.ratingKey] = (p && p[c.ratingKey]) || "[needed]"; }
+    if (isRec(it)) it[c.ratingKey] = it[c.ratingKey] === "[needed]" ? "" : it[c.ratingKey];
+    out.items.push(it);
+  });
+  /* keep consultant-added rows the model dropped */
+  arr(prev && prev.items).forEach(p => { if (p._manual && !out.items.find(x => x.id === p.id)) out.items.push(p); });
+  return out;
+}
+function computeRates(c, j) {
+  const f = c.rateFields; if (!f) return null; const js = j.jobSheet || {};
+  const num = k => { const m = String(js[f[k]] || "").replace(/,/g, "").match(/\d+(?:\.\d+)?/); return m ? Number(m[0]) : null; };
+  const h = num("hours"), r = num("recordables"), d = num("dart");
+  const rate = v => (h && v != null) ? (v * 200000 / h).toFixed(2) : null;
+  return { hours: h, recordables: r, dart: d, trc: rate(r), dartRate: rate(d) };
+}
+function ratesText(c, j) { const k = computeRates(c, j); if (!k) return ""; return `\nINJURY RATES (computed by the app per 200,000 hours worked, from the job sheet; quote exactly, never recompute): TRC ${k.trc ?? "[needed]"}; DART ${k.dartRate ?? "[needed]"} (hours worked ${k.hours ?? "[needed]"}, recordable cases ${k.recordables ?? "[needed]"}, DART cases ${k.dart ?? "[needed]"}).`; }
+function scoreRows(c, j) {
+  const sc = c.scorecard; if (!sc) return [];
+  if (!j.scorecard || !Array.isArray(j.scorecard.rows)) j.scorecard = { rows: sc.categories.map(cat => ({ cat, level: "[needed]" })) };
+  return j.scorecard.rows;
+}
+function computeScore(c, j) {
+  const sc = c.scorecard; if (!sc) return null; const rows = scoreRows(c, j);
+  const lv = {}; sc.levels.forEach(l => lv[l.label] = l.value);
+  const out = rows.map(r => ({ cat: r.cat, level: r.level, value: Object.prototype.hasOwnProperty.call(lv, r.level) ? lv[r.level] : undefined }));
+  const unrated = out.filter(r => r.value === undefined).length;
+  const rated = out.filter(r => r.value !== undefined && r.value !== null);
+  const pct = rated.length ? rated.reduce((a, r) => a + r.value, 0) / rated.length : null;
+  const bands = sc.bands.slice().sort((a, b) => b.min - a.min);
+  const band = pct == null ? null : (bands.find(b => pct >= b.min) || bands[bands.length - 1]).label;
+  const ok = !unrated && pct != null;
+  return { rows: out, unrated, rated: rated.length, na: out.filter(r => r.value === null).length, pct: ok ? pct : null, pctTxt: ok ? pct.toFixed(1) + "%" : "[needed]", band: ok ? band : "[needed]" };
+}
+function scoreText(c, j) {
+  const k = computeScore(c, j); if (!k) return "";
+  return `\nCOMPLIANCE SCORECARD (the consultant's category ratings; score and risk rating computed by the app; quote exactly, never recompute): overall compliance ${k.pctTxt}, risk rating ${k.band}. ${k.rated} rated categories, ${k.na} not applicable${k.unrated ? ", " + k.unrated + " not rated yet" : ""}. Categories: ${k.rows.map(r => `${r.cat} = ${r.level}`).join("; ")}. Levels: ${c.scorecard.levels.map(l => `${l.label} ${l.value == null ? "(excluded)" : l.value}`).join(", ")}. Risk bands: ${c.scorecard.bands.map(b => `${b.label} at ${b.min}% or more`).join(", ")}.`;
+}
+function scoreTableRows(k) { return k.rows.map(r => [r.cat, r.level, r.value === undefined ? "[needed]" : r.value === null ? "N/A" : String(r.value)]); }
+function scoreLine(k) { return `Overall compliance: ${k.pctTxt} (${k.band}${k.band === "[needed]" ? "" : " risk"})`; }
+function countsLabel(c) { return c.countsLabel || "Rating"; }
+function draftToText(d) {
+  if (!d) return "";
+  const c = CFG(); const lines = [d.title || c.reportTitle];
+  coverLines(d).forEach(x => lines.push(`${x.label}: ${x.value}`));
+  arr(d.sections).forEach(s => {
+    lines.push("", s.heading);
+    arr(s.blocks).forEach(b => {
+      if (b.type === "p") lines.push(b.text);
+      else if (b.type === "bullets") arr(b.items).forEach(x => lines.push("• " + x));
+      else if (b.type === "table") { lines.push(arr(b.headers).join(" | ")); arr(b.rows).forEach(r => lines.push(arr(r).join(" | "))); }
+      else if (b.type === "counts") { const k = computeCounts(approvedItems(S.job)); lines.push(countsLabel(c) + " | Count"); Object.entries(k).forEach(([a, v]) => lines.push(`${a} | ${v}`)); }
+      else if (b.type === "scorecard") { const k = computeScore(c, S.job); if (k) { lines.push("Category | Rating | Score"); scoreTableRows(k).forEach(r => lines.push(r.join(" | "))); lines.push(scoreLine(k)); } }
+      else if (b.type === "finding") { lines.push(`${b.id} ${b.title}${b.rating ? " (" + b.rating + ")" : ""}${b.repeat ? " – REPEAT" : ""}`); arr(b.parts).forEach(p => lines.push(`${p.label}: ${p.text}`)); }
+    });
+  });
+  const caps = photoSlots(c).filter(sl => (S.job.photos || {})[sl.key]).map((sl, i) => `Photo ${i + 1}. ${captionOf(sl, S.job)}`);
+  if (caps.length) lines.push("", "Photo captions:", ...caps);
+  lines.push("", "Consultant sign-off", signatureBlock(), "Signature: ______________________   Date: ______________", assistLine());
+  return lines.join("\n");
+}
+function autoChecks(j, reportText, draft) {
+  const c = CFG(); const res = {}; const items = approvedItems(j);
+  for (const q of c.qaChecks) {
+    if (!q.auto) continue;
+    if (q.auto === "counts") {
+      const k = computeCounts(items);
+      const fs = draft ? arr(draft.sections).flatMap(s => arr(s.blocks)).filter(b => b.type === "finding" && !/^rec-/i.test(b.id || "")) : null;
+      const problems = [];
+      if (k["Not rated yet"]) problems.push(`${k["Not rated yet"]} item(s) have no consultant rating`);
+      if (fs) {
+        const ids = new Set(items.filter(x => !isRec(x)).map(x => x.id));
+        const inDraft = new Set(fs.map(b => b.id));
+        [...ids].filter(x => !inDraft.has(x)).forEach(x => problems.push(`${x} is in the approved table but not in the report`));
+        [...inDraft].filter(x => !ids.has(x)).forEach(x => problems.push(`${x} is in the report but not in the approved table`));
+        fs.forEach(b => { const it = items.find(x => x.id === b.id); if (it && it[c.ratingKey] !== (b.rating || "")) problems.push(`${b.id} rating in report (${b.rating || "none"}) differs from the approved table (${it[c.ratingKey]})`); });
+        const hasCounts = arr(draft.sections).some(s => arr(s.blocks).some(b => b.type === "counts"));
+        if (!hasCounts && c.countsBlock !== false) problems.push("the summary counts table is missing");
+      }
+      const sk = computeScore(c, j);
+      if (sk) {
+        if (sk.unrated) problems.push(`${sk.unrated} scorecard categor${sk.unrated > 1 ? "ies are" : "y is"} not rated, so the score shows [needed]`);
+        if (draft && !arr(draft.sections).some(s => arr(s.blocks).some(b => b.type === "scorecard"))) problems.push("the compliance scorecard is missing");
+        if (sk.pct != null) {
+          const pm = [...reportText.matchAll(/(?:overall|compliance score|compliance of)[^.%\n]{0,40}?(\d{1,3}(?:\.\d+)?)\s?%/gi)].map(m => Number(m[1]));
+          pm.filter(v => Math.abs(v - sk.pct) > 0.051 && v !== Math.round(sk.pct)).forEach(v => problems.push(`the text says ${v}% but the app's score is ${sk.pctTxt}`));
+          const bm = [...new Set([...reportText.matchAll(/\b(Minimal|Low|Moderate|Serious|Severe|Critical)\s+risk\b/gi)].map(m => m[1][0].toUpperCase() + m[1].slice(1).toLowerCase()))];
+          bm.filter(v => v !== sk.band).forEach(v => problems.push(`the text says "${v} risk" but the app's rating is ${sk.band}`));
+        }
+      }
+      res[q.n] = problems.length ? { status: "flag", ids: [], detail: problems.join("; ") } : { status: "pass", ids: [], detail: "Counts are built by the app from the approved table: " + Object.entries(k).map(([a, v]) => `${a} ${v}`).join(", ") + (sk ? `. ${scoreLine(sk)}, from ${sk.rated} rated categories.` : "") };
+    }
+    if (q.auto === "sections") {
+      const problems = []; const heads = draft ? arr(draft.sections).map(s => String(s.heading || "")) : [];
+      arr(c.requiredSections).forEach(r => {
+        const re = new RegExp(r.re, "i"); const si = heads.findIndex(h => re.test(h));
+        if (si < 0) { problems.push(`missing section: ${r.name}`); return; }
+        if (r.plan) { const txt = JSON.stringify(draft.sections[si].blocks || []); items.filter(it => !isRec(it)).forEach(it => { if (!new RegExp("\\b" + String(it.id).replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&") + "\\b").test(txt)) problems.push(`${it.id} is not in the ${r.name.toLowerCase()}`); }); }
+      });
+      if (c.columns.some(x => x.key === "due")) items.filter(it => !isRec(it) && /^serious$/i.test(it[c.ratingKey] || "") && (!(it.due || "").trim() || /\[needed\]/i.test(it.due))).forEach(it => problems.push(`${it.id} is Serious and has no correction due date`));
+      res[q.n] = problems.length ? { status: "flag", ids: [], detail: problems.join("; ") } : { status: "pass", ids: [], detail: `All ${arr(c.requiredSections).length} required sections are present.` + (c.columns.some(x => x.key === "due") ? " Every Serious finding has a due date." : "") };
+    }
+    if (q.auto === "labels") {
+      const bad = items.filter(it => !isRec(it) && !c.requirementLabels.some(l => (it.source || "").toUpperCase() === l));
+      let draftBad = [];
+      if (draft) draftBad = arr(draft.sections).flatMap(s => arr(s.blocks)).filter(b => b.type === "finding" && !/^rec-/i.test(b.id || "")).filter(b => { const req = arr(b.parts).find(p => /requirement/i.test(p.label)); return !req || !c.requirementLabels.some(l => (req.text || "").trim().toUpperCase().startsWith(l)); }).map(b => b.id);
+      const ids = [...new Set([...bad.map(b => b.id), ...draftBad])];
+      res[q.n] = ids.length ? { status: "flag", ids, detail: `Requirement line must start with ${c.requirementLabels.join(" or ")}: ${ids.join(", ")}` } : { status: "pass", ids: [], detail: "Every item is labeled " + c.requirementLabels.join(" or ") + "." };
+    }
+    if (q.auto === "citations") {
+      const L = c.citationLibrary; if (!L) { res[q.n] = { status: "pass", ids: [], detail: "This report type cites no regulations." }; continue; }
+      const re = new RegExp(L.citePattern, "gi");
+      const lib = new Set(L.entries.flatMap(e => [e.cite, ...arr(e.aliases)]).map(citeKey));
+      const found = [...new Set((reportText.match(re) || []).map(citeKey))];
+      const bad = found.filter(x => !lib.has(x));
+      const unv = /\(unverified\)/i.test(reportText);
+      const confirm = L.entries.filter(e => e.confirm && [e.cite, ...arr(e.aliases)].some(x => found.includes(citeKey(x)))).map(e => e.cite);
+      if (bad.length || unv) res[q.n] = { status: "flag", ids: [], detail: (bad.length ? `Not in the library: ${bad.join(", ")}. ` : "") + (unv ? "The report contains an (unverified) cite, which blocks release." : "") };
+      else res[q.n] = { status: "pass", ids: [], detail: found.length ? `${found.length} cite(s), all in the library.` + (confirm.length ? ` Library marks ${confirm.join(", ")} to re-confirm.` : "") : "No regulation cites in the report." };
+      res._confirm = confirm;
+    }
+    if (q.auto === "freshness") {
+      const st = libState(c);
+      if (st && !st.verified) { res[q.n] = { status: "flag", ids: [], where: "library", detail: "The citation library is a draft you have not verified yet. Open Your details, then Citation libraries, check each entry against the current official text, and mark it verified." }; continue; }
+      if (!st) { res[q.n] = { status: "pass", ids: [], detail: "The library has no regulation entries yet, so nothing can be stale. Any regulation cite is unverified and blocks release (check 8)." }; continue; }
+      const d = new Date(String(st.on).slice(0, 10) + "T12:00:00"); const ageDays = (Date.now() - d.getTime()) / 864e5;
+      if (isNaN(ageDays)) { res[q.n] = { status: "flag", ids: [], detail: "The library has no check date. Re-verify it before release." }; continue; }
+      res[q.n] = ageDays < 365 && ageDays > -2 ? { status: "pass", ids: [], detail: `Library checked ${fmtDate(d.toISOString())} (${Math.max(0, Math.round(ageDays))} days ago).` } : { status: "flag", ids: [], where: "library", detail: `Library check date ${st.on} is more than 12 months old. Re-verify before release.` };
+    }
+    if (q.auto === "carryover") {
+      const sheet = Object.values(j.jobSheet || {}).join(" \n ").toLowerCase(); const t = reportText.toLowerCase();
+      const hits = c.carryover.filter(x => x && t.includes(x.toLowerCase()) && !sheet.includes(x.toLowerCase()));
+      res[q.n] = hits.length ? { status: "flag", ids: [], detail: "Carryover values in the report: " + hits.join("; ") } : { status: "pass", ids: [], detail: `None of the ${c.carryover.length} carryover values appear outside the job sheet.` };
+    }
+  }
+  return res;
+}
+function gateState(j) {
+  const qa = (j.finalCheck && j.finalCheck.qa) || j.qa; if (!qa) return { open: false, reason: "Run the quality check first." };
+  if (!j.finalCheck && qaStale(j)) return { open: false, reason: "The draft changed after the last quality check. Run it again." };
+  const flags = qa.checks.filter(x => x.status !== "pass");
+  if (flags.length) return { open: false, reason: `${flags.length} item${flags.length > 1 ? "s need" : " needs"} a fix.`, flags };
+  const ph = findPlaceholders(j); if (ph.length) return { open: false, reason: `${ph.length} spot${ph.length > 1 ? "s" : ""} still need${ph.length > 1 ? "" : "s"} filling in (marked [needed] or (unverified)).`, ph };
+  if (!(j.signoff.conflicts && j.signoff.scope)) return { open: false, reason: "Tick the two sign-off boxes in the quality check." };
+  if (!j.signoff.release) return { open: false, reason: "Tick the approval box below: you reviewed the report and will sign and send it yourself." };
+  return { open: true, reason: "Ready to release. Sign it and send it yourself." };
+}
+function stepState(j, n) {
+  if (!j) return "locked";
+  const done = { 1: needCount(j) === 0, 2: j.sources.length > 0, 3: j.approved, 4: !!j.draft, 5: !!j.qa && !qaStale(j) && !(gateState(j).flags || []).length, 6: false };
+  const lockedBy = { 4: !j.approved, 5: !j.draft, 6: !j.draft };
+  if (lockedBy[n]) return "locked";
+  return done[n] ? "done" : "open";
+}
+function lockReason(j, n) {
+  if (n === 4) return { why: "The draft opens after you approve the findings.", fix: "In step 3, answer Claude's questions, rate each finding, then approve the table.", go: 3 };
+  if (n === 5 || n === 6) return j.approved ? { why: `${n === 5 ? "The quality check" : "Downloads"} open once the draft is written.`, fix: "In step 4, write the draft.", go: 4 } : { why: `${n === 5 ? "The quality check" : "Downloads"} open once the draft is written.`, fix: "First approve the findings in step 3, then write the draft in step 4.", go: 3 };
+  return null;
+}
+function needCount(j) { const c = PRESETS[j.presetId] || ENGINE_CONFIG; return c.jobSheetFields.filter(f => !((j.jobSheet || {})[f.key] || "").trim()).length; }
+/* ---------------- rendering ---------------- */
+function renderAll() { renderBar(); renderSteps(); renderView(); renderNext(); }
+function renderBar() {
+  const c = CFG(); const onJob = S.job && !S.page;
+  $("#brandSub").textContent = onJob ? c.reportType : "Skilled Edge";
+  $("#jobName").textContent = onJob ? jobTitle(S.job) + " · All reports" : "All reports";
+  $("#foot").textContent = `Engine ${c.engineId} · licensed by ${c.licensedBy}. The consultant reviews, approves, signs and sends every report.`;
+  $("#stepperBar").hidden = !onJob;
+}
+function renderSteps() {
+  const j = S.job; if (!j) { $("#steps").innerHTML = ""; return; }
+  $("#steps").innerHTML = STEPS.map(s => { const st = stepState(j, s.n); const cur = j.step === s.n; const lr = st === "locked" ? lockReason(j, s.n) : null;
+    return `<button class="step ${cur ? "cur" : ""} ${st === "done" ? "done" : ""} ${st === "locked" ? "locked" : ""}" data-step="${s.n}" aria-current="${cur ? "step" : "false"}" ${lr ? `title="${esc(lr.why)}"` : ""}><span class="n">${st === "done" && !cur ? "✓" : s.n}</span><span><span class="t">${s.t}</span><br><span class="s">${lr ? "Opens after step " + (s.n === 4 ? 3 : 4) : s.s}</span></span></button>`; }).join("");
+  const done = STEPS.filter(s => stepState(j, s.n) === "done").length;
+  $("#prog").style.width = (done / 6 * 100) + "%";
+}
+function renderView() {
+  const v = $("#view");
+  if (S.page === "profile") { v.innerHTML = viewProfile(); return; }
+  if (S.page === "library") { v.innerHTML = viewLibrary(); return; }
+  if (S.page === "home" || !S.job) { v.innerHTML = viewHome(); return; }
+  if (PHOTO.job !== S.job.id && !PHOTO.loading) loadPhotos(S.job);
+  if (stepState(S.job, S.job.step) === "locked") { v.innerHTML = viewLocked(S.job.step); return; }
+  const fn = { 1: viewJobSheet, 2: viewNotes, 3: viewFindings, 4: viewDraft, 5: viewQA, 6: viewExport }[S.job.step];
+  v.innerHTML = fn();
+  if (S.job.step === 1) bindJobSheet();
+  if (S.focus) { const id = S.focus; S.focus = null; requestAnimationFrame(() => { const el = document.getElementById(id); if (el) { el.scrollIntoView({ behavior: "smooth", block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2100); } }); }
+}
+function viewLocked(n) {
+  const lr = lockReason(S.job, n);
+  return `<div class="panel lockview"><div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="4" y="9" width="12" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></div><h2>Step ${n} isn't open yet</h2><p>${esc(lr.why)}</p><p class="small muted">${esc(lr.fix)}</p></div>`;
+}
+/* one clear next button per step */
+function nextAction(j) {
+  if (stepState(j, j.step) === "locked") { const lr = lockReason(j, j.step); return { label: "Go to step " + lr.go, go: lr.go, info: lr.why }; }
+  const c = CFG(); const st = j.step;
+  if (st === 1) { const n = needCount(j); return { label: "Next: notes and photos", go: 2, info: n ? `${n} field${n > 1 ? "s" : ""} still blank. Blanks show as [needed] in the draft; you can fill them later.` : "Job details complete." }; }
+  if (st === 2) return j.sources.length ? { label: j.intake ? "Next: findings" : "Next: read my notes", go: 3, run: j.intake ? null : "findings", info: `${j.sources.length} note${j.sources.length > 1 ? "s" : ""} added${photoCount(j) ? ", " + photoCount(j) + " photo" + (photoCount(j) > 1 ? "s" : "") : ""}.` } : { label: "Add notes to continue", disabled: true, info: "Upload or paste at least one set of field notes." };
+  if (st === 3) {
+    if (!j.intake) return { label: "Read my notes", run: "findings", info: `Claude reads your notes and builds the ${c.itemNoun}s table.` };
+    if (j.approved) return j.draft ? { label: "Next: the draft", go: 4 } : { label: "Next: write the draft", go: 4, run: "draft", info: "Findings approved." };
+    const openAll = j.interview.filter(q => !(q.answer || "").trim() && !q.skipped);
+    const open = openAll.filter(q => q.round === j.round);
+    if (openAll.some(q => q.kind === "injury") && !open.length) return { label: "Answer the injury questions", disabled: true, info: "Injury questions must be answered before you approve." };
+    if (open.length) return { label: "Send my answers", run: "answers", info: `${open.length} question${open.length > 1 ? "s" : ""} from Claude. Answer what you can; skip the rest.` };
+    const un = j.intake.items.filter(it => !isRec(it) && (!it[c.ratingKey] || it[c.ratingKey] === "[needed]")).length;
+    return { label: `Approve ${c.itemNoun}s and write the draft`, run: "approve", info: un ? `${un} ${c.itemNoun}${un > 1 ? "s are" : " is"} not rated yet; they show as [needed].` : "Check the table, then approve." };
+  }
+  if (st === 4) {
+    if (!j.draft) return { label: "Write the draft", run: "draft", info: "Built from the approved table and your job details only." };
+    return { label: "Next: quality check", go: 5, run: (!j.qa || qaStale(j)) ? "qa" : null, info: j.editedAt ? "Your edits are saved." : "Click any text in the draft to edit it." };
+  }
+  if (st === 5) {
+    if (!j.qa || qaStale(j)) return { label: "Run the quality check", run: "qa", info: qaStale(j) ? "The draft changed since the last check." : `${c.qaChecks.length} checks against the report text.` };
+    const g = gateState(j);
+    if (g.flags && g.flags.length) return { label: "Show the first fix", run: "firstfix", info: g.reason };
+    if (g.ph && g.ph.length) return { label: "Show the first blank", run: "firstblank", info: g.reason };
+    return { label: "Next: download Word files", go: 6, info: g.reason };
+  }
+  const g = gateState(j);
+  return { label: g.open ? "Download client report" : "Download a draft copy", run: "export", info: g.reason };
+}
+function renderNext() {
+  const nb = $("#nextbar"); const j = S.job;
+  if (!j || S.page) { nb.hidden = true; return; }
+  const a = nextAction(j); nb.hidden = false;
+  const back = j.step > 1 ? `<button class="btn" data-go="${j.step - 1}">Back</button>` : `<button class="btn" data-page="home">All reports</button>`;
+  $("#nextInner").innerHTML = `${back}<div class="info"><b>Step ${j.step} of 6 · ${esc(STEPS[j.step - 1].t)}</b><br>${esc(a.info || "")}</div><button class="btn primary" id="nextBtn" ${a.disabled ? "disabled" : ""}>${esc(a.label)}</button>`;
+  S.next = a;
+}
+async function runNext() {
+  const a = S.next; const j = S.job; if (!a || !j || a.disabled) return;
+  if (a.go) { j.step = a.go; markDirty(); renderAll(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  if (a.run === "findings") await runFindings();
+  else if (a.run === "answers") { collectAnswers(); if (!j.interview.some(q => q.round === j.round && (q.answer || "").trim())) { toast("Type an answer, or press Skip on a question you can't answer."); return; } await runFindings(); }
+  else if (a.run === "approve") { collectAnswers(); j.approved = true; j.approvedAt = nowISO(); j.step = 4; markDirty(); renderAll(); await buildDraft(); }
+  else if (a.run === "draft") await buildDraft();
+  else if (a.run === "qa") await runQA();
+  else if (a.run === "firstfix") { const f = gateState(j).flags[0]; goFix(fixTarget(j, f)); }
+  else if (a.run === "firstblank") { goFix(gateState(j).ph[0].anchor); }
+  else if (a.run === "export") await exportDoc("report");
+}
+function fixTarget(j, chk) {
+  const d = j.draft; if (!d) return null;
+  const fids = new Set(arr(d.sections).flatMap(s => arr(s.blocks)).filter(b => b.type === "finding").map(b => String(b.id)));
+  const id = arr(chk.ids).find(x => fids.has(String(x))) || (fids.has(String(chk.where || "").trim()) ? String(chk.where).trim() : null);
+  if (id) return "f-" + id;
+  if (chk.where === "library") return "library";
+  const w = String(chk.where || "").trim().toLowerCase();
+  if (w) { const si = arr(d.sections).findIndex(s => { const hd = String(s.heading || "").toLowerCase(); return hd && (hd.includes(w) || w.includes(hd)); }); if (si >= 0) return "sec-" + si; }
+  const m = String(chk.detail || "").match(/\b(?:F|Rec)-\d+\b/i); if (m && fids.has(m[0])) return "f-" + m[0];
+  return "rep-top";
+}
+function goFix(anchor) {
+  const j = S.job; if (!anchor) return;
+  if (anchor === "profile") { S.page = "profile"; renderAll(); return; }
+  if (anchor === "library") { S.page = "library"; S.libId = j.presetId; renderAll(); return; }
+  if (anchor === "score") { j.step = 3; S.tab = "score"; if (j.approved) toast("Reopen the findings table to rate the categories."); markDirty(); renderAll(); return; }
+  j.step = 4; S.dtab = "report"; S.focus = anchor; markDirty(); renderAll();
+}
+function head(title, sub, right = "") { return `<div class="head"><div><h1>${esc(title)}</h1>${sub ? `<p>${sub}</p>` : ""}</div><div class="row">${right}</div></div>`; }
+
+function presetGroups() { const all = Object.values(PRESETS); const feat = all.filter(p => p.featured).sort((a, b) => a.featured - b.featured); return { feat, more: all.filter(p => !p.featured) }; }
+function viewHome() {
+  const { feat, more } = presetGroups(); const host = window.RE_HOST;
+  const card = c => `<div class="panel tcard"><h2 style="margin:0">${esc(c.reportType)}</h2><p>${esc(c.blurb || c.reportTitle)}</p><div class="row"><button class="btn primary" data-new="${c.id}">Start a report</button>${c.sampleJob ? `<button class="btn" data-sample="${c.id}">See a finished sample</button>` : ""}</div></div>`;
+  const jobs = S.jobs.map(j => { const c = PRESETS[j.presetId] || ENGINE_CONFIG; const done = STEPS.filter(s => stepState(j, s.n) === "done").length;
+    return `<div class="jr"><div style="min-width:0"><b>${esc(jobTitle(j))}</b>${j.sample ? ` <span class="chip acc">Sample</span>` : ""}<div class="small muted">${esc(c.reportType)} · Step ${j.step} of 6: ${esc(STEPS[j.step - 1].t)} · saved ${esc(fmtTime(j.updated))}</div><div class="minibar" aria-hidden="true"><i style="width:${Math.round(done / 6 * 100)}%"></i></div></div><div class="row"><button class="btn" data-open="${j.id}">Resume</button><button class="btn ghost danger small" data-del="${j.id}">${S.confirmDel === j.id ? "Confirm delete" : "Delete"}</button></div></div>`; }).join("");
+  return head("Your reports", `Pick up where you left off, or start a new report. Every job saves as you work${S.store === "account" ? " to your account, so you can resume on another device" : " on this device"}.`, `<button class="btn" data-page="profile">Your details</button>${host ? `<button class="btn ghost" id="signOut">Sign out${host.name() ? " (" + esc(host.name()) + ")" : ""}</button>` : ""}`) +
+    (profileReady() ? "" : `<div class="notice info" style="margin-bottom:14px"><span style="flex:1">Add your company name, logo and signature block once. They go on every report you export.</span><button class="btn small" data-page="profile">Add your details</button></div>`) +
+    (S.jobs.length ? `<div class="panel" style="margin-bottom:18px"><h2>In progress</h2><div class="jlist">${jobs}</div></div>` : "") +
+    `<h2 style="font-size:17px;margin:4px 0 10px">Start a new report</h2><div class="home-types">${feat.map(card).join("")}</div>` +
+    (more.length ? `<details class="more" style="margin-top:16px"><summary>More report types (${more.length})</summary><div class="home-types" style="margin-top:10px">${more.map(card).join("")}</div></details>` : "") +
+    `<div class="panel" style="margin-top:18px"><h2>How it works</h2><ol class="steps2 small"><li>Enter the job details.</li><li>Upload or paste your field notes and site photos.</li><li>Answer Claude's questions, rate each finding and approve the table.</li><li>Read and edit the draft.</li><li>Run the quality check and fix anything it lists.</li><li>Download the Word report, then sign and send it yourself.</li></ol></div>`;
+}
+function viewProfile() {
+  const p = profile();
+  const libs = Object.values(PRESETS).filter(c => libState(c));
+  return head("Your details", "Set these once. They appear on the cover, in the page header and footer, and in the signature block of every report.", `<button class="btn" data-page="home">Done</button>`) +
+    `<div class="grid2"><div class="panel"><h2>Company and signer</h2><div class="fields">${PROFILE_FIELDS.map(f => `<label class="f ${f.wide ? "wide" : ""}"><span class="lab">${esc(f.label)}</span><input type="text" data-pf="${f.key}" value="${esc(p[f.key] || "")}"></label>`).join("")}</div>
+      <h2 style="margin-top:18px">Logo</h2><div class="logo-prev">${p.logo ? `<img src="${p.logo}" alt="Your logo"><button class="btn small" id="pickLogo">Replace</button><button class="btn ghost danger small" id="delLogo">Remove</button>` : `<button class="btn" id="pickLogo">Upload a logo</button><span class="small muted">PNG or JPEG. It goes on the report cover.</span>`}</div></div>
+    <div class="panel"><h2>Signature block</h2><p class="small muted" style="margin-top:0">Printed under the signature line at the end of every report. Leave it blank to build it from the fields on the left.</p><textarea data-pf="signature" rows="6" placeholder="${esc(signatureBlock())}">${esc(p.signature || "")}</textarea>
+      <h3 style="font-size:14px;margin:14px 0 6px">Preview</h3><div class="sigprev">${esc(signatureBlock())}\nSignature: ______________________   Date: ____________</div><p class="small muted" style="margin-top:10px"><i>${esc(assistLine())}</i><br>This line is added to every report.</p></div></div>` +
+    (libs.length ? `<div class="panel" style="margin-top:14px"><h2>Citation libraries</h2><p class="small muted" style="margin-top:0">Reports may cite only entries in these libraries. A library that you haven't verified holds back release (quality check 14).</p><div class="jlist">${libs.map(c => { const st = libState(c); return `<div class="jr"><div><b>${esc(c.reportType)}</b><div class="small muted">${arr(c.citationLibrary.entries).length} entries · ${st.verified ? "verified " + esc(String(st.on).slice(0, 10)) : "draft, not verified by you"}</div></div><button class="btn" data-lib="${c.id}">View${st.verified ? "" : " and verify"}</button></div>`; }).join("")}</div></div>` : "");
+}
+function viewLibrary() {
+  const c = PRESETS[S.libId]; if (!c || !libState(c)) { S.page = "profile"; return viewProfile(); }
+  const L = c.citationLibrary, st = libState(c);
+  return head(c.reportType + " citation library", `${esc(L.title)}. ${st.verified ? "You verified it on " + esc(String(st.on).slice(0, 10)) + "." : "Draft: check each entry against the current official text before you mark it verified."}`, `<button class="btn" data-page="profile">Back</button>`) +
+    `<div class="panel"><div class="tframe"><table class="t"><thead><tr><th>Topic</th><th>Cite</th><th>What it requires (paraphrase)</th><th>Note</th></tr></thead><tbody>${L.entries.map(e => `<tr><td>${esc(e.topic)}</td><td class="mono">${esc(e.cite)}</td><td>${esc(e.requires)}</td><td class="small">${esc(e.note || "")}${e.confirm ? ` <span class="chip need">re-confirm</span>` : ""}</td></tr>`).join("")}</tbody></table></div>
+    <div class="row" style="justify-content:space-between;margin-top:14px"><span class="small muted">${esc(L.checkedBy || "")}</span>${st.verified && (profile().libVerified || {})[c.id] ? `<button class="btn" data-libunverify="${c.id}">Mark as not verified</button>` : `<button class="btn primary" data-libverify="${c.id}">I checked every entry against the current text</button>`}</div></div>`;
+}
+/* 1 Job sheet */
+function viewJobSheet() {
+  const c = CFG(), j = S.job, n = needCount(j);
+  return head("Job details", `Every client-specific detail in the report comes from here. Leave a field blank if you don't have it yet: it shows as [needed] in the draft and you can fill it in later. Everything saves as you type.`,
+    `<span class="chip ${n ? "need" : "ok"}" id="needChip">${n ? n + " still needed" : "Complete"}</span>`) +
+    `<div class="panel"><div class="fields">${c.jobSheetFields.map(f => { const v = (j.jobSheet || {})[f.key] || ""; return `<label class="f ${f.wide ? "wide" : ""}"><span class="lab"><span>${esc(f.label)}</span><span class="chip need" data-needfor="${f.key}" ${v.trim() ? "hidden" : ""}>[needed]</span></span>${f.multiline ? `<textarea id="js-${f.key}" data-js="${f.key}" rows="3">${esc(v)}</textarea>` : `<input type="text" ${f.number ? 'inputmode="decimal"' : ""} id="js-${f.key}" data-js="${f.key}" value="${esc(v)}">`}</label>`; }).join("")}</div>
+    <div class="notice info" style="margin-top:16px"><span style="flex:1">Prepared by: <b>${esc(preparedBy())}</b>. This comes from Your details and goes on every report.</span><button class="btn small" data-page="profile">Edit your details</button></div></div>`;
+}
+function bindJobSheet() {
+  document.querySelectorAll("[data-js]").forEach(el => el.addEventListener("input", () => {
+    const k = el.dataset.js; S.job.jobSheet[k] = el.value; const chip = $(`[data-needfor="${k}"]`); if (chip) chip.hidden = !!el.value.trim();
+    const n = needCount(S.job); const nc = $("#needChip"); nc.className = "chip " + (n ? "need" : "ok"); nc.textContent = n ? n + " still needed" : "Complete";
+    $("#jobName").textContent = jobTitle(S.job); markDirty(); renderSteps();
+  }));
+}
+
+/* 2 Notes */
+function viewNotes() {
+  const c = CFG(), j = S.job;
+  const kinds = ["Field notes", "Voice-memo transcript", "Photo of notes", "Checklist", "Attachment", "Prior report", "Email"];
+  const stats = ["received and reviewed", "received not reviewed", "not received"];
+  const sm = photoSummary(c, j);
+  return head("Notes and photos", `Add everything from the visit. Claude reads your notes as text; site photos go into the report where they belong. ${esc(c.inputsRule || "")}`) +
+    `<div class="split"><div class="stack">
+      <div class="panel"><h2>1. Field notes</h2><div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose note files to upload"><b>Drop note files here, or tap to choose</b><div class="small muted" style="margin-top:4px">PDF, Word, text, or a photo of handwritten notes or a checklist</div></div>
+        <details style="margin-top:12px" ${j.sources.length ? "" : "open"}><summary class="small" style="cursor:pointer;font-weight:600">Or paste text</summary><div class="stack" style="margin-top:8px"><label class="f"><span class="lab">Name</span><input type="text" id="pasteName" placeholder="e.g. Site walk notes"></label><label class="f"><span class="lab">Text</span><textarea id="pasteText" rows="6" placeholder="Paste notes, an email, or a voice-memo transcript"></textarea></label><div class="row end"><button class="btn" id="addPaste">Add these notes</button></div></div></details></div>
+      <div class="panel"><h2>2. Site photos</h2><div class="drop" id="photoDrop" tabindex="0" role="button" aria-label="Choose site photos to upload"><b>Drop site photos here, or tap to choose</b><div class="small muted" style="margin-top:4px">JPEG, PNG or WebP. You can also paste a photo.</div></div><p class="small muted" style="margin:8px 0 0">${esc(sm.text)} ${sm.filled ? `${sm.filled} added. Arrange and caption them in the Draft step.` : ""}</p></div>
+    </div>
+    <div class="panel"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Added to this job <span class="chip info">${j.sources.length}</span></h2><span class="small muted">Mark anything you haven't reviewed yourself as "received not reviewed".</span></div>
+      <div class="stack">${j.sources.length ? j.sources.map(s => `<div class="src"><div style="min-width:0"><b style="word-break:break-word">${esc(s.name)}</b><div class="meta small muted" style="margin-top:4px"><span>${esc(s.kind)}</span><span>· ${esc(s.status)}</span><span>· ${s.text.length.toLocaleString()} characters</span>${s.note ? `<span>· ${esc(s.note)}</span>` : ""}</div></div><div class="row"><button class="btn ghost small" data-toggle-src="${s.id}">${s.open ? "Close" : "View / edit type"}</button><button class="btn ghost danger small" data-del-src="${s.id}" aria-label="Remove ${esc(s.name)}">Remove</button></div>
+        ${s.open ? `<div class="row" style="grid-column:1/-1"><label class="f" style="flex:1;min-width:150px"><span class="lab">Type</span><select data-src-kind="${s.id}">${kinds.map(k => `<option ${s.kind === k ? "selected" : ""}>${k}</option>`).join("")}</select></label><label class="f" style="flex:1;min-width:180px"><span class="lab">Review status</span><select data-src-status="${s.id}">${stats.map(k => `<option ${s.status === k ? "selected" : ""}>${k}</option>`).join("")}</select></label></div><pre>${esc(s.text)}</pre>` : ""}</div>`).join("") : `<div class="empty" style="padding:24px 8px"><p style="margin:0">Nothing yet. Add your field notes on the left: typed notes, a checklist, emails, a transcript, or photos of handwritten pages.</p></div>`}
+      ${photoCount(j) ? `<div class="row" style="margin-top:12px;gap:6px">${Object.keys(j.photos || {}).slice(0, 12).map(k => PHOTO.data[k] ? `<img src="${PHOTO.data[k]}" alt="" style="width:64px;height:48px;object-fit:cover;border-radius:4px;border:1px solid var(--line)">` : "").join("")}<span class="small muted">${photoCount(j)} site photo${photoCount(j) > 1 ? "s" : ""}</span></div>` : ""}</div></div></div>`;
+}
+async function addFiles(files) {
+  for (const f of files) {
+    const name = f.name; const ext = (name.split(".").pop() || "").toLowerCase();
+    try {
+      let text = "", kind = "Field notes", note = "";
+      if (["txt", "md", "csv"].includes(ext) || (f.type || "").startsWith("text/")) text = await f.text();
+      else if (ext === "docx") { await loadScript("https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"); const r = await mammoth.extractRawText({ arrayBuffer: await f.arrayBuffer() }); text = r.value; kind = "Attachment"; }
+      else if (ext === "pdf") { text = await pdfText(f); kind = "Attachment"; }
+      else if (["png", "jpg", "jpeg", "webp", "gif"].includes(ext)) {
+        const t = await askText("Reading the notes in " + name, promptPhoto(name), { images: [f], sub: "Claude transcribes the writing only. It does not analyze the photo." });
+        if (t.trim() === "NOT_NOTES") { await addSitePhotos([f], true); toast(`${name} looks like a site photo, so it was added to Site photos.`); continue; }
+        text = t; kind = "Photo of notes"; note = "transcribed from photo";
+      } else { toast(`${name}: this file type isn't supported. Use PDF, Word, text or a photo of notes.`); continue; }
+      text = (text || "").replace(/\r/g, "").trim();
+      if (!text) { toast(`${name} had no readable text.`); continue; }
+      S.job.sources.push({ id: uid(), name, kind, status: kind === "Attachment" ? "received not reviewed" : "received and reviewed", text, note });
+    } catch (e) { const m = errMsg(e); if (m) toast(`${name}: ${m === ERR.unavailable ? m : "couldn't read this file. Paste its text instead."}`); }
+  }
+  markDirty(); renderAll();
+}
+const loaded = {};
+function loadScript(src) { if (!loaded[src]) loaded[src] = new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error("load")); }; document.head.appendChild(s); }); return loaded[src]; }
+async function pdfText(file) {
+  await loadScript("https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js");
+  const lib = window.pdfjsLib; lib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+  const doc = await lib.getDocument({ data: new Uint8Array(await file.arrayBuffer()), isEvalSupported: false }).promise;
+  let out = [];
+  for (let p = 1; p <= doc.numPages; p++) { const pg = await doc.getPage(p); const tc = await pg.getTextContent(); out.push(tc.items.map(i => i.str + (i.hasEOL ? "\n" : " ")).join("")); }
+  return out.join("\n\n");
+}
+
+/* 3 Findings */
+function viewFindings() {
+  const c = CFG(), j = S.job, I = j.intake;
+  if (!I) return head("Findings builder", `Claude reads the ${j.sources.length} input${j.sources.length === 1 ? "" : "s"}, pulls ${c.itemNoun}s, fills the intake (packet, conflicts, names, notes not used) and asks up to 3 short gap questions at a time. Injury and near-miss questions come first.`) +
+    `<div class="panel empty"><h2>Build the ${c.itemNoun}s table</h2><p>Press <b>Read my notes</b> below. Claude pulls each ${c.itemNoun} from your notes and asks a few short questions about gaps. Nothing is drafted until you approve the table, and ratings are yours: Claude never assigns one.</p></div>`;
+  const open = j.interview.filter(q => q.round === j.round && !(q.answer || "").trim() && !q.skipped);
+  const openAll = j.interview.filter(q => !(q.answer || "").trim() && !q.skipped);
+  const injuryOpen = openAll.filter(q => q.kind === "injury");
+  const unrated = I.items.filter(it => !isRec(it) && (!it[c.ratingKey] || it[c.ratingKey] === "[needed]")).length;
+  const lockedNote = j.approved ? `<div class="notice ok"><span><b>Approved ${fmtTime(j.approvedAt)}.</b> The table is locked. Reopen it to change ${c.itemNoun}s; that marks the draft out of date.</span></div>` : "";
+  const qPanel = j.approved ? "" : `<div class="panel"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">Questions for you</h2><span class="chip info">Round ${j.round}</span></div>
+    ${open.length ? `<div class="stack">${open.map(q => `<div class="q"><div class="qh"><span class="chip ${q.kind === "injury" ? "bad" : q.kind === "scope" ? "acc" : "info"}">${esc(q.kind)}</span><span class="small muted">${esc(q.section || "")}</span></div><p>${esc(q.question)}</p><textarea id="ans-${q.id}" data-ans="${q.id}" rows="2" placeholder="Your answer">${esc(q.answer || "")}</textarea><div class="row end" style="margin-top:6px"><button class="btn ghost small" data-skip="${q.id}">${q.kind === "injury" ? "Answer later" : "Skip"}</button></div></div>`).join("")}<div class="row end"><button class="btn" id="sendAnswers">Send answers</button></div></div>`
+      : I.done ? `<div class="notice ok"><span>No gaps left that change the report. Rate each ${c.itemNoun}, check the table, then approve.</span></div>` : `<div class="notice info"><span>No open questions this round.</span></div><div class="row end" style="margin-top:10px"><button class="btn" id="moreQs">Ask for more gaps</button></div>`}
+    ${j.interview.some(q => (q.answer || "").trim()) ? `<details style="margin-top:12px"><summary class="small muted" style="cursor:pointer">Answered so far (${j.interview.filter(q => (q.answer || "").trim()).length})</summary><div class="qa-log" style="margin-top:8px">${j.interview.filter(q => (q.answer || "").trim()).map(q => `<div><b>${esc(q.question)}</b><br>${esc(q.answer)}</div>`).join("")}</div></details>` : ""}</div>`;
+  const tabs = [["findings", c.itemNoun[0].toUpperCase() + c.itemNoun.slice(1) + "s", I.items.length], ["conflicts", "Conflicts register", I.conflicts.length], ["packet", "Packet", I.packet.length], ["names", "Names", I.names.length], ["notused", "Notes not used", I.notesNotUsed.length], ["injury", "Injury & scope", I.injury.length + I.scopeTriggers.length]];
+  const sk = computeScore(c, j); if (sk) tabs.splice(1, 0, ["score", "Scorecard", `${sk.rows.length - sk.unrated}/${sk.rows.length}`]);
+  const t = S.tab;
+  let body = "";
+  if (t === "findings") body = tableFindings(c, j);
+  if (t === "score" && sk) body = tableScore(c, j, sk);
+  if (t === "conflicts") body = simpleTable(["#", "Item", "Source 1 (value)", "Source 2 (value)", "Resolution owner", "Resolution"], I.conflicts.map((x, i) => [x.id || "C-" + (i + 1), x.item, x.source1, x.source2, x.owner, x.resolution || "[open]"]), "No conflicts recorded.");
+  if (t === "packet") body = simpleTable(["Item", "Type", "Status", "Notes"], I.packet.map(x => [x.item, x.type, x.status, x.notes]), "No packet items.");
+  if (t === "names") body = simpleTable(["As written", "Use in report"], I.names.map(x => [x.asWritten, x.useInReport]), "No names in the notes.");
+  if (t === "notused") body = simpleTable(["Note", "Reason"], I.notesNotUsed.map(x => [x.note, x.reason]), "Every note was used.");
+  if (t === "injury") body = simpleTable(["Injury or incident mention", "Status"], I.injury.map(x => [x.note, x.status]), "No injury or incident mentions.") + `<div style="height:12px"></div>` + simpleTable(["Scope trigger", "Question", "Answer"], I.scopeTriggers.map(x => [x.topic, x.question, x.answer || "[open]"]), "No scope triggers.");
+  return head("Findings", `Answer Claude's questions, check the table, and set each rating yourself. Click any cell to edit it. The draft opens once you approve.`,
+      j.approved ? `<button class="btn" id="reopen">Reopen table</button>` : `<button class="btn" id="rerun">Re-read notes</button>`) +
+    `<div class="${j.approved ? "" : "split"}">${qPanel}<div class="panel" style="min-width:0">${lockedNote}<div class="tabs" role="tablist">${tabs.map(([k, l, n]) => `<button class="tab ${t === k ? "on" : ""}" data-tab="${k}" role="tab" aria-selected="${t === k}">${l}<span class="chip info">${n}</span></button>`).join("")}</div>${body}
+      ${j.approved ? "" : `<div class="row" style="justify-content:space-between;margin-top:14px"><span class="small muted">${injuryOpen.length ? `<span class="chip bad">${injuryOpen.length} injury question${injuryOpen.length > 1 ? "s" : ""} open</span> Answer these before approving.` : unrated ? `<span class="chip need">${unrated} not rated</span> Unrated ${c.itemNoun}s show as [needed] in the draft.` : sk && sk.unrated ? `<span class="chip need">${sk.unrated} categor${sk.unrated > 1 ? "ies" : "y"} not scored</span> The compliance score shows as [needed] until every category is rated.` : openAll.length ? `${openAll.length} question${openAll.length > 1 ? "s" : ""} still open. They'll be listed in the QA sheet.` : "Ready to approve."}</span><span class="small muted">Approve with the button below.</span></div>`}</div></div>`;
+}
+function tableFindings(c, j) {
+  const I = j.intake; const ed = !j.approved;
+  return `<div class="tframe"><table class="t" id="ftable"><thead><tr>${c.columns.map(col => `<th>${esc(col.label)}</th>`).join("")}<th>Immediate action</th>${ed ? "<th></th>" : ""}</tr></thead><tbody>${I.items.map((it, ri) => `<tr>${c.columns.map(col => {
+    const v = it[col.key] || ""; const edited = arr(it._edits).includes(col.key) ? "edited" : "";
+    if (col.readonly) return `<td class="idc">${esc(v)}</td>`;
+    if (col.options) { if (!ed) return `<td>${col.key === c.ratingKey && (!v || v === "[needed]") && !isRec(it) ? `<span class="need-txt">[needed]</span>` : esc(v)}</td>`; const opts = col.options.includes(v) || !v ? col.options : [v, ...col.options]; return `<td class="${edited}"><select data-cell="${ri}:${col.key}" aria-label="${esc(col.label)} for ${esc(it.id)}">${(isRec(it) && col.key === c.ratingKey ? ["", ...opts] : opts).map(o => `<option ${o === v ? "selected" : ""} value="${esc(o)}">${esc(o || "—")}</option>`).join("")}</select></td>`; }
+    return `<td class="${edited}" ${ed ? `contenteditable="true" data-cell="${ri}:${col.key}"` : ""}>${hl(v)}</td>`;
+  }).join("")}<td class="small" ${ed ? `contenteditable="true" data-cell="${ri}:action"` : ""}>${hl(it.action || "")}</td>${ed ? `<td><button class="btn ghost danger small" data-delrow="${ri}" aria-label="Delete ${esc(it.id)}">✕</button></td>` : ""}</tr>`).join("")}</tbody></table></div>
+    ${ed ? `<div class="row" style="margin-top:8px"><button class="btn ghost small" id="addRow">+ Add a row</button><span class="small muted">Click any cell to edit. Your edits are marked and kept when Claude updates the table.</span></div>` : ""}`;
+}
+function tableScore(c, j, k) {
+  const sc = c.scorecard; const ed = !j.approved; const opts = ["[needed]", ...sc.levels.map(l => l.label)]; const items = arr(j.intake && j.intake.items);
+  const ids = cat => items.filter(it => (it.category || "").trim().toLowerCase() === String(cat).trim().toLowerCase()).map(it => it.id);
+  return `<div class="row" style="justify-content:space-between;margin-bottom:10px"><span class="chip ${k.unrated ? "need" : "ok"}" style="font-size:13px">${esc(scoreLine(k))}</span><span class="small muted" style="max-width:520px">${esc(sc.note || "")}</span></div>
+    <div class="tframe"><table class="t" id="stable"><thead><tr><th>Audit category</th><th>Rating (yours)</th><th>Score</th><th>${esc(c.itemNoun[0].toUpperCase() + c.itemNoun.slice(1))}s in this category</th>${ed ? "<th></th>" : ""}</tr></thead><tbody>${k.rows.map((r, i) => `<tr><td ${ed ? `contenteditable="true" data-scat="${i}"` : ""}>${esc(r.cat)}</td><td>${ed ? `<select data-slevel="${i}" aria-label="Rating for ${esc(r.cat)}">${opts.map(o => `<option ${o === r.level ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>` : hl(r.level)}</td><td class="mono">${r.value === undefined ? `<span class="need-txt">—</span>` : r.value === null ? "N/A" : r.value}</td><td class="mono small">${esc(ids(r.cat).join(", ")) || `<span class="muted">none</span>`}</td>${ed ? `<td><button class="btn ghost danger small" data-sdel="${i}" aria-label="Remove ${esc(r.cat)}">✕</button></td>` : ""}</tr>`).join("")}</tbody></table></div>
+    <p class="small muted" style="margin-top:8px">Scale: ${sc.levels.map(l => `${esc(l.label)} ${l.value == null ? "(left out)" : l.value}`).join(" · ")}. Risk bands: ${sc.bands.map(b => `${esc(b.label)} ≥ ${b.min}%`).join(" · ")}.${sc.bandsNote ? " " + esc(sc.bandsNote) : ""}</p>
+    ${ed ? `<div class="row" style="margin-top:4px"><button class="btn ghost small" id="addScore">+ Add a category</button><span class="small muted">Rename a category by clicking it. Findings link to a category by its exact name.</span></div>` : ""}`;
+}
+function simpleTable(h, rows, empty) { if (!rows.length) return `<p class="muted small">${esc(empty)}</p>`; return `<div class="tframe"><table class="t"><thead><tr>${h.map(x => `<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(x => `<td>${hl(str(x))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`; }
+async function runFindings() {
+  const j = S.job; const c = CFG();
+  try {
+    const out = await askJSON(j.round === 0 ? "Reading notes and building the table" : `Updating the table with your answers`, promptFindings(j), { tier: j.round === 0 ? "complex" : "default", sub: "Pulling findings, filling the intake and picking the next gap questions." });
+    if (!out || !Array.isArray(out.items)) throw { code: "invalid_json" };
+    j.intake = mergeIntake(j.intake, out);
+    j.round += 1;
+    arr(out.questions).slice(0, 3).forEach(q => j.interview.push({ id: uid(), kind: str(q.kind) || "gap", section: str(q.section), question: str(q.question), answer: "", round: j.round }));
+    if (!arr(out.questions).length) j.intake.done = true;
+    S.tab = "findings"; markDirty(); renderAll();
+  } catch (e) { const m = errMsg(e); if (m) toast(m); }
+}
+
+/* 4 Draft */
+/* ---------------- photos (site-visit photos placed by report section) ---------------- */
+function photoPlan(c) {
+  const base = (c.photoPlan && arr(c.photoPlan.sections).length) ? c.photoPlan : { sections: [] };
+  const n = (S.job && S.job.extraPhotos) || 0; if (!n) return base;
+  return { ...base, sections: [...base.sections, { key: "extra", label: "Additional photographs", anchor: [], count: n, min: 0, shots: ["Site photo"] }] };
+}
+async function addSitePhotos(files, quiet) {
+  const j = S.job; if (!j) return; const c = CFG(); let added = 0;
+  for (const f of files) {
+    if (!/^image\//.test(f.type || "") && !/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name || "")) continue;
+    let sl = photoSlots(c).find(s => !(j.photos || {})[s.key] && s.sec.key !== "extra") || photoSlots(c).find(s => !(j.photos || {})[s.key]);
+    if (!sl) { j.extraPhotos = (j.extraPhotos || 0) + 1; sl = photoSlots(c).find(s => !(j.photos || {})[s.key]); }
+    await addPhoto(sl.key, f); added++;
+  }
+  if (!added && !quiet) toast("Choose photos (JPEG, PNG or WebP).");
+  else if (added && !quiet) toast(`${added} photo${added > 1 ? "s" : ""} added. Arrange and caption them in the Draft step.`);
+}
+function photoSlots(c) {
+  const out = [];
+  photoPlan(c).sections.forEach(sec => { for (let i = 0; i < (sec.count || 0); i++) out.push({ key: sec.key + "-" + (i + 1), sec, i, shot: arr(sec.shots)[i] || arr(sec.shots)[arr(sec.shots).length - 1] || "Photo", required: i < (sec.min || 0) }); });
+  return out;
+}
+function photoCount(j) { return Object.keys(j.photos || {}).length; }
+function photoSummary(c, j) {
+  const secs = photoPlan(c).sections.filter(s => s.count > 0); const total = secs.reduce((n, s) => n + s.count, 0);
+  const parts = secs.map(s => `${s.count} for ${s.key === "cover" ? "the cover" : s.label}`);
+  const slots = photoSlots(c); const ph = j.photos || {};
+  const missing = slots.filter(sl => sl.required && !ph[sl.key]);
+  return { total, text: total ? `Recommended: ${total} photo${total === 1 ? "" : "s"}. ` + parts.join(", ") + "." : "This report type has no photo plan.", missing, filled: slots.filter(sl => ph[sl.key]).length };
+}
+function photoMatch(sec, heading) { return arr(sec.anchor).some(a => a !== "cover" && new RegExp(a, "i").test(String(heading || "").trim())); }
+// where each section's slots land in the draft: "cover", a section index, or "end"
+function photoPlacement(c, d) {
+  const map = {};
+  photoPlan(c).sections.forEach(sec => {
+    if (arr(sec.anchor).includes("cover")) { map[sec.key] = "cover"; return; }
+    let idx = -1; if (d) for (const a of arr(sec.anchor)) { if (a === "cover") continue; idx = arr(d.sections).findIndex(s => new RegExp(a, "i").test(String(s.heading || "").trim())); if (idx >= 0) break; }
+    map[sec.key] = idx >= 0 ? idx : "end";
+  });
+  return map;
+}
+function slotsAt(c, d, where) { const pl = photoPlacement(c, d); return photoSlots(c).filter(sl => pl[sl.sec.key] === where); }
+const PHOTO = { data: {}, job: null, loading: false };
+function photosColl(jobId) { return S.db.collection(`data/users/${S.uid}/photos/${jobId}`); }
+async function loadPhotos(j) {
+  if (!j || PHOTO.job === j.id || PHOTO.loading) return;
+  PHOTO.loading = true; PHOTO.job = j.id; PHOTO.data = {};
+  const keys = Object.keys(j.photos || {});
+  try {
+    if (keys.length && S.db) {
+      const snap = await Promise.race([photosColl(j.id).get(), new Promise((_, r) => setTimeout(() => r({ code: "timeout" }), 10000))]);
+      snap.docs.forEach(dc => { const v = dc.data(); if (v && v.dataUrl) PHOTO.data[dc.id] = v.dataUrl; });
+    }
+    keys.forEach(k => { if (!PHOTO.data[k]) { const v = lsGet(`re.photo.${j.id}.${k}`); if (v) PHOTO.data[k] = v; } });
+  } catch (e) { toast("Photos couldn't be loaded. Reopen the job to try again."); PHOTO.job = null; }
+  PHOTO.loading = false;
+  if (S.job && S.job.id === j.id) renderView();
+}
+function readImage(file) {
+  return new Promise((res, rej) => { const u = URL.createObjectURL(file); const im = new Image(); im.onload = () => { URL.revokeObjectURL(u); res(im); }; im.onerror = () => { URL.revokeObjectURL(u); rej(new Error("image")); }; im.src = u; });
+}
+async function shrinkPhoto(file) {
+  const im = await readImage(file); const W = im.naturalWidth, H = im.naturalHeight; if (!W || !H) throw new Error("image");
+  for (const [edge, q] of [[1600, 0.8], [1400, 0.72], [1200, 0.66], [1000, 0.6], [800, 0.55]]) {
+    const k = Math.min(1, edge / Math.max(W, H)); const w = Math.round(W * k), h = Math.round(H * k);
+    const cv = document.createElement("canvas"); cv.width = w; cv.height = h; cv.getContext("2d").drawImage(im, 0, 0, w, h);
+    const url = cv.toDataURL("image/jpeg", q);
+    if (url.length < 230000) return { dataUrl: url, w, h };
+  }
+  throw new Error("too_large");
+}
+async function addPhoto(slotKey, file) {
+  const j = S.job; if (!j) return;
+  if (!/^image\//.test(file.type || "") && !/\.(jpe?g|png|webp|heic|heif)$/i.test(file.name || "")) { toast("Choose a photo (JPEG, PNG or WebP)."); return; }
+  let p; try { p = await shrinkPhoto(file); } catch (e) { toast(e.message === "too_large" ? "That photo is too large to store. Try a smaller one." : "That photo couldn't be read here. Try a JPEG or PNG."); return; }
+  let where = "device";
+  if (S.db) { try { await photosColl(j.id).doc(slotKey).set({ dataUrl: p.dataUrl, w: p.w, h: p.h, added: nowISO() }); where = "account"; } catch (e) { where = "device"; } }
+  if (where === "device" && !lsSet(`re.photo.${j.id}.${slotKey}`, p.dataUrl)) { toast("There's no room to keep that photo on this device."); return; }
+  const prev = (j.photos || {})[slotKey] || {};
+  j.photos = { ...(j.photos || {}), [slotKey]: { w: p.w, h: p.h, name: file.name || "photo", caption: prev.caption || "", added: nowISO() } };
+  PHOTO.data[slotKey] = p.dataUrl; PHOTO.job = j.id;
+  markDirty(); renderView();
+}
+async function removePhoto(slotKey) {
+  const j = S.job; if (!j || !j.photos || !j.photos[slotKey]) return;
+  if (S.db) { try { await photosColl(j.id).doc(slotKey).delete(); } catch { } }
+  lsDel(`re.photo.${j.id}.${slotKey}`);
+  const o = { ...j.photos }; delete o[slotKey]; j.photos = o; delete PHOTO.data[slotKey]; markDirty(); renderView();
+}
+function captionOf(sl, j) { const v = ((j.photos || {})[sl.key] || {}).caption; return (v && v.trim()) || sl.shot; }
+function photoFrame(sl, j, n) {
+  const ph = (j.photos || {})[sl.key]; const url = PHOTO.data[sl.key];
+  if (ph && url) return `<figure class="ph"><img src="${url}" alt="${esc(captionOf(sl, j))}"><figcaption>Photo ${n}. ${esc(captionOf(sl, j))}</figcaption></figure>`;
+  if (ph) return `<div class="ph-empty"><span><b>Photo ${n}</b> · loading…</span></div>`;
+  return `<div class="ph-empty ${sl.required ? "req" : ""}"><span><b>${sl.required ? "Required photo" : "Photo slot"}</b> · ${esc(sl.shot)}</span><button class="btn small" data-pick="${esc(sl.key)}">Add photo</button></div>`;
+}
+function viewPhotos() {
+  const c = CFG(), j = S.job, sm = photoSummary(c, j), slots = photoSlots(c);
+  if (!sm.total) return `<div class="panel empty"><h2>No photo plan</h2><p>This report type doesn't recommend photos. Add a photoPlan to its setup to turn this on.</p></div>`;
+  const pl = photoPlacement(c, j.draft); const ph = j.photos || {};
+  const where = k => pl[k] === "cover" ? "On the cover" : pl[k] === "end" ? (j.draft ? "Not in the draft yet: goes at the end under Photographs" : "Placed after you write the draft") : "In " + esc(j.draft.sections[pl[k]].heading);
+  const map = photoPlan(c).sections.filter(s => s.count > 0).map(sec => { const ss = slots.filter(sl => sl.sec === sec); return `<div class="r"><div><b>${esc(sec.label)}</b><div class="small muted">${where(sec.key)}${sec.min ? ` · ${sec.min} required` : ""}</div></div><div class="dots" aria-label="${ss.filter(sl => ph[sl.key]).length} of ${ss.length} added">${ss.map(sl => `<i class="${ph[sl.key] ? "f" : sl.required ? "q" : ""}"></i>`).join("")}</div></div>`; }).join("");
+  const cards = photoPlan(c).sections.filter(s => s.count > 0).map(sec => `<h3 style="margin-top:18px">${esc(sec.label)}</h3><div class="slots">${slots.filter(sl => sl.sec === sec).map(sl => { const p = ph[sl.key], url = PHOTO.data[sl.key]; return `<div class="slot"><div class="thumb">${p && url ? `<img src="${url}" alt="">` : p ? "Loading…" : esc(sl.shot)}</div><div class="shot"><span class="chip ${sl.required ? "need" : "info"}">${sl.required ? "Required" : "Recommended"}</span> ${esc(sl.shot)}</div>${p ? `<label class="small muted">Caption<input type="text" data-cap="${esc(sl.key)}" value="${esc(p.caption || "")}" placeholder="${esc(sl.shot)}"></label><div class="row"><button class="btn small" data-pick="${esc(sl.key)}">Replace</button><button class="btn small" data-unpick="${esc(sl.key)}">Remove</button></div>` : `<button class="btn small primary" data-pick="${esc(sl.key)}">Add photo</button>`}</div>`; }).join("")}</div>`).join("");
+  return `<div class="panel"><h2>${esc(sm.text)}</h2><p class="small muted" style="margin:4px 0 12px">${esc((photoPlan(c).note) || "")} ${sm.filled} of ${slots.length} added.${sm.missing.length ? ` ${sm.missing.length} required photo${sm.missing.length === 1 ? " is" : "s are"} still missing.` : ""}</p><div class="pmap">${map}</div>${cards}</div>`;
+}
+function viewDraft() {
+  const c = CFG(), j = S.job; const sm = photoSummary(c, j);
+  const dt = S.dtab || "report";
+  const tabs = sm.total ? `<div class="tabs" role="tablist" style="max-width:860px;margin:0 auto 12px">${[["report", "Report preview", ""], ["photos", "Photos", `${sm.filled}/${photoSlots(c).length}`]].map(([k, l, n]) => `<button class="tab ${dt === k ? "on" : ""}" data-dtab="${k}" role="tab" aria-selected="${dt === k}">${l}${n ? `<span class="chip ${sm.missing.length ? "need" : "info"}">${n}</span>` : ""}</button>`).join("")}</div>` : "";
+  if (dt === "photos" && sm.total) return head("Draft: photos", `Site-visit photos, placed by report section. Add, replace or caption them here.`) + tabs + viewPhotos();
+  if (!j.draft) return head("Draft", `Built from the ${c.reportType} template, the job details and the approved table only.`) +
+    tabs + `<div class="panel empty"><h2>Write the client report</h2><p>Press <b>Write the draft</b> below. The draft is the client report only. Quality-check results go on a separate Consultant QA Sheet that the client never sees.</p></div>`;
+  const changed = JSON.stringify(j.jobSheet) !== JSON.stringify(j.jobSheetAtDraft);
+  const stale = j.draftAt && j.approvedAt && j.approvedAt > j.draftAt;
+  return head("Draft", `Written ${fmtTime(j.draftAt)}${j.editedAt ? ", edited " + fmtTime(j.editedAt) : ""}. Click any text to edit it; changes save automatically.`, `<button class="btn ghost" id="rebuildDraft">${S.confirmRebuild ? "Confirm: rebuild and lose my edits" : "Rebuild draft"}</button>`) +
+    (j.sample ? `<div class="notice info" style="margin-bottom:12px"><span>This is a finished sample with a made-up company. Explore every step, edit it, run the quality check and download the Word files. Your real jobs are separate.</span></div>` : "") +
+    (changed ? `<div class="notice warn" style="margin-bottom:12px"><span style="flex:1">The job sheet changed after this draft was written.</span><button class="btn small" id="applySheet">Update the draft everywhere</button></div>` : "") +
+    (stale ? `<div class="notice warn" style="margin-bottom:12px"><span>The ${c.itemNoun}s table was re-approved after this draft. Rebuild the draft to pick up the changes.</span></div>` : "") +
+    tabs + `<div class="paper" id="paper">${renderReport(j.draft, true)}</div>
+    <div class="panel" style="max-width:860px;margin:14px auto 0"><h2>Ask Claude for a bigger change</h2><div class="stack"><textarea id="editReq" rows="3" placeholder="e.g. Shorten the executive summary, or change the report date to December 2, 2026"></textarea><div class="row end"><button class="btn" id="applyEdit">Apply change</button></div></div></div>`;
+}
+function renderReport(d, edit) {
+  const c = CFG(), j = S.job; let pn = 0; const pf = sl => { if ((j.photos || {})[sl.key]) pn++; return photoFrame(sl, j, (j.photos || {})[sl.key] ? pn : "") };
+  const E = (path, html, tag = "span") => edit ? `<${tag} contenteditable="true" spellcheck="true" data-dp="${path}">${html}</${tag}>` : (tag === "span" ? html : `<${tag}>${html}</${tag}>`);
+  const k = consultantInfo();
+  let h = `<div id="rep-top"></div>`;
+  if (k.logo || k.firm) h += `<div class="brandhead">${k.logo ? `<img src="${k.logo}" alt="">` : ""}${k.firm ? `<b>${esc(k.firm)}</b>` : ""}</div>`;
+  h += `<h1>${E("title", esc(d.title || c.reportTitle))}</h1><div class="cover">${coverLines(d).map(x => `<b>${esc(x.label)}:</b><span>${x.i == null ? `${hl(x.value)} <button class="btn ghost small" data-page="profile" style="padding:0 6px">edit</button>` : E("cover." + x.i + ".value", hl(x.value))}</span>`).join("")}</div>`;
+  h += slotsAt(c, d, "cover").map(pf).join("");
+  arr(d.sections).forEach((s, si) => {
+    h += `<h2 id="sec-${si}">${E(`s.${si}.heading`, esc(s.heading))}</h2>`;
+    arr(s.blocks).forEach((b, bi) => {
+      const P = `s.${si}.b.${bi}`;
+      if (b.type === "p") h += E(P + ".text", hl(b.text), "p");
+      else if (b.type === "bullets") h += `<ul>${arr(b.items).map((x, k2) => E(`${P}.items.${k2}`, hl(x), "li")).join("")}</ul>`;
+      else if (b.type === "table") h += `<div class="tframe" style="margin:6px 0 12px"><table class="t" style="min-width:420px"><thead><tr>${arr(b.headers).map(x => `<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${arr(b.rows).map((r, ri) => `<tr>${arr(r).map((x, ci) => E(`${P}.rows.${ri}.${ci}`, hl(str(x)), "td")).join("")}</tr>`).join("")}</tbody></table></div>`;
+      else if (b.type === "counts") { const kc = computeCounts(approvedItems(S.job)); h += `<div class="tframe" style="margin:6px 0 12px;max-width:340px"><table class="t" style="min-width:0"><thead><tr><th>${esc(countsLabel(c))}</th><th>Count</th></tr></thead><tbody>${Object.entries(kc).map(([a, v]) => `<tr><td>${esc(a)}</td><td class="mono">${v}</td></tr>`).join("")}</tbody></table></div>`; }
+      else if (b.type === "scorecard") { const ks = computeScore(c, j); if (ks) h += `<div class="tframe" style="margin:6px 0 8px;max-width:560px"><table class="t" style="min-width:0"><thead><tr><th>Category</th><th>Rating</th><th>Score</th></tr></thead><tbody>${scoreTableRows(ks).map(r => `<tr><td>${esc(r[0])}</td><td>${hl(r[1])}</td><td class="mono">${hl(r[2])}</td></tr>`).join("")}</tbody></table></div><p><b>${hl(scoreLine(ks))}</b></p>`; }
+      else if (b.type === "finding") h += `<h3 id="f-${esc(b.id)}"><span class="mono">${esc(b.id)}</span> ${E(P + ".title", hl(b.title))}${b.rating ? ` (${esc(b.rating)})` : ""}${b.repeat ? " – REPEAT" : ""}</h3>${arr(b.parts).map((p, pi) => `<p class="fpart"><b>${esc(p.label)}:</b> ${E(`${P}.parts.${pi}.text`, hl(p.text))}</p>`).join("")}`;
+    });
+    h += slotsAt(c, d, si).map(pf).join("");
+  });
+  const tail = slotsAt(c, d, "end"); if (tail.length) h += `<h2>Photographs</h2>` + tail.map(pf).join("");
+  h += `<div class="signoff" id="signoff"><h2 style="border:none;margin-top:0">Consultant sign-off</h2><p style="white-space:pre-wrap">${hl(signatureBlock())}</p><p class="sigline">Signature: ______________________ &nbsp; Date: ______________</p><p class="assist">${esc(assistLine())}</p></div>`;
+  return h;
+}
+function setDraftPath(path, val) {
+  const d = S.job.draft; const p = path.split(".");
+  let o;
+  if (p[0] === "title") { if (d.title === val) return false; d.title = val; return true; }
+  if (p[0] === "cover") { o = arr(d.cover)[Number(p[1])]; if (!o || o.value === val) return false; o.value = val; return true; }
+  const s = arr(d.sections)[Number(p[1])]; if (!s) return false;
+  if (p[2] === "heading") { if (s.heading === val) return false; s.heading = val; return true; }
+  const b = arr(s.blocks)[Number(p[3])]; if (!b) return false;
+  if (p[4] === "text" || p[4] === "title") { if (b[p[4]] === val) return false; b[p[4]] = val; return true; }
+  if (p[4] === "items") { if (b.items[Number(p[5])] === val) return false; b.items[Number(p[5])] = val; return true; }
+  if (p[4] === "rows") { const r = b.rows[Number(p[5])]; if (!r || r[Number(p[6])] === val) return false; r[Number(p[6])] = val; return true; }
+  if (p[4] === "parts") { const pt = b.parts[Number(p[5])]; if (!pt || pt.text === val) return false; pt.text = val; return true; }
+  return false;
+}
+function validDraft(d) { return d && Array.isArray(d.sections) && d.sections.length; }
+async function buildDraft() {
+  const j = S.job;
+  try {
+    const d = await askJSON("Writing the client report", promptDraft(j, approvedItems(j)), { tier: "complex", sub: "Following the template, style rules and wording library." });
+    if (!validDraft(d)) throw { code: "invalid_json" };
+    j.draft = d; j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet); j.qa = null; j.finalCheck = null; markDirty(); renderAll();
+  } catch (e) { const m = errMsg(e); if (m) toast(m); }
+}
+async function editDraft(req, label) {
+  const j = S.job;
+  try {
+    const d = await askJSON(label || "Applying your change", promptEdit(j, req), { tier: "default" });
+    if (!validDraft(d)) throw { code: "invalid_json" };
+    j.draft = d; j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet); j.qa = null; j.finalCheck = null; markDirty(); renderAll(); toast("Draft updated. Run QA again before export.");
+  } catch (e) { const m = errMsg(e); if (m) toast(m); }
+}
+
+/* 5 QA */
+function viewQA() {
+  const c = CFG(), j = S.job;
+  if (!j.qa) return head("Quality check", `${c.qaChecks.length} checks (${esc(c.qaVersion)}). Counts, citations, required sections and carryover are checked by the app itself; Claude checks the rest against the report text.`) +
+    `<div class="panel empty"><h2>Check the draft before it goes out</h2><p>Press <b>Run the quality check</b> below. You get a simple list: what passed, and what to fix, each with a link to the spot in the draft.</p></div>`;
+  const view = (j.finalCheck && j.finalCheck.qa) || j.qa; const g = gateState(j);
+  const fixes = view.checks.filter(x => x.status !== "pass"); const passes = view.checks.filter(x => x.status === "pass");
+  const ph = findPlaceholders(j); const sum = view.summary || {};
+  const nm = n => (c.qaChecks.find(q => q.n === n) || { name: "Check " + n }).name;
+  const sl = (t, a) => `<div><h3 style="font-size:14px;margin:12px 0 6px">${t} <span class="chip info">${arr(a).length}</span></h3>${arr(a).length ? `<ul class="sumlist">${arr(a).map(x => `<li>${hl(str(x))}</li>`).join("")}</ul>` : `<p class="small muted" style="margin:0">None.</p>`}</div>`;
+  return head("Quality check", `${j.finalCheck ? "Showing the re-check of your hand-edited final, " + fmtTime(j.finalCheck.at) : "Checked " + fmtTime(j.qaAt)}. ${passes.length} passed, ${fixes.length} to fix.`, `<button class="btn" id="runQA">Run again</button>`) +
+    (qaStale(j) && !j.finalCheck ? `<div class="notice warn" style="margin-bottom:12px"><span>You changed the draft after this check. Run it again before you release the report.</span></div>` : "") +
+    `<div class="panel" style="padding:0">${fixes.length ? `<div style="padding:14px 14px 4px"><h2 style="margin:0">Fix these <span class="chip bad">${fixes.length}</span></h2></div>${fixes.map(x => { const tg = fixTarget(j, x); return `<div class="fix" id="qa-${x.n}"><div style="min-width:0"><div class="name">${esc(nm(x.n))}</div><div class="det">${hl(x.detail || "")}</div>${arr(x.ids).length ? `<div class="mono small" style="margin-top:3px">${arr(x.ids).map(esc).join(", ")}</div>` : ""}</div>${tg ? `<button class="btn small" data-fix="${esc(tg)}">${tg === "library" ? "Open library" : tg === "profile" ? "Your details" : "Show in draft"}</button>` : ""}</div>`; }).join("")}` : `<div style="padding:14px"><h2 style="margin:0">All ${view.checks.length} checks passed <span class="chip ok">Pass</span></h2></div>`}</div>` +
+    (ph.length ? `<div class="panel"><h2>Fill in the blanks <span class="chip need">${ph.length}</span></h2><p class="small muted" style="margin-top:0">These spots still say [needed] or (unverified). A released report can't contain them.</p>${ph.map(x => `<div class="fix"><div><div class="name">${esc(x.where)}</div><div class="det">${esc(x.what)}${x.n > 1 ? " (" + x.n + ")" : ""}</div></div><button class="btn small" data-fix="${esc(x.anchor)}">${x.anchor === "profile" ? "Your details" : x.anchor === "score" ? "Rate categories" : "Show in draft"}</button></div>`).join("")}</div>` : "") +
+    `<div class="panel"><h2>Your sign-off</h2><div class="stack small"><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="conflicts" ${j.signoff.conflicts ? "checked" : ""}> <span>I reviewed every conflict between my sources and how each was resolved (Findings step, Conflicts tab).</span></label><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="scope" ${j.signoff.scope ? "checked" : ""}> <span>I confirm my answers to the scope questions (Findings step, Injury &amp; scope tab).</span></label></div></div>` +
+    `<details class="more panel"><summary>Passed (${passes.length})</summary><ul class="passlist" style="margin-top:8px">${passes.map(x => `<li><b>${esc(nm(x.n))}</b> <span class="muted">· ${hl(x.detail || "")}</span></li>`).join("")}</ul></details>` +
+    `<details class="more panel"><summary>Report summary and hand-edited final check</summary><div class="grid2" style="margin-top:10px"><div>${sl("Open hazards or issues", sum.openHazards)}${sl("Data mismatches", sum.dataMismatches)}${sl("Citations to confirm", sum.citationsToConfirm)}${sl("Questions for you", sum.questions)}${sl("Notes not used", sum.notesNotUsed)}</div>
+      <div><h3 style="font-size:14px;margin:12px 0 6px">Re-check a version you edited in Word</h3><p class="small muted" style="margin-top:0">Paste the full text. All ${c.qaChecks.length} checks run again and only what changed or broke is reported.</p><textarea id="finalText" rows="5" placeholder="Paste the full report text">${esc((j.finalCheck && j.finalCheck.text) || "")}</textarea><div class="row end" style="margin-top:8px">${j.finalCheck ? `<button class="btn ghost" id="clearFinal">Clear</button>` : ""}<button class="btn" id="runFinal">Re-check final</button></div>${j.finalCheck && j.finalCheck.changes ? `<div class="notice ${j.finalCheck.changes.length ? "warn" : "ok"}" style="margin-top:10px"><span>${j.finalCheck.changes.length ? "<b>Changed or broke:</b> " + j.finalCheck.changes.map(esc).join("; ") : "Your edited final passes the same checks. Nothing broke."}</span></div>` : ""}</div></div></details>`;
+}
+async function runQA(finalText) {
+  const j = S.job; const c = CFG();
+  const text = finalText || draftToText(j.draft);
+  const auto = autoChecks(j, text, finalText ? null : j.draft);
+  const autoForPrompt = {}; Object.keys(auto).filter(k => k !== "_confirm").forEach(k => autoForPrompt[k] = auto[k]);
+  try {
+    const out = await askJSON(finalText ? "Re-checking your final" : `Running ${c.qaChecks.length} QA checks`, promptQA(j, text, autoForPrompt), { tier: "complex", sub: "Checking each rule against the report text." });
+    if (!out || !Array.isArray(out.checks)) throw { code: "invalid_json" };
+    const checks = c.qaChecks.map(q => { if (auto[q.n]) return { n: q.n, ...auto[q.n] }; const m = out.checks.find(x => Number(x.n) === q.n) || { status: "flag", detail: "Not returned by the checker. Re-run QA." }; return { n: q.n, status: m.status === "pass" ? "pass" : "flag", ids: arr(m.ids).map(str), detail: str(m.detail), where: str(m.where) }; });
+    const summary = out.summary || {}; summary.citationsToConfirm = [...new Set([...arr(summary.citationsToConfirm).map(str), ...arr(auto._confirm).map(x => x + " (library marks this cite for re-confirmation)")])];
+    const qa = { checks, summary, at: nowISO() };
+    if (finalText) {
+      const prev = j.qa; const changes = [];
+      checks.forEach(x => { const p = prev && prev.checks.find(y => y.n === x.n); if (!p || p.status !== x.status || (x.status !== "pass" && p.detail !== x.detail)) changes.push(`Check ${x.n} ${x.status === "pass" ? "now passes" : "flags: " + x.detail}`); });
+      j.finalCheck = { text: finalText, qa, at: nowISO(), changes };
+    } else { j.qa = qa; j.qaAt = nowISO(); j.finalCheck = null; }
+    markDirty(); renderAll();
+  } catch (e) { const m = errMsg(e); if (m) toast(m); }
+}
+
+/* 6 Export */
+function viewExport() {
+  const c = CFG(), j = S.job, g = gateState(j);
+  const base = (jobTitle(j) || "Job").replace(/[^\w\- ]+/g, "").trim().slice(0, 50) || "Job";
+  const sm = photoSummary(c, j);
+  return head("Download", `Two separate Word files. The client report never contains quality-check results.`) +
+    `<div class="gate ${g.open ? "open" : "shut"}" style="margin-bottom:14px"><div><div class="big">${g.open ? "Ready to release" : "Not ready to release yet"}</div><div class="small">${esc(g.reason)}${g.open ? "" : " You can still download a draft copy; it is stamped DRAFT."}</div></div>${!g.open && (g.flags || g.ph) ? `<div class="spacer" style="flex:1"></div><button class="btn small" data-go="5">See what to fix</button>` : ""}</div>
+    ${sm.missing.length ? `<div class="notice warn" style="margin-bottom:14px"><span style="flex:1">${sm.missing.length} recommended photo${sm.missing.length === 1 ? " is" : "s are"} missing: ${esc(sm.missing.map(sl => sl.sec.label + ": " + sl.shot).join("; "))}.</span><button class="btn small" data-step="4" data-dtab="photos">Add photos</button></div>` : ""}
+    <div class="panel" style="margin-bottom:14px"><label class="row" style="gap:10px;align-items:flex-start;font-size:14.5px"><input type="checkbox" data-signoff="release" ${j.signoff.release ? "checked" : ""} style="margin-top:4px"> <span><b>I reviewed this report and approve it.</b> I will sign it and send it to the client myself.</span></label></div>
+    <div class="exp"><div class="panel doccard"><div class="ic">DOCX</div><div style="flex:1;min-width:0"><h2 style="margin-bottom:4px">${esc(c.exportNames.report)}</h2><p class="small muted" style="margin:0 0 10px">For the client: your logo and company on the cover, a contents page, your signature block and the assistance line. File: <span class="mono">${esc(base)} - ${esc(c.exportNames.report)}.docx</span></p><p class="small muted" style="margin:0">Use the big button below to download it. In Word, right-click the contents list and choose Update Field to add page numbers.</p></div></div>
+    <div class="panel doccard"><div class="ic">DOCX</div><div style="flex:1;min-width:0"><h2 style="margin-bottom:4px">${esc(c.exportNames.qa)}</h2><p class="small muted" style="margin:0 0 10px">For you only: check results, release status, conflicts register, open questions and notes not used.</p><button class="btn" id="dlQA" ${j.qa ? "" : "disabled"}>Download QA sheet</button>${j.qa ? "" : `<p class="small muted">Run the quality check first.</p>`}</div></div></div>`;
+}
+async function saveFile(filename, blob) {
+  const dl = window.claude && claude.use ? await claude.use("downloads").catch(() => null) : null;
+  if (!dl) { toast(window.RE_HOST ? "Downloads aren't available right now. Try again." : "Downloads aren't available in this view. Open the app in claude.ai."); return; }
+  try { await dl.save({ filename, data: blob }); toast("Saved " + filename); }
+  catch (e) { if (e && e.code === "declined") return; toast(e && e.code === "rate_limited" ? "A save is already waiting for you to confirm." : "The file couldn't be saved here."); }
+}
+
+/* ---------------- Word (.docx) builder ---------------- */
+const X = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
+function wRun(t, o = {}) { const pr = (o.mono ? `<w:rFonts w:ascii="Consolas" w:hAnsi="Consolas"/>` : "") + (o.b ? "<w:b/>" : "") + (o.i ? "<w:i/>" : "") + (o.color ? `<w:color w:val="${o.color}"/>` : "") + (o.sz ? `<w:sz w:val="${o.sz}"/>` : ""); return String(t ?? "").split("\n").map((ln, i) => (i ? "<w:r><w:br/></w:r>" : "") + `<w:r>${pr ? `<w:rPr>${pr}</w:rPr>` : ""}<w:t xml:space="preserve">${X(ln)}</w:t></w:r>`).join(""); }
+function wRich(t, o = {}) { return String(t ?? "").split(/(\*\*[^*]+\*\*)/).map(seg => seg.startsWith("**") && seg.endsWith("**") ? wRun(seg.slice(2, -2), { ...o, b: true }) : wRun(seg, o)).join(""); }
+function wP(runs, o = {}) { const bm = o.bm ? `<w:bookmarkStart w:id="${o.bm.id}" w:name="${o.bm.name}"/>` : ""; const be = o.bm ? `<w:bookmarkEnd w:id="${o.bm.id}"/>` : ""; return `<w:p><w:pPr>${o.style ? `<w:pStyle w:val="${o.style}"/>` : ""}${o.keep ? "<w:keepNext/>" : ""}${o.shade ? `<w:shd w:val="clear" w:color="auto" w:fill="${o.shade}"/>` : ""}${o.after != null || o.before != null ? `<w:spacing${o.before != null ? ` w:before="${o.before}"` : ""}${o.after != null ? ` w:after="${o.after}"` : ""}/>` : ""}${o.bullet ? `<w:ind w:left="360" w:hanging="240"/>` : ""}${o.center ? `<w:jc w:val="center"/>` : ""}</w:pPr>${bm}${runs}${be}</w:p>`; }
+const W_BREAK = `<w:p><w:r><w:br w:type="page"/></w:r></w:p>`;
+function wField(instr, cached) { return `<w:r><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:instrText xml:space="preserve"> ${instr} </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t>${X(cached)}</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r>`; }
+function tocXml(heads) {
+  if (!heads.length) return "";
+  let x = wP(wRun("Contents"), { style: "TOCHeading" });
+  heads.forEach((hd, i) => {
+    const start = i === 0 ? `<w:r><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:instrText xml:space="preserve"> TOC \\o "1-2" \\h \\z \\u </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r>` : "";
+    const end = i === heads.length - 1 ? `<w:r><w:fldChar w:fldCharType="end"/></w:r>` : "";
+    x += `<w:p><w:pPr><w:pStyle w:val="TOC${hd.level}"/></w:pPr>${start}<w:hyperlink w:anchor="${hd.bm}" w:history="1"><w:r><w:rPr><w:rStyle w:val="Hyperlink"/></w:rPr><w:t xml:space="preserve">${X(hd.text)}</w:t></w:r></w:hyperlink>${end}</w:p>`;
+  });
+  return x;
+}
+function wTable(headers, rows, widths) {
+  const n = Math.max(headers.length, ...rows.map(r => r.length), 1); const total = 9360; const w = widths || Array(n).fill(Math.floor(total / n));
+  const b = `<w:tblBorders>${["top", "left", "bottom", "right", "insideH", "insideV"].map(s => `<w:${s} w:val="single" w:sz="4" w:space="0" w:color="A6B1BE"/>`).join("")}</w:tblBorders>`;
+  const cell = (t, i, hd) => `<w:tc><w:tcPr><w:tcW w:w="${w[i] || w[0]}" w:type="dxa"/>${hd ? `<w:shd w:val="clear" w:color="auto" w:fill="E3EBF4"/>` : ""}</w:tcPr>${wP(wRun(str(t), hd ? { b: true, sz: 19 } : { sz: 19 }), { after: 40 })}</w:tc>`;
+  const tr = (r, hd) => `<w:tr>${hd ? "<w:trPr><w:tblHeader/></w:trPr>" : ""}${Array.from({ length: n }, (_, i) => cell(r[i] ?? "", i, hd)).join("")}</w:tr>`;
+  return `<w:tbl><w:tblPr><w:tblW w:w="${total}" w:type="dxa"/>${b}<w:tblCellMar><w:left w:w="90" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${Array.from({ length: n }, (_, i) => `<w:gridCol w:w="${w[i] || w[0]}"/>`).join("")}</w:tblGrid>${headers.length ? tr(headers, true) : ""}${rows.map(r => tr(r, false)).join("")}</w:tbl>` + wP("", { after: 120 });
+}
+const DOCX_STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-US"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style><w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="200"/></w:pPr><w:rPr><w:b/><w:color w:val="1C3A5A"/><w:sz w:val="40"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="320" w:after="120"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="1C3A5A"/><w:sz w:val="30"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="220" w:after="80"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="180" w:after="60"/><w:outlineLvl w:val="2"/></w:pPr><w:rPr><w:b/><w:color w:val="1C3A5A"/><w:sz w:val="22"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Small"><w:name w:val="Small"/><w:basedOn w:val="Normal"/><w:rPr><w:color w:val="5A6879"/><w:sz w:val="18"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="TOCHeading"><w:name w:val="TOC Heading"/><w:basedOn w:val="Heading1"/><w:next w:val="Normal"/><w:pPr><w:outlineLvl w:val="9"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="TOC1"><w:name w:val="toc 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:spacing w:before="60" w:after="60"/></w:pPr><w:rPr><w:b/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="TOC2"><w:name w:val="toc 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:spacing w:after="40"/><w:ind w:left="360"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="Header"><w:name w:val="header"/><w:basedOn w:val="Normal"/><w:pPr><w:tabs><w:tab w:val="right" w:pos="9360"/></w:tabs><w:spacing w:after="0"/></w:pPr><w:rPr><w:color w:val="5A6879"/><w:sz w:val="17"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Footer"><w:name w:val="footer"/><w:basedOn w:val="Normal"/><w:pPr><w:tabs><w:tab w:val="right" w:pos="9360"/></w:tabs><w:spacing w:after="0"/></w:pPr><w:rPr><w:color w:val="5A6879"/><w:sz w:val="16"/></w:rPr></w:style><w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:rPr><w:color w:val="1C3A5A"/></w:rPr></w:style></w:styles>`;
+function wImage(m) {
+  const maxW = m.maxW || 5486400, maxH = m.maxH || 4114800; let cx = maxW, cy = Math.round(maxW * (m.h / m.w)); if (cy > maxH) { cy = maxH; cx = Math.round(maxH * (m.w / m.h)); }
+  return `<w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${m.n}" name="Photo ${m.n}"/><wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="${m.n}" name="${m.file || "photo" + m.n + ".jpeg"}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${m.rid}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>`;
+}
+async function docxBlob(bodyXml, media = [], opts = {}) {
+  const zip = new JSZip();
+  media.forEach(m => { m.file = m.file || `photo${m.n}.jpeg`; zip.file(`word/media/${m.file}`, String(m.dataUrl).split(",")[1] || "", { base64: true }); });
+  const hasPng = media.some(m => /\.png$/.test(m.file)), hasJpg = media.some(m => /\.jpeg$/.test(m.file));
+  const hf = !!(opts.header || opts.footer);
+  zip.file("[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${hasJpg ? `<Default Extension="jpeg" ContentType="image/jpeg"/>` : ""}${hasPng ? `<Default Extension="png" ContentType="image/png"/>` : ""}<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>${hf ? `<Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>` : ""}</Types>`);
+  zip.file("_rels/.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`);
+  zip.file("docProps/core.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${X(opts.title || "")}</dc:title><dc:creator>${X(opts.author || "")}</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${new Date().toISOString().slice(0, 19)}Z</dcterms:created></cp:coreProperties>`);
+  zip.file("word/_rels/document.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>${hf ? `<Relationship Id="rIdH1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rIdF1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>` : ""}${media.map(m => `<Relationship Id="${m.rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/${m.file}"/>`).join("")}</Relationships>`);
+  zip.file("word/styles.xml", DOCX_STYLES);
+  const NS = `xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"`;
+  if (hf) {
+    zip.file("word/header1.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}>${opts.header || wP("", { style: "Header" })}</w:hdr>`);
+    zip.file("word/footer1.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}>${opts.footer || wP("", { style: "Footer" })}</w:ftr>`);
+  }
+  const sect = `<w:sectPr>${hf ? `<w:headerReference w:type="default" r:id="rIdH1"/><w:footerReference w:type="default" r:id="rIdF1"/>` : ""}<w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/>${opts.titlePg ? "<w:titlePg/>" : ""}</w:sectPr>`;
+  zip.file("word/document.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS} xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>${bodyXml}${sect}</w:body></w:document>`);
+  return zip.generateAsync({ type: "blob", compression: "DEFLATE", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+}
+function hfXml(c, j, kind) {
+  const k = consultantInfo(); const d = j.draft || {};
+  const head = wP(wRun(k.firm || "") + `<w:r><w:tab/></w:r>` + wRun(kind === "qa" ? c.exportNames.qa + " · internal" : (d.title || c.reportTitle)), { style: "Header" });
+  const foot = wP(wRun(kind === "qa" ? "Consultant QA Sheet – not for the client." : assistShort()) + `<w:r><w:tab/></w:r>` + wRun("Page ") + wField("PAGE", "1") + wRun(" of ") + wField("NUMPAGES", "1"), { style: "Footer" });
+  return { header: head, footer: foot };
+}
+function reportXml(j, released, media = []) {
+  const c = CFG(), d = j.draft; let x = ""; const heads = []; let bmId = 1;
+  const H = (text, level) => { const bm = { id: bmId++, name: "_TocRE" + String(bmId).padStart(4, "0") }; heads.push({ text, level, bm: bm.name }); return wP(wRun(text), { style: level === 1 ? "Heading1" : "Heading2", bm }); };
+  const ph = j.photos || {};
+  const pics = slots => slots.map(sl => {
+    const p = ph[sl.key], url = PHOTO.data[sl.key];
+    if (p && url) { const n = media.filter(m => !m.logo).length + 1; const m = { n: media.length + 1, rid: "rIdP" + (media.length + 1), dataUrl: url, w: p.w, h: p.h }; media.push(m); return wP(wImage(m), { after: 40, keep: true }) + wP(wRun(`Photo ${n}. ${captionOf(sl, j)}`, { i: true }), { style: "Small" }); }
+    return released ? "" : wP(wRun(`[${sl.required ? "Required photo" : "Photo slot"} not added: ${sl.shot}]`, { i: true, color: "9A6400" }), { style: "Small" });
+  }).join("");
+  // cover page
+  const k = consultantInfo();
+  let cover = "";
+  if (!released) cover += wP(wRun("DRAFT – not released. Not for the client.", { b: true, color: "B42318" }), { shade: "FBE7E5" });
+  if (k.logo) { const im = S.logoDims || { w: 400, h: 160 }; const m = { n: media.length + 1, rid: "rIdLogo", dataUrl: k.logo, w: im.w, h: im.h, maxW: 2286000, maxH: 1143000, logo: true, file: /^data:image\/png/.test(k.logo) ? "logo.png" : "logo.jpeg" }; media.push(m); cover += wP(wImage(m), { after: 120 }); }
+  if (k.firm) cover += wP(wRun(k.firm, { b: true, color: "1C3A5A", sz: 28 }), { after: 480 });
+  cover += wP(wRun(d.title || c.reportTitle), { style: "Title" });
+  coverLines(d).forEach(cv => cover += wP(wRun(cv.label + ": ", { b: true }) + wRich(cv.value), { after: 40 }));
+  cover += pics(slotsAt(c, d, "cover"));
+  // body
+  let body = "";
+  arr(d.sections).forEach((s, si) => {
+    body += H(String(s.heading || ""), /^(\d+\.\d+|#{2,})/.test(String(s.heading).trim()) ? 2 : 1);
+    arr(s.blocks).forEach(b => {
+      if (b.type === "p") body += wP(wRich(b.text));
+      else if (b.type === "bullets") arr(b.items).forEach(it => body += wP(wRun("•\t") + wRich(it), { bullet: true, after: 60 }));
+      else if (b.type === "table") body += wTable(arr(b.headers), arr(b.rows).map(r => arr(r).map(str)));
+      else if (b.type === "counts") { const kc = computeCounts(approvedItems(j)); body += wTable([countsLabel(c), "Count"], Object.entries(kc).map(([a, v]) => [a, String(v)]), [3000, 1500]); }
+      else if (b.type === "scorecard") { const ks = computeScore(c, j); if (ks) { body += wTable(["Category", "Rating", "Score"], scoreTableRows(ks), [5200, 2200, 1200]); body += wP(wRun(scoreLine(ks), { b: true })); } }
+      else if (b.type === "finding") { body += wP(wRun(`${b.id} ${b.title}${b.rating ? " (" + b.rating + ")" : ""}${b.repeat ? " – REPEAT" : ""}`), { style: "Heading3" }); arr(b.parts).forEach(p => body += wP(wRun(p.label + ": ", { b: true }) + wRich(p.text))); }
+    });
+    body += pics(slotsAt(c, d, si));
+  });
+  const tx = pics(slotsAt(c, d, "end")); if (tx) body += H("Photographs", 1) + tx;
+  // sign-off
+  body += H("Consultant Sign-off", 1);
+  body += wP(wRun(signatureBlock()));
+  body += wP(wRun("Signature: ______________________________"), { before: 480, after: 40 }) + wP(wRun("Date: ______________________"), { after: 240 });
+  body += wP(wRun(assistLine(), { i: true, color: "5A6879" }));
+  x = cover + W_BREAK + tocXml(heads) + W_BREAK + body;
+  return x;
+}
+function qaXml(j) {
+  const c = CFG(), qa = (j.finalCheck && j.finalCheck.qa) || j.qa, I = j.intake || {}, g = gateState(j); let x = "";
+  x += wP(wRun("CONSULTANT QA SHEET – internal, not for the client", { b: true, color: "B42318" }));
+  x += wP(wRun("Prepared by: ", { b: true }) + wRun(preparedBy()), { after: 40 });
+  x += wP(wRun(c.exportNames.qa), { style: "Title" });
+  x += wP(wRun("Job: ", { b: true }) + wRun(jobTitle(j)), { after: 40 }) + wP(wRun("Report type: ", { b: true }) + wRun(c.reportType + " · Engine " + c.engineId), { after: 40 }) + wP(wRun("QA rules: ", { b: true }) + wRun(c.qaVersion + " · run " + fmtTime(qa.at) + (j.finalCheck ? " (hand-edited final)" : "")), { after: 40 });
+  x += wP(wRun("Release gate", {}), { style: "Heading1" });
+  x += wP(wRun(g.open ? "OPEN – " : "CLOSED – ", { b: true, color: g.open ? "1D7A4C" : "B42318" }) + wRun(g.reason));
+  x += wP(wRun(`Conflicts register signed off: ${j.signoff.conflicts ? "yes" : "no"}. Scope-trigger answers confirmed: ${j.signoff.scope ? "yes" : "no"}. Report approved by the consultant for release: ${j.signoff.release ? "yes" : "no"}.`));
+  { const ph = findPlaceholders(j); if (ph.length) { x += wP(wRun("Blanks still in the report"), { style: "Heading2" }); ph.forEach(p => x += wP(wRun(`•	${p.where}: ${p.what}`), { bullet: true, after: 60 })); } }
+  x += wP(wRun(c.qaChecks.length + " checks"), { style: "Heading1" });
+  x += wTable(["#", "Check", "Result", "IDs", "Detail"], qa.checks.map(k => { const d = c.qaChecks.find(q => q.n === k.n) || {}; return [String(k.n), d.name || "", k.status === "pass" ? "Pass" : "FLAG", arr(k.ids).join(", "), k.detail || ""]; }), [500, 1700, 800, 1200, 5160]);
+  if (j.finalCheck && arr(j.finalCheck.changes).length) { x += wP(wRun("Changed or broke in the hand-edited final"), { style: "Heading2" }); j.finalCheck.changes.forEach(t => x += wP(wRun("•\t" + t), { bullet: true, after: 60 })); }
+  const s = qa.summary || {};
+  x += wP(wRun("Report Summary"), { style: "Heading1" });
+  [["Open hazards", s.openHazards], ["Data mismatches", s.dataMismatches], ["Citations to confirm", s.citationsToConfirm], ["Questions for the consultant", s.questions], ["Notes not used", s.notesNotUsed]].forEach(([h, a]) => { x += wP(wRun(h), { style: "Heading2" }); if (arr(a).length) arr(a).forEach(t => x += wP(wRun("•\t" + str(t)), { bullet: true, after: 60 })); else x += wP(wRun("None.", { i: true })); });
+  { const sm = photoSummary(c, j); if (sm.total) { x += wP(wRun("Photos"), { style: "Heading1" }); x += wP(wRun(`${sm.filled} of ${photoSlots(c).length} recommended photos added. ` + (sm.missing.length ? "Required photos missing: " + sm.missing.map(sl => sl.sec.label + " – " + sl.shot).join("; ") + "." : "No required photos missing."))); } }
+  x += wP(wRun("Conflicts register"), { style: "Heading1" });
+  x += arr(I.conflicts).length ? wTable(["#", "Item", "Source 1 (value)", "Source 2 (value)", "Resolution owner", "Resolution"], I.conflicts.map((k, i) => [k.id || "C-" + (i + 1), k.item, k.source1, k.source2, k.owner, k.resolution || "[open]"].map(str))) : wP(wRun("None.", { i: true }));
+  x += wP(wRun("Open questions"), { style: "Heading1" });
+  const oq = j.interview.filter(q => !(q.answer || "").trim());
+  if (oq.length) oq.forEach(q => x += wP(wRun(`•\t[${q.kind}] ${q.question}`), { bullet: true, after: 60 })); else x += wP(wRun("None.", { i: true }));
+  x += wP(wRun("Interview answers"), { style: "Heading1" });
+  const aq = j.interview.filter(q => (q.answer || "").trim());
+  if (aq.length) x += wTable(["Question", "Consultant's answer"], aq.map(q => [q.question, q.answer])); else x += wP(wRun("None.", { i: true }));
+  x += wP(wRun("Notes not used"), { style: "Heading1" });
+  x += arr(I.notesNotUsed).length ? wTable(["Note", "Reason"], I.notesNotUsed.map(k => [str(k.note), str(k.reason)])) : wP(wRun("None.", { i: true }));
+  x += wP(wRun("Packet inventory"), { style: "Heading1" });
+  x += arr(I.packet).length ? wTable(["Item", "Type", "Status", "Notes"], I.packet.map(k => [k.item, k.type, k.status, k.notes].map(str))) : wP(wRun("None.", { i: true }));
+  x += wP(wRun("Names"), { style: "Heading1" });
+  x += arr(I.names).length ? wTable(["As written", "Use in report"], I.names.map(k => [str(k.asWritten), str(k.useInReport)])) : wP(wRun("None.", { i: true }));
+  x += wP(wRun("Injury and scope-trigger questions"), { style: "Heading1" });
+  x += wTable(["Item", "Question / status", "Answer"], [...arr(I.injury).map(k => ["Injury / incident: " + str(k.note), str(k.status), ""]), ...arr(I.scopeTriggers).map(k => ["Scope trigger: " + str(k.topic), str(k.question), str(k.answer) || "[open]"])]);
+  return x;
+}
+async function exportDoc(which) {
+  const j = S.job, c = CFG(); const base = (jobTitle(j) || "Job").replace(/[^\w\- ]+/g, "").trim().slice(0, 50) || "Job";
+  try {
+    if (which === "report" && photoCount(j) && PHOTO.job !== j.id) await loadPhotos(j);
+    const k = consultantInfo(); if (k.logo) S.logoDims = await new Promise(res => { const im = new Image(); im.onload = () => res({ w: im.naturalWidth || 400, h: im.naturalHeight || 160 }); im.onerror = () => res({ w: 400, h: 160 }); setTimeout(() => res({ w: 400, h: 160 }), 3000); im.src = k.logo; });
+    const open = gateState(j).open;
+    const media = []; const xml = which === "report" ? reportXml(j, open, media) : qaXml(j);
+    const blob = await docxBlob(xml, media, { ...hfXml(c, j, which), titlePg: which === "report", title: which === "report" ? (j.draft.title || c.reportTitle) : c.exportNames.qa, author: k.name || "" });
+    await saveFile(`${base} - ${which === "report" ? c.exportNames.report : c.exportNames.qa}${which === "report" && !open ? " (DRAFT)" : ""}.docx`, blob);
+  } catch (e) { toast("The Word file couldn't be built: " + (e.message || e)); }
+}
+/* ---------------- events ---------------- */
+document.addEventListener("click", async e => {
+  const t = e.target.closest("button,[data-open],[data-new],.drop"); if (!t) return;
+  if (t.id === "jobBtn" || t.dataset.page === "home") { await saveJob(); S.page = "home"; S.confirmDel = null; renderAll(); window.scrollTo({ top: 0 }); return; }
+  if (t.dataset.page === "profile") { await saveJob(); S.page = "profile"; renderAll(); window.scrollTo({ top: 0 }); return; }
+  if (t.id === "signOut") { await saveJob(); window.RE_HOST && window.RE_HOST.signOut(); return; }
+  if (t.dataset.open) { await saveJob(); const j = S.jobs.find(x => x.id === t.dataset.open); if (j) { S.job = clone(j); lsSet("re.last", j.id); } S.page = null; S.confirmRebuild = false; renderAll(); window.scrollTo({ top: 0 }); return; }
+  if (t.dataset.new) { await saveJob(); S.job = newJob(t.dataset.new); S.page = null; S.tab = "findings"; S.dtab = "report"; markDirty(); renderAll(); window.scrollTo({ top: 0 }); return; }
+  if (t.dataset.sample) { await saveJob(); openSample(t.dataset.sample); return; }
+  if (t.dataset.del) { if (S.confirmDel !== t.dataset.del) { S.confirmDel = t.dataset.del; renderView(); return; } await deleteJob(t.dataset.del); S.confirmDel = null; renderAll(); toast("Job deleted."); return; }
+  if (t.dataset.lib) { S.libId = t.dataset.lib; S.page = "library"; renderAll(); window.scrollTo({ top: 0 }); return; }
+  if (t.dataset.libverify) { const c = PRESETS[t.dataset.libverify]; S.profile = { ...profile(), libVerified: { ...(profile().libVerified || {}), [c.id]: { on: nowISO().slice(0, 10), by: profile().name || "", version: c.citationLibrary.title || "" } } }; saveProfileSoon(); if (S.job && S.job.qa) S.job.editedAt = nowISO(); renderAll(); toast("Marked verified. Run the quality check again on open jobs."); return; }
+  if (t.dataset.libunverify) { const v = { ...(profile().libVerified || {}) }; delete v[t.dataset.libunverify]; S.profile = { ...profile(), libVerified: v }; saveProfileSoon(); renderAll(); return; }
+  if (t.id === "pickLogo") { $("#logoIn").click(); return; }
+  if (t.id === "delLogo") { const p = { ...profile() }; delete p.logo; S.profile = p; saveProfileSoon(); renderView(); return; }
+  if (!S.job || S.page) return;
+  if (t.id === "nextBtn") { await runNext(); return; }
+  if (t.dataset.fix) { goFix(t.dataset.fix); return; }
+  if (t.id === "photoDrop") { $("#sitePhotoIn").click(); return; }
+  if (t.id === "rebuildDraft") { if (!S.confirmRebuild && S.job.editedAt) { S.confirmRebuild = true; renderView(); return; } S.confirmRebuild = false; await buildDraft(); return; }
+  const j = S.job;
+  if (t.dataset.dtab && !t.dataset.step) { S.dtab = t.dataset.dtab; renderView(); return; }
+  if (t.dataset.pick) { S.pickSlot = t.dataset.pick; $("#photoIn").click(); return; }
+  if (t.dataset.unpick) { await removePhoto(t.dataset.unpick); return; }
+  if (t.dataset.step || t.dataset.go) { if (t.dataset.dtab) S.dtab = t.dataset.dtab; j.step = Number(t.dataset.step || t.dataset.go); markDirty(); renderAll(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+  if (t.id === "drop") { $("#fileIn").click(); return; }
+  if (t.id === "addPaste") { const tx = $("#pasteText").value.trim(); if (!tx) { toast("Paste some text first."); return; } j.sources.push({ id: uid(), name: $("#pasteName").value.trim() || "Pasted notes " + (j.sources.length + 1), kind: "Field notes", status: "received and reviewed", text: tx }); markDirty(); renderAll(); return; }
+  if (t.dataset.delSrc) { j.sources = j.sources.filter(s => s.id !== t.dataset.delSrc); markDirty(); renderAll(); return; }
+  if (t.dataset.toggleSrc) { const s = j.sources.find(s => s.id === t.dataset.toggleSrc); s.open = !s.open; renderView(); return; }
+  if (t.id === "runFindings" || t.id === "rerun" || t.id === "moreQs") { await runFindings(); return; }
+  if (t.id === "sendAnswers") { collectAnswers(); if (!j.interview.some(q => q.round === j.round && (q.answer || "").trim())) { toast("Answer at least one question, or skip them."); return; } await runFindings(); return; }
+  if (t.dataset.skip) { collectAnswers(); const q = j.interview.find(q => q.id === t.dataset.skip); if (q.kind === "injury") { toast("Injury questions stay open until you answer them."); return; } q.skipped = true; markDirty(); renderView(); return; }
+  if (t.dataset.tab) { S.tab = t.dataset.tab; renderView(); return; }
+  if (t.id === "addRow") { const c = CFG(); const n = j.intake.items.filter(x => /^F-\d+$/.test(x.id)).reduce((m, x) => Math.max(m, Number(x.id.slice(2))), 0) + 1; const it = { _manual: true, _edits: [] }; c.columns.forEach(col => it[col.key] = col.options ? col.options[0] : ""); it.id = "F-" + n; it.action = ""; j.intake.items.push(it); markDirty(); renderView(); return; }
+  if (t.dataset.sdel) { scoreRows(CFG(), j).splice(Number(t.dataset.sdel), 1); markDirty(); renderView(); return; }
+  if (t.id === "addScore") { scoreRows(CFG(), j).push({ cat: "New category", level: "[needed]" }); markDirty(); renderView(); return; }
+  if (t.dataset.delrow) { j.intake.items.splice(Number(t.dataset.delrow), 1); markDirty(); renderView(); return; }
+  if (t.id === "reopen") { j.approved = false; markDirty(); renderAll(); return; }
+  if (t.id === "applyEdit") { const r = $("#editReq").value.trim(); if (!r) { toast("Describe the change first."); return; } await editDraft(r); return; }
+  if (t.id === "applySheet") { const c = CFG(); const before = j.jobSheetAtDraft || {}; const ch = c.jobSheetFields.filter(f => (before[f.key] || "") !== (j.jobSheet[f.key] || "")).map(f => `${f.label}: was "${before[f.key] || "[needed]"}", now "${j.jobSheet[f.key] || "[needed]"}"`); await editDraft("The job sheet changed. Update every place these values appear in the report, and nothing else:\n" + ch.join("\n"), "Updating the job-sheet values everywhere"); return; }
+  if (t.id === "runQA") { await runQA(); return; }
+  if (t.id === "runFinal") { const tx = $("#finalText").value.trim(); if (tx.length < 200) { toast("Paste the full report text first."); return; } await runQA(tx); return; }
+  if (t.id === "clearFinal") { j.finalCheck = null; markDirty(); renderView(); return; }
+  if (t.id === "dlQA") { await exportDoc("qa"); return; }
+});
+document.addEventListener("change", e => {
+  const el = e.target; const j = S.job; if (!j || S.page) return;
+  if (el.dataset.srcKind) { j.sources.find(s => s.id === el.dataset.srcKind).kind = el.value; markDirty(); }
+  if (el.dataset.srcStatus) { j.sources.find(s => s.id === el.dataset.srcStatus).status = el.value; markDirty(); }
+  if (el.dataset.cell && el.tagName === "SELECT") { setCell(el.dataset.cell, el.value); renderView(); }
+  if (el.dataset.slevel) { scoreRows(CFG(), j)[Number(el.dataset.slevel)].level = el.value; markDirty(); renderView(); return; }
+  if (el.dataset.signoff) { j.signoff[el.dataset.signoff] = el.checked; markDirty(); renderView(); renderNext(); }
+});
+document.addEventListener("input", e => { const el = e.target; if (el.dataset.pf) { S.profile = { ...profile(), [el.dataset.pf]: el.value }; saveProfileSoon(); const pv = $(".sigprev"); if (pv) pv.textContent = signatureBlock() + "\nSignature: ______________________   Date: ____________"; return; } if (el.dataset.cap && S.job && S.job.photos && S.job.photos[el.dataset.cap]) { S.job.photos[el.dataset.cap].caption = el.value; markDirty(); return; } if (el.dataset.ans) { const q = S.job.interview.find(q => q.id === el.dataset.ans); if (q) { q.answer = el.value; markDirty(); } } });
+document.addEventListener("focusout", e => { const el = e.target; if (el.dataset && el.dataset.dp && S.job && S.job.draft) { const v = (el.innerText ?? el.textContent).replace(/\u00a0/g, " ").replace(/\n{3,}/g, "\n\n").trim(); if (setDraftPath(el.dataset.dp, v)) { S.job.editedAt = nowISO(); markDirty(); renderSteps(); renderNext(); } return; } if (el.dataset && el.dataset.scat && el.isContentEditable && S.job) { const r = scoreRows(CFG(), S.job)[Number(el.dataset.scat)]; const v = (el.innerText ?? el.textContent).trim(); if (r && v && r.cat !== v) { r.cat = v; markDirty(); } return; } if (el.dataset && el.dataset.cell && el.isContentEditable) { setCell(el.dataset.cell, (el.innerText ?? el.textContent).trim()); el.classList.add("edited"); } });
+function setCell(ref, val) { const [ri, key] = ref.split(":"); const it = S.job.intake.items[Number(ri)]; if (!it || it[key] === val) return; it[key] = val; it._edits = [...new Set([...arr(it._edits), key])]; markDirty(); }
+function collectAnswers() { document.querySelectorAll("[data-ans]").forEach(el => { const q = S.job.interview.find(q => q.id === el.dataset.ans); if (q) q.answer = el.value; }); }
+$("#photoIn").addEventListener("change", e => { const f = e.target.files[0]; e.target.value = ""; const k = S.pickSlot; S.pickSlot = null; if (f && k) addPhoto(k, f); });
+$("#sitePhotoIn").addEventListener("change", e => { const f = [...e.target.files]; e.target.value = ""; if (f.length) addSitePhotos(f); });
+$("#logoIn").addEventListener("change", async e => { const f = e.target.files[0]; e.target.value = ""; if (!f) return; try { const im = await readImage(f); const k = Math.min(1, 600 / Math.max(im.naturalWidth, im.naturalHeight)); const cv = document.createElement("canvas"); cv.width = Math.round(im.naturalWidth * k); cv.height = Math.round(im.naturalHeight * k); cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height); const png = /png/i.test(f.type); const url = cv.toDataURL(png ? "image/png" : "image/jpeg", 0.9); if (url.length > 200000) { toast("That logo is too large. Try a smaller file."); return; } S.profile = { ...profile(), logo: url }; saveProfileSoon(); renderView(); } catch { toast("That image couldn't be read. Try a PNG or JPEG."); } });
+document.addEventListener("paste", e => { if (!S.job || S.page || S.job.step !== 2) return; const files = [...(e.clipboardData && e.clipboardData.files || [])].filter(f => /^image\//.test(f.type)); if (files.length) { e.preventDefault(); addSitePhotos(files); } });
+$("#fileIn").addEventListener("change", e => { const f = [...e.target.files]; e.target.value = ""; if (f.length) addFiles(f); });
+document.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.id === "drop") { e.preventDefault(); $("#fileIn").click(); } if ((e.key === "Enter" || e.key === " ") && e.target.id === "photoDrop") { e.preventDefault(); $("#sitePhotoIn").click(); } });
+document.addEventListener("dragover", e => { const d = e.target.closest && e.target.closest("#drop,#photoDrop"); if (d) { e.preventDefault(); d.classList.add("over"); } });
+document.addEventListener("dragleave", e => { const d = e.target.closest && e.target.closest("#drop,#photoDrop"); if (d) d.classList.remove("over"); });
+document.addEventListener("drop", e => { const d = e.target.closest && e.target.closest("#drop,#photoDrop"); if (d) { e.preventDefault(); d.classList.remove("over"); if (d.id === "photoDrop") addSitePhotos([...e.dataTransfer.files]); else addFiles([...e.dataTransfer.files]); } });
+window.addEventListener("beforeunload", () => { if (S.dirty) saveJob(); });
+
+/* one-click finished sample: a copy of the report type's built-in sample job (made-up company) */
+function openSample(presetId) {
+  const c = PRESETS[presetId]; if (!c || !c.sampleJob) return;
+  const base = newJob(presetId); const sj = clone(c.sampleJob);
+  const j = { ...base, ...sj, id: uid(), presetId, sample: true, created: nowISO(), updated: nowISO(), step: 4, photos: {}, extraPhotos: 0, signoff: { conflicts: false, scope: false, release: false }, finalCheck: null, editedAt: null };
+  j.approvedAt = nowISO(); j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet);
+  S.job = j; S.page = null; S.dtab = "report"; S.tab = "findings";
+  if (sj.qa) { const auto = autoChecks(j, draftToText(j.draft), j.draft); j.qa = { checks: c.qaChecks.map(q => auto[q.n] ? { n: q.n, ...auto[q.n] } : (sj.qa.checks.find(x => x.n === q.n) || { n: q.n, status: "pass", ids: [], detail: "" })), summary: sj.qa.summary || {}, at: nowISO() }; j.qaAt = nowISO(); }
+  markDirty(); renderAll(); window.scrollTo({ top: 0 });
+  toast("Sample opened. It uses a made-up company.");
+}
+/* ---------------- boot ---------------- */
+async function loadPresets() {
+  for (const p of PRESET_FILES) {
+    try { const r = await fetch(p, { cache: "no-store" }); if (r.ok) { const cfg = await r.json(); if (cfg && cfg.id && cfg.qaChecks) PRESETS[cfg.id] = cfg; } } catch { }
+  }
+}
+(async function boot() {
+  setSaveChip("");
+  renderAll();
+  await Promise.all([initStore(), loadPresets()]);
+  await loadJobs();
+  S.page = "home";
+  setSaveChip(S.store === "account" ? "Jobs save to your account" : "Jobs save on this device");
+  renderAll();
+})();
+</script></body></html>

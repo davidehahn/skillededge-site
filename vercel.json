@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/report-engine/sample.mjs": { "maxDuration": 300 },
+    "api/report-engine/db.mjs": { "maxDuration": 30 },
+    "api/report-engine/login.mjs": { "maxDuration": 10 }
+  },
+  "redirects": [
+    { "source": "/report-engine", "destination": "/report-engine/", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/report-engine/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "no-referrer" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    }
+  ]
+}
