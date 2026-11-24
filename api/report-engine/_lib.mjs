@@ -25,7 +25,7 @@ export function auth(request) {
 export const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store" } });
 export const fail = (code, message, status) => json({ error: { code, message } }, status);
 
-/* ---------- storage: Upstash Redis in production, a local JSON file in development ---------- */
+/* ---------- storage: Upstash Redis or a private Vercel Blob store in production, a local JSON file in development ---------- */
 let _store = null;
 export async function store() {
   if (_store) return _store;
@@ -44,6 +44,29 @@ export async function store() {
       async mget(keys) { return keys.length ? r.mget(...keys) : []; },
       async incrbyfloat(k, n) { return Number(await r.incrbyfloat(k, n)); }
     };
+  } else if (process.env.BLOB_READ_WRITE_TOKEN) {
+    // Vercel Blob (private store). Each key is one small JSON blob; sets are JSON arrays.
+    const B = await import("@vercel/blob");
+    const pn = k => "re/" + String(k).replace(/[^A-Za-z0-9_\-:\/]/g, "_").replace(/:/g, "/") + ".json";
+    const read = async k => {
+      try {
+        const r = await B.get(pn(k), { access: "private", useCache: false });
+        if (!r || r.statusCode !== 200 || !r.stream) return null;
+        return await new Response(r.stream).text();
+      } catch (e) { if (e instanceof B.BlobNotFoundError) return null; throw e; }
+    };
+    const write = (k, v) => B.put(pn(k), String(v), { access: "private", allowOverwrite: true, addRandomSuffix: false, contentType: "application/json", cacheControlMaxAge: 60 });
+    const readSet = async k => { const t = await read(k); try { return t ? JSON.parse(t) : []; } catch { return []; } };
+    _store = {
+      async get(k) { return read(k); },
+      async set(k, v) { await write(k, v); },
+      async del(k) { try { await B.del(pn(k)); } catch (e) { if (!(e instanceof B.BlobNotFoundError)) throw e; } },
+      async sadd(k, m) { const a = await readSet(k); if (!a.includes(m)) { a.push(m); await write(k, JSON.stringify(a)); } },
+      async srem(k, m) { const a = await readSet(k); if (a.includes(m)) await write(k, JSON.stringify(a.filter(x => x !== m))); },
+      async smembers(k) { return readSet(k); },
+      async mget(keys) { return Promise.all(keys.map(read)); },
+      async incrbyfloat(k, n) { const v = Number((await read(k)) || 0) + n; await write(k, String(v)); return v; }
+    };
   } else if (process.env.RE_LOCAL_STORE) {
     const fs = await import("node:fs");
     const file = process.env.RE_LOCAL_STORE;
@@ -60,7 +83,7 @@ export async function store() {
       async incrbyfloat(k, n) { const d = load(); d[k] = Number(d[k] || 0) + n; save(d); return d[k]; }
     };
   } else {
-    throw Object.assign(new Error("Storage is not set up. Connect an Upstash Redis store to this Vercel project."), { code: "storage_missing" });
+    throw Object.assign(new Error("Storage is not set up. Connect a Vercel Blob store (private) or Upstash Redis to this Vercel project."), { code: "storage_missing" });
   }
   return _store;
 }
