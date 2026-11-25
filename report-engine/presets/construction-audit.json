@@ -7,8 +7,8 @@
   "credentials": "",
   "firm": ""
  },
- "featured": 1,
- "blurb": "OSHA-style audit of a construction site: scope, site description, findings tied to the 29 CFR 1926 standard, risk rating, corrective action, owner, due date and an overall score.",
+ "featured": 2,
+ "blurb": "For construction work only (29 CFR 1926): OSHA-style audit of a construction site with findings, risk rating, corrective action, owner, due date and an overall score. For a plant or other fixed workplace, use the general-industry audit.",
  "reportType": "Construction Site Safety Audit",
  "reportTitle": "Construction Site Safety Audit Report",
  "itemNoun": "finding",
@@ -24,6 +24,10 @@
   {
    "key": "siteAddress",
    "label": "Site address"
+  },
+  {
+   "key": "framework",
+   "label": "Regulatory framework: General industry (29 CFR 1910), Construction (29 CFR 1926), or both (name the work under each)"
   },
   {
    "key": "gc",

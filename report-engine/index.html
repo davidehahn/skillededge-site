@@ -457,7 +457,7 @@ const clone = o => JSON.parse(JSON.stringify(o));
 const arr = v => Array.isArray(v) ? v : [];
 const str = v => (v == null ? "" : typeof v === "string" ? v : typeof v === "number" ? String(v) : JSON.stringify(v));
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 3200); }
-function hl(text) { return esc(text).replace(/\[(?:name )?needed\]/gi, m => `<span class="need-txt">${m}</span>`).replace(/\(unverified\)/gi, m => `<span class="unv-txt">${m}</span>`); }
+function hl(text) { return esc(text).replace(/\[(?:name )?needed\]|\[verify:[^\]]*\]/gi, m => `<span class="need-txt">${m}</span>`).replace(/\(unverified\)/gi, m => `<span class="unv-txt">${m}</span>`); }
 function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch { return false; } }
 function lsDel(k) { try { localStorage.removeItem(k); } catch { } }
@@ -619,6 +619,66 @@ function libState(c) {
   if (v && v.version === (L.title || "")) return { verified: true, on: v.on, by: v.by };
   return { verified: L.status !== "draft", on: L.checkedOn, by: L.checkedBy };
 }
+/* per-cite verification: the consultant can verify just the cites a report uses */
+function citeVer(c) { return (profile().libVerified || {})[c.id + ":cites"] || {}; }
+function libEntryFor(c, key) { return arr(c.citationLibrary && c.citationLibrary.entries).find(e => [e.cite, ...arr(e.aliases)].some(x => citeKey(x) === key)); }
+function citeAsWritten(c, text, key) { const L = c.citationLibrary; if (!L || !L.citePattern) return key; const re = new RegExp(L.citePattern, "gi"); const hit = (String(text || "").match(re) || []).find(x => citeKey(x) === key); return hit ? hit.trim() : key; }
+function reportCites(c, text) { const L = c.citationLibrary; if (!L || !L.citePattern) return []; const re = new RegExp(L.citePattern, "gi"); return [...new Set((String(text || "").match(re) || []).map(citeKey))]; }
+function citeIsVerified(c, key) { const L = c.citationLibrary; const st = libState(c); if (st && st.verified) return { by: "library", on: st.on }; const v = citeVer(c)[key]; return v && v.version === (L.title || "") ? { by: "cite", on: v.on } : null; }
+/* traceability: every finding row names where its facts came from */
+function parseRefs(t) { return String(t || "").split(/\s*[;,]\s*/).map(x => x.trim()).filter(Boolean); }
+function resolveRef(j, r) {
+  let m = r.match(/^S(\d+)\s*:\s*L(\d+)(?:\s*[-–]\s*L?(\d+))?$/i);
+  if (m) { const s = arr(j.sources)[Number(m[1]) - 1]; if (!s) return null; const lines = String(s.text || "").split(/\r?\n/); const a = Number(m[2]), b = Number(m[3] || m[2]); if (a < 1 || b > lines.length || b < a) return null; return { label: `${s.name}, line ${a}${b > a ? "–" + b : ""}`, text: lines.slice(a - 1, b).join(" ") }; }
+  m = r.match(/^Q\s*:\s*(\S+)$/i); if (m) { const q = arr(j.interview).find(x => x.id === m[1]); if (!q || !(q.answer || "").trim()) return null; return { label: "Consultant answer", text: q.answer }; }
+  m = r.match(/^JS\s*:\s*(\w+)$/i); if (m) { const f = CFG().jobSheetFields.find(x => x.key === m[1]); const v = ((j.jobSheet || {})[m[1]] || "").trim(); if (!f || !v) return null; return { label: "Job sheet: " + f.label, text: v }; }
+  return null;
+}
+function figuresIn(t) { return [...new Set(String(t || "").match(/\d+(?:[\/.:]\d+)?/g) || [])]; }
+function figPresent(corpus, n) { return new RegExp("(^|[^\\d])" + n.replace(/[.\/]/g, "\\$&") + "(?![\\d])").test(corpus); }
+function traceRows(j) {
+  const c = CFG(); if (!c.columns.some(x => x.key === "ref")) return [];
+  const sheet = Object.values(j.jobSheet || {}).join("\n");
+  return approvedItems(j).map(it => {
+    const refs = parseRefs(it.ref); const resolved = [], bad = [];
+    refs.forEach(r => { const x = resolveRef(j, r); if (x) resolved.push({ ref: r, ...x }); else bad.push(r); });
+    const here = resolved.map(x => x.text).join("\n") + "\n" + sheet;
+    const untraced = figuresIn([it.finding, it.evidence].join(" ")).filter(n => !figPresent(here, n));
+    return { id: it.id, finding: it.finding, refs, resolved, bad, untraced };
+  });
+}
+/* figures in the draft's finding text that appear in no source, answer, job-sheet value or approved-table cell */
+function untracedDraftFigures(j, draft) {
+  const c = CFG(); if (!draft || !c.columns.some(x => x.key === "ref")) return [];
+  const L = c.citationLibrary; const re = L && L.citePattern ? new RegExp(L.citePattern, "gi") : null;
+  const corpus = [...arr(j.sources).map(s => s.text), ...arr(j.interview).map(q => q.answer || ""), ...Object.values(j.jobSheet || {}), JSON.stringify(approvedItems(j))].join("\n");
+  const out = [];
+  arr(draft.sections).forEach(s => arr(s.blocks).filter(b => b.type === "finding").forEach(b => arr(b.parts).filter(p => /condition|observ/i.test(p.label || "")).forEach(p => {
+    const t = re ? String(p.text || "").replace(re, " ") : String(p.text || "");
+    figuresIn(t).filter(n => !figPresent(corpus, n)).forEach(n => out.push(`${b.id}: "${n}"`));
+  })));
+  return [...new Set(out)];
+}
+function openCritical(j) { return arr(j.interview).filter(q => !(q.answer || "").trim() && (q.kind === "scope" || q.kind === "injury")); }
+function releaseBlockers(j) {
+  const c = CFG(); const out = [];
+  if (c.jobSheetFields.some(f => f.key === "framework") && !((j.jobSheet || {}).framework || "").trim()) out.push("Set the regulatory framework on the job sheet (general industry 1910, construction 1926, or both).");
+  const oq = openCritical(j);
+  if (oq.length) out.push(`${oq.length} scope or injury question${oq.length > 1 ? "s are" : " is"} still unanswered. Answer ${oq.length > 1 ? "them" : "it"} in the Findings step: ${oq.map(q => q.question).join(" | ")}`);
+  const tr = traceRows(j).filter(r => !r.resolved.length || r.bad.length);
+  if (tr.length) out.push(`${tr.length} finding${tr.length > 1 ? "s" : ""} can't be traced to a note line, an answer or a job-sheet field (Source ref column): ${tr.map(r => r.id + (r.bad.length ? " (" + r.bad.join(", ") + ")" : " (no ref)")).join(", ")}`);
+  return out;
+}
+function allBlockers(j) {
+  const c = CFG(); const out = []; const qa = (j.finalCheck && j.finalCheck.qa) || j.qa;
+  if (!qa) out.push("The quality check has not been run.");
+  else { if (!j.finalCheck && qaStale(j)) out.push("The draft changed after the last quality check."); qa.checks.filter(x => x.status !== "pass").forEach(x => { const d = c.qaChecks.find(q => q.n === x.n) || {}; out.push(`Check ${x.n} (${d.name || ""}): ${x.detail || "flagged"}`); }); }
+  findPlaceholders(j).forEach(p => out.push(`${p.where}: ${p.what}`));
+  releaseBlockers(j).forEach(t => out.push(t));
+  if (!(j.signoff.conflicts && j.signoff.scope)) out.push("The consultant has not signed off the conflicts register and scope-trigger answers.");
+  if (!j.signoff.release) out.push("The consultant has not approved the report for release.");
+  return out;
+}
 /* cover lines: the app owns "Prepared by" so it always matches Your details */
 function coverLines(d) {
   const out = []; arr(d && d.cover).forEach((x, i) => { if (!/^prepared by/i.test(String(x.label || "").trim())) out.push({ label: x.label, value: x.value, i }); });
@@ -626,10 +686,10 @@ function coverLines(d) {
   return out;
 }
 /* placeholders still in the draft: [needed], (unverified), (pending scope answer) */
-const PH_RE = /\[(?:name )?needed\]|\(unverified\)|\(pending scope answer\)/gi;
+const PH_RE = /\[(?:name )?needed\]|\(unverified\)|\(pending scope answer\)|\[verify:[^\]]*\]/gi;
 function findPlaceholders(j) {
   const d = j && j.draft; const out = []; if (!d) return out;
-  const scan = (text, where, anchor) => { const m = String(text || "").match(PH_RE); if (m) out.push({ where, anchor, n: m.length, what: [...new Set(m.map(x => x.toLowerCase()))].join(", ") }); };
+  const scan = (text, where, anchor) => { const m = String(text || "").match(PH_RE); if (m) out.push({ where, anchor, n: m.length, what: [...new Set(m.map(x => /^\[verify/i.test(x) ? "consultant verification: " + x.slice(8, -1).trim() : x.toLowerCase()))].join(", ") }); };
   scan(d.title, "Report title", "rep-top");
   coverLines(d).forEach(x => scan(x.value, "Cover: " + x.label, x.i == null ? "profile" : "rep-top"));
   arr(d.sections).forEach((s, si) => {
@@ -659,7 +719,7 @@ function citationTable(c) {
 }
 function jobSheetText(c, j) {
   const js = j.jobSheet || {};
-  const lines = c.jobSheetFields.map(f => `- ${f.label}: ${(js[f.key] || "").trim() || "[needed]"}`);
+  const lines = c.jobSheetFields.map(f => `- ${f.label} (ref JS:${f.key}): ${(js[f.key] || "").trim() || "[needed]"}`);
   const k = consultantInfo();
   lines.push(`- Consultant (prepared by): ${k.name || "[needed]"}${k.credentials ? ", " + k.credentials : ""}`);
   lines.push(`- Consultant firm: ${k.firm || "[needed]"}`);
@@ -670,13 +730,14 @@ function rulesText(c) {
 }
 function qaText(c) { return c.qaChecks.map(q => `${q.n}. ${q.name}: ${q.rule}`).join("\n") + `\nRelease gate: ${c.releaseGate}`; }
 function sourcesText(j) {
-  return j.sources.map((s, i) => `--- SOURCE ${i + 1}: "${s.name}" | type: ${s.kind} | status: ${s.status} ---\n${s.text}`).join("\n\n");
+  return j.sources.map((s, i) => `--- SOURCE ${i + 1} (ref S${i + 1}): "${s.name}" | type: ${s.kind} | status: ${s.status} ---\n${String(s.text || "").split(/\r?\n/).map((ln, k) => `L${k + 1}| ${ln}`).join("\n")}`).join("\n\n");
 }
 function interviewText(j) {
   const qa = j.interview.filter(q => q.answer && q.answer.trim());
   if (!qa.length) return "(no answers yet)";
-  return qa.map(q => `[${q.id}] (${q.kind}, round ${q.round}) Q: ${q.question}\nA (consultant): ${q.answer}`).join("\n");
+  return qa.map(q => `[${q.id}] (ref Q:${q.id}) (${q.kind}, round ${q.round}) Q: ${q.question}\nA (consultant): ${q.answer}`).join("\n");
 }
+function openQText(j) { const o = arr(j.interview).filter(q => !(q.answer || "").trim()); return o.length ? o.map(q => `- (${q.kind}${q.skipped ? ", skipped by the consultant" : ""}) ${q.question}`).join("\n") : "(none)"; }
 function columnsSpec(c) { return c.columns.map(col => `"${col.key}"` + (col.options ? ` (one of: ${col.options.join(" | ")})` : "") + ` = ${col.label}`).join("; "); }
 
 /* ---------------- prompts ---------------- */
@@ -733,6 +794,12 @@ ${c.findingRules ? c.findingRules : `2. Requirement source: cite a library secti
 12. Never assign a risk rating. Leave "${c.ratingKey}" as "[needed]" unless the PREVIOUS INTAKE STATE already holds the consultant's rating; then keep it.
 13. "action" says the immediate action the rule requires (e.g. out of service now), or "" if none.${c.columns.some(x => x.key === "due" || x.key === "owner") ? `
 14. "owner" and "due" come only from a source or the consultant's answers; otherwise "[needed]". Never pick a due date yourself.` : ""}
+15. Applicability before citing: a cite needs the facts that make the paragraph apply, and none of its exceptions. If the library note names an exception or a condition (e.g. an immediate-use container, voluntary vs required use, an exposure level) and the inputs don't settle it, keep the row, ask a scope question, and end the cite with " (pending scope answer)".
+16. A missing record, tag, signature or document shows that a requirement could not be confirmed, not that it was not met, unless the requirement itself is the record. Write the row as "could not be confirmed", keep it, and ask whether the work was done or recorded elsewhere.
+17. A sensory observation (loud, dusty, hot, smelled) or a statement is a screening indicator, never a measurement. Say so in "evidence" and never write a number that was not measured.
+18. Never drop a legitimate ${c.itemNoun} because information is missing. When the row depends on something still unconfirmed, start "note" with "verify: " and say in a few words what the consultant must confirm.${c.jobSheetFields.some(f => f.key === "framework") ? `
+19. Framework: cite only the standards the job sheet's regulatory framework names (general industry 29 CFR 1910, construction 29 CFR 1926). If the framework is [needed], ask one scope question that proposes the framework the operations description points to, and say why.` : ""}${c.columns.some(x => x.key === "ref") ? `
+20. "ref" lists where every fact in the row came from: S<source>:L<line> for a note line (e.g. S1:L7, or S1:L7-L8), Q:<question id> for a consultant answer, JS:<field key> for the job sheet. Separate several with "; ". Every row needs at least one ref, and every figure in "finding" or "evidence" must appear in a line it refs. Never ref a line that doesn't say it.` : ""}
 
 Reply with ONLY one JSON object, no prose:
 {"items":[{ ${columnsSpec(c)}, "action": string, "note": string }],
@@ -784,6 +851,11 @@ packet: ${JSON.stringify(arr(I.packet))}
 CONSULTANT ANSWERS:
 ${interviewText(j)}
 
+OPEN QUESTIONS (the consultant has not answered these; state nothing that depends on them as fact):
+${openQText(j)}
+
+VERIFICATION AND SOURCES: Every Condition part says where its evidence came from in plain words (observed during the walk-through on [date], per the consultant, per the [document]), and uses only figures in the sources, answers, job sheet or approved table. A sensory observation is described as observed, never as a measurement. For a row whose "note" starts with "verify:" or whose cite ends "(pending scope answer)", add a part labeled "Verification required" right after Condition, with the text "[verify: what the consultant must confirm]". Keep that finding; never drop or soften it to hide the gap.
+
 OUTPUT: the client report only, ending at the last appendix. No QA results, no conflicts register, no questions. Do not write a "Prepared by" cover line, a signature block or a statement about AI assistance: the app adds those from the consultant's profile. Where the template calls for the rating counts table, put a block {"type":"counts"} and the app will build it.${c.scorecard ? ` Where it calls for the compliance scorecard, put a block {"type":"scorecard"} and the app will build the table and the overall line.` : ""} Each ${c.itemNoun} is one block of type "finding" with its labeled parts in template order. Recommendations use type "finding" with their Rec-n id and rating "". Write [needed] for anything missing. The cover lines come from the job sheet.
 
 Reply with ONLY one JSON object:
@@ -819,6 +891,7 @@ Change only what the request asks, plus anything that must change with it (e.g. 
 }
 function promptQA(j, reportText, auto) {
   const c = CFG(); const I = j.intake || {};
+  const tr = traceRows(j);
   return `You are the Report Engine's QA checker for one ${c.reportType} job. Run all ${c.qaChecks.length} checks on the client report text below.
 
 STANDING RULES: ${rulesText(c)}
@@ -840,7 +913,8 @@ CONSULTANT ANSWERS:
 ${interviewText(j)}
 OPEN QUESTIONS NOT YET ANSWERED: ${JSON.stringify(j.interview.filter(q => !(q.answer || "").trim()).map(q => q.question))}
 
-ORIGINAL FIELD NOTES (for check 4 and 10):
+${tr.length ? `SOURCE-TO-FINDING REGISTER (built by the app from the Source ref column; use it for checks 4 and 10): ${JSON.stringify(tr.map(r => ({ id: r.id, refs: r.refs, sourceText: r.resolved.map(x => x.text), unresolved: r.bad, untracedFigures: r.untraced })))}
+` : ""}ORIGINAL FIELD NOTES (for check 4 and 10):
 ${sourcesText(j)}
 
 CHECKS ALREADY COMPUTED BY THE APP (report these exactly as given): ${JSON.stringify(auto)}
@@ -904,7 +978,8 @@ function scoreRows(c, j) {
 function computeScore(c, j) {
   const sc = c.scorecard; if (!sc) return null; const rows = scoreRows(c, j);
   const lv = {}; sc.levels.forEach(l => lv[l.label] = l.value);
-  const out = rows.map(r => ({ cat: r.cat, level: r.level, value: Object.prototype.hasOwnProperty.call(lv, r.level) ? lv[r.level] : undefined }));
+  const its = approvedItems(j).filter(it => !isRec(it));
+  const out = rows.map(r => { const ids = its.filter(it => (it.category || "").trim().toLowerCase() === String(r.cat).toLowerCase()).map(it => it.id); return { cat: r.cat, level: r.level, ids, value: Object.prototype.hasOwnProperty.call(lv, r.level) ? lv[r.level] : undefined }; });
   const unrated = out.filter(r => r.value === undefined).length;
   const rated = out.filter(r => r.value !== undefined && r.value !== null);
   const pct = rated.length ? rated.reduce((a, r) => a + r.value, 0) / rated.length : null;
@@ -917,7 +992,9 @@ function scoreText(c, j) {
   const k = computeScore(c, j); if (!k) return "";
   return `\nCOMPLIANCE SCORECARD (the consultant's category ratings; score and risk rating computed by the app; quote exactly, never recompute): overall compliance ${k.pctTxt}, risk rating ${k.band}. ${k.rated} rated categories, ${k.na} not applicable${k.unrated ? ", " + k.unrated + " not rated yet" : ""}. Categories: ${k.rows.map(r => `${r.cat} = ${r.level}`).join("; ")}. Levels: ${c.scorecard.levels.map(l => `${l.label} ${l.value == null ? "(excluded)" : l.value}`).join(", ")}. Risk bands: ${c.scorecard.bands.map(b => `${b.label} at ${b.min}% or more`).join(", ")}.`;
 }
-function scoreTableRows(k) { return k.rows.map(r => [r.cat, r.level, r.value === undefined ? "[needed]" : r.value === null ? "N/A" : String(r.value)]); }
+function scoreTableRows(k) { return k.rows.map(r => [r.cat, r.level, r.value === undefined ? "[needed]" : r.value === null ? "N/A" : String(r.value), r.value === null ? "Rated not applicable" : arr(r.ids).length ? "Findings " + r.ids.join(", ") : "No findings recorded"]); }
+const SCORE_HEAD = ["Category", "Rating", "Score", "Basis"];
+function scoreNote(c) { const sc = c.scorecard || {}; return sc.disclaimer || `How this score works: the consultant rates each audit category from the findings and the walk-through (${arr(sc.levels).map(l => l.label + (l.value == null ? " excluded" : " " + l.value)).join(", ")}), and the score is the average of the rated categories. The Basis column lists the findings behind each rating. This is a proprietary scoring method for tracking progress between audits. It is not an OSHA score, rating or inspection result, and it does not predict citations or penalties.`; }
 function scoreLine(k) { return `Overall compliance: ${k.pctTxt} (${k.band}${k.band === "[needed]" ? "" : " risk"})`; }
 function countsLabel(c) { return c.countsLabel || "Rating"; }
 function draftToText(d) {
@@ -931,7 +1008,7 @@ function draftToText(d) {
       else if (b.type === "bullets") arr(b.items).forEach(x => lines.push("• " + x));
       else if (b.type === "table") { lines.push(arr(b.headers).join(" | ")); arr(b.rows).forEach(r => lines.push(arr(r).join(" | "))); }
       else if (b.type === "counts") { const k = computeCounts(approvedItems(S.job)); lines.push(countsLabel(c) + " | Count"); Object.entries(k).forEach(([a, v]) => lines.push(`${a} | ${v}`)); }
-      else if (b.type === "scorecard") { const k = computeScore(c, S.job); if (k) { lines.push("Category | Rating | Score"); scoreTableRows(k).forEach(r => lines.push(r.join(" | "))); lines.push(scoreLine(k)); } }
+      else if (b.type === "scorecard") { const k = computeScore(c, S.job); if (k) { lines.push(SCORE_HEAD.join(" | ")); scoreTableRows(k).forEach(r => lines.push(r.join(" | "))); lines.push(scoreLine(k)); lines.push(scoreNote(c)); } }
       else if (b.type === "finding") { lines.push(`${b.id} ${b.title}${b.rating ? " (" + b.rating + ")" : ""}${b.repeat ? " – REPEAT" : ""}`); arr(b.parts).forEach(p => lines.push(`${p.label}: ${p.text}`)); }
     });
   });
@@ -996,13 +1073,23 @@ function autoChecks(j, reportText, draft) {
       const bad = found.filter(x => !lib.has(x));
       const unv = /\(unverified\)/i.test(reportText);
       const confirm = L.entries.filter(e => e.confirm && [e.cite, ...arr(e.aliases)].some(x => found.includes(citeKey(x)))).map(e => e.cite);
-      if (bad.length || unv) res[q.n] = { status: "flag", ids: [], detail: (bad.length ? `Not in the library: ${bad.join(", ")}. ` : "") + (unv ? "The report contains an (unverified) cite, which blocks release." : "") };
+      let fwBad = "";
+      if (c.jobSheetFields.some(f => f.key === "framework")) {
+        const fw = String((j.jobSheet || {}).framework || ""); const gi = /1910|general/i.test(fw), cx = /1926|construction/i.test(fw);
+        if (!gi && !cx) fwBad = "The job sheet has no regulatory framework, so the cites can't be checked against it. ";
+        else { const off = found.filter(x => (/^1926\./.test(x) && !cx) || (/^1910\./.test(x) && !gi)); if (off.length) fwBad = `These cites don't match the job sheet's framework (${fw}): ${off.join(", ")}. `; }
+      }
+      if (bad.length || unv || fwBad) res[q.n] = { status: "flag", ids: [], detail: (bad.length ? `Not in the library: ${bad.map(k => citeAsWritten(c, reportText, k)).join(", ")}. ` : "") + fwBad + (unv ? "The report contains an (unverified) cite, which blocks release." : "") };
       else res[q.n] = { status: "pass", ids: [], detail: found.length ? `${found.length} cite(s), all in the library.` + (confirm.length ? ` Library marks ${confirm.join(", ")} to re-confirm.` : "") : "No regulation cites in the report." };
       res._confirm = confirm;
     }
     if (q.auto === "freshness") {
       const st = libState(c);
-      if (st && !st.verified) { res[q.n] = { status: "flag", ids: [], where: "library", detail: "The citation library is a draft you have not verified yet. Open Your details, then Citation libraries, check each entry against the current official text, and mark it verified." }; continue; }
+      if (st && !st.verified) {
+        const used = reportCites(c, reportText); const todo = used.filter(k => !citeIsVerified(c, k)).map(k => (libEntryFor(c, k) || {}).cite || citeAsWritten(c, reportText, k));
+        if (used.length && !todo.length) { res[q.n] = { status: "pass", ids: [], detail: `The library is still a draft, but you verified all ${used.length} cite(s) this report uses against the current text.` }; continue; }
+        res[q.n] = { status: "flag", ids: [], where: "library", detail: `The citation library is a draft you have not verified. ${todo.length ? `Check the ${todo.length} cite(s) this report uses against the current official text and mark each verified (Your details, Citation libraries): ${todo.join(", ")}.` : "Verify it before release."}` }; continue;
+      }
       if (!st) { res[q.n] = { status: "pass", ids: [], detail: "The library has no regulation entries yet, so nothing can be stale. Any regulation cite is unverified and blocks release (check 8)." }; continue; }
       const d = new Date(String(st.on).slice(0, 10) + "T12:00:00"); const ageDays = (Date.now() - d.getTime()) / 864e5;
       if (isNaN(ageDays)) { res[q.n] = { status: "flag", ids: [], detail: "The library has no check date. Re-verify it before release." }; continue; }
@@ -1014,6 +1101,7 @@ function autoChecks(j, reportText, draft) {
       res[q.n] = hits.length ? { status: "flag", ids: [], detail: "Carryover values in the report: " + hits.join("; ") } : { status: "pass", ids: [], detail: `None of the ${c.carryover.length} carryover values appear outside the job sheet.` };
     }
   }
+  const uf = untracedDraftFigures(j, draft); if (uf.length) res._untracedFigures = uf;
   return res;
 }
 function gateState(j) {
@@ -1022,6 +1110,7 @@ function gateState(j) {
   const flags = qa.checks.filter(x => x.status !== "pass");
   if (flags.length) return { open: false, reason: `${flags.length} item${flags.length > 1 ? "s need" : " needs"} a fix.`, flags };
   const ph = findPlaceholders(j); if (ph.length) return { open: false, reason: `${ph.length} spot${ph.length > 1 ? "s" : ""} still need${ph.length > 1 ? "" : "s"} filling in (marked [needed] or (unverified)).`, ph };
+  const rb = releaseBlockers(j); if (rb.length) return { open: false, reason: rb[0], blockers: rb };
   if (!(j.signoff.conflicts && j.signoff.scope)) return { open: false, reason: "Tick the two sign-off boxes in the quality check." };
   if (!j.signoff.release) return { open: false, reason: "Tick the approval box below: you reviewed the report and will sign and send it yourself." };
   return { open: true, reason: "Ready to release. Sign it and send it yourself." };
@@ -1168,7 +1257,7 @@ function viewLibrary() {
   const c = PRESETS[S.libId]; if (!c || !libState(c)) { S.page = "profile"; return viewProfile(); }
   const L = c.citationLibrary, st = libState(c);
   return head(c.reportType + " citation library", `${esc(L.title)}. ${st.verified ? "You verified it on " + esc(String(st.on).slice(0, 10)) + "." : "Draft: check each entry against the current official text before you mark it verified."}`, `<button class="btn" data-page="profile">Back</button>`) +
-    `<div class="panel"><div class="tframe"><table class="t"><thead><tr><th>Topic</th><th>Cite</th><th>What it requires (paraphrase)</th><th>Note</th></tr></thead><tbody>${L.entries.map(e => `<tr><td>${esc(e.topic)}</td><td class="mono">${esc(e.cite)}</td><td>${esc(e.requires)}</td><td class="small">${esc(e.note || "")}${e.confirm ? ` <span class="chip need">re-confirm</span>` : ""}</td></tr>`).join("")}</tbody></table></div>
+    `<div class="panel"><div class="tframe"><table class="t"><thead><tr><th>Topic</th><th>Cite</th><th>What it requires (paraphrase)</th><th>Note</th><th>Verified</th></tr></thead><tbody>${L.entries.map(e => { const v = citeIsVerified(c, citeKey(e.cite)); return `<tr><td>${esc(e.topic)}</td><td class="mono">${esc(e.cite)}${e.source ? `<div class="small muted">${esc(e.source.replace(/^https?:\/\//, ""))}</div>` : ""}</td><td>${esc(e.requires)}</td><td class="small">${esc(e.note || "")}${e.checked ? `<div class="muted" style="margin-top:3px">${esc(e.checked)}</div>` : ""}${e.confirm ? ` <span class="chip need">re-confirm</span>` : ""}</td><td>${v ? `<span class="chip ok">${v.by === "library" ? "Library" : "Yes"} ${esc(String(v.on).slice(0, 10))}</span>${v.by === "cite" ? ` <button class="btn ghost small" data-citeunver="${esc(c.id)}|${esc(citeKey(e.cite))}">Undo</button>` : ""}` : `<button class="btn small" data-citever="${esc(c.id)}|${esc(citeKey(e.cite))}">I checked it</button>`}</td></tr>`; }).join("")}</tbody></table></div>
     <div class="row" style="justify-content:space-between;margin-top:14px"><span class="small muted">${esc(L.checkedBy || "")}</span>${st.verified && (profile().libVerified || {})[c.id] ? `<button class="btn" data-libunverify="${c.id}">Mark as not verified</button>` : `<button class="btn primary" data-libverify="${c.id}">I checked every entry against the current text</button>`}</div></div>`;
 }
 /* 1 Job sheet */
@@ -1435,7 +1524,7 @@ function renderReport(d, edit) {
       else if (b.type === "bullets") h += `<ul>${arr(b.items).map((x, k2) => E(`${P}.items.${k2}`, hl(x), "li")).join("")}</ul>`;
       else if (b.type === "table") h += `<div class="tframe" style="margin:6px 0 12px"><table class="t" style="min-width:420px"><thead><tr>${arr(b.headers).map(x => `<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${arr(b.rows).map((r, ri) => `<tr>${arr(r).map((x, ci) => E(`${P}.rows.${ri}.${ci}`, hl(str(x)), "td")).join("")}</tr>`).join("")}</tbody></table></div>`;
       else if (b.type === "counts") { const kc = computeCounts(approvedItems(S.job)); h += `<div class="tframe" style="margin:6px 0 12px;max-width:340px"><table class="t" style="min-width:0"><thead><tr><th>${esc(countsLabel(c))}</th><th>Count</th></tr></thead><tbody>${Object.entries(kc).map(([a, v]) => `<tr><td>${esc(a)}</td><td class="mono">${v}</td></tr>`).join("")}</tbody></table></div>`; }
-      else if (b.type === "scorecard") { const ks = computeScore(c, j); if (ks) h += `<div class="tframe" style="margin:6px 0 8px;max-width:560px"><table class="t" style="min-width:0"><thead><tr><th>Category</th><th>Rating</th><th>Score</th></tr></thead><tbody>${scoreTableRows(ks).map(r => `<tr><td>${esc(r[0])}</td><td>${hl(r[1])}</td><td class="mono">${hl(r[2])}</td></tr>`).join("")}</tbody></table></div><p><b>${hl(scoreLine(ks))}</b></p>`; }
+      else if (b.type === "scorecard") { const ks = computeScore(c, j); if (ks) h += `<div class="tframe" style="margin:6px 0 8px;max-width:560px"><table class="t" style="min-width:0"><thead><tr>${SCORE_HEAD.map(x => `<th>${x}</th>`).join("")}</tr></thead><tbody>${scoreTableRows(ks).map(r => `<tr><td>${esc(r[0])}</td><td>${hl(r[1])}</td><td class="mono">${hl(r[2])}</td><td class="small">${esc(r[3])}</td></tr>`).join("")}</tbody></table></div><p><b>${hl(scoreLine(ks))}</b></p><p class="small muted">${esc(scoreNote(c))}</p>`; }
       else if (b.type === "finding") h += `<h3 id="f-${esc(b.id)}"><span class="mono">${esc(b.id)}</span> ${E(P + ".title", hl(b.title))}${b.rating ? ` (${esc(b.rating)})` : ""}${b.repeat ? " – REPEAT" : ""}</h3>${arr(b.parts).map((p, pi) => `<p class="fpart"><b>${esc(p.label)}:</b> ${E(`${P}.parts.${pi}.text`, hl(p.text))}</p>`).join("")}`;
     });
     h += slotsAt(c, d, si).map(pf).join("");
@@ -1490,6 +1579,7 @@ function viewQA() {
     (qaStale(j) && !j.finalCheck ? `<div class="notice warn" style="margin-bottom:12px"><span>You changed the draft after this check. Run it again before you release the report.</span></div>` : "") +
     `<div class="panel" style="padding:0">${fixes.length ? `<div style="padding:14px 14px 4px"><h2 style="margin:0">Fix these <span class="chip bad">${fixes.length}</span></h2></div>${fixes.map(x => { const tg = fixTarget(j, x); return `<div class="fix" id="qa-${x.n}"><div style="min-width:0"><div class="name">${esc(nm(x.n))}</div><div class="det">${hl(x.detail || "")}</div>${arr(x.ids).length ? `<div class="mono small" style="margin-top:3px">${arr(x.ids).map(esc).join(", ")}</div>` : ""}</div>${tg ? `<button class="btn small" data-fix="${esc(tg)}">${tg === "library" ? "Open library" : tg === "profile" ? "Your details" : "Show in draft"}</button>` : ""}</div>`; }).join("")}` : `<div style="padding:14px"><h2 style="margin:0">All ${view.checks.length} checks passed <span class="chip ok">Pass</span></h2></div>`}</div>` +
     (ph.length ? `<div class="panel"><h2>Fill in the blanks <span class="chip need">${ph.length}</span></h2><p class="small muted" style="margin-top:0">These spots still say [needed] or (unverified). A released report can't contain them.</p>${ph.map(x => `<div class="fix"><div><div class="name">${esc(x.where)}</div><div class="det">${esc(x.what)}${x.n > 1 ? " (" + x.n + ")" : ""}</div></div><button class="btn small" data-fix="${esc(x.anchor)}">${x.anchor === "profile" ? "Your details" : x.anchor === "score" ? "Rate categories" : "Show in draft"}</button></div>`).join("")}</div>` : "") +
+    (releaseBlockers(j).length ? `<div class="panel"><h2>Also holding back release <span class="chip need">${releaseBlockers(j).length}</span></h2>${releaseBlockers(j).map(t => `<div class="fix"><div><div class="det">${esc(t)}</div></div><button class="btn small" data-go="${/job sheet/.test(t) ? 1 : 3}">${/job sheet/.test(t) ? "Job details" : "Findings"}</button></div>`).join("")}</div>` : "") +
     `<div class="panel"><h2>Your sign-off</h2><div class="stack small"><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="conflicts" ${j.signoff.conflicts ? "checked" : ""}> <span>I reviewed every conflict between my sources and how each was resolved (Findings step, Conflicts tab).</span></label><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="scope" ${j.signoff.scope ? "checked" : ""}> <span>I confirm my answers to the scope questions (Findings step, Injury &amp; scope tab).</span></label></div></div>` +
     `<details class="more panel"><summary>Passed (${passes.length})</summary><ul class="passlist" style="margin-top:8px">${passes.map(x => `<li><b>${esc(nm(x.n))}</b> <span class="muted">· ${hl(x.detail || "")}</span></li>`).join("")}</ul></details>` +
     `<details class="more panel"><summary>Report summary and hand-edited final check</summary><div class="grid2" style="margin-top:10px"><div>${sl("Open hazards or issues", sum.openHazards)}${sl("Data mismatches", sum.dataMismatches)}${sl("Citations to confirm", sum.citationsToConfirm)}${sl("Questions for you", sum.questions)}${sl("Notes not used", sum.notesNotUsed)}</div>
@@ -1500,6 +1590,7 @@ async function runQA(finalText) {
   const text = finalText || draftToText(j.draft);
   const auto = autoChecks(j, text, finalText ? null : j.draft);
   const autoForPrompt = {}; Object.keys(auto).filter(k => k !== "_confirm").forEach(k => autoForPrompt[k] = auto[k]);
+  if (auto._untracedFigures) autoForPrompt._untracedFigures = { note: "Figures in finding Condition text that the app found in no source, answer, job-sheet value or approved-table cell. Check 10 flags each one the report can't source.", items: auto._untracedFigures };
   try {
     const out = await askJSON(finalText ? "Re-checking your final" : `Running ${c.qaChecks.length} QA checks`, promptQA(j, text, autoForPrompt), { tier: "complex", sub: "Checking each rule against the report text." });
     if (!out || !Array.isArray(out.checks)) throw { code: "invalid_json" };
@@ -1555,7 +1646,7 @@ function wTable(headers, rows, widths) {
   const n = Math.max(headers.length, ...rows.map(r => r.length), 1); const total = 9360; const w = widths || Array(n).fill(Math.floor(total / n));
   const b = `<w:tblBorders>${["top", "left", "bottom", "right", "insideH", "insideV"].map(s => `<w:${s} w:val="single" w:sz="4" w:space="0" w:color="A6B1BE"/>`).join("")}</w:tblBorders>`;
   const cell = (t, i, hd) => `<w:tc><w:tcPr><w:tcW w:w="${w[i] || w[0]}" w:type="dxa"/>${hd ? `<w:shd w:val="clear" w:color="auto" w:fill="E3EBF4"/>` : ""}</w:tcPr>${wP(wRun(str(t), hd ? { b: true, sz: 19 } : { sz: 19 }), { after: 40 })}</w:tc>`;
-  const tr = (r, hd) => `<w:tr>${hd ? "<w:trPr><w:tblHeader/></w:trPr>" : ""}${Array.from({ length: n }, (_, i) => cell(r[i] ?? "", i, hd)).join("")}</w:tr>`;
+  const tr = (r, hd) => `<w:tr><w:trPr><w:cantSplit/>${hd ? "<w:tblHeader/>" : ""}</w:trPr>${Array.from({ length: n }, (_, i) => cell(r[i] ?? "", i, hd)).join("")}</w:tr>`;
   return `<w:tbl><w:tblPr><w:tblW w:w="${total}" w:type="dxa"/>${b}<w:tblCellMar><w:left w:w="90" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${Array.from({ length: n }, (_, i) => `<w:gridCol w:w="${w[i] || w[0]}"/>`).join("")}</w:tblGrid>${headers.length ? tr(headers, true) : ""}${rows.map(r => tr(r, false)).join("")}</w:tbl>` + wP("", { after: 120 });
 }
 const DOCX_STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Calibri"/><w:sz w:val="22"/><w:szCs w:val="22"/><w:lang w:val="en-US"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style><w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:after="200"/></w:pPr><w:rPr><w:b/><w:color w:val="1C3A5A"/><w:sz w:val="40"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="320" w:after="120"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="1C3A5A"/><w:sz w:val="30"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="220" w:after="80"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:spacing w:before="180" w:after="60"/><w:outlineLvl w:val="2"/></w:pPr><w:rPr><w:b/><w:color w:val="1C3A5A"/><w:sz w:val="22"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Small"><w:name w:val="Small"/><w:basedOn w:val="Normal"/><w:rPr><w:color w:val="5A6879"/><w:sz w:val="18"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="TOCHeading"><w:name w:val="TOC Heading"/><w:basedOn w:val="Heading1"/><w:next w:val="Normal"/><w:pPr><w:outlineLvl w:val="9"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="TOC1"><w:name w:val="toc 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:spacing w:before="60" w:after="60"/></w:pPr><w:rPr><w:b/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="TOC2"><w:name w:val="toc 2"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:spacing w:after="40"/><w:ind w:left="360"/></w:pPr></w:style><w:style w:type="paragraph" w:styleId="Header"><w:name w:val="header"/><w:basedOn w:val="Normal"/><w:pPr><w:tabs><w:tab w:val="right" w:pos="9360"/></w:tabs><w:spacing w:after="0"/></w:pPr><w:rPr><w:color w:val="5A6879"/><w:sz w:val="17"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Footer"><w:name w:val="footer"/><w:basedOn w:val="Normal"/><w:pPr><w:tabs><w:tab w:val="right" w:pos="9360"/></w:tabs><w:spacing w:after="0"/></w:pPr><w:rPr><w:color w:val="5A6879"/><w:sz w:val="16"/></w:rPr></w:style><w:style w:type="character" w:styleId="Hyperlink"><w:name w:val="Hyperlink"/><w:rPr><w:color w:val="1C3A5A"/></w:rPr></w:style></w:styles>`;
@@ -1595,12 +1686,12 @@ function reportXml(j, released, media = []) {
   const pics = slots => slots.map(sl => {
     const p = ph[sl.key], url = PHOTO.data[sl.key];
     if (p && url) { const n = media.filter(m => !m.logo).length + 1; const m = { n: media.length + 1, rid: "rIdP" + (media.length + 1), dataUrl: url, w: p.w, h: p.h }; media.push(m); return wP(wImage(m), { after: 40, keep: true }) + wP(wRun(`Photo ${n}. ${captionOf(sl, j)}`, { i: true }), { style: "Small" }); }
-    return released ? "" : wP(wRun(`[${sl.required ? "Required photo" : "Photo slot"} not added: ${sl.shot}]`, { i: true, color: "9A6400" }), { style: "Small" });
+    return released || !sl.required ? "" : wP(wRun(`[Required photo not added: ${sl.shot}]`, { i: true, color: "9A6400" }), { style: "Small" });
   }).join("");
   // cover page
   const k = consultantInfo();
   let cover = "";
-  if (!released) cover += wP(wRun("DRAFT – not released. Not for the client.", { b: true, color: "B42318" }), { shade: "FBE7E5" });
+  if (!released) { cover += wP(wRun("DRAFT – not released. Not for the client.", { b: true, color: "B42318" }), { shade: "FBE7E5" }); const bl = allBlockers(j); if (bl.length) { cover += wP(wRun(`Before this report can be released (${bl.length}):`, { b: true, color: "B42318", sz: 19 }), { shade: "FBE7E5", after: 40 }); bl.slice(0, 12).forEach(t => cover += wP(wRun("•\t" + t, { sz: 18 }), { bullet: true, after: 20, shade: "FBE7E5" })); if (bl.length > 12) cover += wP(wRun(`…and ${bl.length - 12} more on the Consultant QA Sheet.`, { i: true, sz: 18 }), { shade: "FBE7E5" }); cover += wP("", { after: 120 }); } }
   if (k.logo) { const im = S.logoDims || { w: 400, h: 160 }; const m = { n: media.length + 1, rid: "rIdLogo", dataUrl: k.logo, w: im.w, h: im.h, maxW: 2286000, maxH: 1143000, logo: true, file: /^data:image\/png/.test(k.logo) ? "logo.png" : "logo.jpeg" }; media.push(m); cover += wP(wImage(m), { after: 120 }); }
   if (k.firm) cover += wP(wRun(k.firm, { b: true, color: "1C3A5A", sz: 28 }), { after: 480 });
   cover += wP(wRun(d.title || c.reportTitle), { style: "Title" });
@@ -1615,8 +1706,8 @@ function reportXml(j, released, media = []) {
       else if (b.type === "bullets") arr(b.items).forEach(it => body += wP(wRun("•\t") + wRich(it), { bullet: true, after: 60 }));
       else if (b.type === "table") body += wTable(arr(b.headers), arr(b.rows).map(r => arr(r).map(str)));
       else if (b.type === "counts") { const kc = computeCounts(approvedItems(j)); body += wTable([countsLabel(c), "Count"], Object.entries(kc).map(([a, v]) => [a, String(v)]), [3000, 1500]); }
-      else if (b.type === "scorecard") { const ks = computeScore(c, j); if (ks) { body += wTable(["Category", "Rating", "Score"], scoreTableRows(ks), [5200, 2200, 1200]); body += wP(wRun(scoreLine(ks), { b: true })); } }
-      else if (b.type === "finding") { body += wP(wRun(`${b.id} ${b.title}${b.rating ? " (" + b.rating + ")" : ""}${b.repeat ? " – REPEAT" : ""}`), { style: "Heading3" }); arr(b.parts).forEach(p => body += wP(wRun(p.label + ": ", { b: true }) + wRich(p.text))); }
+      else if (b.type === "scorecard") { const ks = computeScore(c, j); if (ks) { body += wTable(SCORE_HEAD, scoreTableRows(ks), [3700, 1500, 800, 3360]); body += wP(wRun(scoreLine(ks), { b: true })); body += wP(wRun(scoreNote(c), { i: true, color: "5A6879", sz: 19 })); } }
+      else if (b.type === "finding") { body += wP(wRun(`${b.id} ${b.title}${b.rating ? " (" + b.rating + ")" : ""}${b.repeat ? " – REPEAT" : ""}`), { style: "Heading3", keep: true }); const ps = arr(b.parts); ps.forEach((p, pi) => body += wP(wRun(p.label + ": ", { b: true }) + wRich(p.text), { keep: pi < ps.length - 1 && ps.length <= 7, after: 80 })); }
     });
     body += pics(slotsAt(c, d, si));
   });
@@ -1637,6 +1728,7 @@ function qaXml(j) {
   x += wP(wRun("Job: ", { b: true }) + wRun(jobTitle(j)), { after: 40 }) + wP(wRun("Report type: ", { b: true }) + wRun(c.reportType + " · Engine " + c.engineId), { after: 40 }) + wP(wRun("QA rules: ", { b: true }) + wRun(c.qaVersion + " · run " + fmtTime(qa.at) + (j.finalCheck ? " (hand-edited final)" : "")), { after: 40 });
   x += wP(wRun("Release gate", {}), { style: "Heading1" });
   x += wP(wRun(g.open ? "OPEN – " : "CLOSED – ", { b: true, color: g.open ? "1D7A4C" : "B42318" }) + wRun(g.reason));
+  { const bl = allBlockers(j); if (bl.length) { x += wP(wRun(`Everything holding back release (${bl.length})`), { style: "Heading2" }); bl.forEach(t => x += wP(wRun("•\t" + t), { bullet: true, after: 60 })); } }
   x += wP(wRun(`Conflicts register signed off: ${j.signoff.conflicts ? "yes" : "no"}. Scope-trigger answers confirmed: ${j.signoff.scope ? "yes" : "no"}. Report approved by the consultant for release: ${j.signoff.release ? "yes" : "no"}.`));
   { const ph = findPlaceholders(j); if (ph.length) { x += wP(wRun("Blanks still in the report"), { style: "Heading2" }); ph.forEach(p => x += wP(wRun(`•	${p.where}: ${p.what}`), { bullet: true, after: 60 })); } }
   x += wP(wRun(c.qaChecks.length + " checks"), { style: "Heading1" });
@@ -1646,11 +1738,23 @@ function qaXml(j) {
   x += wP(wRun("Report Summary"), { style: "Heading1" });
   [["Open hazards", s.openHazards], ["Data mismatches", s.dataMismatches], ["Citations to confirm", s.citationsToConfirm], ["Questions for the consultant", s.questions], ["Notes not used", s.notesNotUsed]].forEach(([h, a]) => { x += wP(wRun(h), { style: "Heading2" }); if (arr(a).length) arr(a).forEach(t => x += wP(wRun("•\t" + str(t)), { bullet: true, after: 60 })); else x += wP(wRun("None.", { i: true })); });
   { const sm = photoSummary(c, j); if (sm.total) { x += wP(wRun("Photos"), { style: "Heading1" }); x += wP(wRun(`${sm.filled} of ${photoSlots(c).length} recommended photos added. ` + (sm.missing.length ? "Required photos missing: " + sm.missing.map(sl => sl.sec.label + " – " + sl.shot).join("; ") + "." : "No required photos missing."))); } }
+  if (c.citationLibrary && arr(c.citationLibrary.entries).length) {
+    const used = reportCites(c, j.draft ? draftToText(j.draft) : ""); const st = libState(c);
+    x += wP(wRun("Citation verification register"), { style: "Heading1" });
+    x += wP(wRun(`Library: ${c.citationLibrary.title}. Status: ${st && st.verified ? "verified by the consultant " + String(st.on).slice(0, 10) : "draft, not verified by the consultant"}. A cite releases only once the consultant has checked it against the current official text.`));
+    x += used.length ? wTable(["Cite", "Library topic", "Text check recorded in the library", "Consultant verified"], used.map(k => { const e = libEntryFor(c, k) || {}; const v = citeIsVerified(c, k); return [e.cite || k, e.topic || "NOT IN LIBRARY", e.checked || (e.cite ? "Library-level check only (" + (c.citationLibrary.checkedOn || "") + ")" : ""), v ? "Yes, " + String(v.on).slice(0, 10) : "No"]; }), [1900, 2000, 3860, 1600]) : wP(wRun("No regulation cites in the report.", { i: true }));
+  }
+  { const tr = traceRows(j); if (tr.length) {
+    x += wP(wRun("Source-to-finding traceability register"), { style: "Heading1" });
+    x += wP(wRun("Every finding row must point to the note line, consultant answer or job-sheet field it came from. Figures in a finding that the linked sources don't contain are listed."));
+    x += wTable(["ID", "Finding", "Source ref", "What the source says", "Untraced figures"], tr.map(r => [r.id, r.finding, r.refs.join("; ") || "(none)", r.resolved.map(z => `${z.label}: ${z.text}`).join(" / ") + (r.bad.length ? (r.resolved.length ? " / " : "") + "UNRESOLVED: " + r.bad.join(", ") : ""), r.untraced.join(", ") || "None"]), [700, 2300, 1300, 4060, 1000]);
+    const uf = untracedDraftFigures(j, j.draft); if (uf.length) { x += wP(wRun("Figures in the draft's findings not found in any source"), { style: "Heading2" }); uf.forEach(t => x += wP(wRun("•\t" + t), { bullet: true, after: 60 })); }
+  } }
   x += wP(wRun("Conflicts register"), { style: "Heading1" });
   x += arr(I.conflicts).length ? wTable(["#", "Item", "Source 1 (value)", "Source 2 (value)", "Resolution owner", "Resolution"], I.conflicts.map((k, i) => [k.id || "C-" + (i + 1), k.item, k.source1, k.source2, k.owner, k.resolution || "[open]"].map(str))) : wP(wRun("None.", { i: true }));
   x += wP(wRun("Open questions"), { style: "Heading1" });
   const oq = j.interview.filter(q => !(q.answer || "").trim());
-  if (oq.length) oq.forEach(q => x += wP(wRun(`•\t[${q.kind}] ${q.question}`), { bullet: true, after: 60 })); else x += wP(wRun("None.", { i: true }));
+  if (oq.length) oq.forEach(q => x += wP(wRun(`•\t[${q.kind}${q.skipped ? ", skipped" : ""}${q.kind === "scope" || q.kind === "injury" ? ", blocks release" : ""}] ${q.question}`), { bullet: true, after: 60 })); else x += wP(wRun("None.", { i: true }));
   x += wP(wRun("Interview answers"), { style: "Heading1" });
   const aq = j.interview.filter(q => (q.answer || "").trim());
   if (aq.length) x += wTable(["Question", "Consultant's answer"], aq.map(q => [q.question, q.answer])); else x += wP(wRun("None.", { i: true }));
@@ -1687,6 +1791,7 @@ document.addEventListener("click", async e => {
   if (t.dataset.del) { if (S.confirmDel !== t.dataset.del) { S.confirmDel = t.dataset.del; renderView(); return; } await deleteJob(t.dataset.del); S.confirmDel = null; renderAll(); toast("Job deleted."); return; }
   if (t.dataset.lib) { S.libId = t.dataset.lib; S.page = "library"; renderAll(); window.scrollTo({ top: 0 }); return; }
   if (t.dataset.libverify) { const c = PRESETS[t.dataset.libverify]; S.profile = { ...profile(), libVerified: { ...(profile().libVerified || {}), [c.id]: { on: nowISO().slice(0, 10), by: profile().name || "", version: c.citationLibrary.title || "" } } }; saveProfileSoon(); if (S.job && S.job.qa) S.job.editedAt = nowISO(); renderAll(); toast("Marked verified. Run the quality check again on open jobs."); return; }
+  if (t.dataset.citever || t.dataset.citeunver) { const [pid, key] = (t.dataset.citever || t.dataset.citeunver).split("|"); const c = PRESETS[pid]; const k2 = pid + ":cites"; const all = { ...(profile().libVerified || {}) }; const m = { ...(all[k2] || {}) }; if (t.dataset.citever) m[key] = { on: nowISO().slice(0, 10), by: profile().name || "", version: c.citationLibrary.title || "" }; else delete m[key]; all[k2] = m; S.profile = { ...profile(), libVerified: all }; saveProfileSoon(); if (S.job && S.job.qa) S.job.editedAt = nowISO(); renderAll(); if (t.dataset.citever) toast("Marked verified. Run the quality check again on open jobs."); return; }
   if (t.dataset.libunverify) { const v = { ...(profile().libVerified || {}) }; delete v[t.dataset.libunverify]; S.profile = { ...profile(), libVerified: v }; saveProfileSoon(); renderAll(); return; }
   if (t.id === "pickLogo") { $("#logoIn").click(); return; }
   if (t.id === "delLogo") { const p = { ...profile() }; delete p.logo; S.profile = p; saveProfileSoon(); renderView(); return; }
