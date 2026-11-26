@@ -134,7 +134,7 @@
   },
   {
    "key": "ref",
-   "label": "Source ref (S1:L7, Q:id, JS:field)"
+   "label": "Source ref (S1:L7, Q:3, JS:field)"
   },
   {
    "key": "status",
@@ -195,7 +195,7 @@
   {
    "n": 1,
    "name": "Documents",
-   "rule": "Every site document the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A document not provided is a question, not a finding. Every sentence saying a document, log or record was reviewed names only what the packet lists as received and reviewed, as narrowly as the sources do. A program received but not reviewed reads \"Received, not reviewed\", never \"In place\"."
+   "rule": "Every site document the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A document not provided is a question, not a finding. Every sentence saying a document, log or record was reviewed names only what the packet lists as received and reviewed, as narrowly as the sources do. A program received but not reviewed reads \"Received, not reviewed\", never \"In place\". Any period given for a record matches the dates its entries cover, not a wider requested or titled period."
   },
   {
    "n": 2,
@@ -571,6 +571,14 @@
     "trigger": true
    },
    {
+    "topic": "Fall protection plan",
+    "cite": "29 CFR 1926.502(k)",
+    "requires": "A fall protection plan is allowed only for leading edge, precast or residential construction work where conventional protection is shown infeasible or more hazardous; it is prepared by a qualified person for the site, kept current and on site, carried out under a competent person, and explains why conventional protection is infeasible",
+    "type": "Regulation",
+    "note": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy). Cite only when a plan is used or claimed. A plan that was claimed but not provided is a records request, not proof the plan exists.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.502"
+   },
+   {
     "topic": "Guardrail height",
     "cite": "29 CFR 1926.502(b)(1)",
     "requires": "Top rail 42 inches, plus or minus 3 inches, above the walking-working level",
@@ -620,6 +628,14 @@
     "source": "https://www.law.cornell.edu/cfr/text/29/1926.651"
    },
    {
+    "topic": "Cave-in protection",
+    "cite": "29 CFR 1926.652(a)(1)",
+    "requires": "Protect each employee in an excavation from cave-ins with an adequate protective system designed under (b) or (c), unless the excavation is entirely in stable rock, or is under 5 ft deep and a competent person finds no sign of a potential cave-in",
+    "type": "Regulation",
+    "note": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy). Base depth on the auditor's own measurement where it differs from the client's records, and say which was used.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.652"
+   },
+   {
     "topic": "Rebar impalement",
     "cite": "29 CFR 1926.701(b)",
     "requires": "Protruding reinforcing steel guarded to eliminate the hazard of impalement",
@@ -659,6 +675,14 @@
     "note": "Ask: is the task listed in Table 1 and is the employer following Table 1? If not, the exposure assessment option in 1926.1153(d) applies instead.",
     "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153",
     "trigger": true
+   },
+   {
+    "topic": "Silica PEL (alternative to Table 1)",
+    "cite": "29 CFR 1926.1153(d)(1)",
+    "requires": "Where the employer does not fully follow Table 1 for a task, keep employee exposure to respirable crystalline silica at or below 50 micrograms per cubic metre as an 8-hour TWA, with an exposure assessment under (d)(2)",
+    "type": "Regulation",
+    "note": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy). Use (c)(1) when a listed Table 1 task is done without its controls; use (d)(1) only when the employer follows the alternative exposure control path. Never state an exposure level that was not measured.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153"
    },
    {
     "topic": "Silica exposure control plan",
@@ -707,6 +731,22 @@
     "source": "https://www.law.cornell.edu/cfr/text/29/1926.404",
     "trigger": true,
     "checked": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy)."
+   },
+   {
+    "topic": "Eye and face protection",
+    "cite": "29 CFR 1926.102(a)(1)",
+    "requires": "Make sure each affected employee uses appropriate eye or face protection when exposed to hazards such as flying particles, molten metal, liquid chemicals, chemical gases or vapors, or injurious light radiation",
+    "type": "Regulation",
+    "note": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy).",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.102"
+   },
+   {
+    "topic": "Grounding path",
+    "cite": "29 CFR 1926.404(f)(6)",
+    "requires": "Keep the path to ground from circuits, equipment and enclosures permanent and continuous",
+    "type": "Regulation",
+    "note": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy). Fits a cord or plug with the ground pin removed. If the site relies on an assured equipment grounding conductor program, ask for its records under 1926.404(b)(1)(iii) rather than citing (b)(1) outright.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.404"
    }
   ],
   "clientPolicy": []

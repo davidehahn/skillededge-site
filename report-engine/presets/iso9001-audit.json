@@ -100,7 +100,7 @@
   },
   {
    "key": "ref",
-   "label": "Source ref (S1:L7, Q:id, JS:field)"
+   "label": "Source ref (S1:L7, Q:3, JS:field)"
   },
   {
    "key": "source",
@@ -159,7 +159,7 @@
   {
    "n": 1,
    "name": "Documents sampled",
-   "rule": "Every procedure, record and sample the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\""
+   "rule": "Every procedure, record and sample the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" Any period given for a record matches the dates its entries cover, not a wider requested or titled period."
   },
   {
    "n": 2,

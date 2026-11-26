@@ -630,11 +630,15 @@ function parseRefs(t) { return String(t || "").split(/\s*[;,]\s*/).map(x => x.tr
 function resolveRef(j, r) {
   let m = r.match(/^S(\d+)\s*:\s*L(\d+)(?:\s*[-–]\s*L?(\d+))?$/i);
   if (m) { const s = arr(j.sources)[Number(m[1]) - 1]; if (!s) return null; const lines = String(s.text || "").split(/\r?\n/); const a = Number(m[2]), b = Number(m[3] || m[2]); if (a < 1 || b > lines.length || b < a) return null; return { label: `${s.name}, line ${a}${b > a ? "–" + b : ""}`, text: lines.slice(a - 1, b).join(" ") }; }
-  m = r.match(/^Q\s*:\s*(\S+)$/i); if (m) { const q = arr(j.interview).find(x => x.id === m[1]); if (!q || !(q.answer || "").trim()) return null; return { label: "Consultant answer", text: q.answer }; }
+  m = r.match(/^Q\s*:?\s*(\S+)$/i); if (m) { const q = arr(j.interview).find(x => x.id === m[1]) || (/^\d+$/.test(m[1]) ? arr(j.interview)[Number(m[1]) - 1] : null); if (!q || !(q.answer || "").trim()) return null; return { label: "Consultant answer", text: q.answer }; }
   m = r.match(/^JS\s*:\s*(\w+)$/i); if (m) { const f = CFG().jobSheetFields.find(x => x.key === m[1]); const v = ((j.jobSheet || {})[m[1]] || "").trim(); if (!f || !v) return null; return { label: "Job sheet: " + f.label, text: v }; }
   return null;
 }
-function fileBase(j) { return String(jobTitle(j) || "Job").replace(/&/g, " and ").replace(/[^\w\- ]+/g, "").replace(/\s+/g, " ").trim().slice(0, 50) || "Job"; }
+function fileBase(j) {
+  let t = String(jobTitle(j) || "Job").replace(/\s*\([^)]*\)\s*$/, "").replace(/&/g, " and ").replace(/[^\w\- ]+/g, "").replace(/\s+/g, " ").trim();
+  if (t.length > 50) { const cut = t.slice(0, 51); const k = cut.lastIndexOf(" "); t = (k > 20 ? cut.slice(0, k) : t.slice(0, 50)).trim(); }
+  return t || "Job";
+}
 /* strip source refs, item ids and cites so their digits are not read as figures */
 function stripRefs(t) { const L = CFG().citationLibrary; let x = String(t || ""); if (L && L.citePattern) x = x.replace(new RegExp(L.citePattern, "gi"), " "); return x.replace(/\bS\d+\s*:\s*L\d+(?:\s*[-–]\s*L?\d+)?/gi, " ").replace(/\bQ\s*:\s*\S+/g, " ").replace(/\bJS\s*:\s*\w+/g, " ").replace(/\b(?:F|C|Rec|R|Q)-\d+\b/gi, " ").replace(/\b(?:line|lines|L)\s*\d+(?:\s*[-–]\s*\d+)?\b/gi, " ").replace(/\b(?:source|S)\s*\d+\b/gi, " "); }
 function figuresIn(t) { return [...new Set(String(t || "").match(/\d+(?:[\/.:]\d+)?/g) || [])]; }
@@ -691,6 +695,9 @@ function releaseBlockers(j) {
   const ot = openTriggers(j).filter(t => !oq.some(q => q.fromTrigger === t.topic || sameQuestion(q.question, t.question)));
   if (ot.length) out.push(`${ot.length} scope trigger${ot.length > 1 ? "s have" : " has"} no answer. Answer ${ot.length > 1 ? "them" : "it"} in the Findings step (Injury & scope tab): ${ot.map(triggerQuestion).join(" | ")}`);
   dueBeforeReport(j).forEach(t => out.push(t + ". Set a due date on or after the report date."));
+  const sk = computeScore(c, j);
+  if (sk) { const top = Math.max(...c.scorecard.levels.map(l => l.value == null ? -1 : l.value)); sk.rows.filter(r => r.value != null && r.value < top && !arr(r.ids).length).forEach(r => out.push(`Scorecard: "${r.cat}" is rated ${r.level}, but no finding is filed under that category, so its Basis would read "No findings recorded". Add the finding to that category, or change the rating.`)); }
+  if (!oq.length && !ot.length) { const mk = "(pending scope answer)"; const pend = approvedItems(j).filter(it => str(it.cite).toLowerCase().includes(mk)); if (pend.length) out.push(`${pend.length > 1 ? "These items still read" : "This item still reads"} "${mk}" though every scope question is answered: ${pend.map(it => it.id).join(", ")}. Decide whether the standard applies. If it does, delete the marker from the cite in the Findings table; if it doesn't, change the cite or make the item a recommendation. Then rebuild the draft.`); }
   const tr = traceRows(j).filter(r => !r.resolved.length || r.bad.length);
   if (tr.length) out.push(`${tr.length} finding${tr.length > 1 ? "s" : ""} can't be traced to a note line, an answer or a job-sheet field (Source ref column): ${tr.map(r => r.id + (r.bad.length ? " (" + r.bad.join(", ") + ")" : " (no ref)")).join(", ")}`);
   return out;
@@ -761,7 +768,7 @@ function sourcesText(j) {
 function interviewText(j) {
   const qa = j.interview.filter(q => q.answer && q.answer.trim());
   if (!qa.length) return "(no answers yet)";
-  return qa.map(q => `[${q.id}] (ref Q:${q.id}) (${q.kind}, round ${q.round}) Q: ${q.question}\nA (consultant): ${q.answer}`).join("\n");
+  return qa.map(q => `[${q.id}] (ref Q:${j.interview.indexOf(q) + 1}) (${q.kind}, round ${q.round}) Q: ${q.question}\nA (consultant): ${q.answer}`).join("\n");
 }
 function askedOpenText(j) { const o = arr(j.interview).filter(q => !(q.answer || "").trim()); return o.length ? o.map(q => `- [${q.id}] (${q.kind}, ${q.skipped ? "skipped by the consultant" : "still open"}) ${q.question}`).join("\n") : "(none)"; }
 function openQText(j) { const o = arr(j.interview).filter(q => !(q.answer || "").trim()); return o.length ? o.map(q => `- (${q.kind}${q.skipped ? ", skipped by the consultant" : ""}) ${q.question}`).join("\n") : "(none)"; }
@@ -829,7 +836,7 @@ ${c.findingRules ? c.findingRules : `2. Requirement source: cite a library secti
 17. A sensory observation (loud, dusty, hot, smelled) or a statement is a screening indicator, never a measurement. Say so in "evidence" and never write a number that was not measured.
 18. Never drop a legitimate ${c.itemNoun} because information is missing. When the row depends on something still unconfirmed, start "note" with "verify: " and say in a few words what the consultant must confirm.${c.jobSheetFields.some(f => f.key === "framework") ? `
 19. Framework: cite only the standards the job sheet's regulatory framework names (general industry 29 CFR 1910, construction 29 CFR 1926). If the framework is [needed], ask one scope question that proposes the framework the operations description points to, and say why.` : ""}${c.columns.some(x => x.key === "ref") ? `
-20. "ref" lists where every fact in the row came from: S<source>:L<line> for a note line (e.g. S1:L7, or S1:L7-L8), Q:<question id> for a consultant answer, JS:<field key> for the job sheet. Separate several with "; ". Every row needs at least one ref, and every figure in "finding" or "evidence" must appear in a line it refs. Never ref a line that doesn't say it.` : ""}
+20. "ref" lists where every fact in the row came from: S<source>:L<line> for a note line (e.g. S1:L7, or S1:L7-L8), Q:<question number> (as in "ref Q:3") for a consultant answer, JS:<field key> for the job sheet. Separate several with "; ". Every row needs at least one ref, and every figure in "finding" or "evidence" must appear in a line it refs. Never ref a line that doesn't say it.` : ""}
 
 Reply with ONLY one JSON object, no prose:
 {"items":[{ ${columnsSpec(c)}, "action": string, "note": string }],
@@ -884,7 +891,7 @@ ${interviewText(j)}
 OPEN QUESTIONS (the consultant has not answered these; state nothing that depends on them as fact):
 ${openQText(j)}
 
-RECORDS REVIEWED: describe a document, log or record as reviewed only if the packet lists it as received and reviewed, and name it exactly as the packet and sources do (an excerpt of a 300-A is "an excerpt of the 300-A", never "the 300 Log and 300-A"). Never name a document, year or log that is not in the packet or the sources. A program received but not reviewed reads "Received, not reviewed", never "In place". This holds in every section, the summary and the score method included: list the items actually reviewed, never a general phrase such as "a review of written programs and records" when some were not reviewed. A program status other than "Received, not reviewed" (such as "Needs update" or "In place") needs a review that the sources describe. Photos the consultant attached in the app count as reviewed.
+RECORDS REVIEWED: describe a document, log or record as reviewed only if the packet lists it as received and reviewed, and name it exactly as the packet and sources do (an excerpt of a 300-A is "an excerpt of the 300-A", never "the 300 Log and 300-A"). Never name a document, year or log that is not in the packet or the sources. A program received but not reviewed reads "Received, not reviewed", never "In place". When you give a record's period, give the dates its entries actually cover (a log whose entries run from September 3 to October 28 covers "September to October", even if it was requested or titled for August to October). This holds in every section, the summary and the score method included: list the items actually reviewed, never a general phrase such as "a review of written programs and records" when some were not reviewed. A program status other than "Received, not reviewed" (such as "Needs update" or "In place") needs a review that the sources describe. Photos the consultant attached in the app count as reviewed.
 
 VERIFICATION AND SOURCES: Every Condition part says where its evidence came from in plain words (observed during the walk-through on [date], per the consultant, per the [document]), and uses only figures in the sources, answers, job sheet or approved table. A sensory observation is described as observed, never as a measurement. For a row whose "note" starts with "verify:" or whose cite ends "(pending scope answer)", add a part labeled "Verification required" right after Condition, with the text "[verify: what the consultant must confirm]". Keep that finding; never drop or soften it to hide the gap.
 
@@ -1597,6 +1604,7 @@ function keepScopeMarks(j, d) {
   const items = approvedItems(j); const mark = "(pending scope answer)";
   arr(d && d.sections).forEach(sec => arr(sec.blocks).forEach(b => {
     if (b.type !== "finding") return; const it = items.find(x => x.id === b.id);
+    if (b.rating) { const tag = " (" + str(b.rating).trim().toLowerCase() + ")"; let t = str(b.title).trim(); while (t.toLowerCase().endsWith(tag)) t = t.slice(0, t.length - tag.length).trim(); b.title = t; } /* the heading adds the rating itself */
     if (!it || !str(it.cite).toLowerCase().includes(mark)) return;
     const req = arr(b.parts).find(p => /^requirement/i.test(str(p.label)));
     if (!req || str(req.text).toLowerCase().includes(mark)) return;

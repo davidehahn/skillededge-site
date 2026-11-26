@@ -141,7 +141,7 @@
   },
   {
    "key": "ref",
-   "label": "Source ref (S1:L7, Q:id, JS:field)"
+   "label": "Source ref (S1:L7, Q:3, JS:field)"
   },
   {
    "key": "status",
@@ -202,7 +202,7 @@
   {
    "n": 1,
    "name": "Packet",
-   "rule": "Every program, log, record and attachment the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A program not provided is a client question, not a finding. Every sentence saying a document, log or record was reviewed names only what the packet lists as received and reviewed, as narrowly as the sources do. A program received but not reviewed reads \"Received, not reviewed\", never \"In place\"."
+   "rule": "Every program, log, record and attachment the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A program not provided is a client question, not a finding. Every sentence saying a document, log or record was reviewed names only what the packet lists as received and reviewed, as narrowly as the sources do. A program received but not reviewed reads \"Received, not reviewed\", never \"In place\". Any period given for a record matches the dates its entries cover, not a wider requested or titled period."
   },
   {
    "n": 2,
