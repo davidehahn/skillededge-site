@@ -328,7 +328,7 @@
  },
  "scorecard": {
   "title": "Compliance scorecard",
-  "note": "You rate each category. The app computes the score; Claude never rates a category. Mark a category Not Applicable to leave it out of the score.",
+  "note": "You rate each category. The app computes the score; Claude never rates a category. Mark a category Not Applicable to leave it out of the score. Rate a category Compliant only if you examined it during this audit. Mark it Not Assessed if you didn't: it is left out of the score and the report shows it as not assessed.",
   "levels": [
    {
     "label": "Compliant",
@@ -345,6 +345,11 @@
    {
     "label": "Absent",
     "value": 0
+   },
+   {
+    "label": "Not Assessed",
+    "value": null,
+    "notAssessed": true
    },
    {
     "label": "Not Applicable",

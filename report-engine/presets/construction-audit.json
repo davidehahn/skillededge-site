@@ -308,7 +308,7 @@
  "releaseGate": "All 15 pass, every Serious finding has an owner and due date, and the consultant signs off on the conflicts register and scope answers.",
  "scorecard": {
   "title": "Site safety scorecard",
-  "note": "You rate each category. The app computes the score; Claude never rates a category. Mark a category Not Applicable to leave it out.",
+  "note": "You rate each category. The app computes the score; Claude never rates a category. Mark a category Not Applicable to leave it out. Rate a category Compliant only if you examined it during this audit. Mark it Not Assessed if you didn't: it is left out of the score and the report shows it as not assessed.",
   "levels": [
    {
     "label": "Compliant",
@@ -325,6 +325,11 @@
    {
     "label": "Absent",
     "value": 0
+   },
+   {
+    "label": "Not Assessed",
+    "value": null,
+    "notAssessed": true
    },
    {
     "label": "Not Applicable",
@@ -672,9 +677,17 @@
     "cite": "29 CFR 1926.1153(c)(1)",
     "requires": "For each Table 1 task, fully and properly implement the listed engineering controls, work practices and respiratory protection",
     "type": "Regulation",
-    "note": "Ask: is the task listed in Table 1 and is the employer following Table 1? If not, the exposure assessment option in 1926.1153(d) applies instead.",
+    "note": "Ask: is the task listed in Table 1 and is the employer following Table 1? If not, the exposure assessment option in 1926.1153(d) applies instead. Text check Nov 26, 2026 (Cornell LII e-CFR copy), Table 1 row (ii) handheld power saws, any blade diameter: a saw with an integrated water delivery system that continuously feeds water to the blade, operated and maintained per the manufacturer's instructions to minimize dust; respirator APF 10 indoors or in an enclosed area for any duration, and outdoors only for more than 4 hours a shift. Row (ii) offers no shroud or vacuum option. When the saw is used indoors or in an enclosed area, also cite (c)(2)(i). Name every Table 1 control that is missing, not only the first.",
     "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153",
     "trigger": true
+   },
+   {
+    "topic": "Silica Table 1: indoor exhaust",
+    "cite": "29 CFR 1926.1153(c)(2)(i)",
+    "requires": "For Table 1 tasks done indoors or in enclosed areas, provide a means of exhaust as needed to minimize the accumulation of visible airborne dust",
+    "type": "Regulation",
+    "note": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy). Applies with the Table 1 row's own controls. Visible dust building up indoors is the observed condition; never state a concentration that was not measured.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153"
    },
    {
     "topic": "Silica PEL (alternative to Table 1)",
