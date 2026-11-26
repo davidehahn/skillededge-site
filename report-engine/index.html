@@ -1011,7 +1011,7 @@ function mergeIntake(prev, next) {
 }
 function computeRates(c, j) {
   const f = c.rateFields; if (!f) return null; const js = j.jobSheet || {};
-  const num = k => { const m = String(js[f[k]] || "").replace(/,/g, "").match(/\d+(?:\.\d+)?/); return m ? Number(m[0]) : null; };
+  const num = k => { const m = String(js[f[k]] || "").replace(/,/g, "").match(/^\s*(?:about|approx\.?|approximately|~)?\s*(\d+(?:\.\d+)?)(?![\d.])(?!\s*(?:log|-?a\b|form))/i); return m ? Number(m[1]) : null; };
   const h = num("hours"), r = num("recordables"), d = num("dart");
   const rate = v => (h && v != null) ? (v * 200000 / h).toFixed(2) : null;
   return { hours: h, recordables: r, dart: d, trc: rate(r), dartRate: rate(d) };
@@ -1609,7 +1609,14 @@ function setDraftPath(path, val) {
   return false;
 }
 /* keep the approved table's open-scope marker on each finding's requirement line */
+function fillPositives(j, d) {
+  const pos = arr((j.intake || {}).notesNotUsed).filter(n => /positive observation/i.test(String(n && n.reason || ""))).map(n => String(n.note || "").replace(/^\s*S\d+:L\d+(?:-L?\d+)?\s*/i, "").trim()).filter(Boolean).map(t => t.charAt(0).toUpperCase() + t.slice(1).replace(/\.?$/, "."));
+  if (!pos.length) return d;
+  arr(d && d.sections).forEach(sec => { if (!/positive observation/i.test(String(sec.heading || ""))) return; const bl = arr(sec.blocks); const txt = bl.map(b => [b.text, ...arr(b.items)].join(" ")).join(" ").replace(/\[needed\]|[\s.•-]/gi, ""); if (!txt) sec.blocks = [{ type: "bullets", items: pos }]; });
+  return d;
+}
 function keepScopeMarks(j, d) {
+  fillPositives(j, d);
   const items = approvedItems(j); const mark = "(pending scope answer)";
   arr(d && d.sections).forEach(sec => arr(sec.blocks).forEach(b => {
     if (b.type !== "finding") return; const it = items.find(x => x.id === b.id);
