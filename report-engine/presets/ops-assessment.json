@@ -99,6 +99,10 @@
    "label": "Evidence"
   },
   {
+   "key": "ref",
+   "label": "Source ref (S1:L7, Q:id, JS:field)"
+  },
+  {
    "key": "impact",
    "label": "Impact"
   },
@@ -357,6 +361,7 @@
      "area": "Scheduling and dispatch",
      "finding": "Jobs are booked into the first open slot without matching technician skills",
      "evidence": "Observed for two days; the skills field in the job system is not used; dispatch lead estimates about 1 in 5 return visits come from the wrong technician being sent (per interviews)",
+     "ref": "S1:L1; S2:L1",
      "impact": "Contributes to return visits (412 of 1,420 jobs, July to September 2026, job-system report) and the drop in first-time fix from 82% to 71%",
      "priority": "High",
      "recommendation": "Fill in the skills field for each technician and require a skill match before confirming a booking",
@@ -370,6 +375,7 @@
      "area": "Scheduling and dispatch",
      "finding": "Every job gets a 2-hour slot and drive time is not scheduled",
      "evidence": "System default slot regardless of job type; 6 of 9 reschedules seen over two days were caused by a technician running late",
+     "ref": "S1:L2",
      "impact": "On-time arrival was 78% (July to September 2026, job-system report)",
      "priority": "High",
      "recommendation": "Set slot lengths by job type and add drive time between jobs",
@@ -383,6 +389,7 @@
      "area": "Truck stock",
      "finding": "Trucks have no standard stock list or restock schedule",
      "evidence": "No stock list; technicians restock when they can (per interviews); a ride-along technician drove to a supply house mid-day for a capacitor",
+     "ref": "S1:L3",
      "impact": "Parts runs take technicians off scheduled jobs and lead to return visits",
      "priority": "Medium",
      "recommendation": "Build a standard truck stock list from the top 20 parts and restock weekly from the warehouse",
@@ -396,6 +403,7 @@
      "area": "Invoicing",
      "finding": "Invoices are keyed from photos of paper tickets at the end of the week",
      "evidence": "Observed; average 6.4 days from job close to invoice (September 2026, accounting report)",
+     "ref": "S1:L4",
      "impact": "Slows cash collection and adds keying work for the office",
      "priority": "Medium",
      "recommendation": "Invoice from the technician's tablet at job close using the job system",
@@ -409,6 +417,7 @@
      "area": "Management routines",
      "finding": "There is no weekly operations review or shared dashboard",
      "evidence": "No weekly operations meeting since March 2026; reports pulled monthly (per interviews)",
+     "ref": "S1:L5",
      "impact": "Problems such as the drop in first-time fix are seen weeks late",
      "priority": "Low",
      "recommendation": "Hold a 30-minute weekly operations review using a one-page dashboard of first-time fix, on-time arrival and invoice lag",

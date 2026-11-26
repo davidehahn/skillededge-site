@@ -133,6 +133,10 @@
    "label": "Evidence"
   },
   {
+   "key": "ref",
+   "label": "Source ref (S1:L7, Q:id, JS:field)"
+  },
+  {
    "key": "status",
    "label": "Open / corrected on site",
    "options": [
@@ -191,7 +195,7 @@
   {
    "n": 1,
    "name": "Documents",
-   "rule": "Every site document the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A document not provided is a question, not a finding."
+   "rule": "Every site document the report relies on has an inventory row and status. Unreviewed items read \"(not reviewed).\" A document not provided is a question, not a finding. Every sentence saying a document, log or record was reviewed names only what the packet lists as received and reviewed, as narrowly as the sources do. A program received but not reviewed reads \"Received, not reviewed\", never \"In place\"."
   },
   {
    "n": 2,
@@ -228,7 +232,7 @@
   {
    "n": 8,
    "name": "Citation",
-   "rule": "Every cite matches the citation library at the paragraph listed. A cite not in the library is \"(unverified)\" and blocks release.",
+   "rule": "Every cite matches the citation library at the paragraph listed. A cite not in the library is \"(unverified)\" and blocks release. A cite from outside the library must carry \"(unverified)\" and stays listed here until the consultant adds it to the library and verifies it; a cite from outside the library without that marker is a flag.",
    "auto": "citations"
   },
   {
@@ -419,6 +423,26 @@
     "type": "Regulation",
     "note": "Only cite during or for that posting period.",
     "source": "https://www.law.cornell.edu/cfr/text/29/1904.32"
+   },
+   {
+    "topic": "Annual summary certification",
+    "cite": "29 CFR 1904.32(b)(3)",
+    "requires": "A company executive certifies having examined the OSHA 300 Log and reasonably believing the annual summary is correct and complete",
+    "type": "Regulation",
+    "note": "A signature alone doesn't settle it: check who signed against (b)(4). Ask for the signer's title if it isn't clear.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32",
+    "trigger": false,
+    "checked": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy)."
+   },
+   {
+    "topic": "Who may certify the annual summary",
+    "cite": "29 CFR 1904.32(b)(4)",
+    "requires": "The certifying executive is an owner (sole proprietorship or partnership only), a corporate officer, the highest ranking company official at the establishment, or that official's immediate supervisor",
+    "type": "Regulation",
+    "note": "An office manager qualifies only if they hold one of these roles. Ask before calling it a violation.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1904.32",
+    "trigger": true,
+    "checked": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy)."
    },
    {
     "topic": "General Duty Clause",
@@ -616,7 +640,7 @@
     "cite": "29 CFR 1926.1053(b)(4)",
     "requires": "Ladders used only for the purpose for which they were designed",
     "type": "Regulation",
-    "note": "",
+    "note": "For standing on the top cap or top step of a stepladder, use (b)(13) instead. ",
     "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053"
    },
    {
@@ -643,6 +667,46 @@
     "type": "Regulation",
     "note": "",
     "source": "https://www.law.cornell.edu/cfr/text/29/1926.1153"
+   },
+   {
+    "topic": "Stepladder top or top step",
+    "cite": "29 CFR 1926.1053(b)(13)",
+    "requires": "The top or top step of a stepladder not used as a step",
+    "type": "Regulation",
+    "note": "Use this, not (b)(4), for a worker standing on the top cap or top step. Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.1053",
+    "trigger": true,
+    "checked": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy)."
+   },
+   {
+    "topic": "Ground-fault protection on construction sites",
+    "cite": "29 CFR 1926.404(b)(1)(i)",
+    "requires": "Employer uses either GFCIs as in (b)(1)(ii) or an assured equipment grounding conductor program as in (b)(1)(iii) to protect employees on construction sites",
+    "type": "Regulation",
+    "note": "Two ways to comply: no GFCI seen is not a violation if an assured equipment grounding conductor program is in place. Ask which one the employer uses. Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.404",
+    "trigger": true,
+    "checked": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy)."
+   },
+   {
+    "topic": "GFCIs on construction sites",
+    "cite": "29 CFR 1926.404(b)(1)(ii)",
+    "requires": "All 120-volt, single-phase, 15- and 20-ampere receptacle outlets on construction sites that are not part of the permanent wiring and are used by employees have approved GFCIs",
+    "type": "Regulation",
+    "note": "Small two-wire generators (5 kW or less) with insulated conductors are exempt. Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.404",
+    "trigger": true,
+    "checked": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy)."
+   },
+   {
+    "topic": "Assured equipment grounding conductor program",
+    "cite": "29 CFR 1926.404(b)(1)(iii)",
+    "requires": "Where GFCIs are not used, the employer establishes and implements an assured equipment grounding conductor program covering cord sets, non-permanent receptacles and cord-connected equipment",
+    "type": "Regulation",
+    "note": "Ask: is this construction work (29 CFR 1926)? If no, use the general industry (1910) entry instead.",
+    "source": "https://www.law.cornell.edu/cfr/text/29/1926.404",
+    "trigger": true,
+    "checked": "Text check Nov 26, 2026: paragraph read on Cornell LII (e-CFR copy)."
    }
   ],
   "clientPolicy": []
@@ -775,6 +839,7 @@
      "employer": "Framing subcontractor",
      "category": "Fall protection",
      "evidence": "Site walk observation; superintendent said rails were removed for a delivery",
+     "ref": "S1:L1",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.501(b)(1)",
@@ -791,6 +856,7 @@
      "employer": "Ridgeline Builders Inc.",
      "category": "Ladders and stairways",
      "evidence": "Site walk observation",
+     "ref": "S1:L2",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.1053(b)(1)",
@@ -807,6 +873,7 @@
      "employer": "Utilities subcontractor",
      "category": "Excavations and trenching",
      "evidence": "Site walk observation; depth per utilities foreman",
+     "ref": "S1:L3",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.651(c)(2)",
@@ -823,6 +890,7 @@
      "employer": "Utilities subcontractor",
      "category": "Excavations and trenching",
      "evidence": "Site walk observation",
+     "ref": "S1:L3",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.651(j)(2)",
@@ -839,6 +907,7 @@
      "employer": "Utilities subcontractor",
      "category": "Training and competent persons",
      "evidence": "Excavation inspection log, Nov 12 entry blank",
+     "ref": "S2:L1",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.651(k)(1)",
@@ -855,6 +924,7 @@
      "employer": "Concrete subcontractor",
      "category": "Health hazards (silica, noise)",
      "evidence": "Site walk observation",
+     "ref": "S1:L5",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.1153(c)(1)",
@@ -871,6 +941,7 @@
      "employer": "Concrete subcontractor",
      "category": "Housekeeping, fire and flammables",
      "evidence": "Site walk observation",
+     "ref": "S1:L6",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.152(a)(1)",
@@ -887,6 +958,7 @@
      "employer": "Concrete subcontractor",
      "category": "Fall protection",
      "evidence": "Site walk observation",
+     "ref": "S1:L7",
      "status": "open",
      "source": "REGULATION",
      "cite": "29 CFR 1926.701(b)",
@@ -903,6 +975,7 @@
      "employer": "Concrete subcontractor",
      "category": "Training and competent persons",
      "evidence": "October toolbox talk sign-ins",
+     "ref": "S3:L1",
      "status": "open",
      "source": "RECOMMENDATION",
      "cite": "",

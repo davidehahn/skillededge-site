@@ -634,6 +634,9 @@ function resolveRef(j, r) {
   m = r.match(/^JS\s*:\s*(\w+)$/i); if (m) { const f = CFG().jobSheetFields.find(x => x.key === m[1]); const v = ((j.jobSheet || {})[m[1]] || "").trim(); if (!f || !v) return null; return { label: "Job sheet: " + f.label, text: v }; }
   return null;
 }
+function fileBase(j) { return String(jobTitle(j) || "Job").replace(/&/g, " and ").replace(/[^\w\- ]+/g, "").replace(/\s+/g, " ").trim().slice(0, 50) || "Job"; }
+/* strip source refs, item ids and cites so their digits are not read as figures */
+function stripRefs(t) { const L = CFG().citationLibrary; let x = String(t || ""); if (L && L.citePattern) x = x.replace(new RegExp(L.citePattern, "gi"), " "); return x.replace(/\bS\d+\s*:\s*L\d+(?:\s*[-–]\s*L?\d+)?/gi, " ").replace(/\bQ\s*:\s*\S+/g, " ").replace(/\bJS\s*:\s*\w+/g, " ").replace(/\b(?:F|C|Rec|R|Q)-\d+\b/gi, " ").replace(/\b(?:line|lines|L)\s*\d+(?:\s*[-–]\s*\d+)?\b/gi, " ").replace(/\b(?:source|S)\s*\d+\b/gi, " "); }
 function figuresIn(t) { return [...new Set(String(t || "").match(/\d+(?:[\/.:]\d+)?/g) || [])]; }
 function figPresent(corpus, n) { return new RegExp("(^|[^\\d])" + n.replace(/[.\/]/g, "\\$&") + "(?![\\d])").test(corpus); }
 function traceRows(j) {
@@ -643,7 +646,7 @@ function traceRows(j) {
     const refs = parseRefs(it.ref); const resolved = [], bad = [];
     refs.forEach(r => { const x = resolveRef(j, r); if (x) resolved.push({ ref: r, ...x }); else bad.push(r); });
     const here = resolved.map(x => x.text).join("\n") + "\n" + sheet;
-    const untraced = figuresIn([it.finding, it.evidence].join(" ")).filter(n => !figPresent(here, n));
+    const untraced = figuresIn(stripRefs([it.finding, it.evidence].join(" "))).filter(n => !figPresent(here, n));
     return { id: it.id, finding: it.finding, refs, resolved, bad, untraced };
   });
 }
@@ -654,10 +657,30 @@ function untracedDraftFigures(j, draft) {
   const corpus = [...arr(j.sources).map(s => s.text), ...arr(j.interview).map(q => q.answer || ""), ...Object.values(j.jobSheet || {}), JSON.stringify(approvedItems(j))].join("\n");
   const out = [];
   arr(draft.sections).forEach(s => arr(s.blocks).filter(b => b.type === "finding").forEach(b => arr(b.parts).filter(p => /condition|observ/i.test(p.label || "")).forEach(p => {
-    const t = re ? String(p.text || "").replace(re, " ") : String(p.text || "");
+    const t = stripRefs(re ? String(p.text || "").replace(re, " ") : String(p.text || ""));
     figuresIn(t).filter(n => !figPresent(corpus, n)).forEach(n => out.push(`${b.id}: "${n}"`));
   })));
   return [...new Set(out)];
+}
+function normWords(t) { return new Set(String(t || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(w => w.length > 2 && !/^(the|and|for|was|were|are|has|have|this|that|with|any|does|did|you|your|what|which|there|their|from|been|its)$/.test(w))); }
+function sameQuestion(a, b) { const A = normWords(a), B = normWords(b); if (!A.size || !B.size) return false; let n = 0; A.forEach(w => { if (B.has(w)) n++; }); return n / Math.min(A.size, B.size) >= 0.6; }
+function triggerQuestion(t) { return `${str(t.topic)}: ${str(t.question)}`.replace(/^:\s*/, ""); }
+/* scope triggers with no answer, in the intake or in an answered interview question */
+function openTriggers(j) {
+  return arr(j.intake && j.intake.scopeTriggers).filter(t => !str(t.answer).trim() || /^\[?(open|needed|pending)\]?$/i.test(str(t.answer).trim())).filter(t => !arr(j.interview).some(q => (q.answer || "").trim() && (q.fromTrigger === t.topic || sameQuestion(q.question, t.question))));
+}
+function parseDay(v) {
+  const t = String(v || "").trim(); if (!t || /needed/i.test(t)) return null;
+  let m = t.match(/(\d{4})-(\d{2})-(\d{2})/); if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+  m = t.match(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/); if (m) return new Date(+m[3], +m[1] - 1, +m[2]);
+  m = t.match(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})\b/i);
+  if (m) return new Date(+m[3], "janfebmaraprmayjunjulaugsepoctnovdec".indexOf(m[1].toLowerCase().slice(0, 3)) / 3, +m[2]);
+  return null;
+}
+function dueBeforeReport(j) {
+  const c = CFG(); if (!c.columns.some(x => x.key === "due")) return [];
+  const rd = parseDay((j.jobSheet || {}).reportDate); if (!rd) return [];
+  return approvedItems(j).filter(it => !isRec(it) && !/\b(corrected|abated|completed|fixed|done)\b/i.test(str(it.due) + " " + str(it.status))).map(it => ({ it, d: parseDay(it.due) })).filter(x => x.d && x.d < rd).map(x => `${x.it.id} is due ${str(x.it.due)}, before the report date (${str((j.jobSheet || {}).reportDate)})`);
 }
 function openCritical(j) { return arr(j.interview).filter(q => !(q.answer || "").trim() && (q.kind === "scope" || q.kind === "injury")); }
 function releaseBlockers(j) {
@@ -665,6 +688,9 @@ function releaseBlockers(j) {
   if (c.jobSheetFields.some(f => f.key === "framework") && !((j.jobSheet || {}).framework || "").trim()) out.push("Set the regulatory framework on the job sheet (general industry 1910, construction 1926, or both).");
   const oq = openCritical(j);
   if (oq.length) out.push(`${oq.length} scope or injury question${oq.length > 1 ? "s are" : " is"} still unanswered. Answer ${oq.length > 1 ? "them" : "it"} in the Findings step: ${oq.map(q => q.question).join(" | ")}`);
+  const ot = openTriggers(j).filter(t => !oq.some(q => q.fromTrigger === t.topic || sameQuestion(q.question, t.question)));
+  if (ot.length) out.push(`${ot.length} scope trigger${ot.length > 1 ? "s have" : " has"} no answer. Answer ${ot.length > 1 ? "them" : "it"} in the Findings step (Injury & scope tab): ${ot.map(triggerQuestion).join(" | ")}`);
+  dueBeforeReport(j).forEach(t => out.push(t + ". Set a due date on or after the report date."));
   const tr = traceRows(j).filter(r => !r.resolved.length || r.bad.length);
   if (tr.length) out.push(`${tr.length} finding${tr.length > 1 ? "s" : ""} can't be traced to a note line, an answer or a job-sheet field (Source ref column): ${tr.map(r => r.id + (r.bad.length ? " (" + r.bad.join(", ") + ")" : " (no ref)")).join(", ")}`);
   return out;
@@ -737,6 +763,7 @@ function interviewText(j) {
   if (!qa.length) return "(no answers yet)";
   return qa.map(q => `[${q.id}] (ref Q:${q.id}) (${q.kind}, round ${q.round}) Q: ${q.question}\nA (consultant): ${q.answer}`).join("\n");
 }
+function askedOpenText(j) { const o = arr(j.interview).filter(q => !(q.answer || "").trim()); return o.length ? o.map(q => `- [${q.id}] (${q.kind}, ${q.skipped ? "skipped by the consultant" : "still open"}) ${q.question}`).join("\n") : "(none)"; }
 function openQText(j) { const o = arr(j.interview).filter(q => !(q.answer || "").trim()); return o.length ? o.map(q => `- (${q.kind}${q.skipped ? ", skipped by the consultant" : ""}) ${q.question}`).join("\n") : "(none)"; }
 function columnsSpec(c) { return c.columns.map(col => `"${col.key}"` + (col.options ? ` (one of: ${col.options.join(" | ")})` : "") + ` = ${col.label}`).join("; "); }
 
@@ -776,13 +803,16 @@ ${sourcesText(j) || "(none)"}
 INTERVIEW SO FAR (consultant answers are facts you may use):
 ${interviewText(j)}
 
+QUESTIONS ALREADY ASKED AND NOT ANSWERED (skipped by the consultant or still open). Never ask any of them again, in any wording. A row that depends on one keeps [needed] or a "verify:" note:
+${askedOpenText(j)}
+
 PREVIOUS INTAKE STATE (update it; keep IDs stable; keep consultant-edited cell values exactly as they are):
 ${prev}
 
 DO THIS:
 1. Pull every ${c.itemNoun} the inputs support, one row per distinct condition. Use only facts in the sources, the job sheet and the consultant's answers. Never invent names, dates, measurements or facts; write [needed].
-${c.findingRules ? c.findingRules : `2. Requirement source: cite a library section only when the observed condition actually breaks what it requires. A rule that comes from the client is ${arr(c.requirementLabels)[1] || "CLIENT POLICY"} (name the document, or [needed]), never a regulation. If the requirement is met and the issue is a best practice, make it a ${c.recommendationSource} with no cite. If no library entry fits, write the cite followed by " (unverified)".
-3. Scope triggers (conditional standards in the library notes): ask them as questions before the cite is used. Until answered, the row's cite ends with " (pending scope answer)".`}
+${c.findingRules ? c.findingRules : `2. Requirement source: cite a library section only when the observed condition actually breaks what it requires. A rule that comes from the client is ${arr(c.requirementLabels)[1] || "CLIENT POLICY"} (name the document, or [needed]), never a regulation. If the requirement is met and the issue is a best practice, make it a ${c.recommendationSource} with no cite. Cite the most specific standard that covers the hazard (for example the woodworking machinery standard before general machine guarding, or a ladder's own top-step rule before a general intended-use rule). If no library entry fits exactly, never borrow a nearby entry that fits less well and never cite from memory as if it were verified: write the paragraph you believe applies followed by " (unverified)", and start "note" with "verify: add <cite> to the library and check its text". QA check 8 lists every such cite and release stays blocked until the consultant adds and verifies it.
+3. Scope triggers (conditional standards in the library notes): list each one in "scopeTriggers" and also ask it in "questions" with kind "scope" the first round it comes up, unless it is already answered or already asked. Until answered, the row's cite ends with " (pending scope answer)".`}
 4. ${c.injuryQuestions === false ? `Safety incidents, injuries or legal claims mentioned in the notes are not ${c.itemNoun}s unless the template says so: list them under "injury" and ask the consultant how to handle them.` : `Injury, treatment, near-miss or unlogged-incident mentions are never ${c.itemNoun}s: list them under "injury" and ask about them. Ask ALL injury questions in the first round, before other gaps.`}
 5. Every disagreement between sources (counts, measurements, dates, names, checklist vs statements, training status) goes in "conflicts". Nothing is resolved silently. A conflict the consultant has resolved in an answer gets that resolution.
 6. Names: never expand initials or partial names. List each name as written and how the report must refer to it (job title or [name needed]).
@@ -790,7 +820,7 @@ ${c.findingRules ? c.findingRules : `2. Requirement source: cite a library secti
 8. A document the consultant does not have is a question for the client, never a ${c.itemNoun}.
 9. Repeat claims without the prior report say "per client; prior report not reviewed".
 10. Evidence from a source whose status is not "received and reviewed" carries "(not reviewed)".
-11. Questions: ask only about gaps that change the report, short, at most 3 this round, from one Blank Template section at a time. Never re-ask an answered question. kind is one of "injury", "scope", "gap", "client". Never ask for a rating or risk index: the consultant sets those in the table.${j.round >= 2 ? " This is a late round: ask only about a gap that would leave a wrong statement in the report. Anything that can stay [needed] stays [needed]; do not ask about it." : ""} When nothing that matters is left, return "questions": [] and "done": true.
+11. Questions: ask only about gaps that change the report, short, at most 3 this round, from one Blank Template section at a time. Never re-ask a question that is answered, skipped or still open, even in other words. kind is one of "injury", "scope", "gap", "client". Never ask for a rating or risk index: the consultant sets those in the table.${j.round >= 2 ? " This is a late round: ask only about a gap that would leave a wrong statement in the report. Anything that can stay [needed] stays [needed]; do not ask about it." : ""} When nothing that matters is left, return "questions": [] and "done": true.
 12. Never assign a risk rating. Leave "${c.ratingKey}" as "[needed]" unless the PREVIOUS INTAKE STATE already holds the consultant's rating; then keep it.
 13. "action" says the immediate action the rule requires (e.g. out of service now), or "" if none.${c.columns.some(x => x.key === "due" || x.key === "owner") ? `
 14. "owner" and "due" come only from a source or the consultant's answers; otherwise "[needed]". Never pick a due date yourself.` : ""}
@@ -854,6 +884,8 @@ ${interviewText(j)}
 OPEN QUESTIONS (the consultant has not answered these; state nothing that depends on them as fact):
 ${openQText(j)}
 
+RECORDS REVIEWED: describe a document, log or record as reviewed only if the packet lists it as received and reviewed, and name it exactly as the packet and sources do (an excerpt of a 300-A is "an excerpt of the 300-A", never "the 300 Log and 300-A"). Never name a document, year or log that is not in the packet or the sources. A program received but not reviewed reads "Received, not reviewed", never "In place". This holds in every section, the summary and the score method included: list the items actually reviewed, never a general phrase such as "a review of written programs and records" when some were not reviewed. A program status other than "Received, not reviewed" (such as "Needs update" or "In place") needs a review that the sources describe. Photos the consultant attached in the app count as reviewed.
+
 VERIFICATION AND SOURCES: Every Condition part says where its evidence came from in plain words (observed during the walk-through on [date], per the consultant, per the [document]), and uses only figures in the sources, answers, job sheet or approved table. A sensory observation is described as observed, never as a measurement. For a row whose "note" starts with "verify:" or whose cite ends "(pending scope answer)", add a part labeled "Verification required" right after Condition, with the text "[verify: what the consultant must confirm]". Keep that finding; never drop or soften it to hide the gap.
 
 OUTPUT: the client report only, ending at the last appendix. No QA results, no conflicts register, no questions. Do not write a "Prepared by" cover line, a signature block or a statement about AI assistance: the app adds those from the consultant's profile. Where the template calls for the rating counts table, put a block {"type":"counts"} and the app will build it.${c.scorecard ? ` Where it calls for the compliance scorecard, put a block {"type":"scorecard"} and the app will build the table and the overall line.` : ""} Each ${c.itemNoun} is one block of type "finding" with its labeled parts in template order. Recommendations use type "finding" with their Rec-n id and rating "". Write [needed] for anything missing. The cover lines come from the job sheet.
@@ -901,7 +933,7 @@ ${qaText(c)}
 
 JOB SHEET:
 ${jobSheetText(c, j)}
-
+${photoCount(j) ? `\nSITE PHOTOS: the consultant took and attached ${photoCount(j)} photo(s) in the app. They are packet items (taken and reviewed by the consultant); photo captions in the report need no other inventory row.\n` : ""}
 VERIFIED CITATION LIBRARY:
 ${citationTable(c)}
 
@@ -923,6 +955,8 @@ CLIENT REPORT TEXT:
 <<<
 ${reportText}
 >>>
+
+For check 1, also find every sentence in the report that says a document, log, record or program was reviewed, examined or in place, and flag any that names something the packet does not list as received and reviewed, or names it more broadly than the sources do.
 
 For each check: quote the ${c.itemNoun} IDs it concerns and check them against the report text. Never mark a check pass on a fact the report does not support. status is "pass" or "flag". For a flag, "detail" says in one plain sentence what to fix, and "where" names the ${c.itemNoun} ID or the exact section heading where the fix goes ("" if it is not in one place). Then write the Report Summary.
 
@@ -1031,7 +1065,7 @@ function autoChecks(j, reportText, draft) {
         const inDraft = new Set(fs.map(b => b.id));
         [...ids].filter(x => !inDraft.has(x)).forEach(x => problems.push(`${x} is in the approved table but not in the report`));
         [...inDraft].filter(x => !ids.has(x)).forEach(x => problems.push(`${x} is in the report but not in the approved table`));
-        fs.forEach(b => { const it = items.find(x => x.id === b.id); if (it && it[c.ratingKey] !== (b.rating || "")) problems.push(`${b.id} rating in report (${b.rating || "none"}) differs from the approved table (${it[c.ratingKey]})`); });
+        fs.forEach(b => { const it = items.find(x => x.id === b.id); if (it && str(it[c.ratingKey]).trim().toLowerCase() !== str(b.rating).trim().toLowerCase()) problems.push(`${b.id} rating in report (${b.rating || "none"}) differs from the approved table (${it[c.ratingKey]})`); });
         const hasCounts = arr(draft.sections).some(s => arr(s.blocks).some(b => b.type === "counts"));
         if (!hasCounts && c.countsBlock !== false) problems.push("the summary counts table is missing");
       }
@@ -1077,7 +1111,7 @@ function autoChecks(j, reportText, draft) {
       if (c.jobSheetFields.some(f => f.key === "framework")) {
         const fw = String((j.jobSheet || {}).framework || ""); const gi = /1910|general/i.test(fw), cx = /1926|construction/i.test(fw);
         if (!gi && !cx) fwBad = "The job sheet has no regulatory framework, so the cites can't be checked against it. ";
-        else { const off = found.filter(x => (/^1926\./.test(x) && !cx) || (/^1910\./.test(x) && !gi)); if (off.length) fwBad = `These cites don't match the job sheet's framework (${fw}): ${off.join(", ")}. `; }
+        else { const off = found.filter(x => (/^1926\./.test(x) && !cx) || (/^1910\./.test(x) && !gi)); if (off.length) fwBad = `These cites don't match the job sheet's framework (${fw}): ${off.map(k => citeAsWritten(c, reportText, k)).join(", ")}. `; }
       }
       if (bad.length || unv || fwBad) res[q.n] = { status: "flag", ids: [], detail: (bad.length ? `Not in the library: ${bad.map(k => citeAsWritten(c, reportText, k)).join(", ")}. ` : "") + fwBad + (unv ? "The report contains an (unverified) cite, which blocks release." : "") };
       else res[q.n] = { status: "pass", ids: [], detail: found.length ? `${found.length} cite(s), all in the library.` + (confirm.length ? ` Library marks ${confirm.join(", ")} to re-confirm.` : "") : "No regulation cites in the report." };
@@ -1172,6 +1206,7 @@ function nextAction(j) {
     const openAll = j.interview.filter(q => !(q.answer || "").trim() && !q.skipped);
     const open = openAll.filter(q => q.round === j.round);
     if (openAll.some(q => q.kind === "injury") && !open.length) return { label: "Answer the injury questions", disabled: true, info: "Injury questions must be answered before you approve." };
+    if (!open.length && j.interview.some(q => q.round === j.round && !q.skipped && (q.answer || "").trim())) return { label: "Send my answers", run: "answers", info: "Your answers are ready to send." };
     if (open.length) return { label: "Send my answers", run: "answers", info: `${open.length} question${open.length > 1 ? "s" : ""} from Claude. Answer what you can; skip the rest.` };
     const un = j.intake.items.filter(it => !isRec(it) && (!it[c.ratingKey] || it[c.ratingKey] === "[needed]")).length;
     return { label: `Approve ${c.itemNoun}s and write the draft`, run: "approve", info: un ? `${un} ${c.itemNoun}${un > 1 ? "s are" : " is"} not rated yet; they show as [needed].` : "Check the table, then approve." };
@@ -1329,7 +1364,7 @@ function viewFindings() {
   const c = CFG(), j = S.job, I = j.intake;
   if (!I) return head("Findings builder", `Claude reads the ${j.sources.length} input${j.sources.length === 1 ? "" : "s"}, pulls ${c.itemNoun}s, fills the intake (packet, conflicts, names, notes not used) and asks up to 3 short gap questions at a time. Injury and near-miss questions come first.`) +
     `<div class="panel empty"><h2>Build the ${c.itemNoun}s table</h2><p>Press <b>Read my notes</b> below. Claude pulls each ${c.itemNoun} from your notes and asks a few short questions about gaps. Nothing is drafted until you approve the table, and ratings are yours: Claude never assigns one.</p></div>`;
-  const open = j.interview.filter(q => q.round === j.round && !(q.answer || "").trim() && !q.skipped);
+  const open = j.interview.filter(q => q.round === j.round && !q.skipped); /* answered but not yet sent stay here, with Send */
   const openAll = j.interview.filter(q => !(q.answer || "").trim() && !q.skipped);
   const injuryOpen = openAll.filter(q => q.kind === "injury");
   const unrated = I.items.filter(it => !isRec(it) && (!it[c.ratingKey] || it[c.ratingKey] === "[needed]")).length;
@@ -1380,8 +1415,18 @@ async function runFindings() {
     if (!out || !Array.isArray(out.items)) throw { code: "invalid_json" };
     j.intake = mergeIntake(j.intake, out);
     j.round += 1;
-    arr(out.questions).slice(0, 3).forEach(q => j.interview.push({ id: uid(), kind: str(q.kind) || "gap", section: str(q.section), question: str(q.question), answer: "", round: j.round }));
-    if (!arr(out.questions).length) j.intake.done = true;
+    const fresh = arr(out.questions).filter(q => str(q.question).trim() && !j.interview.some(x => sameQuestion(x.question, q.question)));
+    fresh.slice(0, 3).forEach(q => j.interview.push({ id: uid(), kind: str(q.kind) || "gap", section: str(q.section), question: str(q.question), answer: "", round: j.round }));
+    /* every unanswered scope trigger reaches the consultant as a scope question */
+    let added = 0;
+    arr(j.intake.scopeTriggers).forEach(t => {
+      const done = arr(j.interview).find(q => (q.answer || "").trim() && (q.fromTrigger === t.topic || sameQuestion(q.question, t.question)));
+      if (done) { if (!str(t.answer).trim() || /^\[?(open|needed|pending)\]?$/i.test(str(t.answer).trim())) t.answer = done.answer; return; }
+      if (str(t.answer).trim() && !/^\[?(open|needed|pending)\]?$/i.test(str(t.answer).trim())) return;
+      if (arr(j.interview).some(q => q.fromTrigger === t.topic || sameQuestion(q.question, t.question))) return;
+      j.interview.push({ id: uid(), kind: "scope", section: "Scope", question: triggerQuestion(t), fromTrigger: str(t.topic), answer: "", round: j.round }); added++;
+    });
+    if (!fresh.length && !added) j.intake.done = true;
     S.tab = "findings"; markDirty(); renderAll();
   } catch (e) { const m = errMsg(e); if (m) toast(m); }
 }
@@ -1547,13 +1592,26 @@ function setDraftPath(path, val) {
   if (p[4] === "parts") { const pt = b.parts[Number(p[5])]; if (!pt || pt.text === val) return false; pt.text = val; return true; }
   return false;
 }
+/* keep the approved table's open-scope marker on each finding's requirement line */
+function keepScopeMarks(j, d) {
+  const items = approvedItems(j); const mark = "(pending scope answer)";
+  arr(d && d.sections).forEach(sec => arr(sec.blocks).forEach(b => {
+    if (b.type !== "finding") return; const it = items.find(x => x.id === b.id);
+    if (!it || !str(it.cite).toLowerCase().includes(mark)) return;
+    const req = arr(b.parts).find(p => /^requirement/i.test(str(p.label)));
+    if (!req || str(req.text).toLowerCase().includes(mark)) return;
+    const t = str(req.text); const k = t.indexOf(":");
+    req.text = k > 0 ? t.slice(0, k) + " " + mark + t.slice(k) : t + " " + mark;
+  }));
+  return d;
+}
 function validDraft(d) { return d && Array.isArray(d.sections) && d.sections.length; }
 async function buildDraft() {
   const j = S.job;
   try {
     const d = await askJSON("Writing the client report", promptDraft(j, approvedItems(j)), { tier: "complex", sub: "Following the template, style rules and wording library." });
     if (!validDraft(d)) throw { code: "invalid_json" };
-    j.draft = d; j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet); j.qa = null; j.finalCheck = null; markDirty(); renderAll();
+    keepScopeMarks(j, d); j.draft = d; j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet); j.qa = null; j.finalCheck = null; markDirty(); renderAll();
   } catch (e) { const m = errMsg(e); if (m) toast(m); }
 }
 async function editDraft(req, label) {
@@ -1561,7 +1619,7 @@ async function editDraft(req, label) {
   try {
     const d = await askJSON(label || "Applying your change", promptEdit(j, req), { tier: "default" });
     if (!validDraft(d)) throw { code: "invalid_json" };
-    j.draft = d; j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet); j.qa = null; j.finalCheck = null; markDirty(); renderAll(); toast("Draft updated. Run QA again before export.");
+    keepScopeMarks(j, d); j.draft = d; j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet); j.qa = null; j.finalCheck = null; markDirty(); renderAll(); toast("Draft updated. Run QA again before export.");
   } catch (e) { const m = errMsg(e); if (m) toast(m); }
 }
 
@@ -1590,6 +1648,7 @@ async function runQA(finalText) {
   const text = finalText || draftToText(j.draft);
   const auto = autoChecks(j, text, finalText ? null : j.draft);
   const autoForPrompt = {}; Object.keys(auto).filter(k => k !== "_confirm").forEach(k => autoForPrompt[k] = auto[k]);
+  const dbr = dueBeforeReport(j); if (dbr.length) autoForPrompt._dueBeforeReport = { note: "Due dates the app found before the report date. Check 13 flags each one.", items: dbr };
   if (auto._untracedFigures) autoForPrompt._untracedFigures = { note: "Figures in finding Condition text that the app found in no source, answer, job-sheet value or approved-table cell. Check 10 flags each one the report can't source.", items: auto._untracedFigures };
   try {
     const out = await askJSON(finalText ? "Re-checking your final" : `Running ${c.qaChecks.length} QA checks`, promptQA(j, text, autoForPrompt), { tier: "complex", sub: "Checking each rule against the report text." });
@@ -1609,7 +1668,7 @@ async function runQA(finalText) {
 /* 6 Export */
 function viewExport() {
   const c = CFG(), j = S.job, g = gateState(j);
-  const base = (jobTitle(j) || "Job").replace(/[^\w\- ]+/g, "").trim().slice(0, 50) || "Job";
+  const base = fileBase(j);
   const sm = photoSummary(c, j);
   return head("Download", `Two separate Word files. The client report never contains quality-check results.`) +
     `<div class="gate ${g.open ? "open" : "shut"}" style="margin-bottom:14px"><div><div class="big">${g.open ? "Ready to release" : "Not ready to release yet"}</div><div class="small">${esc(g.reason)}${g.open ? "" : " You can still download a draft copy; it is stamped DRAFT."}</div></div>${!g.open && (g.flags || g.ph) ? `<div class="spacer" style="flex:1"></div><button class="btn small" data-go="5">See what to fix</button>` : ""}</div>
@@ -1769,7 +1828,7 @@ function qaXml(j) {
   return x;
 }
 async function exportDoc(which) {
-  const j = S.job, c = CFG(); const base = (jobTitle(j) || "Job").replace(/[^\w\- ]+/g, "").trim().slice(0, 50) || "Job";
+  const j = S.job, c = CFG(); const base = fileBase(j);
   try {
     if (which === "report" && photoCount(j) && PHOTO.job !== j.id) await loadPhotos(j);
     const k = consultantInfo(); if (k.logo) S.logoDims = await new Promise(res => { const im = new Image(); im.onload = () => res({ w: im.naturalWidth || 400, h: im.naturalHeight || 160 }); im.onerror = () => res({ w: 400, h: 160 }); setTimeout(() => res({ w: 400, h: 160 }), 3000); im.src = k.logo; });

@@ -99,6 +99,10 @@
    "label": "Objective evidence"
   },
   {
+   "key": "ref",
+   "label": "Source ref (S1:L7, Q:id, JS:field)"
+  },
+  {
    "key": "source",
    "label": "Requirement source",
    "options": [
@@ -1113,6 +1117,7 @@
      "cite": "clause 7.1.5.2",
      "finding": "Measuring equipment past its calibration due date was in use, and earlier results were not assessed",
      "evidence": "3 of 12 gauges sampled past due and in use on November 10, 2026: M-114 (due August 15, 2026), B-07 (due September 2, 2026), C-221 (due October 20, 2026); no evaluation of parts measured since",
+     "ref": "S1:L1; S2:L1",
      "source": "ISO 9001",
      "grade": "Major NC",
      "corrective": "Remove the 3 gauges from use, assess parts measured with them since their due dates, find the cause of the missed recalls and correct the recall system",
@@ -1127,6 +1132,7 @@
      "cite": "clause 8.4.1",
      "finding": "External providers were not re-evaluated as the supplier procedure requires",
      "evidence": "Approved supplier list last reviewed January 2025; QP-08 section 5 requires annual re-evaluation; 4 of 5 suppliers sampled had no 2026 scorecard",
+     "ref": "S1:L2",
      "source": "ISO 9001",
      "grade": "Minor NC",
      "corrective": "Re-evaluate the approved suppliers, find why the annual review was missed, and set a review date",
@@ -1141,6 +1147,7 @@
      "cite": "clause 8.7",
      "finding": "Rejected bar stock was not identified or kept apart from released stock",
      "evidence": "2 bins of rejected bar stock, heat lot 6614, next to released stock with no red tag and no NCR on November 10, 2026",
+     "ref": "S1:L3",
      "source": "ISO 9001",
      "grade": "Minor NC",
      "corrective": "Tag and segregate the material, raise an NCR, and correct the cause of the missing NCR forms",
@@ -1155,6 +1162,7 @@
      "cite": "clause 10.2",
      "finding": "Corrective actions were closed without a review of their effectiveness",
      "evidence": "4 of 6 CARs closed in 2026 had no effectiveness check recorded: CAR-26-03, CAR-26-05, CAR-26-07, CAR-26-09",
+     "ref": "S1:L4",
      "source": "ISO 9001",
      "grade": "Minor NC",
      "corrective": "Review the effectiveness of the 4 CARs and add an effectiveness step before CAR closure",
@@ -1169,6 +1177,7 @@
      "cite": "clause 6.2",
      "finding": "Quality objectives do not show who is responsible for each one",
      "evidence": "Objectives sheet has no owner column; objectives are tracked monthly",
+     "ref": "S1:L5",
      "source": "ISO 9001",
      "grade": "OFI",
      "corrective": "Consider adding an owner for each objective",
@@ -1183,6 +1192,7 @@
      "cite": "clause 7.2",
      "finding": "The competence matrix does not show when skills are to be reassessed",
      "evidence": "Matrix lists CMM skill for the second-shift machinist with no reassessment date; training record present and signed",
+     "ref": "S1:L6",
      "source": "ISO 9001",
      "grade": "OFI",
      "corrective": "Consider adding reassessment dates to the competence matrix",
