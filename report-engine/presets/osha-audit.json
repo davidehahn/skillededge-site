@@ -99,6 +99,10 @@
    "number": true
   },
   {
+   "key": "ratePopulation",
+   "label": "Do the case counts and the hours cover the same people? (Yes, or No / Not sure; say whether temps are included in each)"
+  },
+  {
    "key": "blsRates",
    "label": "BLS comparison rates for this NAICS and year (supplied by you, or \"none\")"
   },
@@ -324,7 +328,8 @@
  "rateFields": {
   "hours": "hoursWorked",
   "recordables": "recordables",
-  "dart": "dartCases"
+  "dart": "dartCases",
+  "population": "ratePopulation"
  },
  "scorecard": {
   "title": "Compliance scorecard",
@@ -1411,9 +1416,6 @@
   "Pat Rivera",
   "SA-2026-014",
   "SA-2025-031",
-  "Forklift #3",
-  "Aisle 12",
-  "North dock",
   "Ridgeline Builders",
   "Maple Court Medical Office",
   "Brightwater Precision Components",

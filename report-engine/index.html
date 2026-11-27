@@ -696,9 +696,10 @@ function releaseBlockers(j) {
   const ot = openTriggers(j).filter(t => !oq.some(q => q.fromTrigger === t.topic || sameQuestion(q.question, t.question)));
   if (ot.length) out.push(`${ot.length} scope trigger${ot.length > 1 ? "s have" : " has"} no answer. Answer ${ot.length > 1 ? "them" : "it"} in the Findings step (Injury & scope tab): ${ot.map(triggerQuestion).join(" | ")}`);
   dueBeforeReport(j).forEach(t => out.push(t + ". Set a due date on or after the report date."));
+  { const sw = stopWorkDue(j); if (sw.length) out.push(`${sw.join(", ")} ${sw.length > 1 ? "call" : "calls"} for stopping work or taking equipment out of use, but the due date is later. Set the due date to "Immediately (before work resumes)", or change the action.`); }
   const sk = computeScore(c, j);
   if (sk) sk.rows.filter(r => r.notAssessed && arr(r.ids).length).forEach(r => out.push(`Scorecard: "${r.cat}" is marked Not Assessed, but ${r.ids.join(", ")} ${r.ids.length > 1 ? "are" : "is"} filed under it. Rate the category, or move the finding.`));
-  if (sk) { const top = Math.max(...c.scorecard.levels.map(l => l.value == null ? -1 : l.value)); sk.rows.filter(r => r.value != null && r.value < top && !arr(r.ids).length).forEach(r => out.push(`Scorecard: "${r.cat}" is rated ${r.level}, but no finding is filed under that category, so its Basis would read "No findings recorded". Add the finding to that category, or change the rating.`)); }
+  if (sk) { const top = Math.max(...c.scorecard.levels.map(l => l.value == null ? -1 : l.value)); sk.rows.filter(r => r.value != null && r.value === top && arr(r.ids).length).forEach(r => out.push(`Scorecard: "${r.cat}" is rated ${r.level}, but ${r.ids.join(", ")} ${r.ids.length > 1 ? "are" : "is"} filed under it. A category with a finding can't be rated ${r.level}: change the rating or move the finding.`)); sk.rows.filter(r => r.value != null && r.value < top && !arr(r.ids).length && !arr(r.openIds).length).forEach(r => out.push(`Scorecard: "${r.cat}" is rated ${r.level}, but no finding is filed under that category, so its Basis would read "No findings recorded". Add the finding to that category, or change the rating.`)); }
   if (!oq.length && !ot.length) { const mk = "(pending scope answer)"; const pend = approvedItems(j).filter(it => str(it.cite).toLowerCase().includes(mk)); if (pend.length) out.push(`${pend.length > 1 ? "These items still read" : "This item still reads"} "${mk}" though every scope question is answered: ${pend.map(it => it.id).join(", ")}. Decide whether the standard applies. If it does, delete the marker from the cite in the Findings table; if it doesn't, change the cite or make the item a recommendation. Then rebuild the draft.`); }
   const tr = traceRows(j).filter(r => !r.resolved.length || r.bad.length);
   if (tr.length) out.push(`${tr.length} finding${tr.length > 1 ? "s" : ""} can't be traced to a note line, an answer or a job-sheet field (Source ref column): ${tr.map(r => r.id + (r.bad.length ? " (" + r.bad.join(", ") + ")" : " (no ref)")).join(", ")}`);
@@ -710,7 +711,7 @@ function allBlockers(j) {
   else { if (!j.finalCheck && qaStale(j)) out.push("The draft changed after the last quality check."); qa.checks.filter(x => x.status !== "pass").forEach(x => { const d = c.qaChecks.find(q => q.n === x.n) || {}; out.push(`Check ${x.n} (${d.name || ""}): ${x.detail || "flagged"}`); }); }
   findPlaceholders(j).forEach(p => out.push(`${p.where}: ${p.what}`));
   releaseBlockers(j).forEach(t => out.push(t));
-  if (!(j.signoff.conflicts && j.signoff.scope)) out.push("The consultant has not signed off the conflicts register and scope-trigger answers.");
+  if (!(signedOff(j, "conflicts") && signedOff(j, "scope"))) out.push(signoffGaps(j) && (j.signoff.conflicts || j.signoff.scope) ? "The sign-off boxes don't count yet: scope or injury questions are still open. Answer them, then sign off." : "The consultant has not signed off the conflicts register and scope-trigger answers.");
   if (!j.signoff.release) out.push("The consultant has not approved the report for release.");
   return out;
 }
@@ -834,7 +835,7 @@ ${c.findingRules ? c.findingRules : `2. Requirement source: cite a library secti
 13. "action" says the immediate action the rule requires (e.g. out of service now), or "" if none.${c.columns.some(x => x.key === "due" || x.key === "owner") ? `
 14. "owner" and "due" come only from a source or the consultant's answers; otherwise "[needed]". Never pick a due date yourself.` : ""}
 15. Applicability before citing: a cite needs the facts that make the paragraph apply, and none of its exceptions. If the library note names an exception or a condition (e.g. an immediate-use container, voluntary vs required use, an exposure level) and the inputs don't settle it, keep the row, ask a scope question, and end the cite with " (pending scope answer)".
-16. A missing record, tag, signature or document shows that a requirement could not be confirmed, not that it was not met, unless the requirement itself is the record. Write the row as "could not be confirmed", keep it, and ask whether the work was done or recorded elsewhere.
+16. A missing record, tag, signature or document shows that a requirement could not be confirmed, not that it was not met, unless the requirement itself is the record. Write the row as "could not be confirmed", keep it as an open item to verify (rule 25), and ask whether the work was done or recorded elsewhere.
 17. A sensory observation (loud, dusty, hot, smelled) or a statement is a screening indicator, never a measurement. Say so in "evidence" and never write a number that was not measured.
 18. Never drop a legitimate ${c.itemNoun} because information is missing. When the row depends on something still unconfirmed, start "note" with "verify: " and say in a few words what the consultant must confirm.${c.jobSheetFields.some(f => f.key === "framework") ? `
 19. Framework: cite only the standards the job sheet's regulatory framework names (general industry 29 CFR 1910, construction 29 CFR 1926). If the framework is [needed], ask one scope question that proposes the framework the operations description points to, and say why.` : ""}${c.columns.some(x => x.key === "ref") ? `
@@ -843,6 +844,8 @@ ${c.findingRules ? c.findingRules : `2. Requirement source: cite a library secti
 22. Like units only: compare, add or divide figures only when they count the same thing in the same unit (bins with bins, NCRs with NCRs, pounds with pounds, pieces with pieces). When sources measure one thing in different units, give each measure on its own with its own denominator and period, and ask for matching data. Never build a ratio or comparison across unlike units.
 23. Unverified causes: when the cause behind a condition rests only on a statement or a guess (staffing, workload, load, training), the "action" starts by confirming it ("Confirm whether ...; if confirmed, ...") and "note" starts "verify: ". Never present a suspected cause as the cause.
 24. One breakdown, one row: when several records show the same failure of the same requirement in the same process (for example one nonconforming lot traced through an NCR, a hold tag and a shipment), make one row that lists all the evidence. Split rows only when the requirement or the failure differs.
+25. Open items to verify: when the condition itself is not established (it rests only on someone's statement, on a missing, blank or unseen record, on "could not be confirmed", or on a screening indicator with nothing measured), the row is an open item to verify, not a finding. Give it its own id series V-1, V-2 (findings keep F-1, F-2 with no gaps), leave the rating [needed], start "note" with "open: " and say what must be confirmed and how, and when the possible hazard warrants protection now, start "action" with "Interim: " and give the safeguard. A row whose condition was observed or shown by a record stays a finding even when a detail (a cite's text, a record ID, a date) still needs checking; that detail goes in a "verify: " note.${c.columns.some(x => x.key === "employer") ? `
+26. Exposing employer: fill "employer" with the employer whose workers were exposed when any source ties the workers to a trade or company (e.g. "the Granite Hill mason"); write [needed] only when no source says whose workers they were.` : ""}
 
 Reply with ONLY one JSON object, no prose:
 {"items":[{ ${columnsSpec(c)}, "action": string, "note": string }],
@@ -883,7 +886,9 @@ ${citationTable(c)}
 APPROVED ${c.itemNoun.toUpperCase()}S TABLE (approved by the consultant; ratings are the consultant's own; use exactly these IDs and ratings, write nothing that is not here or in the job sheet):
 ${JSON.stringify(findings)}
 
-COUNTS BY RATING (computed by the app from the approved table): ${JSON.stringify(counts)}${scoreText(c, j)}${ratesText(c, j)}
+OPEN ITEMS TO VERIFY (rows whose condition is not confirmed; the app writes them in their own section "Open items to verify" after the findings; never write them as findings, never rate, number, count or plan them, and keep them out of the correction plan; in the summary you may say how many items are open for verification): ${JSON.stringify(openItems(j).map(it => ({ id: it.id, item: it.finding || it.area, note: it.note, action: it.action })))}
+
+COUNTS BY RATING (computed by the app from the approved table; open items are not counted): ${JSON.stringify(counts)}${scoreText(c, j)}${ratesText(c, j)}
 
 CARRYOVER LIST (values from other jobs; never write any of them unless the job sheet also has it): ${JSON.stringify(c.carryover)}
 
@@ -952,7 +957,8 @@ ${citationTable(c)}
 
 CARRYOVER LIST: ${JSON.stringify(c.carryover)}
 
-APPROVED ${c.itemNoun.toUpperCase()}S TABLE: ${JSON.stringify(approvedItems(j))}${scoreText(c, j)}${ratesText(c, j)}
+APPROVED ${c.itemNoun.toUpperCase()}S TABLE: ${JSON.stringify(confirmedItems(j))}
+OPEN ITEMS TO VERIFY (not findings; the app writes them in the "Open items to verify" section; they are correctly absent from findings, counts, score and the correction plan): ${JSON.stringify(openItems(j).map(it => ({ id: it.id, item: it.finding || it.area, ref: it.ref, note: it.note })))}${scoreText(c, j)}${ratesText(c, j)}
 INTAKE: packet ${JSON.stringify(arr(I.packet))}; conflicts ${JSON.stringify(arr(I.conflicts))}; names ${JSON.stringify(arr(I.names))}; notesNotUsed ${JSON.stringify(arr(I.notesNotUsed))}; injury ${JSON.stringify(arr(I.injury))}; scopeTriggers ${JSON.stringify(arr(I.scopeTriggers))}
 CONSULTANT ANSWERS:
 ${interviewText(j)}
@@ -983,11 +989,17 @@ function promptPhoto(name) {
 
 /* ---------------- domain logic ---------------- */
 function approvedItems(j) { return arr(j.intake && j.intake.items).map(it => { const o = { ...it }; delete o._edits; return o; }); }
+function isOpen(it) { if (!it || isRec(it)) return false; return /^\s*open:/i.test(str(it.note)) || /^v-\d/i.test(str(it.id)); }
+function openItems(j) { return approvedItems(j).filter(isOpen); }
+function confirmedItems(j) { return approvedItems(j).filter(it => !isOpen(it)); }
+function signoffGaps(j) { const oq = openCritical(j); const ot = openTriggers(j).filter(t => !oq.some(q => q.fromTrigger === t.topic || sameQuestion(q.question, t.question))); return oq.length + ot.length; }
+function signedOff(j, k) { return !!(j.signoff && j.signoff[k]) && !signoffGaps(j); }
+function stopWorkDue(j) { const SW = /stop (the )?work|before work resumes|remove (it |them )?from (service|use)|take (it |them )?out of (service|use)|do not use/i; return confirmedItems(j).filter(it => (str(it.action) + ". " + str(it.corrective)).split(/[.;]\s*/).some(cl => SW.test(cl) && !/\b(if|unless|whether|until confirmed)\b/i.test(cl)) && !/immediate|before (work|use|re-?entry|next use)|now\b|today/i.test(str(it.due))).map(it => it.id); }
 function isRec(it) { const c = CFG(); return (it.source || "").toUpperCase() === (c.recommendationSource || "").toUpperCase() || /^rec-/i.test(it.id || ""); }
 function computeCounts(items) {
   const c = CFG(); const counts = {}; c.countRatings.forEach(r => counts[r] = 0); let total = 0, needed = 0;
   const grp = c.ratingGroups || null;
-  items.filter(it => !isRec(it)).forEach(it => { const v = it[c.ratingKey]; const r = grp ? Object.keys(grp).find(g => grp[g].includes(v)) : v; if (r && r in counts) { counts[r]++; total++; } else needed++; });
+  items.filter(it => !isRec(it) && !isOpen(it)).forEach(it => { const v = it[c.ratingKey]; const r = grp ? Object.keys(grp).find(g => grp[g].includes(v)) : v; if (r && r in counts) { counts[r]++; total++; } else needed++; });
   counts.Total = total; if (needed) counts["Not rated yet"] = needed; return counts;
 }
 function mergeIntake(prev, next) {
@@ -1013,10 +1025,11 @@ function computeRates(c, j) {
   const f = c.rateFields; if (!f) return null; const js = j.jobSheet || {};
   const num = k => { const m = String(js[f[k]] || "").replace(/,/g, "").match(/^\s*(?:about|approx\.?|approximately|~)?\s*(\d+(?:\.\d+)?)(?![\d.])(?!\s*(?:log|-?a\b|form))/i); return m ? Number(m[1]) : null; };
   const h = num("hours"), r = num("recordables"), d = num("dart");
-  const rate = v => (h && v != null) ? (v * 200000 / h).toFixed(2) : null;
-  return { hours: h, recordables: r, dart: d, trc: rate(r), dartRate: rate(d) };
+  const pop = f.population ? String(js[f.population] || "").trim() : "yes"; const same = /^\s*yes\b/i.test(pop);
+  const rate = v => (same && h && v != null) ? (v * 200000 / h).toFixed(2) : null;
+  return { hours: h, recordables: r, dart: d, trc: rate(r), dartRate: rate(d), same, why: same ? "" : (pop ? "the consultant answered that case counts and hours do not clearly cover the same people" : "the consultant has not confirmed that case counts and hours cover the same people") };
 }
-function ratesText(c, j) { const k = computeRates(c, j); if (!k) return ""; return `\nINJURY RATES (computed by the app per 200,000 hours worked, from the job sheet; quote exactly, never recompute): TRC ${k.trc ?? "[needed]"}; DART ${k.dartRate ?? "[needed]"} (hours worked ${k.hours ?? "[needed]"}, recordable cases ${k.recordables ?? "[needed]"}, DART cases ${k.dart ?? "[needed]"}).`; }
+function ratesText(c, j) { const k = computeRates(c, j); if (!k) return ""; return `\nINJURY RATES (computed by the app per 200,000 hours worked, from the job sheet; quote exactly, never recompute): TRC ${k.trc ?? "[needed]"}; DART ${k.dartRate ?? "[needed]"}${k.same ? "" : ` (not computed: ${k.why}; write both rates as [needed] and say why, and never compute or estimate a rate)`} (hours worked ${k.hours ?? "[needed]"}, recordable cases ${k.recordables ?? "[needed]"}, DART cases ${k.dart ?? "[needed]"}).`; }
 function scoreRows(c, j) {
   const sc = c.scorecard; if (!sc) return [];
   if (!j.scorecard || !Array.isArray(j.scorecard.rows)) j.scorecard = { rows: sc.categories.map(cat => ({ cat, level: "[needed]" })) };
@@ -1025,9 +1038,9 @@ function scoreRows(c, j) {
 function computeScore(c, j) {
   const sc = c.scorecard; if (!sc) return null; const rows = scoreRows(c, j);
   const lv = {}; sc.levels.forEach(l => lv[l.label] = l.value);
-  const its = approvedItems(j).filter(it => !isRec(it));
+  const all = approvedItems(j).filter(it => !isRec(it)); const its = all.filter(it => !isOpen(it));
   const nal = {}; sc.levels.forEach(l => { if (l.notAssessed) nal[l.label] = true; });
-  const out = rows.map(r => { const ids = its.filter(it => (it.category || "").trim().toLowerCase() === String(r.cat).toLowerCase()).map(it => it.id); return { cat: r.cat, level: r.level, ids, value: Object.prototype.hasOwnProperty.call(lv, r.level) ? lv[r.level] : undefined, notAssessed: !!nal[r.level] }; });
+  const out = rows.map(r => { const inCat = it => (it.category || "").trim().toLowerCase() === String(r.cat).toLowerCase(); const ids = its.filter(inCat).map(it => it.id); const openIds = all.filter(it => isOpen(it) && inCat(it)).map(it => it.id); return { cat: r.cat, level: r.level, ids, openIds, value: Object.prototype.hasOwnProperty.call(lv, r.level) ? lv[r.level] : undefined, notAssessed: !!nal[r.level] }; });
   const unrated = out.filter(r => r.value === undefined).length;
   const rated = out.filter(r => r.value !== undefined && r.value !== null);
   const pct = rated.length ? rated.reduce((a, r) => a + r.value, 0) / rated.length : null;
@@ -1040,7 +1053,7 @@ function scoreText(c, j) {
   const k = computeScore(c, j); if (!k) return "";
   return `\nCOMPLIANCE SCORECARD (the consultant's category ratings; score and risk rating computed by the app; quote exactly, never recompute): overall compliance ${k.pctTxt}, risk rating ${k.band}. ${k.rated} rated categories, ${k.na} not applicable${k.notAssessed ? ", " + k.notAssessed + " not assessed (" + k.rated + " of " + k.applicable + " applicable categories assessed)" : ""}${k.unrated ? ", " + k.unrated + " not rated yet" : ""}.${k.notAssessed ? " A category rated Not Assessed was not examined during this audit: say it was not assessed, never that it is compliant, and say the score covers only the assessed categories." : ""} Categories: ${k.rows.map(r => `${r.cat} = ${r.level}`).join("; ")}. Levels: ${c.scorecard.levels.map(l => `${l.label} ${l.value == null ? "(excluded)" : l.value}`).join(", ")}. Risk bands: ${c.scorecard.bands.map(b => `${b.label} at ${b.min}% or more`).join(", ")}.`;
 }
-function scoreTableRows(k) { return k.rows.map(r => [r.cat, r.level, r.value === undefined ? "[needed]" : r.value === null ? "N/A" : String(r.value), r.notAssessed ? "Not assessed during this audit" : r.value === null ? "Rated not applicable" : arr(r.ids).length ? "Findings " + r.ids.join(", ") : "No findings recorded"]); }
+function scoreTableRows(k) { return k.rows.map(r => [r.cat, r.level, r.value === undefined ? "[needed]" : r.value === null ? "N/A" : String(r.value), r.notAssessed ? "Not assessed during this audit" : r.value === null ? "Rated not applicable" : (arr(r.ids).length ? "Findings " + r.ids.join(", ") : "No findings recorded") + (arr(r.openIds).length ? "; open items to verify " + r.openIds.join(", ") : "")]); }
 const SCORE_HEAD = ["Category", "Rating", "Score", "Basis"];
 function scoreNote(c) { const sc = c.scorecard || {}; return sc.disclaimer || `How this score works: the consultant rates each audit category from the findings and the walk-through (${arr(sc.levels).map(l => l.label + (l.value == null ? " excluded" : " " + l.value)).join(", ")}), and the score is the average of the rated categories. A category marked Not Assessed was not examined during this audit and says nothing about compliance. The Basis column lists the findings behind each rating. This is a proprietary scoring method for tracking progress between audits. It is not an OSHA score, rating or inspection result, and it does not predict citations or penalties.`; }
 function scoreLine(k) { return `Overall compliance: ${k.pctTxt} (${k.band}${k.band === "[needed]" ? "" : " risk"})${k.notAssessed ? `, based on the ${k.rated} of ${k.applicable} applicable categories assessed` : ""}`; }
@@ -1068,7 +1081,7 @@ function draftToText(d) {
   return lines.join("\n");
 }
 function autoChecks(j, reportText, draft) {
-  const c = CFG(); const res = {}; const items = approvedItems(j);
+  const c = CFG(); const res = {}; const items = confirmedItems(j);
   for (const q of c.qaChecks) {
     if (!q.auto) continue;
     if (q.auto === "counts") {
@@ -1161,7 +1174,7 @@ function gateState(j) {
   if (flags.length) return { open: false, reason: `${flags.length} item${flags.length > 1 ? "s need" : " needs"} a fix.`, flags };
   const ph = findPlaceholders(j); if (ph.length) return { open: false, reason: `${ph.length} spot${ph.length > 1 ? "s" : ""} still need${ph.length > 1 ? "" : "s"} filling in (marked [needed] or (unverified)).`, ph };
   const rb = releaseBlockers(j); if (rb.length) return { open: false, reason: rb[0], blockers: rb };
-  if (!(j.signoff.conflicts && j.signoff.scope)) return { open: false, reason: "Tick the two sign-off boxes in the quality check." };
+  if (!(signedOff(j, "conflicts") && signedOff(j, "scope"))) return { open: false, reason: signoffGaps(j) ? "Answer the open scope questions, then tick the two sign-off boxes." : "Tick the two sign-off boxes in the quality check." };
   if (!j.signoff.release) return { open: false, reason: "Tick the approval box below: you reviewed the report and will sign and send it yourself." };
   return { open: true, reason: "Ready to release. Sign it and send it yourself." };
 }
@@ -1615,8 +1628,18 @@ function fillPositives(j, d) {
   arr(d && d.sections).forEach(sec => { if (!/positive observation/i.test(String(sec.heading || ""))) return; const bl = arr(sec.blocks); const txt = bl.map(b => [b.text, ...arr(b.items)].join(" ")).join(" ").replace(/\[needed\]|[\s.•-]/gi, ""); if (!txt) sec.blocks = [{ type: "bullets", items: pos }]; });
   return d;
 }
+function addOpenItems(j, d) {
+  if (!d || !Array.isArray(d.sections)) return d;
+  d.sections = d.sections.filter(s => !/^\s*(\d+[a-z]?\.\s*)?open items to verify/i.test(str(s.heading)));
+  const oi = openItems(j); if (!oi.length) return d;
+  const what = it => { let n = str(it.note).replace(/^\s*(open|verify):\s*/i, "").replace(/\s*\((?:[A-Z]{1,3}\d*:L?\d+|Q:\d+|C-\d+)(?:[;,]\s*(?:[A-Z]{1,3}\d*:L?\d+|Q:\d+|C-\d+))*\)/g, "").replace(/\s*\([^()]*\b(?:Q:\d+|C-\d+|S\d+:L\d+)[^()]*\)/g, "").trim(); const sents = n.split(/(?<=[.!?])\s+/).filter(Boolean); const keep = sents.filter(x => !/librar|consultant|conflict c-\d|\bverify:|\bQ:\d|\bC-\d|\bS\d+:L\d|\[needed\]|^employer:/i.test(x)); n = (keep.length ? keep.slice(0, 2) : sents.slice(0, 1).map(x => x.replace(/;?\s*[^;]*\b(consultant|librar)[^;]*/i, ""))).join(" ").trim(); return n ? n.charAt(0).toUpperCase() + n.slice(1) : "Confirm the condition with records or an observation."; };
+  const sec = { heading: "Open items to verify", blocks: [{ type: "p", text: `${oi.length === 1 ? "This item was" : "These " + oi.length + " items were"} seen or reported but could not be confirmed during this audit. ${oi.length === 1 ? "It is not counted as a finding" : "They are not counted as findings"}, rated or scored. ${oi.length === 1 ? "It needs" : "Each needs"} the check shown; any interim safeguard applies now.` }, { type: "table", headers: ["#", "Item", "What to confirm", "Interim safeguard"], rows: oi.map(it => [str(it.id), str(it.finding || it.area), what(it), (/^\s*interim:/i.test(str(it.action)) ? str(it.action).replace(/^\s*interim:\s*/i, "") : "None stated")]) }] };
+  let at = -1; d.sections.forEach((s, i) => { const h = str(s.heading); if (/finding|issue/i.test(h) && !/summary|plan|overview/i.test(h)) at = i; });
+  if (at < 0) at = Math.max(0, d.sections.length - 2);
+  d.sections.splice(at + 1, 0, sec); return d;
+}
 function keepScopeMarks(j, d) {
-  fillPositives(j, d);
+  fillPositives(j, d); addOpenItems(j, d);
   const items = approvedItems(j); const mark = "(pending scope answer)";
   arr(d && d.sections).forEach(sec => arr(sec.blocks).forEach(b => {
     if (b.type !== "finding") return; const it = items.find(x => x.id === b.id);
@@ -1633,7 +1656,7 @@ function validDraft(d) { return d && Array.isArray(d.sections) && d.sections.len
 async function buildDraft() {
   const j = S.job;
   try {
-    const d = await askJSON("Writing the client report", promptDraft(j, approvedItems(j)), { tier: "complex", sub: "Following the template, style rules and wording library." });
+    const d = await askJSON("Writing the client report", promptDraft(j, confirmedItems(j)), { tier: "complex", sub: "Following the template, style rules and wording library." });
     if (!validDraft(d)) throw { code: "invalid_json" };
     keepScopeMarks(j, d); j.draft = d; j.draftAt = nowISO(); j.jobSheetAtDraft = clone(j.jobSheet); j.qa = null; j.finalCheck = null; markDirty(); renderAll();
   } catch (e) { const m = errMsg(e); if (m) toast(m); }
@@ -1662,7 +1685,7 @@ function viewQA() {
     `<div class="panel" style="padding:0">${fixes.length ? `<div style="padding:14px 14px 4px"><h2 style="margin:0">Fix these <span class="chip bad">${fixes.length}</span></h2></div>${fixes.map(x => { const tg = fixTarget(j, x); return `<div class="fix" id="qa-${x.n}"><div style="min-width:0"><div class="name">${esc(nm(x.n))}</div><div class="det">${hl(x.detail || "")}</div>${arr(x.ids).length ? `<div class="mono small" style="margin-top:3px">${arr(x.ids).map(esc).join(", ")}</div>` : ""}</div>${tg ? `<button class="btn small" data-fix="${esc(tg)}">${tg === "library" ? "Open library" : tg === "profile" ? "Your details" : "Show in draft"}</button>` : ""}</div>`; }).join("")}` : `<div style="padding:14px"><h2 style="margin:0">All ${view.checks.length} checks passed <span class="chip ok">Pass</span></h2></div>`}</div>` +
     (ph.length ? `<div class="panel"><h2>Fill in the blanks <span class="chip need">${ph.length}</span></h2><p class="small muted" style="margin-top:0">These spots still say [needed] or (unverified). A released report can't contain them.</p>${ph.map(x => `<div class="fix"><div><div class="name">${esc(x.where)}</div><div class="det">${esc(x.what)}${x.n > 1 ? " (" + x.n + ")" : ""}</div></div><button class="btn small" data-fix="${esc(x.anchor)}">${x.anchor === "profile" ? "Your details" : x.anchor === "score" ? "Rate categories" : "Show in draft"}</button></div>`).join("")}</div>` : "") +
     (releaseBlockers(j).length ? `<div class="panel"><h2>Also holding back release <span class="chip need">${releaseBlockers(j).length}</span></h2>${releaseBlockers(j).map(t => `<div class="fix"><div><div class="det">${esc(t)}</div></div><button class="btn small" data-go="${/job sheet/.test(t) ? 1 : 3}">${/job sheet/.test(t) ? "Job details" : "Findings"}</button></div>`).join("")}</div>` : "") +
-    `<div class="panel"><h2>Your sign-off</h2><div class="stack small"><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="conflicts" ${j.signoff.conflicts ? "checked" : ""}> <span>I reviewed every conflict between my sources and how each was resolved (Findings step, Conflicts tab).</span></label><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="scope" ${j.signoff.scope ? "checked" : ""}> <span>I confirm my answers to the scope questions (Findings step, Injury &amp; scope tab).</span></label></div></div>` +
+    `<div class="panel"><h2>Your sign-off</h2><div class="stack small"><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="conflicts" ${j.signoff.conflicts ? "checked" : ""}${signoffGaps(j) ? " disabled" : ""}> <span>I reviewed every conflict between my sources and how each was resolved (Findings step, Conflicts tab).</span></label><label class="row" style="gap:8px;align-items:flex-start"><input type="checkbox" data-signoff="scope" ${j.signoff.scope ? "checked" : ""}${signoffGaps(j) ? " disabled" : ""}> <span>I confirm my answers to the scope questions (Findings step, Injury &amp; scope tab).</span></label>${signoffGaps(j) ? `<p class="small muted" style="margin:4px 0 0">Answer the open scope or injury questions first (Findings step). Sign-off can't be given while they are open.</p>` : ""}</div></div>` +
     `<details class="more panel"><summary>Passed (${passes.length})</summary><ul class="passlist" style="margin-top:8px">${passes.map(x => `<li><b>${esc(nm(x.n))}</b> <span class="muted">· ${hl(x.detail || "")}</span></li>`).join("")}</ul></details>` +
     `<details class="more panel"><summary>Report summary and hand-edited final check</summary><div class="grid2" style="margin-top:10px"><div>${sl("Open hazards or issues", sum.openHazards)}${sl("Data mismatches", sum.dataMismatches)}${sl("Citations to confirm", sum.citationsToConfirm)}${sl("Questions for you", sum.questions)}${sl("Notes not used", sum.notesNotUsed)}</div>
       <div><h3 style="font-size:14px;margin:12px 0 6px">Re-check a version you edited in Word</h3><p class="small muted" style="margin-top:0">Paste the full text. All ${c.qaChecks.length} checks run again and only what changed or broke is reported.</p><textarea id="finalText" rows="5" placeholder="Paste the full report text">${esc((j.finalCheck && j.finalCheck.text) || "")}</textarea><div class="row end" style="margin-top:8px">${j.finalCheck ? `<button class="btn ghost" id="clearFinal">Clear</button>` : ""}<button class="btn" id="runFinal">Re-check final</button></div>${j.finalCheck && j.finalCheck.changes ? `<div class="notice ${j.finalCheck.changes.length ? "warn" : "ok"}" style="margin-top:10px"><span>${j.finalCheck.changes.length ? "<b>Changed or broke:</b> " + j.finalCheck.changes.map(esc).join("; ") : "Your edited final passes the same checks. Nothing broke."}</span></div>` : ""}</div></div></details>`;
@@ -1812,7 +1835,7 @@ function qaXml(j) {
   x += wP(wRun("Release gate", {}), { style: "Heading1" });
   x += wP(wRun(g.open ? "OPEN – " : "CLOSED – ", { b: true, color: g.open ? "1D7A4C" : "B42318" }) + wRun(g.reason));
   { const bl = allBlockers(j); if (bl.length) { x += wP(wRun(`Everything holding back release (${bl.length})`), { style: "Heading2" }); bl.forEach(t => x += wP(wRun("•\t" + t), { bullet: true, after: 60 })); } }
-  x += wP(wRun(`Conflicts register signed off: ${j.signoff.conflicts ? "yes" : "no"}. Scope-trigger answers confirmed: ${j.signoff.scope ? "yes" : "no"}. Report approved by the consultant for release: ${j.signoff.release ? "yes" : "no"}.`));
+  { const gq = signoffGaps(j), oi = openItems(j); const so = k => signedOff(j, k) ? "yes" : (j.signoff[k] && gq ? `not yet (${gq} scope or injury question${gq > 1 ? "s" : ""} still open)` : "no"); x += wP(wRun(`Open items to verify (not counted as findings): ${oi.length ? oi.map(it => it.id).join(", ") : "none"}. Questions left unanswered: ${arr(j.interview).filter(q => !(q.answer || "").trim()).length}.`)); x += wP(wRun(`Conflicts register signed off: ${so("conflicts")}. Scope-trigger answers confirmed: ${so("scope")}. Report approved by the consultant for release: ${j.signoff.release ? "yes" : "no"}.`)); }
   { const ks = computeScore(c, j); const t = cleanTopNote(c, ks); if (t) x += wP(wRun("Confirm: ", { b: true }) + wRun(t)); if (ks && ks.notAssessed) x += wP(wRun("Coverage: ", { b: true }) + wRun(`${ks.rated} of ${ks.applicable} applicable categories assessed; ${ks.notAssessed} marked Not Assessed.`)); }
   { const ph = findPlaceholders(j); if (ph.length) { x += wP(wRun("Blanks still in the report"), { style: "Heading2" }); ph.forEach(p => x += wP(wRun(`•	${p.where}: ${p.what}`), { bullet: true, after: 60 })); } }
   x += wP(wRun(c.qaChecks.length + " checks"), { style: "Heading1" });
