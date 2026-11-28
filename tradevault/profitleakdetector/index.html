@@ -671,12 +671,59 @@ var STEPS = [
     }
   },
 
-  /* 8 — CARDS & PAYMENTS */
+  /* 8 — RECEIVABLES & BILLING */
+  {
+    name:"Receivables & Billing",
+    tag:"Receivables & Billing",
+    render:function(){return `
+      <div class="step-tag"><span class="n">9</span> Receivables & billing</div>
+      <h2>Is every finished job getting invoiced and collected?</h2>
+      <div class="sub">Work you've completed but not invoiced, and invoices sitting past 60 days, is money you've already earned and aren't collecting. Most trades shops don't track either number.</div>
+      <label class="field"><span class="q">What share of your open invoices is more than 60 days old?</span>
+        <div class="opts" data-radio="rc_aged">
+          <label class="opt"><input type="radio" name="rc_aged" value="0.02"><span class="ot">Almost none — we chase within 30 days</span></label>
+          <label class="opt"><input type="radio" name="rc_aged" value="0.10"><span class="ot">Some — roughly 5–15%</span></label>
+          <label class="opt"><input type="radio" name="rc_aged" value="0.22"><span class="ot">A lot — roughly 15–30%</span></label>
+          <label class="opt"><input type="radio" name="rc_aged" value="0.35"><span class="ot">Over 30%, or we don't know</span></label>
+        </div>
+      </label>
+      <label class="field"><span class="q">How often are completed jobs invoiced more than a week after the work is done?</span>
+        <div class="opts" data-radio="rc_unbilled">
+          <label class="opt"><input type="radio" name="rc_unbilled" value="0.0"><span class="ot">Rarely — same day or next day</span></label>
+          <label class="opt"><input type="radio" name="rc_unbilled" value="0.01"><span class="ot">Sometimes — a few jobs a month</span></label>
+          <label class="opt"><input type="radio" name="rc_unbilled" value="0.03"><span class="ot">Often — most months</span></label>
+          <label class="opt"><input type="radio" name="rc_unbilled" value="0.05"><span class="ot">Constantly — invoices lag behind the work</span></label>
+        </div>
+      </label>`;
+    },
+    save:function(){
+      ['rc_aged','rc_unbilled'].forEach(function(n){
+        var e=document.querySelector('input[name='+n+']:checked');
+        setv(n,e?e.value:'');
+      });
+    },
+    valid:function(){return gv('rc_aged')!==''&&gv('rc_unbilled')!=='';},
+    compute:function(){
+      var rev=+state.revenue||0;
+      var aged=+gv('rc_aged')||0;
+      var unb=+gv('rc_unbilled')||0;
+      // Assumptions: ~12% of annual revenue sits in open AR (about 45 days);
+      // a quarter of balances past 60 days end up written off or heavily discounted;
+      // unbilled share of annual revenue is the lag percentage chosen above.
+      var arBalance=rev*0.12;
+      var agedLoss=arBalance*aged*0.25;
+      var unbilledAmt=rev*unb;
+      var amt=Math.round(agedLoss+unbilledAmt);
+      return {key:'receivables', label:'Receivables & unbilled work', group:'ops', amount:amt};
+    }
+  },
+
+  /* 9 — CARDS & PAYMENTS */
   {
     name:"Cards & Payments",
     tag:"Cards & Payments",
     render:function(){return `
-      <div class="step-tag"><span class="n">9</span> Cards & payment optimization</div>
+      <div class="step-tag"><span class="n">10</span> Cards & payment optimization</div>
       <h2>The money leaking out before it hits your account</h2>
       <div class="sub">Three levers: the cards you swipe, how you pay suppliers, and points you're letting expire. Most trades shops leave $3,000–$15,000 here every year without knowing it.</div>
       <label class="field"><span class="q">Roughly how much do you charge on business cards and pay suppliers monthly?</span>
@@ -1052,6 +1099,19 @@ function getLeakDetail(key){
       };
     })(),
 
+    receivables:(function(){
+      var aged=+gv('rc_aged')||0.10;
+      var unb=+gv('rc_unbilled')||0.01;
+      var agedDesc=aged>=0.22?'a large share of invoices past 60 days':aged>=0.10?'a meaningful share of invoices past 60 days':'a small share of invoices past 60 days';
+      var unbDesc=unb>=0.03?'invoices going out more than a week after the work is done':unb>=0.01?'occasional invoicing lag':'invoices going out promptly';
+      return {
+        diagnosis:'You have '+agedDesc+' and '+unbDesc+'. Work you\'ve finished but not invoiced is revenue you\'ve already earned and aren\'t collecting, and every invoice that ages past 60 days is more likely to be discounted or never paid.',
+        benchmark:null,
+        fix:'Two moves: (1) Make invoicing a required step on your job-close checklist, so every job is billed on completion, not at month-end. (2) Run a 20-minute collections review every Monday: pull the aging report, call every invoice past 30 days, and give each one a named owner. Anything past 60 days gets a final notice and a payment-plan offer.',
+        levers:null
+      };
+    })(),
+
     cards:(function(){
       var spend=+gv('cp_spend')||25000;
       var cardVal=+gv('cp_card')||0.010;
@@ -1087,6 +1147,7 @@ function getActionItem(key){
     pricing:{title:'Audit your last 5 jobs for true margin',desc:'Calculate real cost vs. billed. Rank by margin. Reprice or drop your bottom two job types. Set a quarterly pricing review on your calendar.',recoveryPct:0.50},
     compliance:{title:'Run a 2-hour documentation audit',desc:'Pull every cert and compliance doc. List current, expired, missing. Fix expired items first. 30-day list for missing items.',recoveryPct:0.60},
     growth:{title:'Solve your #1 capacity constraint',desc:'Don\'t spread effort. Find the single bottleneck and fix that first. Every other improvement is capped by it.',recoveryPct:0.35},
+    receivables:{title:'Invoice on completion and run a weekly collections review',desc:'Make invoicing part of the job-close checklist. Pull your aging report every Monday, call every invoice past 30 days, and assign one person to own it.',recoveryPct:0.50},
     cards:{title:'Optimize cards and lock in early-pay discounts',desc:'Match high-rewards cards to fuel and materials spend. Ask top 5 suppliers about 2/10 net 30. Redeem all sitting points this week.',recoveryPct:0.75}
   };
   return actions[key]||{title:'Review this area',desc:'Address this leak with the appropriate advisor.',recoveryPct:0.30};
